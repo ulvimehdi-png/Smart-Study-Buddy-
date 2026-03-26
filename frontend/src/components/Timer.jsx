@@ -1,49 +1,48 @@
-import { cn } from "@/lib/utils"
+import { cn, formatTime } from "@/lib/utils"
 import React, { useState } from "react";
 import { CountdownCircleTimer } from 'react-countdown-circle-timer';
 import TimerPip from "./TimerPip";
-import { Pause, Play, ChevronLast, Settings, BellRing } from "lucide-react";
+import { Pause, Play, ChevronLast, Settings, X, BellRing, Icon } from "lucide-react";
+import { AnimatePresence, motion } from "motion/react";
 
 export default function Timer({ isPiP = false, defaultDuration = 60*20, defaultRest = 60*5 }) {
+  // Timer state
   const [isPlaying, setIsPlaying] = useState(false);
   const [isResetting, setIsResetting] = useState(false);
-  const [key, setKey] = useState(0);
-  const [duration, setDuration] = useState(defaultDuration);
-  const [durationMinutes, setDurationMinutes] = useState(Math.floor(duration / 60));
-  const [durationSeconds, setDurationSeconds] = useState(duration % 60);
-
+  const [timerKey, setTimerKey] = useState(0);
   const [isResting, setIsResting] = useState(false);
-  const [restMinutes, setRestMinutes] = useState(Math.floor(defaultRest / 60));
-  const [restSeconds, setRestSeconds] = useState(defaultRest % 60);
-
   const [hideDurationInputs, setHideDurationInputs] = useState(isPiP);
+
+  const [work, setWork] = useState({
+    minutes: Math.floor(defaultDuration / 60),
+    seconds: defaultDuration % 60,
+  });
+  const [rest, setRest] = useState({
+    minutes: Math.floor(defaultRest / 60),
+    seconds: defaultRest % 60,
+  });
+  // Timer countdown state (in seconds)
+  const [duration, setDuration] = useState(defaultDuration);
 
   // Handler for duration input
   function handleDurationChange(e) {
-    const id = e.target.id;
-    const val = parseInt(e.target.value, 10);
+    const { id, value } = e.target;
+    const val = Math.max(0, parseInt(value, 10) || 0);
     const isMinutes = id.endsWith('minutes');
-    const isForCurrentMode = (id.startsWith('duration-') && !isResting) || 
-                 (id.startsWith('rest-') && isResting);
-    
-    // Update the appropriate state value
     if (id.startsWith('duration-')) {
-      isMinutes ? setDurationMinutes(val) : setDurationSeconds(val);
-      if (!isResting) {
-      setTimerDuration(isMinutes ? val : durationMinutes, 
-               isMinutes ? durationSeconds : val);
-      }
+      setWork(prev => {
+        const updated = { ...prev, [isMinutes ? 'minutes' : 'seconds']: val };
+        if (!isResting) setDuration(updated.minutes * 60 + updated.seconds);
+        return updated;
+      });
+      if (!isResting) setTimerKey(prev => prev + 1);
     } else if (id.startsWith('rest-')) {
-      isMinutes ? setRestMinutes(val) : setRestSeconds(val);
-      if (isResting) {
-      setTimerDuration(isMinutes ? val : restMinutes, 
-               isMinutes ? restSeconds : val);
-      }
-    }
-    
-    // Reset timer when duration changes for current mode
-    if (isForCurrentMode) {
-      setKey(prev => prev + 1);
+      setRest(prev => {
+        const updated = { ...prev, [isMinutes ? 'minutes' : 'seconds']: val };
+        if (isResting) setDuration(updated.minutes * 60 + updated.seconds);
+        return updated;
+      });
+      if (isResting) setTimerKey(prev => prev + 1);
     }
   }
 
@@ -52,24 +51,22 @@ export default function Timer({ isPiP = false, defaultDuration = 60*20, defaultR
   }
 
   function resetTimer() {
-    // If switching to rest mode, set the timer to rest duration
     if (!isResting) {
-      setTimerDuration(restMinutes, restSeconds);
+      setTimerDuration(rest.minutes, rest.seconds);
     } else {
-      // Otherwise, set to the main timer duration
-      setTimerDuration(durationMinutes, durationSeconds);
+      setTimerDuration(work.minutes, work.seconds);
     }
     setIsResting(!isResting);
     setIsPlaying(false);
     setIsResetting(false);
-    setKey(prev => prev + 1);
+    setTimerKey(prev => prev + 1);
   }
 
   return (
     <div className="flex flex-col items-center h-full justify-center">
       <div className="flex justify-center items-center mt-2">
         <CountdownCircleTimer
-          key={key}
+          key={timerKey}
           size={isPiP ? 200 : 400}
           strokeWidth={isPiP ? 10 : 15}
           isPlaying={isPlaying}
@@ -85,7 +82,7 @@ export default function Timer({ isPiP = false, defaultDuration = 60*20, defaultR
               // this is when the timer's line is going back to the start
               setIsResetting(true);
               setDuration(0.5);
-              setKey(prev => prev + 1);
+              setTimerKey(prev => prev + 1);
             }
           }}
         >
@@ -100,9 +97,7 @@ export default function Timer({ isPiP = false, defaultDuration = 60*20, defaultR
                   isPiP ? "text-lg" : "text-2xl"
                 )}
               >
-                { isResetting ? '00:00' :
-                  `${String(Math.floor(remainingTime / 60)).padStart(2, '0')}:${String(remainingTime % 60).padStart(2, '0')}`
-                }
+                { isResetting ? '00:00' : formatTime(remainingTime) }
               </span>
               {isPlaying && !isResetting && (
                 <span className={cn(
@@ -128,11 +123,41 @@ export default function Timer({ isPiP = false, defaultDuration = 60*20, defaultR
       </div>
       { !isPlaying &&
         <div className={cn("flex gap-2", isPiP ? "m-2" : "m-4")}>
-          <Settings
-            size={isPiP ? 20 : 30}
-            className="text-gray-700 cursor-pointer"
-            onClick={() => setHideDurationInputs(!hideDurationInputs)}
-          />
+          <AnimatePresence mode="wait" initial={false}>
+            {hideDurationInputs ? (
+              <motion.span
+                key="settings"
+                initial={{ opacity: 0, scale: 0.7 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.7 }}
+                transition={{ duration: 0.1 }}
+                style={{ display: 'inline-flex' }}
+              >
+                <Settings
+                  size={isPiP ? 20 : 30}
+                  className="text-gray-700 cursor-pointer"
+                  aria-label="Show timer settings"
+                  onClick={() => setHideDurationInputs(false)}
+                />
+              </motion.span>
+            ) : (
+              <motion.span
+                key="x"
+                initial={{ opacity: 0, scale: 0.7 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.7 }}
+                transition={{ duration: 0.1 }}
+                style={{ display: 'inline-flex' }}
+              >
+                <X
+                  size={isPiP ? 20 : 30}
+                  className="text-gray-700 cursor-pointer"
+                  aria-label="Hide timer settings"
+                  onClick={() => setHideDurationInputs(true)}
+                />
+              </motion.span>
+            )}
+          </AnimatePresence>
           <ChevronLast
             size={isPiP ? 20 : 30}
             className="text-gray-700 cursor-pointer"
@@ -142,7 +167,7 @@ export default function Timer({ isPiP = false, defaultDuration = 60*20, defaultR
             }}
           />
           { !isPiP && (
-            <TimerPip defaultDuration={durationMinutes*60 + durationSeconds} defaultRest={restMinutes*60 + restSeconds} />
+            <TimerPip defaultDuration={work.minutes*60 + work.seconds} defaultRest={rest.minutes*60 + rest.seconds} />
           )}
         </div>
       }
@@ -154,7 +179,7 @@ export default function Timer({ isPiP = false, defaultDuration = 60*20, defaultR
               id="duration-minutes"
               type="number"
               min="0"
-              value={durationMinutes}
+              value={work.minutes}
               onChange={handleDurationChange}
               className="border rounded px-2 py-1 w-16"
               placeholder="Minutes"
@@ -164,7 +189,7 @@ export default function Timer({ isPiP = false, defaultDuration = 60*20, defaultR
               id="duration-seconds"
               type="number"
               min="0"
-              value={durationSeconds}
+              value={work.seconds}
               onChange={handleDurationChange}
               className="border rounded px-2 py-1 w-16"
               placeholder="Seconds"
@@ -177,7 +202,7 @@ export default function Timer({ isPiP = false, defaultDuration = 60*20, defaultR
               id="rest-minutes"
               type="number"
               min="0"
-              value={restMinutes}
+              value={rest.minutes}
               onChange={handleDurationChange}
               className="border rounded px-2 py-1 w-16"
               placeholder="Minutes"
@@ -187,7 +212,7 @@ export default function Timer({ isPiP = false, defaultDuration = 60*20, defaultR
               id="rest-seconds"
               type="number"
               min="0"
-              value={restSeconds}
+              value={rest.seconds}
               onChange={handleDurationChange}
               className="border rounded px-2 py-1 w-16"
               placeholder="Seconds"
