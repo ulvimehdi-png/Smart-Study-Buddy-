@@ -1,125 +1,136 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
-import './App.css'
-import Timer from './components/Timer'
+import React, { useState } from 'react';
+import reactLogo from './assets/react.svg';
+import viteLogo from './assets/vite.svg';
+import heroImg from './assets/hero.png';
+import './App.css';
+import Timer from './components/Timer';
 
 function App() {
-  const [count, setCount] = useState(0)
+  // Your Login States
+  const [currentView, setCurrentView] = useState('login'); // 'login', 'register', or 'dashboard'
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [message, setMessage] = useState('');
+  
+  // Colleague's Dashboard State
+  const [count, setCount] = useState(0);
+
+  // Your Fetch Options
+  const fetchOptions = {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    credentials: 'omit'
+  };
+
+  const handleRegister = async (e) => {
+    e.preventDefault();
+    const res = await fetch('http://localhost:8000/register', {
+      ...fetchOptions,
+      body: JSON.stringify({ username, password })
+    });
+    if (res.ok) {
+      setMessage('Registration successful! Please log in.');
+      setCurrentView('login');
+    } else {
+      setMessage('Error: Username might be taken.');
+    }
+  };
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    const res = await fetch('http://localhost:8000/login', {
+      ...fetchOptions,
+      credentials: 'include',
+      body: JSON.stringify({ username, password })
+    });
+    if (res.ok) {
+      setMessage('');
+      setCurrentView('dashboard');
+    } else {
+      setMessage('Invalid username or password.');
+    }
+  };
+
+  const fetchDashboard = async () => {
+    const res = await fetch('http://localhost:8000/dashboard', {
+      method: 'GET',
+      credentials: 'include'
+    });
+    if (res.ok) {
+      const data = await res.json();
+      setMessage(data.message);
+    } else {
+      setMessage('You are not authorized to view this page.');
+      setCurrentView('login');
+    }
+  };
+
+  const handleLogout = async () => {
+    await fetch('http://localhost:8000/logout', {
+      ...fetchOptions,
+      credentials: 'include'
+    });
+    setCurrentView('login');
+    setMessage('Logged out successfully.');
+    setUsername('');
+    setPassword('');
+  };
 
   return (
     <>
-      <section id="center">
-        <div>
-           <Timer />
-        </div>
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
+      {/* Global Message Display */}
+      {message && <p className="message" style={{ textAlign: 'center', marginTop: '20px' }}>{message}</p>}
 
-      <div className="ticks"></div>
-
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
+      {/* --- YOUR LOGIN VIEW --- */}
+      {currentView === 'login' && (
+        <div className="container" style={{ margin: '0 auto', marginTop: '50px' }}>
+          <div className="card">
+            <h1>StudyBuddy</h1>
+            <form onSubmit={handleLogin}>
+              <h2>Login</h2>
+              <input placeholder="Username" value={username} onChange={e => setUsername(e.target.value)} required />
+              <input type="password" placeholder="Password" value={password} onChange={e => setPassword(e.target.value)} required />
+              <button type="submit">Log In</button>
+              <p onClick={() => setCurrentView('register')} className="link">Need an account? Register</p>
+            </form>
+          </div>
         </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
+      )}
 
-      <div className="ticks"></div>
-      <section id="spacer"></section>
+      {/* --- YOUR REGISTER VIEW --- */}
+      {currentView === 'register' && (
+        <div className="container" style={{ margin: '0 auto', marginTop: '50px' }}>
+          <div className="card">
+            <h1>StudyBuddy</h1>
+            <form onSubmit={handleRegister}>
+              <h2>Register</h2>
+              <input placeholder="Username" value={username} onChange={e => setUsername(e.target.value)} required />
+              <input type="password" placeholder="Password" value={password} onChange={e => setPassword(e.target.value)} required />
+              <button type="submit">Sign Up</button>
+              <p onClick={() => setCurrentView('login')} className="link">Already have an account? Log in</p>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* --- YOUR COLLEAGUE'S DASHBOARD VIEW --- */}
+      {currentView === 'dashboard' && (
+        <>
+          <section id="center">
+            <div>
+               <Timer />
+            </div>
+            
+            {/* We added your backend testing buttons here */}
+            <div style={{ margin: '20px 0' }}>
+              <h2>Welcome to the Dashboard</h2>
+              <button onClick={handleLogout} className="logout-btn">Log Out</button>
+            </div>
+          </section>
+        </>
+      )}
     </>
-  )
+  );
 }
 
-export default App
+export default App;
