@@ -69,6 +69,16 @@ def login(user: UserCreate, response: Response, db: Session = Depends(get_db)):
     response.set_cookie(key="session_id", value=session_id, httponly=True)
     return {"message": "Logged in successfully"}
 
+@app.get("/user")
+def get_user(request: Request):
+    # Used by the frontend on refresh to restore auth state from cookie session.
+    session_id = request.cookies.get("session_id")
+
+    if session_id not in active_sessions:
+        raise HTTPException(status_code=401, detail="Not logged in")
+
+    return {"user": active_sessions[session_id]}
+
 @app.get("/dashboard")
 def get_dashboard(request: Request):
     # Check if the browser sent a valid session cookie
@@ -89,3 +99,8 @@ def logout(request: Request, response: Response):
     
     response.delete_cookie("session_id")
     return {"message": "Logged out"}
+
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=8000)

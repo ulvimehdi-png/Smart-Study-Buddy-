@@ -13,3 +13,13 @@ def get_db():
         yield db
     finally:
         db.close()
+
+
+if __name__ == "__main__":
+    # Just a quick test to see if we can connect to the database
+    try:
+        with engine.connect() as connection:
+            result = connection.execute("SELECT 1")
+            print("Database connection successful:", result.fetchone())
+    except Exception as e:
+        print("Database connection failed:", e)
