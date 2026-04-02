@@ -2,6 +2,10 @@ body {
   margin: 0;
   font-family: Arial, sans-serif;
   background-color: #f4f4f9;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
 }
 
 .container {
@@ -238,9 +242,4 @@ button:hover { background-color: #0056b3; }
     right: 0;
     border-right-color: var(--border);
   }
-}
-
-.card h1, 
-.card h2 {
-  color: black;
 }
