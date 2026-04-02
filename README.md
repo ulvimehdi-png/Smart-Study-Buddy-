@@ -1,81 +1,6 @@
 # 2526-TEAM-301 -- StudyBuddy
 
-# Frontend -- React + Vite
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
-
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
-
-## React Compiler
-
-The React Compiler is enabled on this template. See [this documentation](https://react.dev/learn/react-compiler) for more information.
-
-Note: This will impact Vite dev & build performances.
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
-
-# StudyBuddy Backend
-## Description / Overview
-A **FastAPI** 
-## Demo (optional but powerful)
-Add a GIF, image, or link to a live demo. Visuals grab attention.
-## Installation
-Step-by-step instructions to get the project running.
-## Usage
-Show how to run it or use it. Include example commands or screenshots.
-## Features
-List key features so users know what to expect.
-## Tech Stack / Built With
-Mention the languages, frameworks, and tools you used.
-## Contributing (optional)
-If you’re open to collaboration, include guidelines.
-## License
-Let people know how they can use or reuse your code.
-## Credits / Acknowledgments (optional)
-Shout out anyone who helped or inspired the project.
-
-## Repository Layout
-
-backend
-
-|app/
-│ ├── api/
-│ │ ├── deps.py # Dependency functions (DB, auth, current user)
-│ │ └── routes/
-│ │ ├── study_sessions.py # CRUD endpoints for study sessions
-│ │ ├── subjects.py # CRUD endpoints for subjects
-│ │ └── tasks.py # CRUD endpoints for tasks
-│ ├── core/
-│ │ ├── config.py # Project configuration
-│ │ └── database.py # SQLAlchemy Base and Session setup
-│ ├── models/
-│ │ ├── study_session.py
-│ │ ├── subject.py
-│ │ ├── task.py
-│ │ └── user.py
-│ ├── schemas/
-│ │ ├── study_session.py # Pydantic schemas for validation
-│ │ ├── subject.py
-│ │ ├── task.py
-│ │ └── user.py
-│ └── main.py # FastAPI application entry point
-├── alembic/ # DB migrations folder
-├── tests/ # Pytest test cases
-│ ├── test_study_sessions.py
-│ ├── test_subjects.py
-│ └── test_tasks.py
-├── requirements.txt # Python dependencies
-├── scripts/
-│ ├── dev.sh # Start backend + frontend dev
-│ ├── reset_db.sh # Reset database (dev only)
-│ └── migrate.sh # Run Alembic migrations
-├── .env # Environment variables
-├── Makefile # Automation for setup, tests, migrations
-└── README.md # This file
+THIS IS FULLY AI GENERATED PLACEHOLDER FOR A REPO-WIDE README
 
 # StudyBuddy
 
@@ -253,3 +178,11 @@ studybuddy/
 ├── frontend/
 │   └── README.md
 └── README.md
+# StudyBuddy
+
+StudyBuddy is a student-focused planning and study-tracking application built for the Software and Web Technology course. The project is split into two main parts:
+
+- **Backend**: FastAPI API for authentication, subject management, task tracking, and study session logging
+- **Frontend**: web client for interacting with the StudyBuddy platform
+
+The goal of the system is to help students organize courses, plan work, track study time, and measure progress over time.
