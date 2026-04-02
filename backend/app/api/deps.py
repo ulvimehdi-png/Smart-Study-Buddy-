@@ -1,5 +1,4 @@
-from fastapi import Depends, HTTPException, status
-from fastapi.security import OAuth2PasswordBearer
+from fastapi import Cookie, Depends, HTTPException, status
 from jose import JWTError, jwt
 from sqlalchemy.orm import Session
 
@@ -8,7 +7,7 @@ from app.core.database import SessionLocal
 from app.models.user import User
 
 settings = get_settings()
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
+
 
 def get_db():
     db = SessionLocal()
@@ -17,27 +16,38 @@ def get_db():
     finally:
         db.close()
 
-def get_current_user(
-    token: str = Depends(oauth2_scheme),
+
+def get_current_user_from_cookie(
+    access_token: str | None = Cookie(default=None),
     db: Session = Depends(get_db),
 ) -> User:
-    credentials_exception = HTTPException(
-        status_code=status.HTTP_401_UNAUTHORIZED,
-        detail="Could not validate credentials",
-        headers={"WWW-Authenticate": "Bearer"},
-    )
+    if access_token is None:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Not authenticated",
+        )
 
     try:
-        payload = jwt.decode(token, settings.secret_key, algorithms=[settings.algorithm])
+        payload = jwt.decode(
+            access_token,
+            settings.secret_key,
+            algorithms=[settings.algorithm],
+        )
         sub = payload.get("sub")
         if sub is None:
-            raise credentials_exception
+            raise ValueError("Missing subject")
         user_id = int(sub)
     except (JWTError, ValueError):
-        raise credentials_exception
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid authentication token",
+        )
 
     user = db.get(User, user_id)
     if user is None:
-        raise credentials_exception
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="User not found",
+        )
 
     return user

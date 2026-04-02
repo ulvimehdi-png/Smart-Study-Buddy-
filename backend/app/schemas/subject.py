@@ -7,6 +7,7 @@ class SubjectCreate(BaseModel):
     code: str | None = Field(default=None, max_length=32)
     name: str = Field(min_length=1, max_length=120)
     description: str | None = None
+    color_hex: str | None = Field(default=None, pattern=r"^#[0-9A-Fa-f]{6}$")
     target_total_minutes: int | None = Field(default=None, ge=0)
     target_weekly_minutes: int | None = Field(default=None, ge=0)
 
@@ -15,6 +16,8 @@ class SubjectUpdate(BaseModel):
     code: str | None = Field(default=None, max_length=32)
     name: str | None = Field(default=None, min_length=1, max_length=120)
     description: str | None = None
+    color_hex: str | None = Field(default=None, pattern=r"^#[0-9A-Fa-f]{6}$")
+    is_archived: bool | None = None
     target_total_minutes: int | None = Field(default=None, ge=0)
     target_weekly_minutes: int | None = Field(default=None, ge=0)
 
@@ -27,6 +30,10 @@ class SubjectOut(BaseModel):
     code: str | None
     name: str
     description: str | None
+    color_hex: str | None
+    is_archived: bool
+    archived_at: datetime | None
     target_total_minutes: int | None
     target_weekly_minutes: int | None
     created_at: datetime
+    updated_at: datetime

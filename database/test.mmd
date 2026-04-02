@@ -1,0 +1,51 @@
+erDiagram
+    USERS {
+        int id PK
+        string username UK
+        string hashed_password
+        datetime created_at
+    }
+
+    SUBJECTS {
+        int id PK
+        int user_id FK
+        string code
+        string name
+        text description
+        int target_total_minutes
+        int target_weekly_minutes
+        datetime created_at
+    }
+
+    TASKS {
+        int id PK
+        int user_id FK
+        int subject_id FK "nullable"
+        string title
+        text description
+        string status
+        string priority
+        int estimated_minutes
+        datetime completed_at "nullable"
+        datetime created_at
+    }
+
+    STUDY_SESSIONS {
+        int id PK
+        int user_id FK
+        int subject_id FK
+        int task_id FK "nullable"
+        datetime started_at
+        datetime ended_at "nullable"
+        int actual_focus_minutes "nullable"
+        datetime created_at
+    }
+
+    USERS ||--o{ SUBJECTS : owns
+    USERS ||--o{ TASKS : owns
+    USERS ||--o{ STUDY_SESSIONS : logs
+
+    SUBJECTS ||--o{ TASKS : contains
+    SUBJECTS ||--o{ STUDY_SESSIONS : tracked_in
+
+    TASKS ||--o{ STUDY_SESSIONS : linked_to
