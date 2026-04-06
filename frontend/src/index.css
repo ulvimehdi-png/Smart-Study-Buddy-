@@ -1,4 +1,40 @@
 @import "tailwindcss";
+
+/* Blob animation for background elements */
+@keyframes blob {
+  0%, 100% { 
+    transform: translate(0, 0) scale(1); 
+  }
+  33% { 
+    transform: translate(30px, -50px) scale(1.1); 
+  }
+  66% { 
+    transform: translate(-20px, 20px) scale(0.9); 
+  }
+}
+
+.animate-blob {
+  animation: blob 7s infinite;
+}
+
+.animation-delay-2000 {
+  animation-delay: 2s;
+}
+
+.animation-delay-4000 {
+  animation-delay: 4s;
+}
+
+/* Force amber color for toggle links */
+.amber-link {
+  color: #D97706 !important;
+}
+
+.amber-link:hover {
+  color: #B45309 !important;
+  text-decoration: underline !important;
+}
+
 :root {
   --text: #6b6375;
   --text-h: #08060d;
@@ -56,15 +92,13 @@ body {
 }
 
 #root {
-  width: 1126px;
-  max-width: 100%;
+  width: 100%;
   margin: 0 auto;
   text-align: center;
   border-inline: 1px solid var(--border);
   min-height: 100svh;
   display: flex;
   flex-direction: column;
-  box-sizing: border-box;
 }
 
 h1,

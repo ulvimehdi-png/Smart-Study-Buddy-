@@ -3,11 +3,17 @@ import { createRoot } from 'react-dom/client'
 import { BrowserRouter } from "react-router-dom";
 import './index.css'
 import App from './App.jsx'
+import { AuthProvider } from './lib/auth'
+import { TimerProvider } from './lib/useTimer.js';
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
+    <AuthProvider>
+      <TimerProvider>
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
+      </TimerProvider>
+    </AuthProvider>
   </StrictMode>,
 )

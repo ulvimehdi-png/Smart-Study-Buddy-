@@ -1,36 +1,66 @@
-import React from "react";
-import ReactDOM from "react-dom/client";
+import React, { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import Timer from "./Timer";
 import { PictureInPicture2 } from "lucide-react"
+import TimerButton from "./Button/TimerButton";
 
-export default function TimerPip({ defaultDuration = 60 }) {
+export default function TimerPip({className = ""}) {
+  const [pipWindow, setPipWindow] = useState(null);
+  const [pipContainer, setPipContainer] = useState(null);
+
+  useEffect(() => {
+    if (!pipWindow) {
+      return;
+    }
+
+    function handlePageHide() {
+      setPipContainer(null);
+      setPipWindow(null);
+    }
+
+    pipWindow.addEventListener("pagehide", handlePageHide);
+
+    return () => {
+      pipWindow.removeEventListener("pagehide", handlePageHide);
+    };
+  }, [pipWindow]);
 
   async function openPip() {
     try {
-      const dpip = await window.documentPictureInPicture.requestWindow({
-        width: 200,
-        height: 200,
+      if (pipWindow && !pipWindow.closed) {
+        pipWindow.focus();
+        return;
+      }
+
+      const nextPipWindow = await window.documentPictureInPicture.requestWindow({
+        width: 350,
+        height: 350,
       });
 
-      const pipDiv = dpip.document.createElement("div");
+      // 1. Inject Tailwind
+      const tw = nextPipWindow.document.createElement("script");
+      tw.src = "https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4";
+      nextPipWindow.document.head.appendChild(tw);
+
+      // 2. Inject Progressbar CSS (Required because the library is in a separate document)
+      const style = nextPipWindow.document.createElement("style");
+      style.textContent = `
+        .CircularProgressbar { width: 100%; vertical-align: middle; }
+        .CircularProgressbar-path { stroke: #be123c; stroke-linecap: round; }
+        .CircularProgressbar-trail { stroke: #f3f4f6; }
+      `;
+      nextPipWindow.document.head.appendChild(style);
+
+      const pipDiv = nextPipWindow.document.createElement("div");
       pipDiv.setAttribute("id", "pip-root");
-      dpip.document.body.append(pipDiv);
-      const pipRoot = ReactDOM.createRoot(
-        dpip.document.getElementById("pip-root")
-      );
-      
-      
-      pipRoot.render(
-        <Timer
-          isPiP
-          defaultDuration={defaultDuration}
-        />
-      );
+      nextPipWindow.document.body.append(pipDiv);
+      setPipWindow(nextPipWindow);
+      setPipContainer(pipDiv);
 
       // styles with tailwind
-      const script = dpip.document.createElement("script");
+      const script = nextPipWindow.document.createElement("script");
       script.src = "https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4";
-      dpip.document.head.appendChild(script);
+      nextPipWindow.document.head.appendChild(script);
 
     } catch (error) {
       console.error("Error opening PiP:", error);
@@ -38,9 +68,11 @@ export default function TimerPip({ defaultDuration = 60 }) {
   }
 
   return (
-    <PictureInPicture2
-      size={30}
-      className="text-gray-700 cursor-pointer"
-      onClick={() => openPip()} />
+    <>
+      <TimerButton isPiP={false} onClick={openPip} IconComp={PictureInPicture2} className={className}>
+        PiP
+      </TimerButton>
+      {pipContainer && createPortal(<Timer isPiP />, pipContainer)}
+    </>
   );
 }

@@ -2,6 +2,9 @@ import { Routes, Route } from "react-router-dom";
 import './App.css'
 import Home from '@/pages/Home'
 import Timer from '@/components/Timer'
+import ProtectedRoute from './pages/ProtectedRoute';
+import TimerPage from './pages/TimerPage';
+import Test from './pages/Test';
 
 
 function App() {
@@ -10,7 +13,16 @@ function App() {
     <>
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/timer" element={<Timer />} />
+        <Route path="/login" element={<Login />} />
+        <Route
+          path="/timer"
+          element={
+            <ProtectedRoute>
+              <TimerPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route path="/test" element={<Test />} />
       </Routes>
     </>
   )
