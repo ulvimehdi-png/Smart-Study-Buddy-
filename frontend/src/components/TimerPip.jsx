@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
 import Timer from "./Timer";
 import { PictureInPicture2 } from "lucide-react"
@@ -9,6 +9,11 @@ export default function TimerPip({className = ""}) {
   const [pipWindow, setPipWindow] = useState(null);
   const [pipContainer, setPipContainer] = useState(null);
   const { theme } = useTheme();
+
+  const isSupported = useMemo(
+    () => typeof window !== 'undefined' && 'documentPictureInPicture' in window,
+    []
+  );
 
   useEffect(() => {
     if (!pipWindow) {
@@ -87,7 +92,7 @@ export default function TimerPip({className = ""}) {
     }
   }
 
-  return (
+  return isSupported && (
     <>
       <TimerButton isPiP={false} onClick={openPip} IconComp={PictureInPicture2} className={className}>
         PiP

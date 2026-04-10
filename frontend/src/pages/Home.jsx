@@ -43,12 +43,12 @@ export default function Home() {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <section className="relative pt-24 pb-20 px-4 overflow-hidden h-dvh flex items-center">
+      <section className="relative pt-20 pb-20 px-4 min-h-dvh flex items-center">
         {/* Animated Background */}
         <AnimatedBlobs />
 
         <div className="max-w-7xl mx-auto">
-          <div className={`text-center transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+          <div className={`text-center transition-all duration-1000`}>
             <Badge icon={Sparkles} className="mb-6">
               Your Personal Learning Companion
             </Badge>

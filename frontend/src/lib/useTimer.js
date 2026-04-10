@@ -8,8 +8,8 @@ function durationToMs({ minutes, seconds }) {
 const reset = { minutes: 0, seconds: 0.5 };
 
 export function TimerProvider({ children }) {
-  const [work, setWork] = useState({ minutes: 0, seconds: 1 });
-  const [rest, setRest] = useState({ minutes: 0, seconds: 2 });
+  const [work, setWork] = useState({ minutes: 25, seconds: 0 });
+  const [rest, setRest] = useState({ minutes: 5, seconds: 0 });
 
   const [isPlaying, setIsPlaying] = useState(false);
   const [isResting, setIsResting] = useState(false);

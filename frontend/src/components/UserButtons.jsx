@@ -47,8 +47,6 @@ export default function UserButtons() {
       ) : (
         <>
           {/* Sign In Link */}
-
-          {/* Get Started Button */}
           <GradientButton to="/login" size="sm">
             Sign In
           </GradientButton>

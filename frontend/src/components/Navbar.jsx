@@ -58,10 +58,10 @@ export default function Navbar() {
   return (
     <nav
       className={cn(
-        'fixed top-0 left-0 right-0 z-50 transition-all duration-300',
+        'fixed top-0 left-0 right-0 z-50 transition-all duration-300 backdrop-blur-lg',
         isPlaying ? 'opacity-0 pointer-events-none' : 'opacity-100',
-        isScrolled
-          ? 'bg-bg-base/80 backdrop-blur-lg shadow-lg border-b border-base'
+        isScrolled || isMobileMenuOpen
+          ? 'bg-bg-base/80 shadow-lg border-b border-base'
           : 'bg-transparent'
       )}
     >
@@ -99,7 +99,7 @@ export default function Navbar() {
       {/* Mobile Menu */}
       {isMobileMenuOpen && (
         <div className="md:hidden bg-base border-t border-base shadow-xl animate-in fade-in slide-in-from-top-4 duration-200">
-          <div className="px-4 py-6 flex flex-col gap-4">
+          <div className="px-4 py-6 flex flex-col gap-4 text-center">
             {NAV_LINKS.map((link) => renderNavLink(link, true))}
             <div className="h-[1px] bg-border-base my-2" />
             <div className="flex justify-center">
