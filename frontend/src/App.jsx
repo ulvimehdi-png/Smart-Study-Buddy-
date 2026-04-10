@@ -4,6 +4,7 @@ import './App.css';
 import Home from '@/pages/Home';
 import Login from '@/pages/Login';
 import Timer from '@/components/Timer';
+import Tasks from '@/pages/Tasks';
 import Notes from '@/pages/Notes'; 
 import Dashboard from '@/pages/Dashboard'; // Make sure this points to your new dashboard file
 import ProtectedRoute from './pages/ProtectedRoute';
@@ -14,7 +15,7 @@ function App() {
       <Route path="/" element={<Home />} />
       <Route path="/login" element={<Login />} />
       
-      {/* These pages require the user to be logged in */}
+      <Route path="/tasks" element={<ProtectedRoute><Tasks /></ProtectedRoute>} />
       <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
       <Route path="/timer" element={<ProtectedRoute><Timer /></ProtectedRoute>} />
       <Route path="/notes" element={<ProtectedRoute><Notes /></ProtectedRoute>} /> 
