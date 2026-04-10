@@ -37,15 +37,15 @@ export default function Timer({ isPiP = false }) {
 
   return (
     <div className="flex flex-col items-center h-full justify-center" id="timer">
-      <div className={cn("relative flex justify-center items-center mt-2", isPiP ? "w-48 h-48" : "w-full h-full")} >
+      <div className={cn("relative flex flex-col md:flex-row justify-center items-center mt-2", isPiP ? "w-48 h-48" : "w-full h-full")} >
         
         <CircularProgressbarWithChildren
           value={!isResetting ? 100 - percentage : percentage}
           counterClockwise={false}
           strokeWidth={isPiP ? 4 : 4}
           styles={buildStyles({
-            pathColor: isResting ? '#fca5a5' : '#be123c', 
-            trailColor: '#f3f4f6',
+            pathColor: isResting ? 'var(--color-timer-rest)' : 'var(--color-timer-work)',
+            trailColor: 'var(--color-timer-trail)',
             pathTransition: 'none', // Critical for 60fps fluidity
           })}
         >
@@ -55,27 +55,31 @@ export default function Timer({ isPiP = false }) {
           onClick={() => setIsPlaying((current) => isResetting ? current : !current)}
         >
           <div className="flex flex-col items-center justify-center absolute w-full h-full transition-all duration-200 group-hover:opacity-20">
-            <span className={cn("font-mono text-gray-700", isPiP ? "text-xl" : "text-2xl")}>
+            <span className={cn("font-mono text-text-main", isPiP ? "text-xl" : "text-2xl")}>
               {displayTime}
             </span>
             {isPlaying && (
-              <span className="absolute top-3/4 flex items-center gap-1 text-gray-500 text-sm mt-2">
+              <span className="absolute top-3/4 flex items-center gap-1 text-text-secondary text-sm mt-2">
                 <BellRing size={14} /> { endTime }
               </span>
             )}
           </div>
           
           <div className="absolute opacity-0 group-hover:opacity-100 transition-opacity">
-            {isPlaying ? <Pause size={isPiP ? 30 : 60} className="fill-gray-700 text-gray-700"/> : <Play size={isPiP ? 30 : 60} className="fill-gray-700 text-gray-700" />}
+            {isPlaying ? <Pause size={isPiP ? 30 : 60} className="fill-text-secondary text-text-secondary"/> : <Play size={isPiP ? 30 : 60} className="fill-text-main text-text-main" />}
           </div>
 
         </div>
         </CircularProgressbarWithChildren>
 
+        <AnimatePresence mode="wait" initial={false}>
+          {!isPlaying && !isPiP && <TimerDurationInputs />}
+        </AnimatePresence>
+        
       </div>
 
       <AnimatePresence mode="wait" initial={false}>
-        <div className={cn("flex gap-2 transition-all duration-300", isPiP ? "m-2" : "m-4")}>
+        <div className={cn("flex flex-col sm:flex-row gap-2 transition-all duration-300", isPiP ? "flex-row! m-2" : "m-8")}>
           <TimerButton isPiP={isPiP} onClick={() => setIsPlaying((current) => isResetting ? current : !current)} IconComp={isPlaying ? Pause : Play}>
             {isPlaying ? "Pause" : "Start"}
           </TimerButton>

@@ -1,20 +1,16 @@
 import React from 'react';
-import { motion as Motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 
 export default function TimerButton({ isPiP, onClick, IconComp, children, className = "" }) {
 
   return (
-    <Motion.button
-      key="skip-button"
-      initial={{ opacity: 0, scale: 0.7, height: 0, y: -8 }}
-      animate={{ opacity: 1, scale: 1, height: 'auto', y: 0 }}
-      exit={{ opacity: 0, scale: 0.7, height: 0, y: -8 }}
-      transition={{ duration: 0.5, ease: 'easeInOut' }}
-      className={cn("flex items-center gap-2 px-4 py-2 rounded-full",
-                    "bg-gray-100 hover:bg-gray-100",
+    <button
+      className={cn("flex items-center gap-2 rounded-full",
+                    "px-5 py-3",
+                    "text-text-main items-center justify-center",
+                    "bg-text-main/7 hover:bg-text-main/10",
                     "hover:-translate-y-0.5 active:translate-y-0.5",
-                    "shadow-sm hover:shadow-md active:shadow-sm active:inset-shadow-sm/10 inset-shadow-white",
+                    "hover:shadow-lg active:shadow-none active:inset-shadow-sm inset-shadow-text-main/20",
                     "transition-all duration-100", className)}
       onClick={onClick}
       >
@@ -23,9 +19,9 @@ export default function TimerButton({ isPiP, onClick, IconComp, children, classN
         className="cursor-pointer"
       />
       {!isPiP && 
-      <span className="text-sm font-medium">
+      <span>
         {children}
       </span>}
-    </Motion.button>
+    </button>
   );
 }

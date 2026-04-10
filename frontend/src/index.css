@@ -43,6 +43,11 @@
 
   --badge-text: theme('colors.amber.600');
 
+  /* Timer Colors */
+  /* isResting? '#fca5a5' : '#be123c',  */
+  --color-timer-work: theme('colors.rose.700');
+  --color-timer-rest: theme('colors.red.300');
+
   /* Typography Defaults */
   --font-sans: system-ui, 'Segoe UI', Roboto, sans-serif;
 }
@@ -68,6 +73,9 @@
   /* Component Specific */
   --input-bg: theme('colors.gray.800');
   --blob-opacity: 0.15;
+
+  --color-timer-work: theme('colors.cyan.500');
+  --color-timer-rest: theme('colors.red.500');
 
   --badge-text: theme('colors.amber.400');
 }
@@ -99,6 +107,11 @@
   --color-border-base: var(--border-base);
 
   --color-badge-text: var(--badge-text);
+
+  /* Timer Colors */
+  --color-timer-work: var(--color-timer-work);
+  --color-timer-rest: var(--color-timer-rest);
+  --color-timer-trail: var(--color-border-base);
 }
 
 /* 4. Base Styles & Global Settings */

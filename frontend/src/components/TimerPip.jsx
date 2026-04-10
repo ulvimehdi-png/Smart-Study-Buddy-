@@ -3,10 +3,25 @@ import { createPortal } from "react-dom";
 import Timer from "./Timer";
 import { PictureInPicture2 } from "lucide-react"
 import TimerButton from "./Button/TimerButton";
+import { useTheme } from "@/lib/useTheme";
 
 export default function TimerPip({className = ""}) {
   const [pipWindow, setPipWindow] = useState(null);
   const [pipContainer, setPipContainer] = useState(null);
+  const { theme } = useTheme();
+
+  useEffect(() => {
+    if (!pipWindow) {
+      return;
+    }
+
+    if (theme === "dark") {
+      pipWindow.document.documentElement.classList.add("dark");
+    } else {
+      pipWindow.document.documentElement.classList.remove("dark");
+    }
+    
+  }, [theme, pipWindow]);
 
   useEffect(() => {
     if (!pipWindow) {
@@ -51,6 +66,28 @@ export default function TimerPip({className = ""}) {
       `;
       nextPipWindow.document.head.appendChild(style);
 
+      // https://dev.to/keni_97e44d198c12a5/how-i-implemented-picture-in-picture-in-react-with-full-code-tips-2aj3
+      const target = nextPipWindow.document;
+      Array.from(document.styleSheets).forEach((styleSheet) => {
+        try {
+          const rules = styleSheet.cssRules;
+          const style = target.createElement('style');
+          style.textContent = Array.from(rules)
+            .map((rule) => rule.cssText)
+            .join('\n');
+          target.head.appendChild(style);
+        } catch (error) {
+          const ownerNode = styleSheet.ownerNode;
+          if (ownerNode?.tagName === 'LINK' && ownerNode.href) {
+            const link = target.createElement('link');
+            link.rel = 'stylesheet';
+            link.href = ownerNode.href;
+            target.head.appendChild(link);
+          }
+        }
+      });
+
+      // 3. Create a container for our React tree
       const pipDiv = nextPipWindow.document.createElement("div");
       pipDiv.setAttribute("id", "pip-root");
       nextPipWindow.document.body.append(pipDiv);

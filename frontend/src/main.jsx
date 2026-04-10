@@ -5,14 +5,17 @@ import './index.css'
 import App from './App.jsx'
 import { AuthProvider } from './lib/auth'
 import { TimerProvider } from './lib/useTimer.js';
+import { ThemeProvider } from './lib/useTheme.js';
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <AuthProvider>
       <TimerProvider>
-        <BrowserRouter>
-          <App />
-        </BrowserRouter>
+        <ThemeProvider>
+          <BrowserRouter>
+            <App />
+          </BrowserRouter>
+        </ThemeProvider>
       </TimerProvider>
     </AuthProvider>
   </StrictMode>,

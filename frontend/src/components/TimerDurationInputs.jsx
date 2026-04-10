@@ -33,7 +33,7 @@ export default function TimerDurationInputs({ isPiP = false }) {
     }
   }
 
-  const inputClass = "border rounded px-2 py-1 w-16 bg-white text-gray-800 focus:ring-2 focus:ring-amber-400 focus:border-black/30 outline-none transition-all";
+  const inputClass = "border rounded px-2 py-1 w-16 bg-bg-elevated text-text-main focus:ring-2 focus:ring-primary-light outline-none transition-all";
 
   return (
     <Motion.div
@@ -42,13 +42,13 @@ export default function TimerDurationInputs({ isPiP = false }) {
       animate={{ opacity: 1, scale: 1, width: 'auto', x: 0 }}
       exit={{ opacity: 0, scale: 0.3, width: 0, x: -80 }}
       transition={{ duration: 0.25, ease: 'easeInOut' }}
-      className={cn("overflow-hidden mt-4")}
+      className={cn("overflow-hidden mt-4 md:ml-4")}
     >
-      <div className="flex flex-col items-end gap-3 py-2 text-sm text-gray-600">
+      <div className="flex flex-col items-end gap-3 py-2 text-text-main">
         {/* Work Duration Row */}
         <div className="flex items-center gap-4">
           <div className="gap-1 flex items-center">
-            <label className="font-bold text-gray-700">Work:</label>
+            <label className="font-bold">Work:</label>
             <input
               id="duration-minutes"
               type="number"
@@ -73,7 +73,7 @@ export default function TimerDurationInputs({ isPiP = false }) {
         {/* Rest Duration Row */}
         <div className="flex items-center gap-4">
           <div className="gap-1 flex items-center">
-            <label className="font-bold text-gray-700">Rest:</label>
+            <label className="font-bold">Rest:</label>
             <input
               id="rest-minutes"
               type="number"
