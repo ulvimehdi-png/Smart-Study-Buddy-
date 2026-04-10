@@ -14,6 +14,10 @@
   --color-primary: theme('colors.amber.500');
   --color-primary-light: theme('colors.amber.400');
   --color-primary-dark: theme('colors.amber.600');
+
+  --color-secondary: theme('colors.yellow.500');
+  --color-secondary-light: theme('colors.yellow.400');
+  --color-secondary-dark: theme('colors.yellow.600');
   
   --color-accent: theme('colors.orange.600');
   --color-accent-light: theme('colors.orange.500');
@@ -86,6 +90,10 @@
   --color-primary: var(--color-primary);
   --color-primary-light: var(--color-primary-light);
   --color-primary-dark: var(--color-primary-dark);
+
+  --color-secondary: var(--color-secondary);
+  --color-secondary-light: var(--color-secondary-light);
+  --color-secondary-dark: var(--color-secondary-dark);
   
   --color-accent: var(--color-accent);
   --color-accent-light: var(--color-accent-light);
@@ -124,8 +132,6 @@
     background-color: var(--bg-base);
     color: var(--text-main);
     font-family: var(--font-sans);
-    font-size: 18px;
-    line-height: 1.45;
     -webkit-font-smoothing: antialiased;
   }
 

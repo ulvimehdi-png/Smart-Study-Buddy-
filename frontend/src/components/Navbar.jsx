@@ -34,7 +34,7 @@ export default function Navbar() {
       isMobile ? 'block px-3 py-2 rounded-lg' : '',
       isActive(path) 
         ? 'text-primary' // Use our brand primary color
-        : 'text-secondary hover:text-accent-light' // Switches from gray-600 to amber automatically
+        : 'text-text-secondary hover:text-accent dark:hover:text-accent-light'
     );
   };
 

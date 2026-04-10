@@ -66,7 +66,7 @@ export default function Timer({ isPiP = false }) {
           </div>
           
           <div className="absolute opacity-0 group-hover:opacity-100 transition-opacity">
-            {isPlaying ? <Pause size={isPiP ? 30 : 60} className="fill-text-secondary text-text-secondary"/> : <Play size={isPiP ? 30 : 60} className="fill-text-main text-text-main" />}
+            {isPlaying ? <Pause strokeWidth={1} size={isPiP ? 40 : 60} className="-stroke-3 fill-text-secondary text-text-secondary"/> : <Play size={isPiP ? 40 : 60} className="fill-text-secondary text-text-secondary" />}
           </div>
 
         </div>

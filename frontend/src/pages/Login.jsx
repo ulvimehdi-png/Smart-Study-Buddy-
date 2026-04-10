@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from '../lib/auth';
 import { BookOpen, Brain, Sparkles } from 'lucide-react';
-import { AnimatedBlobs, Logo } from '../components/shared';
+import { AnimatedBlobs, GradientButton, Logo } from '../components/shared';
 
 export default function Login() {
   const navigate = useNavigate();
@@ -45,15 +45,13 @@ export default function Login() {
   };
 
   return (
-    <div className="relative min-h-screen w-full flex items-center justify-center bg-gradient-hero dark:bg-gradient-to-br dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 p-4 pt-20">
+    <div className="relative min-h-screen w-full flex items-center justify-center p-4 pt-20">
       {/* Floating Background Elements */}
       <AnimatedBlobs />
 
       {/* Main Card */}
-      <div className="relative w-full max-w-md">
-        <div className="absolute inset-0 bg-gradient-primary rounded-3xl blur-2xl opacity-20"></div>
-        
-        <div className="relative bg-white/80 dark:bg-gray-800/90 backdrop-blur-xl rounded-3xl shadow-2xl p-8 border border-white/20 dark:border-gray-700/50">
+
+        <div className="w-md bg-bg-card rounded-3xl shadow-2xl p-8 border">
           {/* Logo & Header */}
           <div className="text-center mb-8">
             <div className="flex justify-center mb-4">
@@ -67,17 +65,17 @@ export default function Login() {
 
           {/* Features Icons */}
           <div className="grid grid-cols-3 gap-3 mb-6">
-            <div className="flex flex-col items-center p-3 bg-gradient-to-br from-yellow-50 to-yellow-100 dark:from-yellow-900/20 dark:to-yellow-800/20 rounded-xl">
-              <BookOpen className="w-5 h-5 text-yellow-600 dark:text-yellow-400 mb-1" />
-              <span className="text-xs text-yellow-700 dark:text-yellow-300 font-medium">Study</span>
+            <div className="flex flex-col items-center p-3 bg-secondary/15 rounded-xl">
+              <BookOpen className="w-5 h-5 text-secondary-dark dark:text-secondary-light mb-1" />
+              <span className="text-xs text-secondary-dark dark:text-secondary-light font-medium">Study</span>
             </div>
-            <div className="flex flex-col items-center p-3 bg-gradient-to-br from-amber-50 to-amber-100 dark:from-amber-900/20 dark:to-amber-800/20 rounded-xl">
-              <Brain className="w-5 h-5 text-amber-600 dark:text-amber-400 mb-1" />
-              <span className="text-xs text-amber-700 dark:text-amber-300 font-medium">Focus</span>
+            <div className="flex flex-col items-center p-3 bg-primary/15 rounded-xl">
+              <Brain className="w-5 h-5 text-primary-dark dark:text-primary-light mb-1" />
+              <span className="text-xs text-primary-dark dark:text-primary-light font-medium">Focus</span>
             </div>
-            <div className="flex flex-col items-center p-3 bg-gradient-to-br from-orange-50 to-orange-100 dark:from-orange-900/20 dark:to-orange-800/20 rounded-xl">
-              <Sparkles className="w-5 h-5 text-orange-600 dark:text-orange-400 mb-1" />
-              <span className="text-xs text-orange-700 dark:text-orange-300 font-medium">Excel</span>
+            <div className="flex flex-col items-center p-3 bg-accent/15 rounded-xl">
+              <Sparkles className="w-5 h-5 text-accent-dark dark:text-accent-light mb-1" />
+              <span className="text-xs text-accent-dark dark:text-accent-light font-medium">Excel</span>
             </div>
           </div>
 
@@ -95,10 +93,12 @@ export default function Login() {
           {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="text-center mb-6">
-              <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-100">
-                {currentView === 'register' ? 'Create Account' : 'Welcome Back'}
+              <h2 className="text-2xl font-bold">
+                {currentView === 'register'
+                  ? 'Create Account'
+                  : 'Welcome Back'}
               </h2>
-              <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+              <p className="text-sm text-text-secondary mt-1">
                 {currentView === 'register' 
                   ? 'Join thousands of successful students' 
                   : 'Continue your learning journey'}
@@ -129,10 +129,10 @@ export default function Login() {
               </div>
             </div>
 
-            <button 
+            <GradientButton 
               type="submit" 
               disabled={auth.loading}
-              className="w-full py-3 bg-gradient-primary-extended text-white font-semibold rounded-xl hover:shadow-lg hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+              className="w-full rounded-xl hover:shadow-lg hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
             >
               {auth.loading ? (
                 <span className="flex items-center justify-center">
@@ -145,7 +145,7 @@ export default function Login() {
               ) : (
                 currentView === 'register' ? 'Create Account' : 'Sign In'
               )}
-            </button>
+            </GradientButton>
 
             <div className="text-center mt-6">
               <button
@@ -154,7 +154,7 @@ export default function Login() {
                   setMessage('');
                   setCurrentView(currentView === 'register' ? 'login' : 'register');
                 }}
-                className="amber-link text-sm font-medium transition-colors"
+                className="text-text-secondary hover:text-accent cursor-pointer text-sm font-medium transition-all"
               >
                 {currentView === 'register' 
                   ? 'Already have an account? Sign in' 
@@ -171,6 +171,6 @@ export default function Login() {
           </div>
         </div>
       </div>
-    </div>
+
   );
 }

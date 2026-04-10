@@ -26,7 +26,7 @@ export default function GradientButton({
   };
 
   const baseClasses = cn(
-    'inline-flex items-center justify-center font-bold rounded-full transition-all duration-300 hover:scale-105',
+    'inline-flex items-center justify-center font-bold rounded-full cursor-pointer transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:hover:shadow-none disabled:cursor-not-allowed disabled:hover:scale-100',
     variants[variant],
     sizes[size],
     className
