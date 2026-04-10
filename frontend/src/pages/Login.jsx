@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from '../lib/auth';
-import { BookOpen, GraduationCap, Brain, Sparkles } from 'lucide-react';
-import Navbar from '../components/Navbar';
+import { BookOpen, Brain, Sparkles } from 'lucide-react';
+import { AnimatedBlobs, Logo } from '../components/shared';
 
 export default function Login() {
   const navigate = useNavigate();
@@ -45,45 +45,39 @@ export default function Login() {
   };
 
   return (
-    <>
-      <Navbar />
-      <div className="min-h-screen w-full flex items-center justify-center bg-linear-to-br from-amber-50 via-yellow-50 to-orange-50 p-4 pt-20">
+    <div className="relative min-h-screen w-full flex items-center justify-center bg-gradient-hero dark:bg-gradient-to-br dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 p-4 pt-20">
       {/* Floating Background Elements */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-20 left-10 w-72 h-72 bg-yellow-300 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-blob"></div>
-        <div className="absolute top-40 right-10 w-72 h-72 bg-amber-300 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-blob animation-delay-2000"></div>
-        <div className="absolute -bottom-8 left-20 w-72 h-72 bg-orange-300 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-blob animation-delay-4000"></div>
-      </div>
+      <AnimatedBlobs />
 
       {/* Main Card */}
       <div className="relative w-full max-w-md">
-        <div className="absolute inset-0 bg-linear-to-r from-yellow-400 via-amber-400 to-orange-400 rounded-3xl blur-2xl opacity-20"></div>
+        <div className="absolute inset-0 bg-gradient-primary rounded-3xl blur-2xl opacity-20"></div>
         
-        <div className="relative bg-white/80 backdrop-blur-xl rounded-3xl shadow-2xl p-8 border border-white/20">
+        <div className="relative bg-white/80 dark:bg-gray-800/90 backdrop-blur-xl rounded-3xl shadow-2xl p-8 border border-white/20 dark:border-gray-700/50">
           {/* Logo & Header */}
           <div className="text-center mb-8">
-            <div className="inline-flex items-center justify-center w-20 h-20 bg-linear-to-br from-yellow-400 to-amber-500 rounded-2xl mb-4 shadow-lg">
-              <GraduationCap className="w-10 h-10 text-white" />
+            <div className="flex justify-center mb-4">
+              <Logo size="lg" showText={false} />
             </div>
-            <h1 className="text-4xl font-bold bg-linear-to-r from-yellow-600 via-amber-600 to-orange-600 bg-clip-text text-transparent mb-2">
+            <h1 className="text-4xl font-bold text-gradient-primary mb-2">
               StudyBuddy
             </h1>
-            <p className="text-gray-600 text-sm">Your personal learning companion</p>
+            <p className="text-gray-600 dark:text-gray-400 text-sm">Your personal learning companion</p>
           </div>
 
           {/* Features Icons */}
           <div className="grid grid-cols-3 gap-3 mb-6">
-            <div className="flex flex-col items-center p-3 bg-linear-to-br from-yellow-50 to-yellow-100 rounded-xl">
-              <BookOpen className="w-5 h-5 text-yellow-600 mb-1" />
-              <span className="text-xs text-yellow-700 font-medium">Study</span>
+            <div className="flex flex-col items-center p-3 bg-gradient-to-br from-yellow-50 to-yellow-100 dark:from-yellow-900/20 dark:to-yellow-800/20 rounded-xl">
+              <BookOpen className="w-5 h-5 text-yellow-600 dark:text-yellow-400 mb-1" />
+              <span className="text-xs text-yellow-700 dark:text-yellow-300 font-medium">Study</span>
             </div>
-            <div className="flex flex-col items-center p-3 bg-linear-to-br from-amber-50 to-amber-100 rounded-xl">
-              <Brain className="w-5 h-5 text-amber-600 mb-1" />
-              <span className="text-xs text-amber-700 font-medium">Focus</span>
+            <div className="flex flex-col items-center p-3 bg-gradient-to-br from-amber-50 to-amber-100 dark:from-amber-900/20 dark:to-amber-800/20 rounded-xl">
+              <Brain className="w-5 h-5 text-amber-600 dark:text-amber-400 mb-1" />
+              <span className="text-xs text-amber-700 dark:text-amber-300 font-medium">Focus</span>
             </div>
-            <div className="flex flex-col items-center p-3 bg-linear-to-br from-orange-50 to-orange-100 rounded-xl">
-              <Sparkles className="w-5 h-5 text-orange-600 mb-1" />
-              <span className="text-xs text-orange-700 font-medium">Excel</span>
+            <div className="flex flex-col items-center p-3 bg-gradient-to-br from-orange-50 to-orange-100 dark:from-orange-900/20 dark:to-orange-800/20 rounded-xl">
+              <Sparkles className="w-5 h-5 text-orange-600 dark:text-orange-400 mb-1" />
+              <span className="text-xs text-orange-700 dark:text-orange-300 font-medium">Excel</span>
             </div>
           </div>
 
@@ -101,10 +95,10 @@ export default function Login() {
           {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="text-center mb-6">
-              <h2 className="text-2xl font-bold text-gray-800">
+              <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-100">
                 {currentView === 'register' ? 'Create Account' : 'Welcome Back'}
               </h2>
-              <p className="text-sm text-gray-500 mt-1">
+              <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
                 {currentView === 'register' 
                   ? 'Join thousands of successful students' 
                   : 'Continue your learning journey'}
@@ -119,7 +113,7 @@ export default function Login() {
                   value={username} 
                   onChange={e => setUsername(e.target.value)} 
                   required
-                  className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent transition-all duration-200 placeholder-gray-400"
+                  className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent transition-all duration-200 placeholder-gray-400 dark:placeholder-gray-500 text-gray-900 dark:text-gray-100"
                 />
               </div>
 
@@ -130,7 +124,7 @@ export default function Login() {
                   value={password} 
                   onChange={e => setPassword(e.target.value)} 
                   required
-                  className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent transition-all duration-200 placeholder-gray-400"
+                  className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent transition-all duration-200 placeholder-gray-400 dark:placeholder-gray-500 text-gray-900 dark:text-gray-100"
                 />
               </div>
             </div>
@@ -138,7 +132,7 @@ export default function Login() {
             <button 
               type="submit" 
               disabled={auth.loading}
-              className="w-full py-3 bg-linear-to-r from-yellow-400 via-amber-500 to-orange-500 text-white font-semibold rounded-xl hover:shadow-lg hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+              className="w-full py-3 bg-gradient-primary-extended text-white font-semibold rounded-xl hover:shadow-lg hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
             >
               {auth.loading ? (
                 <span className="flex items-center justify-center">
@@ -170,14 +164,13 @@ export default function Login() {
           </form>
 
           {/* Footer */}
-          <div className="mt-8 pt-6 border-t border-gray-200 text-center">
-            <p className="text-xs text-gray-500">
+          <div className="mt-8 pt-6 border-t border-gray-200 dark:border-gray-700 text-center">
+            <p className="text-xs text-gray-500 dark:text-gray-400">
               Empowering students to achieve their academic goals 🎓
             </p>
           </div>
         </div>
       </div>
     </div>
-    </>
   );
 }

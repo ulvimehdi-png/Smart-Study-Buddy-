@@ -1,98 +1,176 @@
 @import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
 
-/* Blob animation for background elements */
-@keyframes blob {
-  0%, 100% { 
-    transform: translate(0, 0) scale(1); 
-  }
-  33% { 
-    transform: translate(30px, -50px) scale(1.1); 
-  }
-  66% { 
-    transform: translate(-20px, 20px) scale(0.9); 
-  }
-}
+/* ============================================
+   CSS Variables - Light & Dark Mode
+   ============================================ */
 
-.animate-blob {
-  animation: blob 7s infinite;
-}
+/* 1. Define the Dark Mode variant */
+@custom-variant dark (&:where(.dark, .dark *));
 
-.animation-delay-2000 {
-  animation-delay: 2s;
-}
-
-.animation-delay-4000 {
-  animation-delay: 4s;
-}
-
-/* Force amber color for toggle links */
-.amber-link {
-  color: #D97706 !important;
-}
-
-.amber-link:hover {
-  color: #B45309 !important;
-  text-decoration: underline !important;
-}
-
+/* 2. CSS Variable Logic (The "Brain") */
 :root {
-  --text: #6b6375;
-  --text-h: #08060d;
-  --bg: #fff;
-  --border: #e5e4e7;
-  --code-bg: #f4f3ec;
-  --accent: #aa3bff;
-  --accent-bg: rgba(170, 59, 255, 0.1);
-  --accent-border: rgba(170, 59, 255, 0.5);
-  --social-bg: rgba(244, 243, 236, 0.5);
-  --shadow:
-    rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
+  /* Brand - Amber/Orange */
+  --color-primary: theme('colors.amber.500');
+  --color-primary-light: theme('colors.amber.400');
+  --color-primary-dark: theme('colors.amber.600');
+  
+  --color-accent: theme('colors.orange.600');
+  --color-accent-light: theme('colors.orange.500');
+  --color-accent-dark: theme('colors.orange.700');
 
-  --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --mono: ui-monospace, Consolas, monospace;
+  --color-danger: theme('colors.red.600');
+  --bg-danger-subtle: theme('colors.red.50');
 
-  font: 18px/145% var(--sans);
-  letter-spacing: 0.18px;
-  color-scheme: light dark;
-  color: var(--text);
-  background: var(--bg);
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  /* UI Surface Colors */
+  --bg-base: theme('colors.white');
+  --bg-elevated: theme('colors.gray.50');
+  --bg-card: theme('colors.white');
+  --brand-subtle: theme('colors.amber.50');
+  
+  /* Text Colors */
+  --text-main: theme('colors.gray.900');
+  --text-secondary: theme('colors.gray.600');
+  --text-muted: theme('colors.gray.500');
+  
+  /* Borders */
+  --border-base: theme('colors.gray.200');
+  --border-light: theme('colors.gray.100');
+
+  /* Component Specific */
+  --input-bg: theme('colors.gray.50');
+  --blob-opacity: 0.3;
+
+  --badge-text: theme('colors.amber.600');
+
+  /* Typography Defaults */
+  --font-sans: system-ui, 'Segoe UI', Roboto, sans-serif;
+}
+
+.dark {
+  /* UI Surface Colors - Dark Mode Overrides */
+  --bg-base: theme('colors.gray.900');
+  --bg-elevated: theme('colors.gray.800');
+  --bg-card: theme('colors.gray.800');
+
+  --color-danger: theme('colors.red.400');
+  --bg-danger-subtle: rgba(239, 68, 68, 0.1);
+  
+  /* Text Colors - Dark Mode Overrides */
+  --text-main: theme('colors.gray.100');
+  --text-secondary: theme('colors.gray.400');
+  --text-muted: theme('colors.gray.500');
+  
+  /* Borders - Dark Mode Overrides */
+  --border-base: theme('colors.gray.700');
+  --border-light: theme('colors.gray.800');
+
+  /* Component Specific */
+  --input-bg: theme('colors.gray.800');
+  --blob-opacity: 0.15;
+
+  --badge-text: theme('colors.amber.400');
+}
+
+/* 3. Tailwind Theme Mapping (The "API") */
+@theme {
+  /* Mapping brand colors so you can use bg-primary, text-primary, etc. */
+  --color-primary: var(--color-primary);
+  --color-primary-light: var(--color-primary-light);
+  --color-primary-dark: var(--color-primary-dark);
+  
+  --color-accent: var(--color-accent);
+  --color-accent-light: var(--color-accent-light);
+  --color-accent-dark: var(--color-accent-dark);
+
+  --color-brand-subtle: var(--brand-subtle);
+
+  --color-danger: var(--color-danger);
+  --color-danger-subtle: var(--bg-danger-subtle);
+
+  /* Mapping UI colors so you can use bg-base, text-main, border-base */
+  --color-bg-base: var(--bg-base);
+  --color-bg-elevated: var(--bg-elevated);
+  
+  --color-text-main: var(--text-main);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-muted: var(--text-muted);
+
+  --color-border-base: var(--border-base);
+
+  --color-badge-text: var(--badge-text);
+}
+
+/* 4. Base Styles & Global Settings */
+@layer base {
+  * {
+    @apply border-border-base;
+  }
+  
+  body {
+    background-color: var(--bg-base);
+    color: var(--text-main);
+    font-family: var(--font-sans);
+    font-size: 18px;
+    line-height: 1.45;
+    -webkit-font-smoothing: antialiased;
+  }
 
   @media (max-width: 1024px) {
-    font-size: 16px;
+    body { font-size: 16px; }
   }
 }
 
-/* @media (prefers-color-scheme: dark) {
-  :root {
-    --text: #9ca3af;
-    --text-h: #f3f4f6;
-    --bg: #16171d;
-    --border: #2e303a;
-    --code-bg: #1f2028;
-    --accent: #c084fc;
-    --accent-bg: rgba(192, 132, 252, 0.15);
-    --accent-border: rgba(192, 132, 252, 0.5);
-    --social-bg: rgba(47, 48, 58, 0.5);
-    --shadow:
-      rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
+/* 5. Custom Utilities & Animations */
+@layer utilities {
+  .bg-gradient-primary {
+    background: linear-gradient(to right, var(--color-primary-light), var(--color-primary));
   }
 
-  #social .button-icon {
-    filter: invert(1) brightness(2);
+  .bg-gradient-primary-accent {
+    background: linear-gradient(to right, var(--color-primary-light), var(--color-accent));
   }
-} */
 
-#root {
-  width: 100%;
-  margin: 0 auto;
-  text-align: center;
-  border-inline: 1px solid var(--border);
-  min-height: 100svh;
-  display: flex;
-  flex-direction: column;
+  .bg-gradient-cta {
+    background: linear-gradient(to bottom right, var(--color-amber-500), var(--color-orange-500), var(--color-red-500));
+  }
+
+  .bg-bg-card {
+    /* bg-linear-to-br from-gray-50 to-bg-base dark:from-gray-800 */
+    background: linear-gradient(to bottom right, var(--bg-elevated), var(--bg-base));
+  }
+
+  /* change classes to text-gradient (only clip & transparent) and bg-gradient-... */
+  .text-gradient-primary {
+    background: linear-gradient(to right, var(--color-primary), var(--color-accent));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .text-gradient-accent {
+    background: linear-gradient(to right, var(--color-accent-light), var(--color-accent));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .text-gradient-primary-accent {
+    background: linear-gradient(to right, var(--color-primary-light), var(--color-accent));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+
+  .animate-blob {
+    animation: blob 7s infinite;
+    opacity: var(--blob-opacity);
+  }
+}
+
+@keyframes blob {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(30px, -50px) scale(1.1); }
+  66% { transform: translate(-20px, 20px) scale(0.9); }
 }

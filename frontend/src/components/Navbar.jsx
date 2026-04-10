@@ -1,206 +1,109 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { GraduationCap, Menu, X, User, LogOut } from 'lucide-react';
+import { Menu, X } from 'lucide-react'; // Removed unused User, LogOut
 import { useAuth } from '../lib/auth';
 import { cn } from '@/lib/utils';
 import { useTimer } from '../lib/useTimer';
+import { Logo, ThemeToggle } from './shared'; // Removed unused GradientButton
+import UserButtons from './UserButtons';
+
+const NAV_LINKS = [
+  { name: 'Home', path: '/', needsAuth: false, isRoute: true },
+  { name: 'Features', path: '/#features', needsAuth: false, isRoute: true },
+  { name: 'Timer', path: '/timer', needsAuth: true, isRoute: true },
+];
 
 export default function Navbar() {
   const { isPlaying } = useTimer();
-
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const navigate = useNavigate();
   const location = useLocation();
   const auth = useAuth();
-  
 
   useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
-    };
+    const handleScroll = () => setIsScrolled(window.scrollY > 10);
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const handleLogout = () => {
-    auth.logout();
-    navigate('/');
+  const isActive = (path) => location.pathname === path;
+
+  const getLinkClassName = (path, isMobile = true) => {
+    return cn(
+      'text-sm font-medium transition-colors duration-200',
+      isMobile ? 'block px-3 py-2 rounded-lg' : '',
+      isActive(path) 
+        ? 'text-primary' // Use our brand primary color
+        : 'text-secondary hover:text-accent-light' // Switches from gray-600 to amber automatically
+    );
   };
 
-  const isActive = (path) => location.pathname === path;
+  const renderNavLink = ({ name, path, needsAuth, isRoute }, isMobile = false) => {
+    if (needsAuth && !auth.user) return null;
+    
+    const className = getLinkClassName(path, isMobile);
+    const onClick = isMobile ? () => setIsMobileMenuOpen(false) : undefined;
+
+    return isRoute ? (
+      <Link key={name} to={path} onClick={onClick} className={className}>
+        {name}
+      </Link>
+    ) : (
+      <a key={name} href={path} onClick={onClick} className={className}>
+        {name}
+      </a>
+    );
+  };
 
   return (
     <nav
-      className={cn('fixed top-0 left-0 right-0 z-50 transition-all duration-300', {
-        'bg-white/95 backdrop-blur-lg shadow-lg': isScrolled,
-        'bg-white/80 backdrop-blur-sm': !isScrolled,
-        'opacity-0': isPlaying, // Hide navbar when timer is active
-      })}
+      className={cn(
+        'fixed top-0 left-0 right-0 z-50 transition-all duration-300',
+        isPlaying ? 'opacity-0 pointer-events-none' : 'opacity-100',
+        isScrolled
+          ? 'bg-bg-base/80 backdrop-blur-lg shadow-lg border-b border-base'
+          : 'bg-transparent'
+      )}
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
-          {/* Logo */}
-          <Link to="/" className="flex items-center space-x-2 group">
-            <div className="w-10 h-10 bg-linear-to-br from-yellow-400 to-amber-500 rounded-xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
-              <GraduationCap className="w-6 h-6 text-white" />
-            </div>
-            <span className="text-xl font-bold bg-linear-to-r from-yellow-600 to-amber-600 bg-clip-text text-transparent">
-              StudyBuddy
-            </span>
-          </Link>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center h-16">
+        {/* Logo */}
+        <Link to="/" className="flex items-center">
+          <Logo size="md" className="transition-transform hover:scale-105" />
+        </Link>
 
-          {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-8">
-            <Link
-              to="/"
-              className={cn('text-sm font-medium transition-colors', 
-                isActive('/') ? 'text-yellow-600' : 'text-gray-700 hover:text-yellow-600'
-              )}
-            >
-              Home
-            </Link>
-            <a
-              href="#features"
-              className="text-sm font-medium text-gray-700 hover:text-yellow-600 transition-colors"
-            >
-              Features
-            </a>
-            {auth.user && (
-              <Link
-                to="/timer"
-                className={cn('text-sm font-medium transition-colors',
-                  isActive('/timer') ? 'text-yellow-600' :
-                    'text-gray-700 hover:text-yellow-600',
-                )}
-              >
-                Timer
-              </Link>
-            )}
-          </div>
+        {/* Desktop Navigation */}
+        <div className="hidden md:flex gap-8">
+          {NAV_LINKS.map((link) => renderNavLink(link))}
+        </div>
 
-          {/* Desktop Auth Buttons */}
-          <div className="hidden md:flex items-center space-x-4">
-            {auth.user ? (
-              <div className="flex items-center space-x-4">
-                <div className="flex items-center space-x-2 px-3 py-2 bg-yellow-50 rounded-lg">
-                  <User className="w-4 h-4 text-yellow-600" />
-                  <span className="text-sm font-medium text-yellow-700">
-                    {auth.user.username}
-                  </span>
-                </div>
-                <button
-                  onClick={handleLogout}
-                  className="flex items-center space-x-2 px-4 py-2 bg-red-50 text-red-600 rounded-lg hover:bg-red-100 transition-colors"
-                >
-                  <LogOut className="w-4 h-4" />
-                  <span className="text-sm font-medium">Logout</span>
-                </button>
-              </div>
-            ) : (
-              <>
-                <Link
-                  to="/login"
-                  className="text-sm font-medium text-gray-700 hover:text-yellow-600 transition-colors"
-                >
-                  Sign In
-                </Link>
-                <Link
-                  to="/login"
-                  className="px-4 py-2 bg-linear-to-r from-yellow-400 to-amber-500 text-white text-sm font-medium rounded-lg hover:shadow-lg hover:scale-105 transition-all"
-                >
-                  Get Started
-                </Link>
-              </>
-            )}
-          </div>
+        {/* Desktop Actions */}
+        <div className="hidden md:flex items-center gap-4">
+          <UserButtons />
+          <div className="h-6 w-[1px] bg-border-base mx-2" /> {/* Divider */}
+          <ThemeToggle />
+        </div>
 
-          {/* Mobile Menu Button */}
+        {/* Mobile Toggle */}
+        <div className="md:hidden flex items-center gap-2">
+          <ThemeToggle />
           <button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="md:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors"
+            className="p-2 rounded-lg text-secondary hover:bg-elevated transition-colors"
+            aria-label="Toggle Menu"
           >
-            {isMobileMenuOpen ? (
-              <X className="w-6 h-6 text-gray-700" />
-            ) : (
-              <Menu className="w-6 h-6 text-gray-700" />
-            )}
+            {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
           </button>
         </div>
       </div>
 
       {/* Mobile Menu */}
       {isMobileMenuOpen && (
-        <div className="md:hidden bg-white border-t border-gray-200 shadow-lg">
-          <div className="px-4 py-4 space-y-3">
-            <Link
-              to="/"
-              onClick={() => setIsMobileMenuOpen(false)}
-              className={cn('block px-3 py-2 rounded-lg text-sm font-medium', {
-                'bg-purple-50 text-purple-600': isActive('/'),
-                'text-gray-700 hover:bg-gray-50': !isActive('/')
-              })}
-            >
-              Home
-            </Link>
-            <a
-              href="#features"
-              onClick={() => setIsMobileMenuOpen(false)}
-              className="block px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50"
-            >
-              Features
-            </a>
-            {auth.user && (
-              <Link
-                to="/timer"
-                onClick={() => setIsMobileMenuOpen(false)}
-                className={`block px-3 py-2 rounded-lg text-sm font-medium ${
-                  isActive('/timer')
-                    ? 'bg-purple-50 text-purple-600'
-                    : 'text-gray-700 hover:bg-gray-50'
-                }`}
-              >
-                Timer
-              </Link>
-            )}
-            <div className="pt-3 border-t border-gray-200">
-              {auth.user ? (
-                <>
-                  <div className="flex items-center space-x-2 px-3 py-2 mb-2 bg-yellow-50 rounded-lg">
-                    <User className="w-4 h-4 text-yellow-600" />
-                    <span className="text-sm font-medium text-yellow-700">
-                      {auth.user.username}
-                    </span>
-                  </div>
-                  <button
-                    onClick={() => {
-                      handleLogout();
-                      setIsMobileMenuOpen(false);
-                    }}
-                    className="w-full flex items-center justify-center space-x-2 px-4 py-2 bg-red-50 text-red-600 rounded-lg hover:bg-red-100 transition-colors"
-                  >
-                    <LogOut className="w-4 h-4" />
-                    <span className="text-sm font-medium">Logout</span>
-                  </button>
-                </>
-              ) : (
-                <>
-                  <Link
-                    to="/login"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    className="block w-full text-center px-4 py-2 mb-2 text-sm font-medium text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50"
-                  >
-                    Sign In
-                  </Link>
-                  <Link
-                    to="/login"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    className="block w-full text-center px-4 py-2 bg-linear-to-r from-yellow-400 to-amber-500 text-white text-sm font-medium rounded-lg hover:shadow-lg"
-                  >
-                    Get Started
-                  </Link>
-                </>
-              )}
+        <div className="md:hidden bg-base border-t border-base shadow-xl animate-in fade-in slide-in-from-top-4 duration-200">
+          <div className="px-4 py-6 flex flex-col gap-4">
+            {NAV_LINKS.map((link) => renderNavLink(link, true))}
+            <div className="h-[1px] bg-border-base my-2" />
+            <div className="flex justify-center">
+              <UserButtons />
             </div>
           </div>
         </div>
