@@ -52,20 +52,7 @@ export default function TimerPip({className = ""}) {
         height: 350,
       });
 
-      // 1. Inject Tailwind
-      const tw = nextPipWindow.document.createElement("script");
-      tw.src = "https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4";
-      nextPipWindow.document.head.appendChild(tw);
-
-      // 2. Inject Progressbar CSS (Required because the library is in a separate document)
-      const style = nextPipWindow.document.createElement("style");
-      style.textContent = `
-        .CircularProgressbar { width: 100%; vertical-align: middle; }
-        .CircularProgressbar-path { stroke: #be123c; stroke-linecap: round; }
-        .CircularProgressbar-trail { stroke: #f3f4f6; }
-      `;
-      nextPipWindow.document.head.appendChild(style);
-
+      // Inject CSS
       // https://dev.to/keni_97e44d198c12a5/how-i-implemented-picture-in-picture-in-react-with-full-code-tips-2aj3
       const target = nextPipWindow.document;
       Array.from(document.styleSheets).forEach((styleSheet) => {
@@ -86,6 +73,7 @@ export default function TimerPip({className = ""}) {
           }
         }
       });
+      
 
       // 3. Create a container for our React tree
       const pipDiv = nextPipWindow.document.createElement("div");
@@ -93,11 +81,6 @@ export default function TimerPip({className = ""}) {
       nextPipWindow.document.body.append(pipDiv);
       setPipWindow(nextPipWindow);
       setPipContainer(pipDiv);
-
-      // styles with tailwind
-      const script = nextPipWindow.document.createElement("script");
-      script.src = "https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4";
-      nextPipWindow.document.head.appendChild(script);
 
     } catch (error) {
       console.error("Error opening PiP:", error);
