@@ -3,7 +3,7 @@
 namespace App\Entity;
 
 use App\Entity\Traits\TimestampableTrait;
-use App\Enum\DefaultSessionType;
+use App\Enum\SessionType;
 use App\Enum\WeekStartDay;
 use App\Repository\UserSettingsRepository;
 use Doctrine\DBAL\Types\Types;
@@ -34,9 +34,9 @@ class UserSettings
     #[Groups(['user:read', 'user:write'])]
     private ?WeekStartDay $weekStartDay = WeekStartDay::MONDAY;
 
-    #[ORM\Column(enumType: DefaultSessionType::class)]
+    #[ORM\Column(enumType: SessionType::class)]
     #[Groups(['user:read', 'user:write'])]
-    private ?DefaultSessionType $defaultSessionType = DefaultSessionType::MANUAL;
+    private ?SessionType $defaultSessionType = SessionType::MANUAL;
 
     #[ORM\Column(type: Types::SMALLINT, options: ['unsigned' => true, 'default' => 50])]
     #[Assert\Positive]
@@ -88,12 +88,12 @@ class UserSettings
         return $this;
     }
 
-    public function getDefaultSessionType(): ?DefaultSessionType
+    public function getDefaultSessionType(): ?SessionType
     {
         return $this->defaultSessionType;
     }
 
-    public function setDefaultSessionType(DefaultSessionType $defaultSessionType): static
+    public function setDefaultSessionType(SessionType $defaultSessionType): static
     {
         $this->defaultSessionType = $defaultSessionType;
 

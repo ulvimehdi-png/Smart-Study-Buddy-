@@ -2,7 +2,7 @@
 
 namespace App\Enum;
 
-enum DefaultSessionType: string
+enum SessionType: string
 {
     case MANUAL = 'manual';
     case POMODORO = 'pomodoro';

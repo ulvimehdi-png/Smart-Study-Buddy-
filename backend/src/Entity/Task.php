@@ -7,6 +7,8 @@ use App\Entity\Traits\TimestampableTrait;
 use App\Enum\TaskPriority;
 use App\Enum\TaskStatus;
 use App\Repository\TaskRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Attribute\Groups;
@@ -77,6 +79,17 @@ class Task
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE, nullable: true)]
     #[Groups(['read', 'task:read'])]
     private ?\DateTimeImmutable $completedAt = null;
+
+    /**
+     * @var Collection<int, Note>
+     */
+    #[ORM\OneToMany(targetEntity: Note::class, mappedBy: 'task')]
+    private Collection $notes;
+
+    public function __construct()
+    {
+        $this->notes = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -211,6 +224,36 @@ class Task
     public function setCompletedAt(?\DateTimeImmutable $completedAt): static
     {
         $this->completedAt = $completedAt;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Note>
+     */
+    public function getNotes(): Collection
+    {
+        return $this->notes;
+    }
+
+    public function addNote(Note $note): static
+    {
+        if (!$this->notes->contains($note)) {
+            $this->notes->add($note);
+            $note->setTask($this);
+        }
+
+        return $this;
+    }
+
+    public function removeNote(Note $note): static
+    {
+        if ($this->notes->removeElement($note)) {
+            // set the owning side to null (unless already changed)
+            if ($note->getTask() === $this) {
+                $note->setTask(null);
+            }
+        }
 
         return $this;
     }

@@ -1,0 +1,174 @@
+<?php
+
+namespace App\Entity;
+
+use App\Entity\Traits\ArchivableSoftDeletableTrait;
+use App\Entity\Traits\TimestampableTrait;
+use App\Enum\NoteSourceType;
+use App\Repository\NoteRepository;
+use Doctrine\DBAL\Types\Types;
+use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Attribute\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
+
+#[ORM\Entity(repositoryClass: NoteRepository::class)]
+#[ORM\Table(name: 'notes')]
+#[ORM\Index(name: 'idx_notes_user_id', columns: ['user_id'])]
+#[ORM\Index(name: 'idx_notes_subject_id', columns: ['subject_id'])]
+#[ORM\Index(name: 'idx_notes_task_id', columns: ['task_id'])]
+#[ORM\Index(name: 'idx_notes_source_type', columns: ['source_type'])]
+#[ORM\Index(name: 'idx_notes_archived_at', columns: ['archived_at'])]
+#[ORM\Index(name: 'idx_notes_deleted_at', columns: ['deleted_at'])]
+#[ORM\HasLifecycleCallbacks]
+class Note
+{
+    use TimestampableTrait;
+    use ArchivableSoftDeletableTrait;
+
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column]
+    #[Groups(['read', 'note:read'])]
+    private ?int $id = null;
+
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'notes')]
+    #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
+    private ?User $user = null;
+
+    #[ORM\ManyToOne(targetEntity: Subject::class, inversedBy: 'notes')]
+    #[ORM\JoinColumn(name: 'subject_id', referencedColumnName: 'id', nullable: true, onDelete: 'SET NULL')]
+    #[Groups(['note:read'])]
+    private ?Subject $subject = null;
+
+    #[ORM\ManyToOne(targetEntity: Task::class, inversedBy: 'notes')]
+    #[ORM\JoinColumn(name: 'task_id', referencedColumnName: 'id', nullable: true, onDelete: 'SET NULL')]
+    #[Groups(['note:read'])]
+    private ?Task $task = null;
+
+    #[ORM\Column(length: 150)]
+    #[Assert\NotBlank]
+    #[Assert\Length(max: 150)]
+    #[Groups(['read', 'note:read', 'note:write'])]
+    private ?string $title = null;
+
+    #[ORM\Column(type: Types::TEXT)]
+    #[Assert\NotBlank]
+    #[Groups(['read', 'note:read', 'note:write'])]
+    private ?string $content = null;
+
+    #[ORM\Column(name: 'source_type', enumType: NoteSourceType::class)]
+    #[Assert\NotNull]
+    #[Groups(['read', 'note:read', 'note:write'])]
+    private ?NoteSourceType $sourceType = null;
+
+    #[ORM\Column(length: 1024, nullable: true)]
+    #[Assert\Length(max: 1024)]
+    #[Assert\Url]
+    #[Groups(['read', 'note:read', 'note:write'])]
+    private ?string $externalUrl = null;
+
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): static
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
+    public function getSubject(): ?Subject
+    {
+        return $this->subject;
+    }
+
+    public function setSubject(?Subject $subject): static
+    {
+        $this->subject = $subject;
+
+        return $this;
+    }
+
+    public function getTask(): ?Task
+    {
+        return $this->task;
+    }
+
+    public function setTask(?Task $task): static
+    {
+        $this->task = $task;
+
+        return $this;
+    }
+
+    public function getTitle(): ?string
+    {
+        return $this->title;
+    }
+
+    public function setTitle(string $title): static
+    {
+        $this->title = trim($title);
+
+        return $this;
+    }
+
+    public function getContent(): ?string
+    {
+        return $this->content;
+    }
+
+    public function setContent(string $content): static
+    {
+        $this->content = $content;
+
+        return $this;
+    }
+
+    public function getSourceType(): ?NoteSourceType
+    {
+        return $this->sourceType;
+    }
+
+    public function setSourceType(NoteSourceType $sourceType): static
+    {
+        $this->sourceType = $sourceType;
+
+        return $this;
+    }
+
+    public function getExternalUrl(): ?string
+    {
+        return $this->externalUrl;
+    }
+
+    public function setExternalUrl(?string $externalUrl): static
+    {
+        $this->externalUrl = null !== $externalUrl ? trim($externalUrl) : null;
+
+        return $this;
+    }
+
+    #[Assert\Callback]
+    public function validateExternalUrl(ExecutionContextInterface $context): void
+    {
+        if (
+            null !== $this->sourceType
+            && $this->sourceType->value === 'link'
+            && (null === $this->externalUrl || '' === trim($this->externalUrl))
+        ) {
+            $context
+                ->buildViolation('externalUrl is required when sourceType is link.')
+                ->atPath('externalUrl')
+                ->addViolation();
+        }
+    }
+}
