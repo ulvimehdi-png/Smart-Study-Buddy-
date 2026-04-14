@@ -31,7 +31,7 @@ services:
     build:
       context: ..
       dockerfile: ./docker/Dockerfile
-    user: "${UID}:${GID}"
+    user: "${UID:-1000}:${GID:-1000}"
     volumes:
       - ../backend:/app
       - ./xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini
@@ -45,7 +45,7 @@ services:
   node:
     image: node:25.9.0
     working_dir: /app
-    user: "${UID}:${GID}"
+    user: "${UID:-1000}:${GID:-1000}"
     volumes:
       - ../frontend:/app
     ports:
