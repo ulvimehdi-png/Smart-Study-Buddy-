@@ -9,7 +9,7 @@ export default function Notes() {
 
     // 1. Grab notes from the backend
     const fetchNotes = () => {
-        fetch(`http://127.0.0.1:8000/api/notes?userId=${userId}`)
+        fetch(`/api/notes?userId=${userId}`)
             .then(res => res.json())
             .then(data => setNotes(data))
             .catch(err => console.error("Error fetching notes:", err));
@@ -21,7 +21,7 @@ export default function Notes() {
 
     // 2. Delete a note
     const handleDelete = (noteId) => {
-        fetch(`http://127.0.0.1:8000/api/notes/${noteId}?userId=${userId}`, {
+        fetch(`/api/notes/${noteId}?userId=${userId}`, {
             method: 'DELETE',
         })
             .then(res => res.json())
@@ -34,7 +34,7 @@ export default function Notes() {
         e.preventDefault();
         if (!title || !content) return;
 
-        fetch('http://127.0.0.1:8000/api/notes', {
+        fetch('/api/notes', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ userId, title, content, subject })

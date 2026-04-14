@@ -7,7 +7,7 @@ export default function Tasks() {
     const userId = 1;
 
     const fetchTasks = () => {
-        fetch(`http://127.0.0.1:8000/api/tasks?userId=${userId}`)
+        fetch(`/api/tasks?userId=${userId}`)
             .then(res => res.json())
             .then(data => setTasks(data))
             .catch(err => console.error("Error fetching tasks:", err));
@@ -16,19 +16,19 @@ export default function Tasks() {
     useEffect(() => { fetchTasks(); }, []);
 
     const handleToggle = (taskId) => {
-        fetch(`http://127.0.0.1:8000/api/tasks/${taskId}/toggle?userId=${userId}`, { method: 'PUT' })
+        fetch(`/api/tasks/${taskId}/toggle?userId=${userId}`, { method: 'PUT' })
             .then(() => fetchTasks());
     };
 
     const handleDelete = (taskId) => {
-        fetch(`http://127.0.0.1:8000/api/tasks/${taskId}?userId=${userId}`, { method: 'DELETE' })
+        fetch(`/api/tasks/${taskId}?userId=${userId}`, { method: 'DELETE' })
             .then(() => fetchTasks());
     };
 
     const handleSubmit = (e) => {
         e.preventDefault();
         if (!title) return;
-        fetch('http://127.0.0.1:8000/api/tasks', {
+        fetch('/api/tasks', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ userId, title, subject })
