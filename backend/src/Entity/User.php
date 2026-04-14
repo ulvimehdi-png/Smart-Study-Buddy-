@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use App\Entity\Traits\TimestampableTrait;
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
@@ -76,6 +78,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\OneToOne(targetEntity: UserSettings::class, mappedBy: 'user', cascade: ['persist', 'remove'])]
     private ?UserSettings $userSettings = null;
+
+    /**
+     * @var Collection<int, Subject>
+     */
+    #[ORM\OneToMany(targetEntity: Subject::class, mappedBy: 'userId', orphanRemoval: true)]
+    private Collection $subjects;
+
+    public function __construct()
+    {
+        $this->subjects = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -217,6 +230,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         }
 
         $this->userSettings = $userSettings;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Subject>
+     */
+    public function getSubjects(): Collection
+    {
+        return $this->subjects;
+    }
+
+    public function addSubject(Subject $subject): static
+    {
+        if (!$this->subjects->contains($subject)) {
+            $this->subjects->add($subject);
+            $subject->setUserId($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSubject(Subject $subject): static
+    {
+        if ($this->subjects->removeElement($subject)) {
+            // set the owning side to null (unless already changed)
+            if ($subject->getUserId() === $this) {
+                $subject->setUserId(null);
+            }
+        }
 
         return $this;
     }
