@@ -5,6 +5,8 @@ namespace App\Entity;
 use App\Entity\Traits\ArchivableSoftDeletableTrait;
 use App\Entity\Traits\TimestampableTrait;
 use App\Repository\SubjectRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Attribute\Groups;
@@ -61,6 +63,17 @@ class Subject
     #[Assert\PositiveOrZero]
     #[Groups(['read', 'subject:read', 'subject:write'])]
     private ?int $targetWeeklyMinutes = null;
+
+    /**
+     * @var Collection<int, Task>
+     */
+    #[ORM\OneToMany(targetEntity: Task::class, mappedBy: 'subject')]
+    private Collection $tasks;
+
+    public function __construct()
+    {
+        $this->tasks = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -147,6 +160,36 @@ class Subject
     public function setTargetWeeklyMinutes(?int $targetWeeklyMinutes): static
     {
         $this->targetWeeklyMinutes = $targetWeeklyMinutes;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Task>
+     */
+    public function getTasks(): Collection
+    {
+        return $this->tasks;
+    }
+
+    public function addTask(Task $task): static
+    {
+        if (!$this->tasks->contains($task)) {
+            $this->tasks->add($task);
+            $task->setSubject($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTask(Task $task): static
+    {
+        if ($this->tasks->removeElement($task)) {
+            // set the owning side to null (unless already changed)
+            if ($task->getSubject() === $this) {
+                $task->setSubject(null);
+            }
+        }
 
         return $this;
     }

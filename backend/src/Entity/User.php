@@ -69,25 +69,25 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Groups(['read', 'user:read'])]
     private ?\DateTimeImmutable $lastLoginAt = null;
 
-//    #[ORM\Column(type: Types::DATETIME_IMMUTABLE, nullable: true)]
-//    #[Groups(['read', 'user:read'])]
-//    private ?\DateTimeImmutable $createdAt = null;
-//
-//    #[ORM\Column]
-//    private ?\DateTimeImmutable $updatedAt = null;
-
     #[ORM\OneToOne(targetEntity: UserSettings::class, mappedBy: 'user', cascade: ['persist', 'remove'])]
     private ?UserSettings $userSettings = null;
 
     /**
      * @var Collection<int, Subject>
      */
-    #[ORM\OneToMany(targetEntity: Subject::class, mappedBy: 'userId', orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: Subject::class, mappedBy: 'user', orphanRemoval: true)]
     private Collection $subjects;
+
+    /**
+     * @var Collection<int, Task>
+     */
+    #[ORM\OneToMany(targetEntity: Task::class, mappedBy: 'user', orphanRemoval: true)]
+    private Collection $tasks;
 
     public function __construct()
     {
         $this->subjects = new ArrayCollection();
+        $this->tasks = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -258,6 +258,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($subject->getUserId() === $this) {
                 $subject->setUserId(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Task>
+     */
+    public function getTasks(): Collection
+    {
+        return $this->tasks;
+    }
+
+    public function addTask(Task $task): static
+    {
+        if (!$this->tasks->contains($task)) {
+            $this->tasks->add($task);
+            $task->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTask(Task $task): static
+    {
+        if ($this->tasks->removeElement($task)) {
+            // set the owning side to null (unless already changed)
+            if ($task->getUser() === $this) {
+                $task->setUser(null);
             }
         }
 
