@@ -2,10 +2,11 @@ import React, { useState, useEffect } from 'react';
 
 export default function Dashboard() {
     const [data, setData] = useState(null);
-    const userId = 1;
 
     useEffect(() => {
-        fetch(`/api/dashboard?userId=${userId}`)
+        fetch('/api/dashboard', {
+            credentials: 'include'
+        })
             .then(res => res.json())
             .then(d => setData(d))
             .catch(err => console.error("Error fetching dashboard:", err));

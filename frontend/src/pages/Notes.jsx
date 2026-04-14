@@ -5,11 +5,12 @@ export default function Notes() {
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
     const [subject, setSubject] = useState('');
-    const userId = 1; // Keeping it hardcoded to 1 for now, just like the dashboard
 
     // 1. Grab notes from the backend
     const fetchNotes = () => {
-        fetch(`/api/notes?userId=${userId}`)
+        fetch('/api/notes', {
+            credentials: 'include'
+        })
             .then(res => res.json())
             .then(data => setNotes(data))
             .catch(err => console.error("Error fetching notes:", err));
@@ -21,8 +22,9 @@ export default function Notes() {
 
     // 2. Delete a note
     const handleDelete = (noteId) => {
-        fetch(`/api/notes/${noteId}?userId=${userId}`, {
+        fetch(`/api/notes/${noteId}`, {
             method: 'DELETE',
+            credentials: 'include'
         })
             .then(res => res.json())
             .then(() => fetchNotes()) // Refresh the list after deleting
@@ -36,8 +38,9 @@ export default function Notes() {
 
         fetch('/api/notes', {
             method: 'POST',
+            credentials: 'include',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ userId, title, content, subject })
+            body: JSON.stringify({ title, content, subject })
         })
             .then(res => res.json())
             .then(() => {

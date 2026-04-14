@@ -4,10 +4,11 @@ export default function Tasks() {
     const [tasks, setTasks] = useState([]);
     const [title, setTitle] = useState('');
     const [subject, setSubject] = useState('');
-    const userId = 1;
 
     const fetchTasks = () => {
-        fetch(`/api/tasks?userId=${userId}`)
+        fetch('/api/tasks', {
+            credentials: 'include'
+        })
             .then(res => res.json())
             .then(data => setTasks(data))
             .catch(err => console.error("Error fetching tasks:", err));
@@ -16,12 +17,18 @@ export default function Tasks() {
     useEffect(() => { fetchTasks(); }, []);
 
     const handleToggle = (taskId) => {
-        fetch(`/api/tasks/${taskId}/toggle?userId=${userId}`, { method: 'PUT' })
+        fetch(`/api/tasks/${taskId}/toggle`, {
+            method: 'PUT',
+            credentials: 'include',
+        })
             .then(() => fetchTasks());
     };
 
     const handleDelete = (taskId) => {
-        fetch(`/api/tasks/${taskId}?userId=${userId}`, { method: 'DELETE' })
+        fetch(`/api/tasks/${taskId}`, {
+            method: 'DELETE',
+            credentials: 'include',
+        })
             .then(() => fetchTasks());
     };
 
@@ -30,8 +37,9 @@ export default function Tasks() {
         if (!title) return;
         fetch('/api/tasks', {
             method: 'POST',
+            credentials: 'include',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ userId, title, subject })
+            body: JSON.stringify({ title, subject })
         }).then(() => {
             setTitle('');
             setSubject('');
