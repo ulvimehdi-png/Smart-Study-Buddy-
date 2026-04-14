@@ -19,7 +19,7 @@ class UserSettings
     use TimestampableTrait;
 
     #[ORM\Id]
-    #[ORM\OneToOne(targetEntity: User::class, inversedBy: 'settings')]
+    #[ORM\OneToOne(targetEntity: User::class, inversedBy: 'userSettings')]
     #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
     #[Groups(['user:read'])]
     private User $user;
