@@ -34,7 +34,7 @@ lerna-debug.log*
 # Databases and Secrets
 *.db
 *.sqlite3
-.env
+docker/.env
 
 # Misc
 *.bak
