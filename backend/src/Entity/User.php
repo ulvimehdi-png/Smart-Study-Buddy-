@@ -63,7 +63,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(options: ['default' => true])]
     #[Groups(['read', 'user:read'])]
-    private ?bool $isActive = null;
+    private ?bool $isActive = true;
 
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE, nullable: true)]
     #[Groups(['read', 'user:read'])]

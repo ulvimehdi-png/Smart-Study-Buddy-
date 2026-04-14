@@ -65,12 +65,12 @@ class Session
     #[ORM\Column(name: 'break_minutes', options: ['unsigned' => true, 'default' => 0])]
     #[Assert\PositiveOrZero]
     #[Groups(['read', 'session:read', 'session:write'])]
-    private ?int $breakMinutes = null;
+    private ?int $breakMinutes = 0;
 
     #[ORM\Column(name: 'distraction_count', options: ['unsigned' => true, 'default' => 0])]
     #[Assert\PositiveOrZero]
     #[Groups(['read', 'session:read', 'session:write'])]
-    private ?int $distractionCount = null;
+    private ?int $distractionCount = 0;
 
     #[ORM\Column(name: 'session_note', length: 255, nullable: true)]
     #[Assert\Length(max: 255)]

@@ -43,7 +43,6 @@ final class SecurityController extends AbstractController
         $user->setPassword(
             $hasher->hashPassword($user, $password)
         );
-        $user->setIsActive(true);
 
         $settings = new UserSettings();
         $settings->setUser($user);

@@ -57,11 +57,11 @@ class Task
 
     #[ORM\Column(length: 20, enumType: TaskStatus::class, options: ['default' => TaskStatus::TODO])]
     #[Groups(['read', 'task:read', 'task:write'])]
-    private ?TaskStatus $status = null;
+    private ?TaskStatus $status = TaskStatus::TODO;
 
     #[ORM\Column(length: 20, enumType: TaskPriority::class, options: ['default' => TaskPriority::MEDIUM])]
     #[Groups(['read', 'task:read', 'task:write'])]
-    private ?TaskPriority $priority = null;
+    private ?TaskPriority $priority = TaskPriority::MEDIUM;
 
     #[ORM\Column(nullable: true, options: ['unsigned' => true])]
     #[Assert\PositiveOrZero]
