@@ -29,7 +29,8 @@ class UserFactory
 
         // Core identity
         $user->setUsername($username);
-        $user->
+
+        return $user;
     }
 
     /*
@@ -44,6 +45,7 @@ class UserFactory
 
         // Standard defaults
         $settings->setWeekStartDay(WeekStartDay::MONDAY);
-        $settings->
+
+        return $settings;
     }
 }

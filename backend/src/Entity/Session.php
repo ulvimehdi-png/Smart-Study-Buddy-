@@ -23,6 +23,9 @@ use Symfony\Component\Validator\Context\ExecutionContextInterface;
 #[ORM\HasLifecycleCallbacks]
 class Session
 {
+    private const int DEFAULT_BREAK_MINUTES = 0;
+    private const int DEFAULT_DISTRACTION_COUNT = 0;
+
     use TimestampableTrait;
 
     #[ORM\Id]
@@ -64,15 +67,15 @@ class Session
     #[Groups(['read', 'session:read', 'session:write'])]
     private ?int $actualFocusMinutes = null;
 
-    #[ORM\Column(name: 'break_minutes', options: ['unsigned' => true, 'default' => 0])]
+    #[ORM\Column(name: 'break_minutes', options: ['unsigned' => true, 'default' => self::DEFAULT_BREAK_MINUTES])]
     #[Assert\PositiveOrZero]
     #[Groups(['read', 'session:read', 'session:write'])]
-    private ?int $breakMinutes = 0;
+    private ?int $breakMinutes;
 
-    #[ORM\Column(name: 'distraction_count', options: ['unsigned' => true, 'default' => 0])]
+    #[ORM\Column(name: 'distraction_count', options: ['unsigned' => true, 'default' => self::DEFAULT_DISTRACTION_COUNT])]
     #[Assert\PositiveOrZero]
     #[Groups(['read', 'session:read', 'session:write'])]
-    private ?int $distractionCount = 0;
+    private ?int $distractionCount;
 
     #[ORM\Column(name: 'session_note', length: 255, nullable: true)]
     #[Assert\Length(max: 255)]
@@ -87,6 +90,9 @@ class Session
 
     public function __construct()
     {
+        $this->breakMinutes = self::DEFAULT_BREAK_MINUTES;
+        $this->distractionCount = self::DEFAULT_DISTRACTION_COUNT;
+
         $this->sessionEntries = new ArrayCollection();
     }
 

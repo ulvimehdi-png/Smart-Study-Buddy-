@@ -16,6 +16,10 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\HasLifecycleCallbacks]
 class Settings
 {
+    private const string DEFAULT_TIMEZONE = 'Europe/Brussels';
+    private const int DEFAULT_SESSION_MINUTES = 50;
+    private const int DEFAULT_BREAK_MINUTES = 10;
+
     use TimestampableTrait;
 
     #[ORM\Id]
@@ -24,29 +28,38 @@ class Settings
     #[Groups(['user:read'])]
     private User $user;
 
-    #[ORM\Column(length: 64, options: ['default' => 'UTC'])]
+    #[ORM\Column(length: 64, options: ['default' => self::DEFAULT_TIMEZONE])]
     #[Assert\NotBlank]
     #[Assert\Length(max: 64)]
     #[Groups(['user:read', 'user:write'])]
-    private ?string $timezone = 'UTC';
+    private ?string $timezone;
 
     #[ORM\Column(enumType: WeekStartDay::class)]
     #[Groups(['user:read', 'user:write'])]
-    private ?WeekStartDay $weekStartDay = WeekStartDay::MONDAY;
+    private ?WeekStartDay $weekStartDay;
 
     #[ORM\Column(enumType: SessionType::class)]
     #[Groups(['user:read', 'user:write'])]
-    private ?SessionType $defaultSessionType = SessionType::MANUAL;
+    private ?SessionType $defaultSessionType;
 
-    #[ORM\Column(type: Types::SMALLINT, options: ['unsigned' => true, 'default' => 50])]
+    #[ORM\Column(type: Types::SMALLINT, options: ['unsigned' => true, 'default' => self::DEFAULT_SESSION_MINUTES])]
     #[Assert\Positive]
     #[Groups(['user:read', 'user:write'])]
-    private ?int $defaultSessionMinutes = 50;
+    private ?int $defaultSessionMinutes;
 
-    #[ORM\Column(type: Types::SMALLINT, options: ['unsigned' => true, 'default' => 10])]
+    #[ORM\Column(type: Types::SMALLINT, options: ['unsigned' => true, 'default' => self::DEFAULT_BREAK_MINUTES])]
     #[Assert\PositiveOrZero]
     #[Groups(['user:read', 'user:write'])]
-    private ?int $defaultBreakMinutes = 10;
+    private ?int $defaultBreakMinutes;
+
+    public function __construct()
+    {
+        $this->timezone = self::DEFAULT_TIMEZONE;
+        $this->weekStartDay = WeekStartDay::default();
+        $this->defaultSessionType = SessionType::default();
+        $this->defaultSessionMinutes = self::DEFAULT_SESSION_MINUTES;
+        $this->defaultBreakMinutes = self::DEFAULT_BREAK_MINUTES;
+    }
 
     public function getUser(): User
     {

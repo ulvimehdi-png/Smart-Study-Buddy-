@@ -61,7 +61,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(options: ['default' => true])]
     #[Groups(['read', 'user:read'])]
-    private ?bool $isActive = true;
+    private ?bool $isActive;
 
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE, nullable: true)]
     #[Groups(['read', 'user:read'])]
@@ -108,6 +108,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function __construct()
     {
+        $this->isActive = true;
+
         $this->subjects = new ArrayCollection();
         $this->tasks = new ArrayCollection();
         $this->sessions = new ArrayCollection();

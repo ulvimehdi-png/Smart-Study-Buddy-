@@ -55,13 +55,13 @@ class Task
     #[Groups(['read', 'task:read', 'task:write'])]
     private ?string $description = null;
 
-    #[ORM\Column(length: 20, enumType: TaskStatus::class, options: ['default' => TaskStatus::TODO])]
+    #[ORM\Column(length: 20, enumType: TaskStatus::class)]
     #[Groups(['read', 'task:read', 'task:write'])]
-    private ?TaskStatus $status = TaskStatus::TODO;
+    private ?TaskStatus $status;
 
-    #[ORM\Column(length: 20, enumType: TaskPriority::class, options: ['default' => TaskPriority::MEDIUM])]
+    #[ORM\Column(length: 20, enumType: TaskPriority::class)]
     #[Groups(['read', 'task:read', 'task:write'])]
-    private ?TaskPriority $priority = TaskPriority::MEDIUM;
+    private ?TaskPriority $priority;
 
     #[ORM\Column(nullable: true, options: ['unsigned' => true])]
     #[Assert\PositiveOrZero]
@@ -100,6 +100,9 @@ class Task
 
     public function __construct()
     {
+        $this->status = TaskStatus::default();
+        $this->priority = TaskPriority::default();
+
         $this->notes = new ArrayCollection();
         $this->taskTags = new ArrayCollection();
         $this->sessionEntries = new ArrayCollection();
