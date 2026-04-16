@@ -14,38 +14,31 @@ class UserFactory
     ){}
 
     /*
-     * Creates a fully valid User aggregate root (--> incl Settings)
+     * Creates a fully valid User with default Settings
      */
     public function create(
-        string $username,
-        string $plainPassword,
+        string  $username,
+        string  $plainPassword,
         ?string $email = null,
         ?string $displayName = null,
-        array $roles = ['ROLE_USER'],
+        ?array  $roles = null,
 
     ): User
     {
         $user = new User();
 
-        // Core identity
         $user->setUsername($username);
+        $user->setEmail($email);
+        $user->setDisplayName($displayName);
+        if ($roles !== null) $user->setRoles($roles);
+
+        $user->setPassword(
+            $this->hasher->hashPassword($user, $plainPassword)
+        );
+
+        $settings = new Settings();
+        $user->setSettings($settings);
 
         return $user;
-    }
-
-    /*
-     * Creates default settings tied to a user
-     */
-    private function createDefaultSettings(User $user, string $timezone): Settings
-    {
-        $settings = new Settings();
-
-        $settings->setUser($user);
-        $settings->setTimezone($timezone);
-
-        // Standard defaults
-        $settings->setWeekStartDay(WeekStartDay::MONDAY);
-
-        return $settings;
     }
 }
