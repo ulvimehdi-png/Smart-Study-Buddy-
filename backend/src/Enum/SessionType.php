@@ -9,4 +9,9 @@ enum SessionType: string
     case REVIEW = 'review';
     case READING = 'reading';
     case PRACTICE = 'practice';
+
+    public static function default(): self
+    {
+        return self::MANUAL;
+    }
 }

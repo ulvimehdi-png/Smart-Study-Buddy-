@@ -8,4 +8,9 @@ enum NoteSourceType: string
     case UPLOAD = 'upload';
     case IMPORT = 'import';
     case LINK = 'link';
+
+    public static function default(): self
+    {
+        return self::MANUAL;
+    }
 }

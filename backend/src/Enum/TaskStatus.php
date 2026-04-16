@@ -8,4 +8,9 @@ enum TaskStatus: string
     case IN_PROGRESS = 'in_progress';
     case DONE = 'done';
     case CANCELLED = 'cancelled';
+
+    public static function default(): self
+    {
+        return self::TODO;
+    }
 }

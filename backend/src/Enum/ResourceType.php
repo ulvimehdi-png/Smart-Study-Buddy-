@@ -10,4 +10,9 @@ enum ResourceType: string
     case VIDEO = 'video';
     case ARTICLE = 'article';
     case OTHER = 'other';
+
+    public static function default(): self
+    {
+        return self::OTHER;
+    }
 }
