@@ -92,10 +92,17 @@ class Task
     #[ORM\OneToMany(targetEntity: TaskTag::class, mappedBy: 'task')]
     private Collection $taskTags;
 
+    /**
+     * @var Collection<int, SessionEntry>
+     */
+    #[ORM\OneToMany(targetEntity: SessionEntry::class, mappedBy: 'task')]
+    private Collection $sessionEntries;
+
     public function __construct()
     {
         $this->notes = new ArrayCollection();
         $this->taskTags = new ArrayCollection();
+        $this->sessionEntries = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -288,6 +295,36 @@ class Task
         if ($this->taskTags->removeElement($taskTag)) {
             if ($taskTag->getTask() === $this) {
                 $taskTag->setTask(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, SessionEntry>
+     */
+    public function getSessionEntries(): Collection
+    {
+        return $this->sessionEntries;
+    }
+
+    public function addSessionEntry(SessionEntry $sessionEntry): static
+    {
+        if (!$this->sessionEntries->contains($sessionEntry)) {
+            $this->sessionEntries->add($sessionEntry);
+            $sessionEntry->setTask($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSessionEntry(SessionEntry $sessionEntry): static
+    {
+        if ($this->sessionEntries->removeElement($sessionEntry)) {
+            // set the owning side to null (unless already changed)
+            if ($sessionEntry->getTask() === $this) {
+                $sessionEntry->setTask(null);
             }
         }
 

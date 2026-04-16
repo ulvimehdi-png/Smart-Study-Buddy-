@@ -6,6 +6,8 @@ use App\Entity\Traits\TimestampableTrait;
 use App\Enum\SessionStatus;
 use App\Enum\SessionType;
 use App\Repository\SessionRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Attribute\Groups;
@@ -76,6 +78,17 @@ class Session
     #[Assert\Length(max: 255)]
     #[Groups(['read', 'session:read', 'session:write'])]
     private ?string $sessionNote = null;
+
+    /**
+     * @var Collection<int, SessionEntry>
+     */
+    #[ORM\OneToMany(targetEntity: SessionEntry::class, mappedBy: 'session', cascade: ['persist', 'remove'])]
+    private Collection $sessionEntries;
+
+    public function __construct()
+    {
+        $this->sessionEntries = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -197,7 +210,37 @@ class Session
 
     public function setSessionNote(?string $sessionNote): static
     {
-        $this->sessionNote = $sessionNote;
+        $this->sessionNote = null !== $sessionNote ? trim($sessionNote) : null;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, SessionEntry>
+     */
+    public function getSessionEntries(): Collection
+    {
+        return $this->sessionEntries;
+    }
+
+    public function addSessionEntry(SessionEntry $sessionEntry): static
+    {
+        if (!$this->sessionEntries->contains($sessionEntry)) {
+            $this->sessionEntries->add($sessionEntry);
+            $sessionEntry->setSession($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSessionEntry(SessionEntry $sessionEntry): static
+    {
+        if ($this->sessionEntries->removeElement($sessionEntry)) {
+            // set the owning side to null (unless already changed)
+            if ($sessionEntry->getSession() === $this) {
+                $sessionEntry->setSession(null);
+            }
+        }
 
         return $this;
     }

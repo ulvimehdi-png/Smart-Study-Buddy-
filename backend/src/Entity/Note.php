@@ -82,10 +82,17 @@ class Note
     #[ORM\OneToMany(targetEntity: NoteTag::class, mappedBy: 'note')]
     private Collection $noteTags;
 
+    /**
+     * @var Collection<int, SessionEntry>
+     */
+    #[ORM\OneToMany(targetEntity: SessionEntry::class, mappedBy: 'note')]
+    private Collection $sessionEntries;
+
     public function __construct()
     {
         $this->noteAttachments = new ArrayCollection();
         $this->noteTags = new ArrayCollection();
+        $this->sessionEntries = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -245,6 +252,36 @@ class Note
         if ($this->noteTags->removeElement($noteTag)) {
             if ($noteTag->getNote() === $this) {
                 $noteTag->setNote(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, SessionEntry>
+     */
+    public function getSessionEntries(): Collection
+    {
+        return $this->sessionEntries;
+    }
+
+    public function addSessionEntry(SessionEntry $sessionEntry): static
+    {
+        if (!$this->sessionEntries->contains($sessionEntry)) {
+            $this->sessionEntries->add($sessionEntry);
+            $sessionEntry->setNote($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSessionEntry(SessionEntry $sessionEntry): static
+    {
+        if ($this->sessionEntries->removeElement($sessionEntry)) {
+            // set the owning side to null (unless already changed)
+            if ($sessionEntry->getNote() === $this) {
+                $sessionEntry->setNote(null);
             }
         }
 

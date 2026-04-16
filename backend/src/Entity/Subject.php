@@ -88,12 +88,19 @@ class Subject
     #[ORM\OneToMany(targetEntity: SubjectTag::class, mappedBy: 'subject')]
     private Collection $subjectTags;
 
+    /**
+     * @var Collection<int, SessionEntry>
+     */
+    #[ORM\OneToMany(targetEntity: SessionEntry::class, mappedBy: 'subject')]
+    private Collection $sessionEntries;
+
     public function __construct()
     {
         $this->tasks = new ArrayCollection();
         $this->notes = new ArrayCollection();
         $this->resources = new ArrayCollection();
         $this->subjectTags = new ArrayCollection();
+        $this->sessionEntries = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -297,6 +304,36 @@ class Subject
         if ($this->subjectTags->removeElement($subjectTag)) {
             if ($subjectTag->getSubject() === $this) {
                 $subjectTag->setSubject(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, SessionEntry>
+     */
+    public function getSessionEntries(): Collection
+    {
+        return $this->sessionEntries;
+    }
+
+    public function addSessionEntry(SessionEntry $sessionEntry): static
+    {
+        if (!$this->sessionEntries->contains($sessionEntry)) {
+            $this->sessionEntries->add($sessionEntry);
+            $sessionEntry->setSubject($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSessionEntry(SessionEntry $sessionEntry): static
+    {
+        if ($this->sessionEntries->removeElement($sessionEntry)) {
+            // set the owning side to null (unless already changed)
+            if ($sessionEntry->getSubject() === $this) {
+                $sessionEntry->setSubject(null);
             }
         }
 
