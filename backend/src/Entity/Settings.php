@@ -5,21 +5,21 @@ namespace App\Entity;
 use App\Entity\Traits\TimestampableTrait;
 use App\Enum\SessionType;
 use App\Enum\WeekStartDay;
-use App\Repository\UserSettingsRepository;
+use App\Repository\SettingsRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
-#[ORM\Entity(repositoryClass: UserSettingsRepository::class)]
-#[ORM\Table(name: 'user_settings')]
+#[ORM\Entity(repositoryClass: SettingsRepository::class)]
+#[ORM\Table(name: 'settings')]
 #[ORM\HasLifecycleCallbacks]
-class UserSettings
+class Settings
 {
     use TimestampableTrait;
 
     #[ORM\Id]
-    #[ORM\OneToOne(targetEntity: User::class, inversedBy: 'userSettings')]
+    #[ORM\OneToOne(targetEntity: User::class, inversedBy: 'settings')]
     #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
     #[Groups(['user:read'])]
     private User $user;
@@ -57,8 +57,8 @@ class UserSettings
     {
         $this->user = $user;
 
-        if ($user->getUserSettings() !== $this){
-            $user->setUserSettings($this);
+        if ($user->getSettings() !== $this){
+            $user->setSettings($this);
         }
 
         return $this;

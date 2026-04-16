@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\User;
-use App\Entity\UserSettings;
+use App\Entity\Settings;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -44,9 +44,9 @@ final class SecurityController extends AbstractController
             $hasher->hashPassword($user, $password)
         );
 
-        $settings = new UserSettings();
+        $settings = new Settings();
         $settings->setUser($user);
-        $user->setUserSettings($settings);
+        $user->setSettings($settings);
 
         $em->persist($user);
         $em->persist($settings);

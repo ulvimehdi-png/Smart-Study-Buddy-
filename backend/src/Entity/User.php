@@ -17,10 +17,10 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: 'users')]
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_USERNAME', fields: ['username'])]
-##[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
-#[ORM\HasLifecycleCallbacks]
 #[UniqueEntity(fields: ['username'])]
+##[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
 ##[UniqueEntity(fields: ['email'])]
+#[ORM\HasLifecycleCallbacks]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     use TimestampableTrait;
@@ -69,8 +69,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Groups(['read', 'user:read'])]
     private ?\DateTimeImmutable $lastLoginAt = null;
 
-    #[ORM\OneToOne(targetEntity: UserSettings::class, mappedBy: 'user', cascade: ['persist', 'remove'])]
-    private ?UserSettings $userSettings = null;
+    #[ORM\OneToOne(targetEntity: Settings::class, mappedBy: 'user', cascade: ['persist', 'remove'])]
+    private ?Settings $settings = null;
 
     /**
      * @var Collection<int, Subject>
@@ -245,19 +245,19 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getUserSettings(): ?UserSettings
+    public function getSettings(): ?Settings
     {
-        return $this->userSettings;
+        return $this->settings;
     }
 
-    public function setUserSettings(UserSettings $userSettings): static
+    public function setSettings(Settings $settings): static
     {
         // set the owning side of the relation if necessary
-        if ($userSettings->getUser() !== $this) {
-            $userSettings->setUser($this);
+        if ($settings->getUser() !== $this) {
+            $settings->setUser($this);
         }
 
-        $this->userSettings = $userSettings;
+        $this->settings = $settings;
 
         return $this;
     }
