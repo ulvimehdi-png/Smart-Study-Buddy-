@@ -49,7 +49,7 @@ class Task
     #[Assert\NotBlank]
     #[Assert\Length(max: 255)]
     #[Groups(['read', 'task:read', 'task:write'])]
-    private string $title;
+    private ?string $title = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     #[Groups(['read', 'task:read', 'task:write'])]
@@ -86,9 +86,16 @@ class Task
     #[ORM\OneToMany(targetEntity: Note::class, mappedBy: 'task')]
     private Collection $notes;
 
+    /**
+     * @var Collection<int, TaskTag>
+     */
+    #[ORM\OneToMany(targetEntity: TaskTag::class, mappedBy: 'task')]
+    private Collection $taskTags;
+
     public function __construct()
     {
         $this->notes = new ArrayCollection();
+        $this->taskTags = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -252,6 +259,35 @@ class Task
             // set the owning side to null (unless already changed)
             if ($note->getTask() === $this) {
                 $note->setTask(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, TaskTag>
+     */
+    public function getTaskTags(): Collection
+    {
+        return $this->taskTags;
+    }
+
+    public function addTaskTag(TaskTag $taskTag): static
+    {
+        if (!$this->taskTags->contains($taskTag)) {
+            $this->taskTags->add($taskTag);
+            $taskTag->setTask($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTaskTag(TaskTag $taskTag): static
+    {
+        if ($this->taskTags->removeElement($taskTag)) {
+            if ($taskTag->getTask() === $this) {
+                $taskTag->setTask(null);
             }
         }
 

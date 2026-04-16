@@ -6,6 +6,8 @@ use App\Entity\Traits\ArchivableSoftDeletableTrait;
 use App\Entity\Traits\TimestampableTrait;
 use App\Enum\NoteSourceType;
 use App\Repository\NoteRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Attribute\Groups;
@@ -67,6 +69,24 @@ class Note
     #[Assert\Url]
     #[Groups(['read', 'note:read', 'note:write'])]
     private ?string $externalUrl = null;
+
+    /**
+     * @var Collection<int, NoteAttachment>
+     */
+    #[ORM\OneToMany(targetEntity: NoteAttachment::class, mappedBy: 'note', cascade: ['persist', 'remove'])]
+    private Collection $noteAttachments;
+
+    /**
+     * @var Collection<int, NoteTag>
+     */
+    #[ORM\OneToMany(targetEntity: NoteTag::class, mappedBy: 'note')]
+    private Collection $noteTags;
+
+    public function __construct()
+    {
+        $this->noteAttachments = new ArrayCollection();
+        $this->noteTags = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -170,5 +190,64 @@ class Note
                 ->atPath('externalUrl')
                 ->addViolation();
         }
+    }
+
+    /**
+     * @return Collection<int, NoteAttachment>
+     */
+    public function getNoteAttachments(): Collection
+    {
+        return $this->noteAttachments;
+    }
+
+    public function addNoteAttachment(NoteAttachment $noteAttachment): static
+    {
+        if (!$this->noteAttachments->contains($noteAttachment)) {
+            $this->noteAttachments->add($noteAttachment);
+            $noteAttachment->setNote($this);
+        }
+
+        return $this;
+    }
+
+    public function removeNoteAttachment(NoteAttachment $noteAttachment): static
+    {
+        if ($this->noteAttachments->removeElement($noteAttachment)) {
+            // set the owning side to null (unless already changed)
+            if ($noteAttachment->getNote() === $this) {
+                $noteAttachment->setNote(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, NoteTag>
+     */
+    public function getNoteTags(): Collection
+    {
+        return $this->noteTags;
+    }
+
+    public function addNoteTag(NoteTag $noteTag): static
+    {
+        if (!$this->noteTags->contains($noteTag)) {
+            $this->noteTags->add($noteTag);
+            $noteTag->setNote($this);
+        }
+
+        return $this;
+    }
+
+    public function removeNoteTag(NoteTag $noteTag): static
+    {
+        if ($this->noteTags->removeElement($noteTag)) {
+            if ($noteTag->getNote() === $this) {
+                $noteTag->setNote(null);
+            }
+        }
+
+        return $this;
     }
 }

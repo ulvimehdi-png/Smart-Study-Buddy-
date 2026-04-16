@@ -76,10 +76,24 @@ class Subject
     #[ORM\OneToMany(targetEntity: Note::class, mappedBy: 'subject')]
     private Collection $notes;
 
+    /**
+     * @var Collection<int, Resource>
+     */
+    #[ORM\OneToMany(targetEntity: Resource::class, mappedBy: 'subject')]
+    private Collection $resources;
+
+    /**
+     * @var Collection<int, SubjectTag>
+     */
+    #[ORM\OneToMany(targetEntity: SubjectTag::class, mappedBy: 'subject')]
+    private Collection $subjectTags;
+
     public function __construct()
     {
         $this->tasks = new ArrayCollection();
         $this->notes = new ArrayCollection();
+        $this->resources = new ArrayCollection();
+        $this->subjectTags = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -225,6 +239,64 @@ class Subject
             // set the owning side to null (unless already changed)
             if ($note->getSubject() === $this) {
                 $note->setSubject(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Resource>
+     */
+    public function getResource(): Collection
+    {
+        return $this->resources;
+    }
+
+    public function addResource(Resource $resource): static
+    {
+        if (!$this->resources->contains($resource)) {
+            $this->resources->add($resource);
+            $resource->setSubject($this);
+        }
+
+        return $this;
+    }
+
+    public function removeResource(Resource $resource): static
+    {
+        if ($this->resources->removeElement($resource)) {
+            if ($resource->getSubject() === $this) {
+                $resource->setSubject(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, SubjectTag>
+     */
+    public function getSubjectTags(): Collection
+    {
+        return $this->subjectTags;
+    }
+
+    public function addSubjectTag(SubjectTag $subjectTag): static
+    {
+        if (!$this->subjectTags->contains($subjectTag)) {
+            $this->subjectTags->add($subjectTag);
+            $subjectTag->setSubject($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSubjectTag(SubjectTag $subjectTag): static
+    {
+        if ($this->subjectTags->removeElement($subjectTag)) {
+            if ($subjectTag->getSubject() === $this) {
+                $subjectTag->setSubject(null);
             }
         }
 

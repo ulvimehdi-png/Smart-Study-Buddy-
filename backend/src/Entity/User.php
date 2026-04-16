@@ -17,10 +17,10 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: 'users')]
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_USERNAME', fields: ['username'])]
-#[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
+##[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
 #[ORM\HasLifecycleCallbacks]
 #[UniqueEntity(fields: ['username'])]
-#[UniqueEntity(fields: ['email'])]
+##[UniqueEntity(fields: ['email'])]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     use TimestampableTrait;
@@ -75,26 +75,38 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @var Collection<int, Subject>
      */
-    #[ORM\OneToMany(targetEntity: Subject::class, mappedBy: 'user', orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: Subject::class, mappedBy: 'user')]
     private Collection $subjects;
 
     /**
      * @var Collection<int, Task>
      */
-    #[ORM\OneToMany(targetEntity: Task::class, mappedBy: 'user', orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: Task::class, mappedBy: 'user')]
     private Collection $tasks;
 
     /**
      * @var Collection<int, Session>
      */
-    #[ORM\OneToMany(targetEntity: Session::class, mappedBy: 'user', orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: Session::class, mappedBy: 'user')]
     private Collection $sessions;
 
     /**
      * @var Collection<int, Note>
      */
-    #[ORM\OneToMany(targetEntity: Note::class, mappedBy: 'user', orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: Note::class, mappedBy: 'user')]
     private Collection $notes;
+
+    /**
+     * @var Collection<int, Resource>
+     */
+    #[ORM\OneToMany(targetEntity: Resource::class, mappedBy: 'user')]
+    private Collection $resources;
+
+    /**
+     * @var Collection<int, Tag>
+     */
+    #[ORM\OneToMany(targetEntity: Tag::class, mappedBy: 'user')]
+    private Collection $tags;
 
     public function __construct()
     {
@@ -102,6 +114,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->tasks = new ArrayCollection();
         $this->sessions = new ArrayCollection();
         $this->notes = new ArrayCollection();
+        $this->resources = new ArrayCollection();
+        $this->tags = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -239,8 +253,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setUserSettings(UserSettings $userSettings): static
     {
         // set the owning side of the relation if necessary
-        if ($userSettings->getUserId() !== $this) {
-            $userSettings->setUserId($this);
+        if ($userSettings->getUser() !== $this) {
+            $userSettings->setUser($this);
         }
 
         $this->userSettings = $userSettings;
@@ -260,7 +274,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if (!$this->subjects->contains($subject)) {
             $this->subjects->add($subject);
-            $subject->setUserId($this);
+            $subject->setUser($this);
         }
 
         return $this;
@@ -270,8 +284,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if ($this->subjects->removeElement($subject)) {
             // set the owning side to null (unless already changed)
-            if ($subject->getUserId() === $this) {
-                $subject->setUserId(null);
+            if ($subject->getUser() === $this) {
+                $subject->setUser(null);
             }
         }
 
@@ -362,6 +376,64 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($note->getUser() === $this) {
                 $note->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Resource>
+     */
+    public function getResources(): Collection
+    {
+        return $this->resources;
+    }
+
+    public function addResource(Resource $resource): static
+    {
+        if (!$this->resources->contains($resource)) {
+            $this->resources->add($resource);
+            $resource->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeResource(Resource $resource): static
+    {
+        if ($this->resources->removeElement($resource)) {
+            if ($resource->getUser() === $this) {
+                $resource->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Tag>
+     */
+    public function getTags(): Collection
+    {
+        return $this->tags;
+    }
+
+    public function addTag(Tag $tag): static
+    {
+        if (!$this->tags->contains($tag)) {
+            $this->tags->add($tag);
+            $tag->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTag(Tag $tag): static
+    {
+        if ($this->tags->removeElement($tag)) {
+            if ($tag->getUser() === $this) {
+                $tag->setUser(null);
             }
         }
 
