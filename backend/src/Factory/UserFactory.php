@@ -4,7 +4,6 @@ namespace App\Factory;
 
 use App\Entity\User;
 use App\Entity\Settings;
-use App\Enum\WeekStartDay;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class UserFactory
