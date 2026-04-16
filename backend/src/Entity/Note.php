@@ -73,7 +73,7 @@ class Note
     /**
      * @var Collection<int, NoteAttachment>
      */
-    #[ORM\OneToMany(targetEntity: NoteAttachment::class, mappedBy: 'note', cascade: ['persist', 'remove'])]
+    #[ORM\OneToMany(targetEntity: NoteAttachment::class, mappedBy: 'note', cascade: ['persist', 'remove'], orphanRemoval: true)]
     private Collection $noteAttachments;
 
     /**

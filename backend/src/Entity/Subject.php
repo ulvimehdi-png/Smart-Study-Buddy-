@@ -248,7 +248,7 @@ class Subject
     /**
      * @return Collection<int, Resource>
      */
-    public function getResource(): Collection
+    public function getResources(): Collection
     {
         return $this->resources;
     }

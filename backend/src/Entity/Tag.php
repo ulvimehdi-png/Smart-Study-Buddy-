@@ -6,6 +6,7 @@ use App\Entity\Traits\TimestampableTrait;
 use App\Repository\TagRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -35,9 +36,6 @@ class Tag
     #[ORM\Column(length: 7, nullable: true)]
     #[Assert\Regex(pattern: '/^#[0-9A-Fa-f]{6}$/', message: 'Color must be a valid hex color.')]
     private ?string $colorHex = null;
-
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $description = null;
 
     /**
      * @var Collection<int, NoteTag>
