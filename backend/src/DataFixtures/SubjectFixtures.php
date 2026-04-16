@@ -3,9 +3,10 @@
 namespace App\DataFixtures;
 
 use Doctrine\Bundle\FixturesBundle\Fixture;
+use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
 use Doctrine\Persistence\ObjectManager;
 
-class SubjectFixtures extends Fixture
+class SubjectFixtures extends Fixture implements FixtureGroupInterface
 {
     public function load(ObjectManager $manager): void
     {
@@ -13,5 +14,20 @@ class SubjectFixtures extends Fixture
         // $manager->persist($product);
 
         $manager->flush();
+    }
+
+    public function getDependencies(): array
+    {
+        return [
+            UserFixtures::class,
+        ];
+    }
+
+    /**
+     * @return string[]
+     */
+    public static function getGroups(): array
+    {
+        return ['base','dev','demo','ui','large'];
     }
 }
