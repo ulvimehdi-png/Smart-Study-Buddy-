@@ -5,7 +5,10 @@ namespace App\Factory;
 use App\Entity\Task;
 use App\Enum\TaskPriority;
 use App\Enum\TaskStatus;
+use App\Repository\TaskRepository;
+use phpDocumentor\Reflection\Types\Integer;
 use Zenstruck\Foundry\Persistence\PersistentObjectFactory;
+use Zenstruck\Foundry\Persistence\ProxyRepositoryDecorator;
 
 /**
  * @extends PersistentObjectFactory<Task>
@@ -36,12 +39,9 @@ final class TaskFactory extends PersistentObjectFactory
     protected function defaults(): array|callable
     {
         return [
-            'createdAt' => \DateTimeImmutable::createFromMutable(self::faker()->dateTime()),
-            'priority' => self::faker()->randomElement(TaskPriority::cases()),
-            'status' => self::faker()->randomElement(TaskStatus::cases()),
-            'title' => self::faker()->text(255),
-            'updatedAt' => \DateTimeImmutable::createFromMutable(self::faker()->dateTime()),
-            'user' => UserFactory::new(),
+            'title' => ucfirst(self::faker()->words(4, true)),
+            'status' => TaskStatus::default(),
+            'priority' => TaskPriority::default(),
         ];
     }
 
@@ -52,7 +52,68 @@ final class TaskFactory extends PersistentObjectFactory
     protected function initialize(): static
     {
         return $this
-            // ->afterInstantiate(function(Task $task): void {})
-        ;
+            ->afterInstantiate(function (Task $task): void {
+                if ($task->getStatus() !== TaskStatus::DONE) {
+                    $task->setCompletedAt(null);
+                }
+            });
+    }
+
+    /*
+     *
+     * FACTORY STATES
+     *
+     */
+
+    public function withStatus(TaskStatus $status): static
+    {
+        return $this->with([
+            'status' => $status,
+            'completedAt' => $status === TaskStatus::DONE ? new \DateTimeImmutable() : null,
+        ]);
+    }
+
+    public function withDescription(?string $description = null,): static
+    {
+        return $this->with([
+            'description' => $description ?? self::faker()->paragraphs(),
+        ]);
+    }
+
+    public function withEstimatedMinutes(?Integer $estimatedMinutes = null): static
+    {
+        return $this->with([
+            //mutiple of 15
+            'estimatedMinutes' => $estimatedMinutes ?? round(self::faker()->numberBetween(10,600)/15)*15,
+        ]);
+    }
+
+    public function withDueAt(?\DateTimeImmutable $dueAt = null): static
+    {
+        return $this->with([
+            'dueAt' => $dueAt ?? self::faker()->dateTimeBetween('now', '+30 days'),
+        ]);
+    }
+
+    public function withScheduledFor(?\DateTimeImmutable $scheduledFor = null): static
+    {
+        return $this->with([
+            'scheduledFor' => $scheduledFor ?? new \DateTimeImmutable(),
+        ]);
+    }
+
+    public function archived(?\DateTimeImmutable $archivedDate = null): static
+    {
+        return $this->with([
+            'archivedAt' => $archivedDate ?? new \DateTimeImmutable(),
+        ]);
+    }
+
+    /**
+     * @return ProxyRepositoryDecorator<Task, TaskRepository>
+     */
+    public static function repository(): ProxyRepositoryDecorator
+    {
+        return parent::repository();
     }
 }

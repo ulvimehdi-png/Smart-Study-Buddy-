@@ -3,7 +3,9 @@
 namespace App\Factory;
 
 use App\Entity\Tag;
+use App\Repository\TagRepository;
 use Zenstruck\Foundry\Persistence\PersistentObjectFactory;
+use Zenstruck\Foundry\Persistence\ProxyRepositoryDecorator;
 
 /**
  * @extends PersistentObjectFactory<Tag>
@@ -17,6 +19,7 @@ final class TagFactory extends PersistentObjectFactory
      */
     public function __construct()
     {
+        parent::__construct();
     }
 
     #[\Override]
@@ -34,10 +37,7 @@ final class TagFactory extends PersistentObjectFactory
     protected function defaults(): array|callable
     {
         return [
-            'createdAt' => \DateTimeImmutable::createFromMutable(self::faker()->dateTime()),
-            'name' => self::faker()->text(50),
-            'updatedAt' => \DateTimeImmutable::createFromMutable(self::faker()->dateTime()),
-            'user' => UserFactory::new(),
+            'name' => self::faker()->unique()->word(),
         ];
     }
 
@@ -47,8 +47,27 @@ final class TagFactory extends PersistentObjectFactory
     #[\Override]
     protected function initialize(): static
     {
-        return $this
-            // ->afterInstantiate(function(Tag $tag): void {})
-        ;
+        return $this;
+    }
+
+    /*
+     *
+     * FACTORY STATES
+     *
+     */
+
+    public function withColor(?string $colorHex = null): static
+    {
+        return $this->with([
+            'colorHex' => $colorHex ?? self::faker()->hexColor(),
+        ]);
+    }
+
+    /**
+     * @return ProxyRepositoryDecorator<Tag, TagRepository>
+     */
+    public static function repository(): ProxyRepositoryDecorator
+    {
+        return parent::repository();
     }
 }

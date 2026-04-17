@@ -57,24 +57,42 @@ final class SubjectFactory extends PersistentObjectFactory
      *
      */
 
-    public function withAllOptions(
-        string $name,
-        ?string $code = null,
-        ?string $description = null,
-        ?string $colorHex = null,
+    public function withCode(?string $code = null): static
+    {
+        return $this->with([
+            'code' => $code ?? self::faker()->word,
+        ]);
+    }
+
+    public function withDescription(?string $description = null,): static
+    {
+        return $this->with([
+            'description' => $description ?? self::faker()->paragraphs(),
+        ]);
+    }
+
+    public function withColorHex(): static
+    {
+        return $this->with([
+            'colorHex' => $colorHex ?? self::faker()->hexColor(),
+        ]);
+    }
+
+    public function withTargetMinutes(
         ?Integer $targetTotalMinutes = null,
         ?Integer $targetWeeklyMinutes = null,
     ): static
     {
+        $minutesPerCredit = self::faker()->numberBetween(20,40) * 60;
+        $subjectCredit = self::faker()->numberBetween(3,7);
+        $subjectWeeks = self::faker()->numberBetween(4,52);
+
+        $targetTotalMinutes = $minutesPerCredit*$subjectCredit;
+        $targetWeeklyMinutes = intdiv($targetTotalMinutes, $subjectWeeks);
+
         return $this->with([
-            'name' => $name,
-            'code' => $code ?? self::faker()->word,
-            'description' => $description ?? self::faker()->paragraphs(),
-            'colorHex' => $colorHex ?? self::faker()->hexColor(),
-            // 1 credit = 30hr, set max 6 credits
-            'targetTotalMinutes' => $targetTotalMinutes ?? self::faker()->numberBetween(30*60, 6*30*60),
-            // 13 weeks per semester
-            'targetWeeklyMinutes' => $targetWeeklyMinutes ?? self::faker()->numberBetween(30*60/13, 6*30*60/13),
+            'targetTotalMinutes' => $targetTotalMinutes,
+            'targetWeeklyMinutes' => $targetWeeklyMinutes,
         ]);
     }
 

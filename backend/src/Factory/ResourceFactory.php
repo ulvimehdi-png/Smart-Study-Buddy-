@@ -4,7 +4,9 @@ namespace App\Factory;
 
 use App\Entity\Resource;
 use App\Enum\ResourceType;
+use phpDocumentor\Reflection\Types\Integer;
 use Zenstruck\Foundry\Persistence\PersistentObjectFactory;
+use Zenstruck\Foundry\Persistence\ProxyRepositoryDecorator;
 
 /**
  * @extends PersistentObjectFactory<resource>
@@ -18,6 +20,7 @@ final class ResourceFactory extends PersistentObjectFactory
      */
     public function __construct()
     {
+        parent::__construct();
     }
 
     #[\Override]
@@ -35,11 +38,8 @@ final class ResourceFactory extends PersistentObjectFactory
     protected function defaults(): array|callable
     {
         return [
-            'createdAt' => \DateTimeImmutable::createFromMutable(self::faker()->dateTime()),
-            'resourceType' => self::faker()->randomElement(ResourceType::cases()),
-            'title' => self::faker()->text(150),
-            'updatedAt' => \DateTimeImmutable::createFromMutable(self::faker()->dateTime()),
-            'user' => UserFactory::new(),
+            'title' => ucfirst(self::faker()->words(3, true)),
+            'resourceType' => ResourceType::LINK,
         ];
     }
 
@@ -49,8 +49,46 @@ final class ResourceFactory extends PersistentObjectFactory
     #[\Override]
     protected function initialize(): static
     {
-        return $this
-            // ->afterInstantiate(function(Resource $resource): void {})
-        ;
+        return $this;
+    }
+
+    /*
+     *
+     * FACTORY STATES
+     *
+     */
+
+    public function link(?string $url = null): static
+    {
+        return $this->with([
+            'resource_type' => ResourceType::LINK,
+            'external_url' => $url ?? self::faker()->url(),
+        ]);
+    }
+
+    public function file(
+        ?string $originalFilename = null,
+        ?string $storagePath = null,
+        ?string $mimeType = null,
+        ?Integer $sizeBytes = null,
+        ?string $checksumSha256 = null
+    ): static
+    {
+        return $this->with([
+            'resourceType' => ResourceType::FILE,
+            'originalFilename' => $originalFilename ?? self::faker()->randomElement(['summary.pdf', 'slides.pdf', 'notes.docx']),
+            'storagePath' => $storagePath ?? '/fixtures/resources/'.self::faker()->uuid().'.bin',
+            'mimeType' => $mimeType ?? self::faker()->randomElement(['application/pdf', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document']),
+            'sizeBytes' => $sizeBytes ?? self::faker()->numberBetween(50_000, 2_000_000),
+            'checksumSha256' => $checksumSha256 ?? hash('sha256', self::faker()->uuid()),
+        ]);
+    }
+
+    /**
+     * @return ProxyRepositoryDecorator<Resource, ResourceFactory>
+     */
+    public static function repository(): ProxyRepositoryDecorator
+    {
+        return parent::repository();
     }
 }

@@ -5,7 +5,10 @@ namespace App\Factory;
 use App\Entity\Session;
 use App\Enum\SessionStatus;
 use App\Enum\SessionType;
+use App\Repository\SessionRepository;
+use phpDocumentor\Reflection\Types\Integer;
 use Zenstruck\Foundry\Persistence\PersistentObjectFactory;
+use Zenstruck\Foundry\Persistence\ProxyRepositoryDecorator;
 
 /**
  * @extends PersistentObjectFactory<Session>
@@ -19,6 +22,7 @@ final class SessionFactory extends PersistentObjectFactory
      */
     public function __construct()
     {
+        parent::__construct();
     }
 
     #[\Override]
@@ -35,15 +39,16 @@ final class SessionFactory extends PersistentObjectFactory
     #[\Override]
     protected function defaults(): array|callable
     {
+        $startedAt = \DateTimeImmutable::createFromMutable(
+            self::faker()->dateTimeBetween('-30 days')
+        );
+
         return [
-            'breakMinutes' => self::faker()->randomNumber(),
-            'createdAt' => \DateTimeImmutable::createFromMutable(self::faker()->dateTime()),
-            'distractionCount' => self::faker()->randomNumber(),
-            'sessionType' => self::faker()->randomElement(SessionType::cases()),
-            'startedAt' => \DateTimeImmutable::createFromMutable(self::faker()->dateTime()),
-            'status' => self::faker()->randomElement(SessionStatus::cases()),
-            'updatedAt' => \DateTimeImmutable::createFromMutable(self::faker()->dateTime()),
-            'user' => UserFactory::new(),
+            'status' => SessionStatus::default(), //ACTIVE
+            'sessionType' => SessionType::default(),
+            'startedAt' => $startedAt,
+            'breakMinutes' => 0,
+            'distractionCount' => 0,
         ];
     }
 
@@ -53,8 +58,50 @@ final class SessionFactory extends PersistentObjectFactory
     #[\Override]
     protected function initialize(): static
     {
-        return $this
-            // ->afterInstantiate(function(Session $session): void {})
-        ;
+        return $this;
+    }
+
+    /*
+     *
+     * FACTORY STATES
+     *
+     */
+
+    public function completed(): static
+    {
+        return $this->with(function () {
+            $focus = self::faker()->numberBetween(25, 150);
+            $break = self::faker()->numberBetween(0, 30);
+            $planned = $focus + $break;
+
+            $startedAt = \DateTimeImmutable::createFromMutable(
+                self::faker()->dateTimeBetween('-30 days', 'now')
+            );
+
+            return [
+                'status' => SessionStatus::COMPLETED,
+                'startedAt' => $startedAt,
+                'endedAt' => $startedAt->modify("+{$planned} minutes"),
+                'plannedMinutes' => $planned,
+                'actualFocusMinutes' => $focus,
+                'breakMinutes' => $break,
+                'distractionCount' => self::faker()->numberBetween(0, 5),
+            ];
+        });
+    }
+
+    public function cancelled(): static
+    {
+        return $this->with([
+            'status' => SessionStatus::CANCELLED,
+        ]);
+    }
+
+    /**
+     * @return ProxyRepositoryDecorator<Session, SessionRepository>
+     */
+    public static function repository(): ProxyRepositoryDecorator
+    {
+        return parent::repository();
     }
 }

@@ -4,7 +4,9 @@ namespace App\Factory;
 
 use App\Entity\Note;
 use App\Enum\NoteSourceType;
+use App\Repository\NoteRepository;
 use Zenstruck\Foundry\Persistence\PersistentObjectFactory;
+use Zenstruck\Foundry\Persistence\ProxyRepositoryDecorator;
 
 /**
  * @extends PersistentObjectFactory<Note>
@@ -18,6 +20,7 @@ final class NoteFactory extends PersistentObjectFactory
      */
     public function __construct()
     {
+        parent::__construct();
     }
 
     #[\Override]
@@ -35,12 +38,9 @@ final class NoteFactory extends PersistentObjectFactory
     protected function defaults(): array|callable
     {
         return [
-            'content' => self::faker()->text(),
-            'createdAt' => \DateTimeImmutable::createFromMutable(self::faker()->dateTime()),
-            'sourceType' => self::faker()->randomElement(NoteSourceType::cases()),
-            'title' => self::faker()->text(150),
-            'updatedAt' => \DateTimeImmutable::createFromMutable(self::faker()->dateTime()),
-            'user' => UserFactory::new(),
+            'title' => ucfirst(self::faker()->words(3, true)),
+            'content' => self::faker()->paragraphs(5, true),
+            'sourceType' => NoteSourceType::default(),
         ];
     }
 
@@ -50,8 +50,36 @@ final class NoteFactory extends PersistentObjectFactory
     #[\Override]
     protected function initialize(): static
     {
-        return $this
-            // ->afterInstantiate(function(Note $note): void {})
-        ;
+        return $this;
+    }
+
+    /*
+     *
+     * FACTORY STATES
+     *
+     */
+
+    public function link(?string $url = null): static
+    {
+        return $this->with([
+            'sourceType' => NoteSourceType::LINK,
+            'externalUrl' => $url ?? self::faker()->url(),
+        ]);
+    }
+
+    public function standalone(): static
+    {
+        return $this->with([
+            'subject' => null,
+            'task' => null,
+        ]);
+    }
+
+    /**
+     * @return ProxyRepositoryDecorator<Note, NoteRepository>
+     */
+    public static function repository(): ProxyRepositoryDecorator
+    {
+        return parent::repository();
     }
 }
