@@ -2,11 +2,7 @@
 
 namespace App\Factory;
 
-use App\Entity\Settings;
-use App\Entity\Subject;
 use App\Entity\User;
-use App\Enum\SessionType;
-use App\Enum\WeekStartDay;
 use App\Repository\UserRepository;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Zenstruck\Foundry\Persistence\PersistentObjectFactory;
@@ -71,13 +67,6 @@ final class UserFactory extends PersistentObjectFactory
                 $user->setPassword(
                     $this->userPasswordHasher->hashPassword($user, (string) $user->getPassword())
                 );
-                /*
-                if($this->userPasswordHasher){
-                    $user->setPassword(
-                        $this->userPasswordHasher->hashPassword($user, (string) $user->getPassword())
-                    );
-                }
-                */
             });
     }
 
@@ -87,7 +76,7 @@ final class UserFactory extends PersistentObjectFactory
      *
      */
 
-    public function admin(): self
+    public function admin(): static
     {
         return $this->with([
             'roles' => ['ROLE_ADMIN'],
@@ -97,28 +86,28 @@ final class UserFactory extends PersistentObjectFactory
         ]);
     }
 
-    public function inactive(): self
+    public function inactive(): static
     {
         return $this->with([
             'isActive' => false,
         ]);
     }
 
-    public function withEmail(?string $email = null): self
+    public function withEmail(?string $email = null): static
     {
         return $this->with([
             'email' => $email ?? self::faker()->safeEmail(),
         ]);
     }
 
-    public function withDisplayName(?string $displayName = null): self
+    public function withDisplayName(?string $displayName = null): static
     {
         return $this->with([
             'displayName' => $displayName ?? self::faker()->name(),
         ]);
     }
 
-    public function withTimezone(string $timezone): self
+    public function withTimezone(string $timezone): static
     {
         return $this->afterInstantiate(function (User $user) use ($timezone) {
             $user->getSettings()?->setTimezone($timezone);
