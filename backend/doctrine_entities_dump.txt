@@ -1,0 +1,2168 @@
+ ------------------------------- --------------------------------------- 
+  Field                           Value                                  
+ ------------------------------- --------------------------------------- 
+  Name                            App\Entity\User                        
+  Root entity name                App\Entity\User                        
+  Custom generator definition     None                                   
+  Custom repository class         App\Repository\UserRepository          
+  Mapped super class?             False                                  
+  Embedded class?                 False                                  
+  Parent classes                  Empty                                  
+  Sub classes                     Empty                                  
+  Embedded classes                Empty                                  
+  Identifier                      [                                      
+                                      "id"                               
+                                  ]                                      
+  Inheritance type                1                                      
+  Discriminator column            None                                   
+  Discriminator value             None                                   
+  Discriminator map               Empty                                  
+  Generator type                  4                                      
+  Table                           {                                      
+                                      "name": "users",                   
+                                      "uniqueConstraints": {             
+                                          "UNIQ_IDENTIFIER_USERNAME": {  
+                                              "fields": [                
+                                                  "username"             
+                                              ]                          
+                                          }                              
+                                      }                                  
+                                  }                                      
+  Composite identifier?           False                                  
+  Foreign identifier?             False                                  
+  Enum identifier?                False                                  
+  Sequence generator definition   None                                   
+  Change tracking policy          1                                      
+  Versioned?                      False                                  
+  Version field                   None                                   
+  Read only?                      False                                  
+  Entity listeners                Empty                                  
+  Association mappings:                                                  
+    settings                                                             
+      cascade                     [                                      
+                                      "persist",                         
+                                      "remove"                           
+                                  ]                                      
+      fetch                       2                                      
+      inherited                   Null                                   
+      declared                    Null                                   
+      cache                       Null                                   
+      id                          Null                                   
+      isOnDeleteCascade           Null                                   
+      originalClass               Null                                   
+      originalField               Null                                   
+      orphanRemoval               False                                  
+      unique                      Null                                   
+      fieldName                   settings                               
+      sourceEntity                App\Entity\User                        
+      targetEntity                App\Entity\Settings                    
+      mappedBy                    user                                   
+    subjects                                                             
+      cascade                     Empty                                  
+      fetch                       2                                      
+      inherited                   Null                                   
+      declared                    Null                                   
+      cache                       Null                                   
+      id                          Null                                   
+      isOnDeleteCascade           Null                                   
+      originalClass               Null                                   
+      originalField               Null                                   
+      orphanRemoval               False                                  
+      unique                      Null                                   
+      fieldName                   subjects                               
+      sourceEntity                App\Entity\User                        
+      targetEntity                App\Entity\Subject                     
+      mappedBy                    user                                   
+      indexBy                     Null                                   
+      orderBy                     Empty                                  
+    tasks                                                                
+      cascade                     Empty                                  
+      fetch                       2                                      
+      inherited                   Null                                   
+      declared                    Null                                   
+      cache                       Null                                   
+      id                          Null                                   
+      isOnDeleteCascade           Null                                   
+      originalClass               Null                                   
+      originalField               Null                                   
+      orphanRemoval               False                                  
+      unique                      Null                                   
+      fieldName                   tasks                                  
+      sourceEntity                App\Entity\User                        
+      targetEntity                App\Entity\Task                        
+      mappedBy                    user                                   
+      indexBy                     Null                                   
+      orderBy                     Empty                                  
+    sessions                                                             
+      cascade                     Empty                                  
+      fetch                       2                                      
+      inherited                   Null                                   
+      declared                    Null                                   
+      cache                       Null                                   
+      id                          Null                                   
+      isOnDeleteCascade           Null                                   
+      originalClass               Null                                   
+      originalField               Null                                   
+      orphanRemoval               False                                  
+      unique                      Null                                   
+      fieldName                   sessions                               
+      sourceEntity                App\Entity\User                        
+      targetEntity                App\Entity\Session                     
+      mappedBy                    user                                   
+      indexBy                     Null                                   
+      orderBy                     Empty                                  
+    notes                                                                
+      cascade                     Empty                                  
+      fetch                       2                                      
+      inherited                   Null                                   
+      declared                    Null                                   
+      cache                       Null                                   
+      id                          Null                                   
+      isOnDeleteCascade           Null                                   
+      originalClass               Null                                   
+      originalField               Null                                   
+      orphanRemoval               False                                  
+      unique                      Null                                   
+      fieldName                   notes                                  
+      sourceEntity                App\Entity\User                        
+      targetEntity                App\Entity\Note                        
+      mappedBy                    user                                   
+      indexBy                     Null                                   
+      orderBy                     Empty                                  
+    resources                                                            
+      cascade                     Empty                                  
+      fetch                       2                                      
+      inherited                   Null                                   
+      declared                    Null                                   
+      cache                       Null                                   
+      id                          Null                                   
+      isOnDeleteCascade           Null                                   
+      originalClass               Null                                   
+      originalField               Null                                   
+      orphanRemoval               False                                  
+      unique                      Null                                   
+      fieldName                   resources                              
+      sourceEntity                App\Entity\User                        
+      targetEntity                App\Entity\Resource                    
+      mappedBy                    user                                   
+      indexBy                     Null                                   
+      orderBy                     Empty                                  
+    tags                                                                 
+      cascade                     Empty                                  
+      fetch                       2                                      
+      inherited                   Null                                   
+      declared                    Null                                   
+      cache                       Null                                   
+      id                          Null                                   
+      isOnDeleteCascade           Null                                   
+      originalClass               Null                                   
+      originalField               Null                                   
+      orphanRemoval               False                                  
+      unique                      Null                                   
+      fieldName                   tags                                   
+      sourceEntity                App\Entity\User                        
+      targetEntity                App\Entity\Tag                         
+      mappedBy                    user                                   
+      indexBy                     Null                                   
+      orderBy                     Empty                                  
+  Field mappings:                                                        
+    id                                                                   
+      length                      Null                                   
+      id                          True                                   
+      nullable                    False                                  
+      notInsertable               Null                                   
+      notUpdatable                Null                                   
+      columnDefinition            Null                                   
+      generated                   Null                                   
+      enumType                    Null                                   
+      precision                   Null                                   
+      scale                       Null                                   
+      unique                      False                                  
+      index                       False                                  
+      inherited                   Null                                   
+      originalClass               Null                                   
+      originalField               Null                                   
+      quoted                      Null                                   
+      declared                    Null                                   
+      declaredField               Null                                   
+      options                     Null                                   
+      version                     Null                                   
+      default                     Null                                   
+      type                        integer                                
+      fieldName                   id                                     
+      columnName                  id                                     
+    username                                                             
+      length                      50                                     
+      id                          Null                                   
+      nullable                    False                                  
+      notInsertable               Null                                   
+      notUpdatable                Null                                   
+      columnDefinition            Null                                   
+      generated                   Null                                   
+      enumType                    Null                                   
+      precision                   Null                                   
+      scale                       Null                                   
+      unique                      False                                  
+      index                       False                                  
+      inherited                   Null                                   
+      originalClass               Null                                   
+      originalField               Null                                   
+      quoted                      Null                                   
+      declared                    Null                                   
+      declaredField               Null                                   
+      options                     Null                                   
+      version                     Null                                   
+      default                     Null                                   
+      type                        string                                 
+      fieldName                   username                               
+      columnName                  username                               
+    email                                                                
+      length                      180                                    
+      id                          Null                                   
+      nullable                    True                                   
+      notInsertable               Null                                   
+      notUpdatable                Null                                   
+      columnDefinition            Null                                   
+      generated                   Null                                   
+      enumType                    Null                                   
+      precision                   Null                                   
+      scale                       Null                                   
+      unique                      False                                  
+      index                       False                                  
+      inherited                   Null                                   
+      originalClass               Null                                   
+      originalField               Null                                   
+      quoted                      Null                                   
+      declared                    Null                                   
+      declaredField               Null                                   
+      options                     Null                                   
+      version                     Null                                   
+      default                     Null                                   
+      type                        string                                 
+      fieldName                   email                                  
+      columnName                  email                                  
+    roles                                                                
+      length                      Null                                   
+      id                          Null                                   
+      nullable                    False                                  
+      notInsertable               Null                                   
+      notUpdatable                Null                                   
+      columnDefinition            Null                                   
+      generated                   Null                                   
+      enumType                    Null                                   
+      precision                   Null                                   
+      scale                       Null                                   
+      unique                      False                                  
+      index                       False                                  
+      inherited                   Null                                   
+      originalClass               Null                                   
+      originalField               Null                                   
+      quoted                      Null                                   
+      declared                    Null                                   
+      declaredField               Null                                   
+      options                     Null                                   
+      version                     Null                                   
+      default                     Null                                   
+      type                        json                                   
+      fieldName                   roles                                  
+      columnName                  roles                                  
+    password                                                             
+      length                      255                                    
+      id                          Null                                   
+      nullable                    False                                  
+      notInsertable               Null                                   
+      notUpdatable                Null                                   
+      columnDefinition            Null                                   
+      generated                   Null                                   
+      enumType                    Null                                   
+      precision                   Null                                   
+      scale                       Null                                   
+      unique                      False                                  
+      index                       False                                  
+      inherited                   Null                                   
+      originalClass               Null                                   
+      originalField               Null                                   
+      quoted                      Null                                   
+      declared                    Null                                   
+      declaredField               Null                                   
+      options                     Null                                   
+      version                     Null                                   
+      default                     Null                                   
+      type                        string                                 
+      fieldName                   password                               
+      columnName                  hashed_password                        
+    displayName                                                          
+      length                      120                                    
+      id                          Null                                   
+      nullable                    True                                   
+      notInsertable               Null                                   
+      notUpdatable                Null                                   
+      columnDefinition            Null                                   
+      generated                   Null                                   
+      enumType                    Null                                   
+      precision                   Null                                   
+      scale                       Null                                   
+      unique                      False                                  
+      index                       False                                  
+      inherited                   Null                                   
+      originalClass               Null                                   
+      originalField               Null                                   
+      quoted                      Null                                   
+      declared                    Null                                   
+      declaredField               Null                                   
+      options                     Null                                   
+      version                     Null                                   
+      default                     Null                                   
+      type                        string                                 
+      fieldName                   displayName                            
+      columnName                  display_name                           
+    isActive                                                             
+      length                      Null                                   
+      id                          Null                                   
+      nullable                    False                                  
+      notInsertable               Null                                   
+      notUpdatable                Null                                   
+      columnDefinition            Null                                   
+      generated                   Null                                   
+      enumType                    Null                                   
+      precision                   Null                                   
+      scale                       Null                                   
+      unique                      False                                  
+      index                       False                                  
+      inherited                   Null                                   
+      originalClass               Null                                   
+      originalField               Null                                   
+      quoted                      Null                                   
+      declared                    Null                                   
+      declaredField               Null                                   
+      options                     {                                      
+                                      "default": true                    
+                                  }                                      
+      version                     Null                                   
+      default                     Null                                   
+      type                        boolean                                
+      fieldName                   isActive                               
+      columnName                  is_active                              
+    lastLoginAt                                                          
+      length                      Null                                   
+      id                          Null                                   
+      nullable                    True                                   
+      notInsertable               Null                                   
+      notUpdatable                Null                                   
+      columnDefinition            Null                                   
+      generated                   Null                                   
+      enumType                    Null                                   
+      precision                   Null                                   
+      scale                       Null                                   
+      unique                      False                                  
+      index                       False                                  
+      inherited                   Null                                   
+      originalClass               Null                                   
+      originalField               Null                                   
+      quoted                      Null                                   
+      declared                    Null                                   
+      declaredField               Null                                   
+      options                     Null                                   
+      version                     Null                                   
+      default                     Null                                   
+      type                        datetime_immutable                     
+      fieldName                   lastLoginAt                            
+      columnName                  last_login_at                          
+    createdAt                                                            
+      length                      Null                                   
+      id                          Null                                   
+      nullable                    False                                  
+      notInsertable               Null                                   
+      notUpdatable                Null                                   
+      columnDefinition            Null                                   
+      generated                   Null                                   
+      enumType                    Null                                   
+      precision                   Null                                   
+      scale                       Null                                   
+      unique                      False                                  
+      index                       False                                  
+      inherited                   Null                                   
+      originalClass               Null                                   
+      originalField               Null                                   
+      quoted                      Null                                   
+      declared                    Null                                   
+      declaredField               Null                                   
+      options                     Null                                   
+      version                     Null                                   
+      default                     Null                                   
+      type                        datetime_immutable                     
+      fieldName                   createdAt                              
+      columnName                  created_at                             
+    updatedAt                                                            
+      length                      Null                                   
+      id                          Null                                   
+      nullable                    False                                  
+      notInsertable               Null                                   
+      notUpdatable                Null                                   
+      columnDefinition            Null                                   
+      generated                   Null                                   
+      enumType                    Null                                   
+      precision                   Null                                   
+      scale                       Null                                   
+      unique                      False                                  
+      index                       False                                  
+      inherited                   Null                                   
+      originalClass               Null                                   
+      originalField               Null                                   
+      quoted                      Null                                   
+      declared                    Null                                   
+      declaredField               Null                                   
+      options                     Null                                   
+      version                     Null                                   
+      default                     Null                                   
+      type                        datetime_immutable                     
+      fieldName                   updatedAt                              
+      columnName                  updated_at                             
+ ------------------------------- --------------------------------------- 
+
+ ------------------------------- --------------------------------------------- 
+  Field                           Value                                        
+ ------------------------------- --------------------------------------------- 
+  Name                            App\Entity\SessionEntry                      
+  Root entity name                App\Entity\SessionEntry                      
+  Custom generator definition     None                                         
+  Custom repository class         App\Repository\SessionEntryRepository        
+  Mapped super class?             False                                        
+  Embedded class?                 False                                        
+  Parent classes                  Empty                                        
+  Sub classes                     Empty                                        
+  Embedded classes                Empty                                        
+  Identifier                      [                                            
+                                      "id"                                     
+                                  ]                                            
+  Inheritance type                1                                            
+  Discriminator column            None                                         
+  Discriminator value             None                                         
+  Discriminator map               Empty                                        
+  Generator type                  4                                            
+  Table                           {                                            
+                                      "name": "session_entries",               
+                                      "indexes": {                             
+                                          "idx_session_entries_session_id": {  
+                                              "columns": [                     
+                                                  "session_id"                 
+                                              ]                                
+                                          },                                   
+                                          "idx_session_entries_subject_id": {  
+                                              "columns": [                     
+                                                  "subject_id"                 
+                                              ]                                
+                                          },                                   
+                                          "idx_session_entries_task_id": {     
+                                              "columns": [                     
+                                                  "task_id"                    
+                                              ]                                
+                                          },                                   
+                                          "idx_session_entries_note_id": {     
+                                              "columns": [                     
+                                                  "note_id"                    
+                                              ]                                
+                                          }                                    
+                                      }                                        
+                                  }                                            
+  Composite identifier?           False                                        
+  Foreign identifier?             False                                        
+  Enum identifier?                False                                        
+  Sequence generator definition   None                                         
+  Change tracking policy          1                                            
+  Versioned?                      False                                        
+  Version field                   None                                         
+  Read only?                      False                                        
+  Entity listeners                Empty                                        
+  Association mappings:                                                        
+    session                                                                    
+      cascade                     Empty                                        
+      fetch                       2                                            
+      inherited                   Null                                         
+      declared                    Null                                         
+      cache                       Null                                         
+      id                          Null                                         
+      isOnDeleteCascade           Null                                         
+      originalClass               Null                                         
+      originalField               Null                                         
+      orphanRemoval               False                                        
+      unique                      Null                                         
+      fieldName                   session                                      
+      sourceEntity                App\Entity\SessionEntry                      
+      targetEntity                App\Entity\Session                           
+      inversedBy                  sessionEntries                               
+      sourceToTargetKeyColumns    {                                            
+                                      "session_id": "id"                       
+                                  }                                            
+      targetToSourceKeyColumns    {                                            
+                                      "id": "session_id"                       
+                                  }                                            
+      joinColumns                 [                                            
+                                      {                                        
+                                          "deferrable": false,                 
+                                          "unique": false,                     
+                                          "quoted": null,                      
+                                          "fieldName": null,                   
+                                          "onDelete": "CASCADE",               
+                                          "columnDefinition": null,            
+                                          "nullable": false,                   
+                                          "options": null,                     
+                                          "name": "session_id",                
+                                          "referencedColumnName": "id"         
+                                      }                                        
+                                  ]                                            
+      joinColumnFieldNames        {                                            
+                                      "session_id": "session_id"               
+                                  }                                            
+    subject                                                                    
+      cascade                     Empty                                        
+      fetch                       2                                            
+      inherited                   Null                                         
+      declared                    Null                                         
+      cache                       Null                                         
+      id                          Null                                         
+      isOnDeleteCascade           Null                                         
+      originalClass               Null                                         
+      originalField               Null                                         
+      orphanRemoval               False                                        
+      unique                      Null                                         
+      fieldName                   subject                                      
+      sourceEntity                App\Entity\SessionEntry                      
+      targetEntity                App\Entity\Subject                           
+      inversedBy                  sessionEntries                               
+      sourceToTargetKeyColumns    {                                            
+                                      "subject_id": "id"                       
+                                  }                                            
+      targetToSourceKeyColumns    {                                            
+                                      "id": "subject_id"                       
+                                  }                                            
+      joinColumns                 [                                            
+                                      {                                        
+                                          "deferrable": false,                 
+                                          "unique": false,                     
+                                          "quoted": null,                      
+                                          "fieldName": null,                   
+                                          "onDelete": "SET NULL",              
+                                          "columnDefinition": null,            
+                                          "nullable": true,                    
+                                          "options": null,                     
+                                          "name": "subject_id",                
+                                          "referencedColumnName": "id"         
+                                      }                                        
+                                  ]                                            
+      joinColumnFieldNames        {                                            
+                                      "subject_id": "subject_id"               
+                                  }                                            
+    task                                                                       
+      cascade                     Empty                                        
+      fetch                       2                                            
+      inherited                   Null                                         
+      declared                    Null                                         
+      cache                       Null                                         
+      id                          Null                                         
+      isOnDeleteCascade           Null                                         
+      originalClass               Null                                         
+      originalField               Null                                         
+      orphanRemoval               False                                        
+      unique                      Null                                         
+      fieldName                   task                                         
+      sourceEntity                App\Entity\SessionEntry                      
+      targetEntity                App\Entity\Task                              
+      inversedBy                  sessionEntries                               
+      sourceToTargetKeyColumns    {                                            
+                                      "task_id": "id"                          
+                                  }                                            
+      targetToSourceKeyColumns    {                                            
+                                      "id": "task_id"                          
+                                  }                                            
+      joinColumns                 [                                            
+                                      {                                        
+                                          "deferrable": false,                 
+                                          "unique": false,                     
+                                          "quoted": null,                      
+                                          "fieldName": null,                   
+                                          "onDelete": "SET NULL",              
+                                          "columnDefinition": null,            
+                                          "nullable": true,                    
+                                          "options": null,                     
+                                          "name": "task_id",                   
+                                          "referencedColumnName": "id"         
+                                      }                                        
+                                  ]                                            
+      joinColumnFieldNames        {                                            
+                                      "task_id": "task_id"                     
+                                  }                                            
+    note                                                                       
+      cascade                     Empty                                        
+      fetch                       2                                            
+      inherited                   Null                                         
+      declared                    Null                                         
+      cache                       Null                                         
+      id                          Null                                         
+      isOnDeleteCascade           Null                                         
+      originalClass               Null                                         
+      originalField               Null                                         
+      orphanRemoval               False                                        
+      unique                      Null                                         
+      fieldName                   note                                         
+      sourceEntity                App\Entity\SessionEntry                      
+      targetEntity                App\Entity\Note                              
+      inversedBy                  sessionEntries                               
+      sourceToTargetKeyColumns    {                                            
+                                      "note_id": "id"                          
+                                  }                                            
+      targetToSourceKeyColumns    {                                            
+                                      "id": "note_id"                          
+                                  }                                            
+      joinColumns                 [                                            
+                                      {                                        
+                                          "deferrable": false,                 
+                                          "unique": false,                     
+                                          "quoted": null,                      
+                                          "fieldName": null,                   
+                                          "onDelete": "SET NULL",              
+                                          "columnDefinition": null,            
+                                          "nullable": true,                    
+                                          "options": null,                     
+                                          "name": "note_id",                   
+                                          "referencedColumnName": "id"         
+                                      }                                        
+                                  ]                                            
+      joinColumnFieldNames        {                                            
+                                      "note_id": "note_id"                     
+                                  }                                            
+  Field mappings:                                                              
+    id                                                                         
+      length                      Null                                         
+      id                          True                                         
+      nullable                    False                                        
+      notInsertable               Null                                         
+      notUpdatable                Null                                         
+      columnDefinition            Null                                         
+      generated                   Null                                         
+      enumType                    Null                                         
+      precision                   Null                                         
+      scale                       Null                                         
+      unique                      False                                        
+      index                       False                                        
+      inherited                   Null                                         
+      originalClass               Null                                         
+      originalField               Null                                         
+      quoted                      Null                                         
+      declared                    Null                                         
+      declaredField               Null                                         
+      options                     Null                                         
+      version                     Null                                         
+      default                     Null                                         
+      type                        integer                                      
+      fieldName                   id                                           
+      columnName                  id                                           
+    plannedMinutes                                                             
+      length                      Null                                         
+      id                          Null                                         
+      nullable                    True                                         
+      notInsertable               Null                                         
+      notUpdatable                Null                                         
+      columnDefinition            Null                                         
+      generated                   Null                                         
+      enumType                    Null                                         
+      precision                   Null                                         
+      scale                       Null                                         
+      unique                      False                                        
+      index                       False                                        
+      inherited                   Null                                         
+      originalClass               Null                                         
+      originalField               Null                                         
+      quoted                      Null                                         
+      declared                    Null                                         
+      declaredField               Null                                         
+      options                     {                                            
+                                      "unsigned": true                         
+                                  }                                            
+      version                     Null                                         
+      default                     Null                                         
+      type                        integer                                      
+      fieldName                   plannedMinutes                               
+      columnName                  planned_minutes                              
+    actualFocusMinutes                                                         
+      length                      Null                                         
+      id                          Null                                         
+      nullable                    True                                         
+      notInsertable               Null                                         
+      notUpdatable                Null                                         
+      columnDefinition            Null                                         
+      generated                   Null                                         
+      enumType                    Null                                         
+      precision                   Null                                         
+      scale                       Null                                         
+      unique                      False                                        
+      index                       False                                        
+      inherited                   Null                                         
+      originalClass               Null                                         
+      originalField               Null                                         
+      quoted                      Null                                         
+      declared                    Null                                         
+      declaredField               Null                                         
+      options                     {                                            
+                                      "unsigned": true                         
+                                  }                                            
+      version                     Null                                         
+      default                     Null                                         
+      type                        integer                                      
+      fieldName                   actualFocusMinutes                           
+      columnName                  actual_focus_minutes                         
+    entryStartedAt                                                             
+      length                      Null                                         
+      id                          Null                                         
+      nullable                    True                                         
+      notInsertable               Null                                         
+      notUpdatable                Null                                         
+      columnDefinition            Null                                         
+      generated                   Null                                         
+      enumType                    Null                                         
+      precision                   Null                                         
+      scale                       Null                                         
+      unique                      False                                        
+      index                       False                                        
+      inherited                   Null                                         
+      originalClass               Null                                         
+      originalField               Null                                         
+      quoted                      Null                                         
+      declared                    Null                                         
+      declaredField               Null                                         
+      options                     Null                                         
+      version                     Null                                         
+      default                     Null                                         
+      type                        datetime_immutable                           
+      fieldName                   entryStartedAt                               
+      columnName                  entry_started_at                             
+    entryEndedAt                                                               
+      length                      Null                                         
+      id                          Null                                         
+      nullable                    True                                         
+      notInsertable               Null                                         
+      notUpdatable                Null                                         
+      columnDefinition            Null                                         
+      generated                   Null                                         
+      enumType                    Null                                         
+      precision                   Null                                         
+      scale                       Null                                         
+      unique                      False                                        
+      index                       False                                        
+      inherited                   Null                                         
+      originalClass               Null                                         
+      originalField               Null                                         
+      quoted                      Null                                         
+      declared                    Null                                         
+      declaredField               Null                                         
+      options                     Null                                         
+      version                     Null                                         
+      default                     Null                                         
+      type                        datetime_immutable                           
+      fieldName                   entryEndedAt                                 
+      columnName                  entry_ended_at                               
+    subjectNameSnapshot                                                        
+      length                      120                                          
+      id                          Null                                         
+      nullable                    True                                         
+      notInsertable               Null                                         
+      notUpdatable                Null                                         
+      columnDefinition            Null                                         
+      generated                   Null                                         
+      enumType                    Null                                         
+      precision                   Null                                         
+      scale                       Null                                         
+      unique                      False                                        
+      index                       False                                        
+      inherited                   Null                                         
+      originalClass               Null                                         
+      originalField               Null                                         
+      quoted                      Null                                         
+      declared                    Null                                         
+      declaredField               Null                                         
+      options                     Null                                         
+      version                     Null                                         
+      default                     Null                                         
+      type                        string                                       
+      fieldName                   subjectNameSnapshot                          
+      columnName                  subject_name_snapshot                        
+    taskTitleSnapshot                                                          
+      length                      255                                          
+      id                          Null                                         
+      nullable                    True                                         
+      notInsertable               Null                                         
+      notUpdatable                Null                                         
+      columnDefinition            Null                                         
+      generated                   Null                                         
+      enumType                    Null                                         
+      precision                   Null                                         
+      scale                       Null                                         
+      unique                      False                                        
+      index                       False                                        
+      inherited                   Null                                         
+      originalClass               Null                                         
+      originalField               Null                                         
+      quoted                      Null                                         
+      declared                    Null                                         
+      declaredField               Null                                         
+      options                     Null                                         
+      version                     Null                                         
+      default                     Null                                         
+      type                        string                                       
+      fieldName                   taskTitleSnapshot                            
+      columnName                  task_title_snapshot                          
+    noteTitleSnapshot                                                          
+      length                      150                                          
+      id                          Null                                         
+      nullable                    True                                         
+      notInsertable               Null                                         
+      notUpdatable                Null                                         
+      columnDefinition            Null                                         
+      generated                   Null                                         
+      enumType                    Null                                         
+      precision                   Null                                         
+      scale                       Null                                         
+      unique                      False                                        
+      index                       False                                        
+      inherited                   Null                                         
+      originalClass               Null                                         
+      originalField               Null                                         
+      quoted                      Null                                         
+      declared                    Null                                         
+      declaredField               Null                                         
+      options                     Null                                         
+      version                     Null                                         
+      default                     Null                                         
+      type                        string                                       
+      fieldName                   noteTitleSnapshot                            
+      columnName                  note_title_snapshot                          
+    createdAt                                                                  
+      length                      Null                                         
+      id                          Null                                         
+      nullable                    False                                        
+      notInsertable               Null                                         
+      notUpdatable                Null                                         
+      columnDefinition            Null                                         
+      generated                   Null                                         
+      enumType                    Null                                         
+      precision                   Null                                         
+      scale                       Null                                         
+      unique                      False                                        
+      index                       False                                        
+      inherited                   Null                                         
+      originalClass               Null                                         
+      originalField               Null                                         
+      quoted                      Null                                         
+      declared                    Null                                         
+      declaredField               Null                                         
+      options                     Null                                         
+      version                     Null                                         
+      default                     Null                                         
+      type                        datetime_immutable                           
+      fieldName                   createdAt                                    
+      columnName                  created_at                                   
+    updatedAt                                                                  
+      length                      Null                                         
+      id                          Null                                         
+      nullable                    False                                        
+      notInsertable               Null                                         
+      notUpdatable                Null                                         
+      columnDefinition            Null                                         
+      generated                   Null                                         
+      enumType                    Null                                         
+      precision                   Null                                         
+      scale                       Null                                         
+      unique                      False                                        
+      index                       False                                        
+      inherited                   Null                                         
+      originalClass               Null                                         
+      originalField               Null                                         
+      quoted                      Null                                         
+      declared                    Null                                         
+      declaredField               Null                                         
+      options                     Null                                         
+      version                     Null                                         
+      default                     Null                                         
+      type                        datetime_immutable                           
+      fieldName                   updatedAt                                    
+      columnName                  updated_at                                   
+ ------------------------------- --------------------------------------------- 
+
+ ------------------------------- -------------------------------------- 
+  Field                           Value                                 
+ ------------------------------- -------------------------------------- 
+  Name                            App\Entity\Settings                   
+  Root entity name                App\Entity\Settings                   
+  Custom generator definition     None                                  
+  Custom repository class         App\Repository\SettingsRepository     
+  Mapped super class?             False                                 
+  Embedded class?                 False                                 
+  Parent classes                  Empty                                 
+  Sub classes                     Empty                                 
+  Embedded classes                Empty                                 
+  Identifier                      [                                     
+                                      "user"                            
+                                  ]                                     
+  Inheritance type                1                                     
+  Discriminator column            None                                  
+  Discriminator value             None                                  
+  Discriminator map               Empty                                 
+  Generator type                  5                                     
+  Table                           {                                     
+                                      "name": "settings"                
+                                  }                                     
+  Composite identifier?           False                                 
+  Foreign identifier?             True                                  
+  Enum identifier?                False                                 
+  Sequence generator definition   None                                  
+  Change tracking policy          1                                     
+  Versioned?                      False                                 
+  Version field                   None                                  
+  Read only?                      False                                 
+  Entity listeners                Empty                                 
+  Association mappings:                                                 
+    user                                                                
+      cascade                     Empty                                 
+      fetch                       2                                     
+      inherited                   Null                                  
+      declared                    Null                                  
+      cache                       Null                                  
+      id                          True                                  
+      isOnDeleteCascade           Null                                  
+      originalClass               Null                                  
+      originalField               Null                                  
+      orphanRemoval               False                                 
+      unique                      Null                                  
+      fieldName                   user                                  
+      sourceEntity                App\Entity\Settings                   
+      targetEntity                App\Entity\User                       
+      inversedBy                  settings                              
+      sourceToTargetKeyColumns    {                                     
+                                      "user_id": "id"                   
+                                  }                                     
+      targetToSourceKeyColumns    {                                     
+                                      "id": "user_id"                   
+                                  }                                     
+      joinColumns                 [                                     
+                                      {                                 
+                                          "deferrable": false,          
+                                          "unique": false,              
+                                          "quoted": null,               
+                                          "fieldName": null,            
+                                          "onDelete": "CASCADE",        
+                                          "columnDefinition": null,     
+                                          "nullable": false,            
+                                          "options": null,              
+                                          "name": "user_id",            
+                                          "referencedColumnName": "id"  
+                                      }                                 
+                                  ]                                     
+      joinColumnFieldNames        {                                     
+                                      "user_id": "user_id"              
+                                  }                                     
+  Field mappings:                                                       
+    timezone                                                            
+      length                      64                                    
+      id                          Null                                  
+      nullable                    False                                 
+      notInsertable               Null                                  
+      notUpdatable                Null                                  
+      columnDefinition            Null                                  
+      generated                   Null                                  
+      enumType                    Null                                  
+      precision                   Null                                  
+      scale                       Null                                  
+      unique                      False                                 
+      index                       False                                 
+      inherited                   Null                                  
+      originalClass               Null                                  
+      originalField               Null                                  
+      quoted                      Null                                  
+      declared                    Null                                  
+      declaredField               Null                                  
+      options                     {                                     
+                                      "default": "Europe/Brussels"      
+                                  }                                     
+      version                     Null                                  
+      default                     Null                                  
+      type                        string                                
+      fieldName                   timezone                              
+      columnName                  timezone                              
+    weekStartDay                                                        
+      length                      Null                                  
+      id                          Null                                  
+      nullable                    False                                 
+      notInsertable               Null                                  
+      notUpdatable                Null                                  
+      columnDefinition            Null                                  
+      generated                   Null                                  
+      enumType                    App\Enum\WeekStartDay                 
+      precision                   Null                                  
+      scale                       Null                                  
+      unique                      False                                 
+      index                       False                                 
+      inherited                   Null                                  
+      originalClass               Null                                  
+      originalField               Null                                  
+      quoted                      Null                                  
+      declared                    Null                                  
+      declaredField               Null                                  
+      options                     Null                                  
+      version                     Null                                  
+      default                     Null                                  
+      type                        string                                
+      fieldName                   weekStartDay                          
+      columnName                  week_start_day                        
+    defaultSessionType                                                  
+      length                      Null                                  
+      id                          Null                                  
+      nullable                    False                                 
+      notInsertable               Null                                  
+      notUpdatable                Null                                  
+      columnDefinition            Null                                  
+      generated                   Null                                  
+      enumType                    App\Enum\SessionType                  
+      precision                   Null                                  
+      scale                       Null                                  
+      unique                      False                                 
+      index                       False                                 
+      inherited                   Null                                  
+      originalClass               Null                                  
+      originalField               Null                                  
+      quoted                      Null                                  
+      declared                    Null                                  
+      declaredField               Null                                  
+      options                     Null                                  
+      version                     Null                                  
+      default                     Null                                  
+      type                        string                                
+      fieldName                   defaultSessionType                    
+      columnName                  default_session_type                  
+    defaultSessionMinutes                                               
+      length                      Null                                  
+      id                          Null                                  
+      nullable                    False                                 
+      notInsertable               Null                                  
+      notUpdatable                Null                                  
+      columnDefinition            Null                                  
+      generated                   Null                                  
+      enumType                    Null                                  
+      precision                   Null                                  
+      scale                       Null                                  
+      unique                      False                                 
+      index                       False                                 
+      inherited                   Null                                  
+      originalClass               Null                                  
+      originalField               Null                                  
+      quoted                      Null                                  
+      declared                    Null                                  
+      declaredField               Null                                  
+      options                     {                                     
+                                      "unsigned": true,                 
+                                      "default": 50                     
+                                  }                                     
+      version                     Null                                  
+      default                     Null                                  
+      type                        smallint                              
+      fieldName                   defaultSessionMinutes                 
+      columnName                  default_session_minutes               
+    defaultBreakMinutes                                                 
+      length                      Null                                  
+      id                          Null                                  
+      nullable                    False                                 
+      notInsertable               Null                                  
+      notUpdatable                Null                                  
+      columnDefinition            Null                                  
+      generated                   Null                                  
+      enumType                    Null                                  
+      precision                   Null                                  
+      scale                       Null                                  
+      unique                      False                                 
+      index                       False                                 
+      inherited                   Null                                  
+      originalClass               Null                                  
+      originalField               Null                                  
+      quoted                      Null                                  
+      declared                    Null                                  
+      declaredField               Null                                  
+      options                     {                                     
+                                      "unsigned": true,                 
+                                      "default": 10                     
+                                  }                                     
+      version                     Null                                  
+      default                     Null                                  
+      type                        smallint                              
+      fieldName                   defaultBreakMinutes                   
+      columnName                  default_break_minutes                 
+    createdAt                                                           
+      length                      Null                                  
+      id                          Null                                  
+      nullable                    False                                 
+      notInsertable               Null                                  
+      notUpdatable                Null                                  
+      columnDefinition            Null                                  
+      generated                   Null                                  
+      enumType                    Null                                  
+      precision                   Null                                  
+      scale                       Null                                  
+      unique                      False                                 
+      index                       False                                 
+      inherited                   Null                                  
+      originalClass               Null                                  
+      originalField               Null                                  
+      quoted                      Null                                  
+      declared                    Null                                  
+      declaredField               Null                                  
+      options                     Null                                  
+      version                     Null                                  
+      default                     Null                                  
+      type                        datetime_immutable                    
+      fieldName                   createdAt                             
+      columnName                  created_at                            
+    updatedAt                                                           
+      length                      Null                                  
+      id                          Null                                  
+      nullable                    False                                 
+      notInsertable               Null                                  
+      notUpdatable                Null                                  
+      columnDefinition            Null                                  
+      generated                   Null                                  
+      enumType                    Null                                  
+      precision                   Null                                  
+      scale                       Null                                  
+      unique                      False                                 
+      index                       False                                 
+      inherited                   Null                                  
+      originalClass               Null                                  
+      originalField               Null                                  
+      quoted                      Null                                  
+      declared                    Null                                  
+      declaredField               Null                                  
+      options                     Null                                  
+      version                     Null                                  
+      default                     Null                                  
+      type                        datetime_immutable                    
+      fieldName                   updatedAt                             
+      columnName                  updated_at                            
+ ------------------------------- -------------------------------------- 
+
+ ------------------------------- ------------------------------------------- 
+  Field                           Value                                      
+ ------------------------------- ------------------------------------------- 
+  Name                            App\Entity\NoteAttachment                  
+  Root entity name                App\Entity\NoteAttachment                  
+  Custom generator definition     None                                       
+  Custom repository class         App\Repository\NoteAttachmentRepository    
+  Mapped super class?             False                                      
+  Embedded class?                 False                                      
+  Parent classes                  Empty                                      
+  Sub classes                     Empty                                      
+  Embedded classes                Empty                                      
+  Identifier                      [                                          
+                                      "id"                                   
+                                  ]                                          
+  Inheritance type                1                                          
+  Discriminator column            None                                       
+  Discriminator value             None                                       
+  Discriminator map               Empty                                      
+  Generator type                  4                                          
+  Table                           {                                          
+                                      "name": "note_attachments",            
+                                      "indexes": {                           
+                                          "idx_note_attachments_note_id": {  
+                                              "columns": [                   
+                                                  "note_id"                  
+                                              ]                              
+                                          }                                  
+                                      }                                      
+                                  }                                          
+  Composite identifier?           False                                      
+  Foreign identifier?             False                                      
+  Enum identifier?                False                                      
+  Sequence generator definition   None                                       
+  Change tracking policy          1                                          
+  Versioned?                      False                                      
+  Version field                   None                                       
+  Read only?                      False                                      
+  Entity listeners                Empty                                      
+  Association mappings:                                                      
+    note                                                                     
+      cascade                     Empty                                      
+      fetch                       2                                          
+      inherited                   Null                                       
+      declared                    Null                                       
+      cache                       Null                                       
+      id                          Null                                       
+      isOnDeleteCascade           Null                                       
+      originalClass               Null                                       
+      originalField               Null                                       
+      orphanRemoval               False                                      
+      unique                      Null                                       
+      fieldName                   note                                       
+      sourceEntity                App\Entity\NoteAttachment                  
+      targetEntity                App\Entity\Note                            
+      inversedBy                  noteAttachments                            
+      sourceToTargetKeyColumns    {                                          
+                                      "note_id": "id"                        
+                                  }                                          
+      targetToSourceKeyColumns    {                                          
+                                      "id": "note_id"                        
+                                  }                                          
+      joinColumns                 [                                          
+                                      {                                      
+                                          "deferrable": false,               
+                                          "unique": false,                   
+                                          "quoted": null,                    
+                                          "fieldName": null,                 
+                                          "onDelete": "CASCADE",             
+                                          "columnDefinition": null,          
+                                          "nullable": false,                 
+                                          "options": null,                   
+                                          "name": "note_id",                 
+                                          "referencedColumnName": "id"       
+                                      }                                      
+                                  ]                                          
+      joinColumnFieldNames        {                                          
+                                      "note_id": "note_id"                   
+                                  }                                          
+  Field mappings:                                                            
+    id                                                                       
+      length                      Null                                       
+      id                          True                                       
+      nullable                    False                                      
+      notInsertable               Null                                       
+      notUpdatable                Null                                       
+      columnDefinition            Null                                       
+      generated                   Null                                       
+      enumType                    Null                                       
+      precision                   Null                                       
+      scale                       Null                                       
+      unique                      False                                      
+      index                       False                                      
+      inherited                   Null                                       
+      originalClass               Null                                       
+      originalField               Null                                       
+      quoted                      Null                                       
+      declared                    Null                                       
+      declaredField               Null                                       
+      options                     Null                                       
+      version                     Null                                       
+      default                     Null                                       
+      type                        integer                                    
+      fieldName                   id                                         
+      columnName                  id                                         
+    originalFilename                                                         
+      length                      255                                        
+      id                          Null                                       
+      nullable                    False                                      
+      notInsertable               Null                                       
+      notUpdatable                Null                                       
+      columnDefinition            Null                                       
+      generated                   Null                                       
+      enumType                    Null                                       
+      precision                   Null                                       
+      scale                       Null                                       
+      unique                      False                                      
+      index                       False                                      
+      inherited                   Null                                       
+      originalClass               Null                                       
+      originalField               Null                                       
+      quoted                      Null                                       
+      declared                    Null                                       
+      declaredField               Null                                       
+      options                     Null                                       
+      version                     Null                                       
+      default                     Null                                       
+      type                        string                                     
+      fieldName                   originalFilename                           
+      columnName                  original_filename                          
+    storagePath                                                              
+      length                      512                                        
+      id                          Null                                       
+      nullable                    False                                      
+      notInsertable               Null                                       
+      notUpdatable                Null                                       
+      columnDefinition            Null                                       
+      generated                   Null                                       
+      enumType                    Null                                       
+      precision                   Null                                       
+      scale                       Null                                       
+      unique                      False                                      
+      index                       False                                      
+      inherited                   Null                                       
+      originalClass               Null                                       
+      originalField               Null                                       
+      quoted                      Null                                       
+      declared                    Null                                       
+      declaredField               Null                                       
+      options                     Null                                       
+      version                     Null                                       
+      default                     Null                                       
+      type                        string                                     
+      fieldName                   storagePath                                
+      columnName                  storage_path                               
+    mimeType                                                                 
+      length                      100                                        
+      id                          Null                                       
+      nullable                    True                                       
+      notInsertable               Null                                       
+      notUpdatable                Null                                       
+      columnDefinition            Null                                       
+      generated                   Null                                       
+      enumType                    Null                                       
+      precision                   Null                                       
+      scale                       Null                                       
+      unique                      False                                      
+      index                       False                                      
+      inherited                   Null                                       
+      originalClass               Null                                       
+      originalField               Null                                       
+      quoted                      Null                                       
+      declared                    Null                                       
+      declaredField               Null                                       
+      options                     Null                                       
+      version                     Null                                       
+      default                     Null                                       
+      type                        string                                     
+      fieldName                   mimeType                                   
+      columnName                  mime_type                                  
+    sizeBytes                                                                
+      length                      Null                                       
+      id                          Null                                       
+      nullable                    True                                       
+      notInsertable               Null                                       
+      notUpdatable                Null                                       
+      columnDefinition            Null                                       
+      generated                   Null                                       
+      enumType                    Null                                       
+      precision                   Null                                       
+      scale                       Null                                       
+      unique                      False                                      
+      index                       False                                      
+      inherited                   Null                                       
+      originalClass               Null                                       
+      originalField               Null                                       
+      quoted                      Null                                       
+      declared                    Null                                       
+      declaredField               Null                                       
+      options                     {                                          
+                                      "unsigned": true                       
+                                  }                                          
+      version                     Null                                       
+      default                     Null                                       
+      type                        integer                                    
+      fieldName                   sizeBytes                                  
+      columnName                  size_bytes                                 
+    checksumSha256                                                           
+      length                      64                                         
+      id                          Null                                       
+      nullable                    True                                       
+      notInsertable               Null                                       
+      notUpdatable                Null                                       
+      columnDefinition            Null                                       
+      generated                   Null                                       
+      enumType                    Null                                       
+      precision                   Null                                       
+      scale                       Null                                       
+      unique                      False                                      
+      index                       False                                      
+      inherited                   Null                                       
+      originalClass               Null                                       
+      originalField               Null                                       
+      quoted                      Null                                       
+      declared                    Null                                       
+      declaredField               Null                                       
+      options                     Null                                       
+      version                     Null                                       
+      default                     Null                                       
+      type                        string                                     
+      fieldName                   checksumSha256                             
+      columnName                  checksum_sha256                            
+    createdAt                                                                
+      length                      Null                                       
+      id                          Null                                       
+      nullable                    False                                      
+      notInsertable               Null                                       
+      notUpdatable                Null                                       
+      columnDefinition            Null                                       
+      generated                   Null                                       
+      enumType                    Null                                       
+      precision                   Null                                       
+      scale                       Null                                       
+      unique                      False                                      
+      index                       False                                      
+      inherited                   Null                                       
+      originalClass               Null                                       
+      originalField               Null                                       
+      quoted                      Null                                       
+      declared                    Null                                       
+      declaredField               Null                                       
+      options                     Null                                       
+      version                     Null                                       
+      default                     Null                                       
+      type                        datetime_immutable                         
+      fieldName                   createdAt                                  
+      columnName                  created_at                                 
+    updatedAt                                                                
+      length                      Null                                       
+      id                          Null                                       
+      nullable                    False                                      
+      notInsertable               Null                                       
+      notUpdatable                Null                                       
+      columnDefinition            Null                                       
+      generated                   Null                                       
+      enumType                    Null                                       
+      precision                   Null                                       
+      scale                       Null                                       
+      unique                      False                                      
+      index                       False                                      
+      inherited                   Null                                       
+      originalClass               Null                                       
+      originalField               Null                                       
+      quoted                      Null                                       
+      declared                    Null                                       
+      declaredField               Null                                       
+      options                     Null                                       
+      version                     Null                                       
+      default                     Null                                       
+      type                        datetime_immutable                         
+      fieldName                   updatedAt                                  
+      columnName                  updated_at                                 
+ ------------------------------- ------------------------------------------- 
+
+ ------------------------------- -------------------------------------------- 
+  Field                           Value                                       
+ ------------------------------- -------------------------------------------- 
+  Name                            App\Entity\ResourceTag                      
+  Root entity name                App\Entity\ResourceTag                      
+  Custom generator definition     None                                        
+  Custom repository class         App\Repository\ResourceTagRepository        
+  Mapped super class?             False                                       
+  Embedded class?                 False                                       
+  Parent classes                  Empty                                       
+  Sub classes                     Empty                                       
+  Embedded classes                Empty                                       
+  Identifier                      [                                           
+                                      "id"                                    
+                                  ]                                           
+  Inheritance type                1                                           
+  Discriminator column            None                                        
+  Discriminator value             None                                        
+  Discriminator map               Empty                                       
+  Generator type                  4                                           
+  Table                           {                                           
+                                      "name": "resource_tags",                
+                                      "indexes": {                            
+                                          "idx_resource_tags_resource_id": {  
+                                              "columns": [                    
+                                                  "resource_id"               
+                                              ]                               
+                                          },                                  
+                                          "idx_resource_tags_tag_id": {       
+                                              "columns": [                    
+                                                  "tag_id"                    
+                                              ]                               
+                                          }                                   
+                                      },                                      
+                                      "uniqueConstraints": {                  
+                                          "UNIQ_RESOURCETAG_RESOURCE_TAG": {  
+                                              "columns": [                    
+                                                  "resource_id",              
+                                                  "tag_id"                    
+                                              ]                               
+                                          }                                   
+                                      }                                       
+                                  }                                           
+  Composite identifier?           False                                       
+  Foreign identifier?             False                                       
+  Enum identifier?                False                                       
+  Sequence generator definition   None                                        
+  Change tracking policy          1                                           
+  Versioned?                      False                                       
+  Version field                   None                                        
+  Read only?                      False                                       
+  Entity listeners                Empty                                       
+  Association mappings:                                                       
+    resource                                                                  
+      cascade                     Empty                                       
+      fetch                       2                                           
+      inherited                   Null                                        
+      declared                    Null                                        
+      cache                       Null                                        
+      id                          Null                                        
+      isOnDeleteCascade           Null                                        
+      originalClass               Null                                        
+      originalField               Null                                        
+      orphanRemoval               False                                       
+      unique                      Null                                        
+      fieldName                   resource                                    
+      sourceEntity                App\Entity\ResourceTag                      
+      targetEntity                App\Entity\Resource                         
+      inversedBy                  Null                                        
+      sourceToTargetKeyColumns    {                                           
+                                      "resource_id": "id"                     
+                                  }                                           
+      targetToSourceKeyColumns    {                                           
+                                      "id": "resource_id"                     
+                                  }                                           
+      joinColumns                 [                                           
+                                      {                                       
+                                          "deferrable": false,                
+                                          "unique": false,                    
+                                          "quoted": null,                     
+                                          "fieldName": null,                  
+                                          "onDelete": "CASCADE",              
+                                          "columnDefinition": null,           
+                                          "nullable": false,                  
+                                          "options": null,                    
+                                          "name": "resource_id",              
+                                          "referencedColumnName": "id"        
+                                      }                                       
+                                  ]                                           
+      joinColumnFieldNames        {                                           
+                                      "resource_id": "resource_id"            
+                                  }                                           
+    tag                                                                       
+      cascade                     Empty                                       
+      fetch                       2                                           
+      inherited                   Null                                        
+      declared                    Null                                        
+      cache                       Null                                        
+      id                          Null                                        
+      isOnDeleteCascade           Null                                        
+      originalClass               Null                                        
+      originalField               Null                                        
+      orphanRemoval               False                                       
+      unique                      Null                                        
+      fieldName                   tag                                         
+      sourceEntity                App\Entity\ResourceTag                      
+      targetEntity                App\Entity\Tag                              
+      inversedBy                  resourceTags                                
+      sourceToTargetKeyColumns    {                                           
+                                      "tag_id": "id"                          
+                                  }                                           
+      targetToSourceKeyColumns    {                                           
+                                      "id": "tag_id"                          
+                                  }                                           
+      joinColumns                 [                                           
+                                      {                                       
+                                          "deferrable": false,                
+                                          "unique": false,                    
+                                          "quoted": null,                     
+                                          "fieldName": null,                  
+                                          "onDelete": "CASCADE",              
+                                          "columnDefinition": null,           
+                                          "nullable": false,                  
+                                          "options": null,                    
+                                          "name": "tag_id",                   
+                                          "referencedColumnName": "id"        
+                                      }                                       
+                                  ]                                           
+      joinColumnFieldNames        {                                           
+                                      "tag_id": "tag_id"                      
+                                  }                                           
+  Field mappings:                                                             
+    id                                                                        
+      length                      Null                                        
+      id                          True                                        
+      nullable                    False                                       
+      notInsertable               Null                                        
+      notUpdatable                Null                                        
+      columnDefinition            Null                                        
+      generated                   Null                                        
+      enumType                    Null                                        
+      precision                   Null                                        
+      scale                       Null                                        
+      unique                      False                                       
+      index                       False                                       
+      inherited                   Null                                        
+      originalClass               Null                                        
+      originalField               Null                                        
+      quoted                      Null                                        
+      declared                    Null                                        
+      declaredField               Null                                        
+      options                     Null                                        
+      version                     Null                                        
+      default                     Null                                        
+      type                        integer                                     
+      fieldName                   id                                          
+      columnName                  id                                          
+    createdAt                                                                 
+      length                      Null                                        
+      id                          Null                                        
+      nullable                    False                                       
+      notInsertable               Null                                        
+      notUpdatable                Null                                        
+      columnDefinition            Null                                        
+      generated                   Null                                        
+      enumType                    Null                                        
+      precision                   Null                                        
+      scale                       Null                                        
+      unique                      False                                       
+      index                       False                                       
+      inherited                   Null                                        
+      originalClass               Null                                        
+      originalField               Null                                        
+      quoted                      Null                                        
+      declared                    Null                                        
+      declaredField               Null                                        
+      options                     Null                                        
+      version                     Null                                        
+      default                     Null                                        
+      type                        datetime_immutable                          
+      fieldName                   createdAt                                   
+      columnName                  created_at                                  
+ ------------------------------- -------------------------------------------- 
+
+ ------------------------------- -------------------------------------- 
+  Field                           Value                                 
+ ------------------------------- -------------------------------------- 
+  Name                            App\Entity\TaskTag                    
+  Root entity name                App\Entity\TaskTag                    
+  Custom generator definition     None                                  
+  Custom repository class         App\Repository\TaskTagRepository      
+  Mapped super class?             False                                 
+  Embedded class?                 False                                 
+  Parent classes                  Empty                                 
+  Sub classes                     Empty                                 
+  Embedded classes                Empty                                 
+  Identifier                      [                                     
+                                      "id"                              
+                                  ]                                     
+  Inheritance type                1                                     
+  Discriminator column            None                                  
+  Discriminator value             None                                  
+  Discriminator map               Empty                                 
+  Generator type                  4                                     
+  Table                           {                                     
+                                      "name": "task_tags",              
+                                      "indexes": {                      
+                                          "idx_task_tags_task_id": {    
+                                              "columns": [              
+                                                  "task_id"             
+                                              ]                         
+                                          },                            
+                                          "idx_task_tags_tag_id": {     
+                                              "columns": [              
+                                                  "tag_id"              
+                                              ]                         
+                                          }                             
+                                      },                                
+                                      "uniqueConstraints": {            
+                                          "UNIQ_TASKTAG_TASK_TAG": {    
+                                              "columns": [              
+                                                  "task_id",            
+                                                  "tag_id"              
+                                              ]                         
+                                          }                             
+                                      }                                 
+                                  }                                     
+  Composite identifier?           False                                 
+  Foreign identifier?             False                                 
+  Enum identifier?                False                                 
+  Sequence generator definition   None                                  
+  Change tracking policy          1                                     
+  Versioned?                      False                                 
+  Version field                   None                                  
+  Read only?                      False                                 
+  Entity listeners                Empty                                 
+  Association mappings:                                                 
+    task                                                                
+      cascade                     Empty                                 
+      fetch                       2                                     
+      inherited                   Null                                  
+      declared                    Null                                  
+      cache                       Null                                  
+      id                          Null                                  
+      isOnDeleteCascade           Null                                  
+      originalClass               Null                                  
+      originalField               Null                                  
+      orphanRemoval               False                                 
+      unique                      Null                                  
+      fieldName                   task                                  
+      sourceEntity                App\Entity\TaskTag                    
+      targetEntity                App\Entity\Task                       
+      inversedBy                  taskTags                              
+      sourceToTargetKeyColumns    {                                     
+                                      "task_id": "id"                   
+                                  }                                     
+      targetToSourceKeyColumns    {                                     
+                                      "id": "task_id"                   
+                                  }                                     
+      joinColumns                 [                                     
+                                      {                                 
+                                          "deferrable": false,          
+                                          "unique": false,              
+                                          "quoted": null,               
+                                          "fieldName": null,            
+                                          "onDelete": "CASCADE",        
+                                          "columnDefinition": null,     
+                                          "nullable": false,            
+                                          "options": null,              
+                                          "name": "task_id",            
+                                          "referencedColumnName": "id"  
+                                      }                                 
+                                  ]                                     
+      joinColumnFieldNames        {                                     
+                                      "task_id": "task_id"              
+                                  }                                     
+    tag                                                                 
+      cascade                     Empty                                 
+      fetch                       2                                     
+      inherited                   Null                                  
+      declared                    Null                                  
+      cache                       Null                                  
+      id                          Null                                  
+      isOnDeleteCascade           Null                                  
+      originalClass               Null                                  
+      originalField               Null                                  
+      orphanRemoval               False                                 
+      unique                      Null                                  
+      fieldName                   tag                                   
+      sourceEntity                App\Entity\TaskTag                    
+      targetEntity                App\Entity\Tag                        
+      inversedBy                  taskTags                              
+      sourceToTargetKeyColumns    {                                     
+                                      "tag_id": "id"                    
+                                  }                                     
+      targetToSourceKeyColumns    {                                     
+                                      "id": "tag_id"                    
+                                  }                                     
+      joinColumns                 [                                     
+                                      {                                 
+                                          "deferrable": false,          
+                                          "unique": false,              
+                                          "quoted": null,               
+                                          "fieldName": null,            
+                                          "onDelete": "CASCADE",        
+                                          "columnDefinition": null,     
+                                          "nullable": false,            
+                                          "options": null,              
+                                          "name": "tag_id",             
+                                          "referencedColumnName": "id"  
+                                      }                                 
+                                  ]                                     
+      joinColumnFieldNames        {                                     
+                                      "tag_id": "tag_id"                
+                                  }                                     
+  Field mappings:                                                       
+    id                                                                  
+      length                      Null                                  
+      id                          True                                  
+      nullable                    False                                 
+      notInsertable               Null                                  
+      notUpdatable                Null                                  
+      columnDefinition            Null                                  
+      generated                   Null                                  
+      enumType                    Null                                  
+      precision                   Null                                  
+      scale                       Null                                  
+      unique                      False                                 
+      index                       False                                 
+      inherited                   Null                                  
+      originalClass               Null                                  
+      originalField               Null                                  
+      quoted                      Null                                  
+      declared                    Null                                  
+      declaredField               Null                                  
+      options                     Null                                  
+      version                     Null                                  
+      default                     Null                                  
+      type                        integer                               
+      fieldName                   id                                    
+      columnName                  id                                    
+    createdAt                                                           
+      length                      Null                                  
+      id                          Null                                  
+      nullable                    False                                 
+      notInsertable               Null                                  
+      notUpdatable                Null                                  
+      columnDefinition            Null                                  
+      generated                   Null                                  
+      enumType                    Null                                  
+      precision                   Null                                  
+      scale                       Null                                  
+      unique                      False                                 
+      index                       False                                 
+      inherited                   Null                                  
+      originalClass               Null                                  
+      originalField               Null                                  
+      quoted                      Null                                  
+      declared                    Null                                  
+      declaredField               Null                                  
+      options                     Null                                  
+      version                     Null                                  
+      default                     Null                                  
+      type                        datetime_immutable                    
+      fieldName                   createdAt                             
+      columnName                  created_at                            
+ ------------------------------- -------------------------------------- 
+
+ ------------------------------- -------------------------------------- 
+  Field                           Value                                 
+ ------------------------------- -------------------------------------- 
+  Name                            App\Entity\NoteTag                    
+  Root entity name                App\Entity\NoteTag                    
+  Custom generator definition     None                                  
+  Custom repository class         App\Repository\NoteTagRepository      
+  Mapped super class?             False                                 
+  Embedded class?                 False                                 
+  Parent classes                  Empty                                 
+  Sub classes                     Empty                                 
+  Embedded classes                Empty                                 
+  Identifier                      [                                     
+                                      "id"                              
+                                  ]                                     
+  Inheritance type                1                                     
+  Discriminator column            None                                  
+  Discriminator value             None                                  
+  Discriminator map               Empty                                 
+  Generator type                  4                                     
+  Table                           {                                     
+                                      "name": "note_tags",              
+                                      "indexes": {                      
+                                          "idx_note_tags_note_id": {    
+                                              "columns": [              
+                                                  "note_id"             
+                                              ]                         
+                                          },                            
+                                          "idx_note_tags_tag_id": {     
+                                              "columns": [              
+                                                  "tag_id"              
+                                              ]                         
+                                          }                             
+                                      },                                
+                                      "uniqueConstraints": {            
+                                          "UNIQ_NOTETAG_NOTE_TAG": {    
+                                              "columns": [              
+                                                  "note_id",            
+                                                  "tag_id"              
+                                              ]                         
+                                          }                             
+                                      }                                 
+                                  }                                     
+  Composite identifier?           False                                 
+  Foreign identifier?             False                                 
+  Enum identifier?                False                                 
+  Sequence generator definition   None                                  
+  Change tracking policy          1                                     
+  Versioned?                      False                                 
+  Version field                   None                                  
+  Read only?                      False                                 
+  Entity listeners                Empty                                 
+  Association mappings:                                                 
+    note                                                                
+      cascade                     Empty                                 
+      fetch                       2                                     
+      inherited                   Null                                  
+      declared                    Null                                  
+      cache                       Null                                  
+      id                          Null                                  
+      isOnDeleteCascade           Null                                  
+      originalClass               Null                                  
+      originalField               Null                                  
+      orphanRemoval               False                                 
+      unique                      Null                                  
+      fieldName                   note                                  
+      sourceEntity                App\Entity\NoteTag                    
+      targetEntity                App\Entity\Note                       
+      inversedBy                  noteTags                              
+      sourceToTargetKeyColumns    {                                     
+                                      "note_id": "id"                   
+                                  }                                     
+      targetToSourceKeyColumns    {                                     
+                                      "id": "note_id"                   
+                                  }                                     
+      joinColumns                 [                                     
+                                      {                                 
+                                          "deferrable": false,          
+                                          "unique": false,              
+                                          "quoted": null,               
+                                          "fieldName": null,            
+                                          "onDelete": "CASCADE",        
+                                          "columnDefinition": null,     
+                                          "nullable": false,            
+                                          "options": null,              
+                                          "name": "note_id",            
+                                          "referencedColumnName": "id"  
+                                      }                                 
+                                  ]                                     
+      joinColumnFieldNames        {                                     
+                                      "note_id": "note_id"              
+                                  }                                     
+    tag                                                                 
+      cascade                     Empty                                 
+      fetch                       2                                     
+      inherited                   Null                                  
+      declared                    Null                                  
+      cache                       Null                                  
+      id                          Null                                  
+      isOnDeleteCascade           Null                                  
+      originalClass               Null                                  
+      originalField               Null                                  
+      orphanRemoval               False                                 
+      unique                      Null                                  
+      fieldName                   tag                                   
+      sourceEntity                App\Entity\NoteTag                    
+      targetEntity                App\Entity\Tag                        
+      inversedBy                  noteTags                              
+      sourceToTargetKeyColumns    {                                     
+                                      "tag_id": "id"                    
+                                  }                                     
+      targetToSourceKeyColumns    {                                     
+                                      "id": "tag_id"                    
+                                  }                                     
+      joinColumns                 [                                     
+                                      {                                 
+                                          "deferrable": false,          
+                                          "unique": false,              
+                                          "quoted": null,               
+                                          "fieldName": null,            
+                                          "onDelete": "CASCADE",        
+                                          "columnDefinition": null,     
+                                          "nullable": false,            
+                                          "options": null,              
+                                          "name": "tag_id",             
+                                          "referencedColumnName": "id"  
+                                      }                                 
+                                  ]                                     
+      joinColumnFieldNames        {                                     
+                                      "tag_id": "tag_id"                
+                                  }                                     
+  Field mappings:                                                       
+    id                                                                  
+      length                      Null                                  
+      id                          True                                  
+      nullable                    False                                 
+      notInsertable               Null                                  
+      notUpdatable                Null                                  
+      columnDefinition            Null                                  
+      generated                   Null                                  
+      enumType                    Null                                  
+      precision                   Null                                  
+      scale                       Null                                  
+      unique                      False                                 
+      index                       False                                 
+      inherited                   Null                                  
+      originalClass               Null                                  
+      originalField               Null                                  
+      quoted                      Null                                  
+      declared                    Null                                  
+      declaredField               Null                                  
+      options                     Null                                  
+      version                     Null                                  
+      default                     Null                                  
+      type                        integer                               
+      fieldName                   id                                    
+      columnName                  id                                    
+    createdAt                                                           
+      length                      Null                                  
+      id                          Null                                  
+      nullable                    False                                 
+      notInsertable               Null                                  
+      notUpdatable                Null                                  
+      columnDefinition            Null                                  
+      generated                   Null                                  
+      enumType                    Null                                  
+      precision                   Null                                  
+      scale                       Null                                  
+      unique                      False                                 
+      index                       False                                 
+      inherited                   Null                                  
+      originalClass               Null                                  
+      originalField               Null                                  
+      quoted                      Null                                  
+      declared                    Null                                  
+      declaredField               Null                                  
+      options                     Null                                  
+      version                     Null                                  
+      default                     Null                                  
+      type                        datetime_immutable                    
+      fieldName                   createdAt                             
+      columnName                  created_at                            
+ ------------------------------- -------------------------------------- 
+
+ ------------------------------- ------------------------------------------ 
+  Field                           Value                                     
+ ------------------------------- ------------------------------------------ 
+  Name                            App\Entity\SubjectTag                     
+  Root entity name                App\Entity\SubjectTag                     
+  Custom generator definition     None                                      
+  Custom repository class         App\Repository\SubjectTagRepository       
+  Mapped super class?             False                                     
+  Embedded class?                 False                                     
+  Parent classes                  Empty                                     
+  Sub classes                     Empty                                     
+  Embedded classes                Empty                                     
+  Identifier                      [                                         
+                                      "id"                                  
+                                  ]                                         
+  Inheritance type                1                                         
+  Discriminator column            None                                      
+  Discriminator value             None                                      
+  Discriminator map               Empty                                     
+  Generator type                  4                                         
+  Table                           {                                         
+                                      "name": "subject_tags",               
+                                      "indexes": {                          
+                                          "idx_subject_tags_subject_id": {  
+                                              "columns": [                  
+                                                  "subject_id"              
+                                              ]                             
+                                          },                                
+                                          "idx_subject_tags_tag_id": {      
+                                              "columns": [                  
+                                                  "tag_id"                  
+                                              ]                             
+                                          }                                 
+                                      },                                    
+                                      "uniqueConstraints": {                
+                                          "UNIQ_SUBJECTTAG_SUBJECT_TAG": {  
+                                              "columns": [                  
+                                                  "subject_id",             
+                                                  "tag_id"                  
+                                              ]                             
+                                          }                                 
+                                      }                                     
+                                  }                                         
+  Composite identifier?           False                                     
+  Foreign identifier?             False                                     
+  Enum identifier?                False                                     
+  Sequence generator definition   None                                      
+  Change tracking policy          1                                         
+  Versioned?                      False                                     
+  Version field                   None                                      
+  Read only?                      False                                     
+  Entity listeners                Empty                                     
+  Association mappings:                                                     
+    subject                                                                 
+      cascade                     Empty                                     
+      fetch                       2                                         
+      inherited                   Null                                      
+      declared                    Null                                      
+      cache                       Null                                      
+      id                          Null                                      
+      isOnDeleteCascade           Null                                      
+      originalClass               Null                                      
+      originalField               Null                                      
+      orphanRemoval               False                                     
+      unique                      Null                                      
+      fieldName                   subject                                   
+      sourceEntity                App\Entity\SubjectTag                     
+      targetEntity                App\Entity\Subject                        
+      inversedBy                  subjectTags                               
+      sourceToTargetKeyColumns    {                                         
+                                      "subject_id": "id"                    
+                                  }                                         
+      targetToSourceKeyColumns    {                                         
+                                      "id": "subject_id"                    
+                                  }                                         
+      joinColumns                 [                                         
+                                      {                                     
+                                          "deferrable": false,              
+                                          "unique": false,                  
+                                          "quoted": null,                   
+                                          "fieldName": null,                
+                                          "onDelete": "CASCADE",            
+                                          "columnDefinition": null,         
+                                          "nullable": false,                
+                                          "options": null,                  
+                                          "name": "subject_id",             
+                                          "referencedColumnName": "id"      
+                                      }                                     
+                                  ]                                         
+      joinColumnFieldNames        {                                         
+                                      "subject_id": "subject_id"            
+                                  }                                         
+    tag                                                                     
+      cascade                     Empty                                     
+      fetch                       2                                         
+      inherited                   Null                                      
+      declared                    Null                                      
+      cache                       Null                                      
+      id                          Null                                      
+      isOnDeleteCascade           Null                                      
+      originalClass               Null                                      
+      originalField               Null                                      
+      orphanRemoval               False                                     
+      unique                      Null                                      
+      fieldName                   tag                                       
+      sourceEntity                App\Entity\SubjectTag                     
+      targetEntity                App\Entity\Tag                            
+      inversedBy                  subjectTags                               
+      sourceToTargetKeyColumns    {                                         
+                                      "tag_id": "id"                        
+                                  }                                         
+      targetToSourceKeyColumns    {                                         
+                                      "id": "tag_id"                        
+                                  }                                         
+      joinColumns                 [                                         
+                                      {                                     
+                                          "deferrable": false,              
+                                          "unique": false,                  
+                                          "quoted": null,                   
+                                          "fieldName": null,                
+                                          "onDelete": "CASCADE",            
+                                          "columnDefinition": null,         
+                                          "nullable": false,                
+                                          "options": null,                  
+                                          "name": "tag_id",                 
+                                          "referencedColumnName": "id"      
+                                      }                                     
+                                  ]                                         
+      joinColumnFieldNames        {                                         
+                                      "tag_id": "tag_id"                    
+                                  }                                         
+  Field mappings:                                                           
+    id                                                                      
+      length                      Null                                      
+      id                          True                                      
+      nullable                    False                                     
+      notInsertable               Null                                      
+      notUpdatable                Null                                      
+      columnDefinition            Null                                      
+      generated                   Null                                      
+      enumType                    Null                                      
+      precision                   Null                                      
+      scale                       Null                                      
+      unique                      False                                     
+      index                       False                                     
+      inherited                   Null                                      
+      originalClass               Null                                      
+      originalField               Null                                      
+      quoted                      Null                                      
+      declared                    Null                                      
+      declaredField               Null                                      
+      options                     Null                                      
+      version                     Null                                      
+      default                     Null                                      
+      type                        integer                                   
+      fieldName                   id                                        
+      columnName                  id                                        
+    createdAt                                                               
+      length                      Null                                      
+      id                          Null                                      
+      nullable                    False                                     
+      notInsertable               Null                                      
+      notUpdatable                Null                                      
+      columnDefinition            Null                                      
+      generated                   Null                                      
+      enumType                    Null                                      
+      precision                   Null                                      
+      scale                       Null                                      
+      unique                      False                                     
+      index                       False                                     
+      inherited                   Null                                      
+      originalClass               Null                                      
+      originalField               Null                                      
+      quoted                      Null                                      
+      declared                    Null                                      
+      declaredField               Null                                      
+      options                     Null                                      
+      version                     Null                                      
+      default                     Null                                      
+      type                        datetime_immutable                        
+      fieldName                   createdAt                                 
+      columnName                  created_at                                
+ ------------------------------- ------------------------------------------ 
+

@@ -93,20 +93,6 @@ final class UserFactory extends PersistentObjectFactory
         ]);
     }
 
-    public function withEmail(?string $email = null): static
-    {
-        return $this->with([
-            'email' => $email ?? self::faker()->safeEmail(),
-        ]);
-    }
-
-    public function withDisplayName(?string $displayName = null): static
-    {
-        return $this->with([
-            'displayName' => $displayName ?? self::faker()->name(),
-        ]);
-    }
-
     public function withTimezone(string $timezone): static
     {
         return $this->afterInstantiate(function (User $user) use ($timezone) {
