@@ -88,10 +88,6 @@ export function TimerProvider({ children }) {
     if (message.snapshot) {
       applySharedSnapshot(message.snapshot);
     }
-
-    if (message.eventtype) {
-      alert(`Received shared timer event: ${message.eventtype}`); // For debugging, can be removed later
-    }
   }, [applySharedSnapshot]);
 
   useEffect(() => {
