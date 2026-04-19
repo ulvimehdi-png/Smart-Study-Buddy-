@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  Clock, TrendingUp, Flag, BarChart3, FileText, Layout, 
-  Users, Trophy, Upload, Zap, Brain, Calendar, 
-  Music, Download, Video, Target, Sparkles, ArrowRight,
-  Star, Flame
+import {
+    Clock, TrendingUp, Flag, BarChart3, FileText, Layout,
+    Users, Trophy, Upload, Zap, Brain, Calendar,
+    Music, Download, Video, Target, Sparkles, ArrowRight,
+    Star, Flame
 } from 'lucide-react';
 import { Badge, AnimatedBlobs, FeatureCard, GradientButton, Logo } from '../components/shared';
 

@@ -78,8 +78,7 @@ export default function TimerPip({className = ""}) {
           }
         }
       });
-      
-
+    
       // 3. Create a container for our React tree
       const pipDiv = nextPipWindow.document.createElement("div");
       pipDiv.setAttribute("id", "pip-root");

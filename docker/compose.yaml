@@ -1,0 +1,56 @@
+services:
+  database:
+    image: mysql:9.6.0
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: app
+      MYSQL_USER: app
+      MYSQL_PASSWORD: app
+    ports:
+      - "3307:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 5s
+      retries: 5
+      start_period: 60s
+    volumes:
+      - database_data:/var/lib/mysql:rw
+      # You may use a bind-mounted host directory instead, so that it is harder to accidentally remove the volume and lose all your data!
+      # - ./docker/db/data:/var/lib/mysql/data:rw
+
+  mailer:
+    image: axllent/mailpit
+    ports:
+      - "1025:1025"
+      - "8025:8025"
+    environment:
+      MP_SMTP_AUTH_ACCEPT_ANY: 1
+      MP_SMTP_AUTH_ALLOW_INSECURE: 1
+
+  php:
+    build:
+      context: ..
+      dockerfile: ./docker/Dockerfile
+    user: "${UID:-1000}:${GID:-1000}"
+    volumes:
+      - ../backend:/app
+      - ./xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini
+    working_dir: /app
+    depends_on:
+      - database
+    ports:
+      - "8000:8000"
+    command: php -S 0.0.0.0:8000 -t public
+
+  node:
+    image: node:25.9.0
+    working_dir: /app
+    user: "${UID:-1000}:${GID:-1000}"
+    volumes:
+      - ../frontend:/app
+    ports:
+      - "5173:5173"
+    command: sh -c "npm install && npm run dev -- --host --port 5173"
+
+volumes:
+  database_data:
