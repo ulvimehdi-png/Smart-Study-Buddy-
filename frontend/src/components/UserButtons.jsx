@@ -22,7 +22,8 @@ export default function UserButtons() {
             className={cn(
               "flex items-center space-x-2 px-4 py-2 rounded-lg transition-all",
               "bg-primary/10 hover:bg-primary/20",
-              "text-primary border border-primary/20 hover:border-primary/30"
+              "text-primary border border-primary/20 hover:border-primary/30",
+              "cursor-pointer"
             )}
           >
             <User className="w-4 h-4 text-primary" />
@@ -37,7 +38,8 @@ export default function UserButtons() {
             className={cn(
               "flex items-center space-x-2 px-4 py-2 rounded-lg transition-all",
               "bg-danger/10 hover:bg-danger/20",
-              "text-danger border border-danger/20 hover:border-danger/30"
+              "text-danger border border-danger/20 hover:border-danger/30",
+              "cursor-pointer"
             )}
           >
             <LogOut className="w-4 h-4" />

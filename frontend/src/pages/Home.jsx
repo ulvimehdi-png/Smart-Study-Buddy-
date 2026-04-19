@@ -8,36 +8,104 @@ import {
 import { Badge, AnimatedBlobs, FeatureCard, GradientButton, Logo } from '../components/shared';
 
 export default function Home() {
-  const [isVisible, setIsVisible] = useState(false);
-
-  useEffect(() => {
-    setIsVisible(true);
-  }, []);
-
   const mustFeatures = [
-    { icon: Clock, title: 'Pomodoro Timer', description: 'Stay focused with customizable study sessions', color: 'from-amber-400 to-amber-400' },
-    { icon: TrendingUp, title: 'Progress Tracking', description: 'Monitor your growth across all subjects', color: 'from-amber-500 to-amber-500' },
-    { icon: Flag, title: 'Priority Levels', description: 'Organize tasks by importance and urgency', color: 'from-orange-400 to-orange-400' },
-    { icon: BarChart3, title: 'Progress Dashboard', description: 'Visualize your study statistics and achievements', color: 'from-orange-500 to-orange-500' },
-    { icon: FileText, title: 'Notes & Documentation', description: 'Write and organize your study notes', color: 'from-orange-600 to-orange-600' },
-    { icon: Layout, title: 'Simple Dashboard', description: 'Clean interface for all your study needs', color: 'from-red-500 to-red-500' },
+    {
+      icon: Clock,
+      title: "Pomodoro Timer",
+      description: "Stay focused with customizable study sessions",
+      color: "bg-amber-400",
+    },
+    {
+      icon: TrendingUp,
+      title: "Progress Tracking",
+      description: "Monitor your growth across all subjects",
+      color: "bg-amber-500",
+    },
+    {
+      icon: Flag,
+      title: "Priority Levels",
+      description: "Organize tasks by importance and urgency",
+      color: "bg-orange-400",
+    },
+    {
+      icon: BarChart3,
+      title: "Progress Dashboard",
+      description: "Visualize your study statistics and achievements",
+      color: "bg-orange-500",
+    },
+    {
+      icon: FileText,
+      title: "Notes & Documentation",
+      description: "Write and organize your study notes",
+      color: "bg-orange-600",
+    },
+    {
+      icon: Layout,
+      title: "Simple Dashboard",
+      description: "Clean interface for all your study needs",
+      color: "bg-red-500",
+    },
   ];
 
   const shouldFeatures = [
-    { icon: Users, title: 'Study with Friends', description: 'Share Pomodoro sessions with study partners' },
-    { icon: Flame, title: 'Track Streak', description: 'Build consistent study habits' },
-    { icon: Trophy, title: 'Achievements', description: 'Unlock rewards as you progress' },
-    { icon: Upload, title: 'Import Notes', description: 'Upload from other apps and images' },
-    { icon: Zap, title: 'Competition', description: 'Compete with friends on leaderboards' },
+    {
+      icon: Users,
+      title: "Study with Friends",
+      description: "Share Pomodoro sessions with study partners",
+    },
+    {
+      icon: Flame,
+      title: "Track Streak",
+      description: "Build consistent study habits",
+    },
+    {
+      icon: Trophy,
+      title: "Achievements",
+      description: "Unlock rewards as you progress",
+    },
+    {
+      icon: Upload,
+      title: "Import Notes",
+      description: "Upload from other apps and images",
+    },
+    {
+      icon: Zap,
+      title: "Competition",
+      description: "Compete with friends on leaderboards",
+    },
   ];
 
   const couldFeatures = [
-    { icon: Brain, title: 'AI Organization', description: 'Smart assistance for study planning' },
-    { icon: Target, title: 'Smart Search', description: 'Find anything in your notes instantly' },
-    { icon: Music, title: 'Lofi Music', description: 'Integrated Spotify playlists' },
-    { icon: Calendar, title: 'Calendar Integration', description: 'Sync with your schedule' },
-    { icon: Download, title: 'Import/Export', description: 'Backup and restore your data' },
-    { icon: Video, title: 'Video Calls', description: 'Study together with FaceTime' },
+    {
+      icon: Brain,
+      title: "AI Organization",
+      description: "Smart assistance for study planning",
+    },
+    {
+      icon: Target,
+      title: "Smart Search",
+      description: "Find anything in your notes instantly",
+    },
+    {
+      icon: Music,
+      title: "Lofi Music",
+      description: "Integrated Spotify playlists",
+    },
+    {
+      icon: Calendar,
+      title: "Calendar Integration",
+      description: "Sync with your schedule",
+    },
+    {
+      icon: Download,
+      title: "Import/Export",
+      description: "Backup and restore your data",
+    },
+    {
+      icon: Video,
+      title: "Video Calls",
+      description: "Study together with FaceTime",
+    },
   ];
 
   return (
@@ -52,18 +120,17 @@ export default function Home() {
             <Badge icon={Sparkles} className="mb-6">
               Your Personal Learning Companion
             </Badge>
-            
+
             <h1 className="text-5xl md:text-7xl font-bold mb-6">
-              <span className="text-gradient-primary">
-                Study Smarter,
-              </span>
+              <span className="text-gradient-primary">Study Smarter,</span>
               <br />
               <span className="text-gradient-accent">Not Harder</span>
             </h1>
-            
+
             <p className="text-xl text-text-secondary mb-12 max-w-3xl mx-auto">
-              Transform your study routine with intelligent time management, progress tracking, 
-              and collaborative features designed for modern students.
+              Transform your study routine with intelligent time management,
+              progress tracking, and collaborative features designed for modern
+              students.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
@@ -103,10 +170,12 @@ export default function Home() {
               Core Features
             </Badge>
             <h2 className="text-4xl md:text-5xl font-bold mb-4">
-              Everything You Need to <span className="text-gradient-accent">Excel</span>
+              Everything You Need to{" "}
+              <span className="text-gradient-accent">Excel</span>
             </h2>
             <p className="text-lg text-text-secondary max-w-2xl mx-auto">
-              Powerful tools designed to boost your productivity and academic performance
+              Powerful tools designed to boost your productivity and academic
+              performance
             </p>
           </div>
 
@@ -117,7 +186,7 @@ export default function Home() {
                 icon={feature.icon}
                 title={feature.title}
                 description={feature.description}
-                gradient={feature.color}
+                color={feature.color}
               />
             ))}
           </div>
@@ -132,7 +201,8 @@ export default function Home() {
               Advanced Features
             </Badge>
             <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-gray-100 mb-4">
-              Take Your Studies to the <span className="text-gradient-secondary">Next Level</span>
+              Take Your Studies to the{" "}
+              <span className="text-gradient-secondary">Next Level</span>
             </h2>
           </div>
 
@@ -150,7 +220,9 @@ export default function Home() {
                   </div>
                   <div>
                     <h3 className="font-semibold mb-1">{feature.title}</h3>
-                    <p className="text-sm text-text-secondary">{feature.description}</p>
+                    <p className="text-sm text-text-secondary">
+                      {feature.description}
+                    </p>
                   </div>
                 </div>
               );
@@ -166,7 +238,9 @@ export default function Home() {
             <Badge icon={Sparkles} variant="accent" className="mb-4">
               Coming Soon
             </Badge>
-            <h3 className="text-4xl md:text-5xl font-bold mb-8">Future Innovations</h3>
+            <h3 className="text-4xl md:text-5xl font-bold mb-8">
+              Future Innovations
+            </h3>
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -181,8 +255,12 @@ export default function Home() {
                     <Icon className="w-6 h-6 text-text-secondary" />
                   </div>
                   <div>
-                    <h3 className="font-semibold text-text-main mb-1">{feature.title}</h3>
-                    <p className="text-sm text-text-secondary">{feature.description}</p>
+                    <h3 className="font-semibold text-text-main mb-1">
+                      {feature.title}
+                    </h3>
+                    <p className="text-sm text-text-secondary">
+                      {feature.description}
+                    </p>
                   </div>
                 </div>
               );
@@ -213,7 +291,6 @@ export default function Home() {
           </GradientButton>
         </div>
       </section>
-
     </div>
   );
 }

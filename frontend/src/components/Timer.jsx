@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { AnimatePresence, motion as Motion } from 'framer-motion';
-import { Share2, FastForward, Pause, Play, RotateCcw } from 'lucide-react';
+import { Share2, FastForward, Pause, Play, RotateCcw, BellRing } from 'lucide-react';
 import { CircularProgressbar, CircularProgressbarWithChildren, buildStyles } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 import { cn } from "@/lib/utils";
@@ -69,7 +69,7 @@ export default function Timer({ isPiP = false }) {
             </span>
             {isPlaying && (
               <span className="absolute top-3/4 flex items-center gap-1 text-text-secondary text-sm mt-2">
-                <span className="inline-block h-2 w-2 rounded-full bg-current" /> { endTime }
+                <BellRing size={14} /> { endTime }
               </span>
             )}
           </div>

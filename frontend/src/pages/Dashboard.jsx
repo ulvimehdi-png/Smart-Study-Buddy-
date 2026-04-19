@@ -1,89 +1,291 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from "react";
+import { BarChart3, Clock, FileText, Flame, Sparkles, Target } from "lucide-react";
+import PageBackdrop from "../components/shared/PageBackdrop";
+
+const formatDate = (value) =>
+  new Intl.DateTimeFormat(undefined, { dateStyle: "medium" }).format(
+    new Date(value),
+  );
 
 export default function Dashboard() {
-    const [data, setData] = useState(null);
+  const [data, setData] = useState(null);
 
-    useEffect(() => {
-        fetch('/api/dashboard', {
-            credentials: 'include'
-        })
-            .then(res => res.json())
-            .then(d => setData(d))
-            .catch(err => console.error("Error fetching dashboard:", err));
-    }, []);
+  useEffect(() => {
+    fetch("/api/dashboard", {
+      credentials: "include",
+    })
+      .then((res) => res.json())
+      .then((dashboardData) => setData(dashboardData))
+      .catch((err) => console.error("Error fetching dashboard:", err));
+  }, []);
 
-    if (!data) return <div className="p-8 text-center text-gray-500">Loading Dashboard...</div>;
-
+  if (!data) {
     return (
-        <div className="p-8 max-w-6xl mx-auto bg-gray-50 min-h-screen">
-            <h1 className="text-3xl font-bold mb-6 text-gray-800">Dashboard</h1>
-
-            {/* Top Stats Row */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-                <div className="bg-white p-4 rounded-lg shadow text-center border border-gray-100">
-                    <h3 className="text-gray-500 text-sm font-semibold">Total Notes</h3>
-                    <p className="text-3xl font-bold text-blue-600 mt-2">{data.totalNotes}</p>
-                </div>
-                <div className="bg-white p-4 rounded-lg shadow text-center border border-gray-100">
-                    <h3 className="text-gray-500 text-sm font-semibold">Total Hours</h3>
-                    <p className="text-3xl font-bold text-blue-600 mt-2">{data.totalHours}</p>
-                </div>
-                <div className="bg-white p-4 rounded-lg shadow text-center border border-gray-100">
-                    <h3 className="text-gray-500 text-sm font-semibold">Today's Hours</h3>
-                    <p className="text-3xl font-bold text-blue-600 mt-2">{data.todayHours}</p>
-                </div>
-                <div className="bg-white p-4 rounded-lg shadow text-center border border-gray-100">
-                    <h3 className="text-gray-500 text-sm font-semibold">Study Streak</h3>
-                    <p className="text-3xl font-bold text-blue-600 mt-2">{data.studyStreak} <span className="text-lg">Days</span></p>
-                </div>
+      <div className="relative min-h-screen overflow-hidden bg-bg-base text-text-main">
+        <PageBackdrop />
+        <div className="relative mx-auto flex min-h-screen max-w-4xl items-center justify-center px-4 pt-20 sm:px-6">
+          <div className="w-full rounded-4xl border border-border-base bg-bg-card p-10 text-center shadow-xl shadow-black/5">
+            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-primary/10 text-primary">
+              <BarChart3 className="h-7 w-7" />
             </div>
-
-            <div className="grid md:grid-cols-2 gap-8">
-                {/* Task Progress Section */}
-                <div className="bg-white p-6 rounded-lg shadow border border-gray-100">
-                    <h2 className="text-xl font-bold mb-4 text-gray-800">Task Progress</h2>
-                    {data.progress && data.progress.length > 0 ? (
-                        <div className="space-y-4">
-                            {data.progress.map((prog, index) => (
-                                <div key={index}>
-                                    <div className="flex justify-between text-sm mb-1">
-                                        <span className="font-semibold text-gray-700">{prog.subject}</span>
-                                        <span className="text-gray-500">{prog.completedTasks} / {prog.totalTasks} Tasks ({prog.progressPercent}%)</span>
-                                    </div>
-                                    <div className="w-full bg-gray-200 rounded-full h-2.5">
-                                        <div
-                                            className="bg-blue-600 h-2.5 rounded-full transition-all duration-500"
-                                            style={{ width: `${prog.progressPercent}%` }}
-                                        ></div>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    ) : (
-                        <p className="text-gray-500 italic">No tasks created yet.</p>
-                    )}
-                </div>
-
-                {/* Recent Notes Section */}
-                <div className="bg-white p-6 rounded-lg shadow border border-gray-100">
-                    <h2 className="text-xl font-bold mb-4 text-gray-800">Recent Notes</h2>
-                    {data.recentNotes && data.recentNotes.length > 0 ? (
-                        <div className="space-y-4">
-                            {data.recentNotes.map((note) => (
-                                <div key={note.noteId} className="border-b border-gray-100 pb-3 last:border-0">
-                                    <h4 className="font-semibold text-lg text-gray-800">{note.title}</h4>
-                                    <p className="text-xs text-gray-500 mb-2">
-                                        {note.subject || "No Subject"} • {new Date(note.createdAt).toLocaleDateString()}
-                                    </p>
-                                    <p className="text-sm text-gray-600 line-clamp-2">{note.content}</p>
-                                </div>
-                            ))}
-                        </div>
-                    ) : (
-                        <p className="text-gray-500 italic">No notes created yet.</p>
-                    )}
-                </div>
-            </div>
+            <h1 className="mt-5 text-2xl font-semibold">Loading Dashboard</h1>
+            <p className="mt-3 text-text-secondary">
+              Pulling together notes, study time, and task progress.
+            </p>
+          </div>
         </div>
+      </div>
     );
+  }
+
+  const progressItems = data.progress ?? [];
+  const recentNotes = data.recentNotes ?? [];
+
+  const totalTrackedTasks = progressItems.reduce(
+    (sum, item) => sum + item.totalTasks,
+    0,
+  );
+  const completedTrackedTasks = progressItems.reduce(
+    (sum, item) => sum + item.completedTasks,
+    0,
+  );
+  const overallProgress =
+    totalTrackedTasks > 0
+      ? Math.round((completedTrackedTasks / totalTrackedTasks) * 100)
+      : 0;
+
+  const leadingSubject = progressItems.reduce((best, current) => {
+    if (!best || current.progressPercent > best.progressPercent) {
+      return current;
+    }
+
+    return best;
+  }, null);
+
+  const stats = [
+    {
+      label: "Total Notes",
+      value: data.totalNotes,
+      detail: "Saved across your workspace",
+      icon: <FileText className="h-5 w-5" />,
+      iconClass: "bg-primary-light/10 text-primary-light",
+    },
+    {
+      label: "Total Hours",
+      value: data.totalHours,
+      detail: "Focus sessions logged",
+      icon: <Clock className="h-5 w-5" />,
+      iconClass: "bg-primary/10 text-primary",
+    },
+    {
+      label: "Today's Hours",
+      value: data.todayHours,
+      detail: "Time invested today",
+      icon: <Target className="h-5 w-5" />,
+      iconClass: "bg-accent-light/10 text-accent-light",
+    },
+    {
+      label: "Study Streak",
+      value: `${data.studyStreak} Days`,
+      detail: "Consistency is building",
+      icon: <Flame className="h-5 w-5" />,
+      iconClass: "bg-accent/10 text-accent",
+    },
+  ];
+
+  return (
+    <div className="relative min-h-screen overflow-hidden bg-bg-base text-text-main">
+      <PageBackdrop />
+
+      <div className="relative mx-auto max-w-7xl px-4 pb-12 pt-22 sm:px-6 lg:px-8">
+        <div className="mb-8 flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
+          <div>
+            <div className="flex items-center gap-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                <BarChart3 className="h-5 w-5" />
+              </div>
+              <div>
+                <h1 className="text-2xl font-semibold sm:text-3xl">
+                  Dashboard
+                </h1>
+                <p className="mt-1 text-sm text-text-secondary">
+                  Overview of notes, study time, and task progress.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div className="grid gap-3 sm:grid-cols-2 lg:min-w-[320px]">
+            <div className="rounded-2xl border border-border-base bg-bg-card p-4 shadow-sm">
+              <p className="text-sm font-medium text-text-secondary">
+                Overall task completion
+              </p>
+              <div className="mt-3 flex items-end justify-between gap-4">
+                <span className="text-3xl font-semibold text-text-main">
+                  {overallProgress}%
+                </span>
+                <span className="rounded-full bg-primary/10 px-3 py-1 text-sm font-semibold text-primary">
+                  {completedTrackedTasks}/{totalTrackedTasks || 0} done
+                </span>
+              </div>
+            </div>
+
+            <div className="rounded-2xl border border-border-base bg-bg-card p-4 shadow-sm">
+              <p className="text-sm font-medium text-text-secondary">
+                Leading subject
+              </p>
+              <div className="mt-3 text-lg font-semibold">
+                {leadingSubject?.subject || "No subjects yet"}
+              </div>
+              <p className="mt-1 text-sm text-text-secondary">
+                {leadingSubject
+                  ? `${leadingSubject.progressPercent}% completion`
+                  : "Create tasks to see momentum by subject."}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+          {stats.map(({ label, value, detail, icon, iconClass }) => (
+            <div
+              key={label}
+              className="rounded-2xl border border-border-base bg-bg-card p-4 shadow-sm"
+            >
+              <div className="flex flex-wrap items-center gap-2">
+                <div
+                  className={`flex h-10 w-10 items-center justify-center rounded-xl ${iconClass}`}
+                >
+                  {icon}
+                </div>
+                <div>
+                  <p className="font-medium">{label}</p>
+                  <p className="text-sm text-text-secondary">{detail}</p>
+                </div>
+              </div>
+              <div className="mt-3 text-3xl font-semibold">{value}</div>
+            </div>
+          ))}
+        </div>
+
+        <div className="mt-6 grid gap-6 xl:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)]">
+          <section className="rounded-3xl border border-border-base bg-bg-card p-5 shadow-sm">
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+              <div className="flex items-start gap-4">
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                  <BarChart3 className="h-5 w-5" />
+                </div>
+                <div>
+                  <h2 className="text-lg font-semibold">Task Progress</h2>
+                  <p className="mt-1 text-sm text-text-secondary">
+                    Progress by subject.
+                  </p>
+                </div>
+              </div>
+
+              {totalTrackedTasks > 0 && (
+                <div className="rounded-full bg-accent/10 px-3 py-1 text-sm font-semibold text-accent">
+                  {progressItems.length} subject
+                  {progressItems.length === 1 ? "" : "s"} tracked
+                </div>
+              )}
+            </div>
+
+            {progressItems.length > 0 ? (
+              <div className="mt-6 space-y-4">
+                {progressItems.map((prog, index) => (
+                  <div
+                    key={`${prog.subject}-${index}`}
+                    className="rounded-2xl border border-border-base bg-bg-base p-4"
+                  >
+                    <div className="flex flex-wrap items-center justify-between gap-3">
+                      <div>
+                        <p className="font-semibold">
+                          {prog.subject || "General"}
+                        </p>
+                        <p className="text-sm text-text-secondary">
+                          {prog.completedTasks} of {prog.totalTasks} tasks
+                          complete
+                        </p>
+                      </div>
+
+                      <span className="rounded-full bg-primary/10 px-3 py-1 text-sm font-semibold text-primary">
+                        {prog.progressPercent}%
+                      </span>
+                    </div>
+
+                    <div className="mt-4 h-3 overflow-hidden rounded-full bg-border-base">
+                      <div
+                        className="h-full rounded-full transition-all duration-500"
+                        style={{
+                          width: `${prog.progressPercent}%`,
+                          background: "var(--color-primary)",
+                        }}
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="mt-6 rounded-2xl border border-dashed border-border-base bg-bg-base px-6 py-12 text-center">
+                <Sparkles className="mx-auto h-8 w-8 text-accent" />
+                <h3 className="mt-4 text-lg font-semibold">No tasks yet</h3>
+                <p className="mt-2 text-text-secondary">
+                  Add tasks to unlock subject-by-subject progress tracking here.
+                </p>
+              </div>
+            )}
+          </section>
+
+          <section className="rounded-3xl border border-border-base bg-bg-card p-5 shadow-sm">
+            <div className="flex items-start gap-4">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-accent/10 text-accent">
+                <FileText className="h-5 w-5" />
+              </div>
+              <div>
+                <h2 className="text-lg font-semibold">Recent Notes</h2>
+                <p className="mt-1 text-sm text-text-secondary">
+                  Latest saved notes.
+                </p>
+              </div>
+            </div>
+
+            {recentNotes.length > 0 ? (
+              <div className="mt-6 space-y-4">
+                {recentNotes.map((note) => (
+                  <article
+                    key={note.noteId}
+                    className="rounded-2xl border border-border-base bg-bg-base p-4"
+                  >
+                    <div className="flex flex-wrap items-center gap-2">
+                      <span className="rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
+                        {note.subject || "General"}
+                      </span>
+                      <span className="text-xs text-text-muted">
+                        {formatDate(note.createdAt)}
+                      </span>
+                    </div>
+                    <h3 className="mt-3 text-lg font-semibold">{note.title}</h3>
+                    <p className="mt-2 text-sm leading-6 text-text-secondary line-clamp-3">
+                      {note.content}
+                    </p>
+                  </article>
+                ))}
+              </div>
+            ) : (
+              <div className="mt-6 rounded-2xl border border-dashed border-border-base bg-bg-base px-6 py-12 text-center">
+                <FileText className="mx-auto h-8 w-8 text-primary" />
+                <h3 className="mt-4 text-lg font-semibold">
+                  No notes created yet
+                </h3>
+                <p className="mt-2 text-text-secondary">
+                  As soon as you save notes, the latest ones will show up here.
+                </p>
+              </div>
+            )}
+          </section>
+        </div>
+      </div>
+    </div>
+  );
 }

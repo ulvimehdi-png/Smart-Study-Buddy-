@@ -9,7 +9,9 @@ import UserButtons from './UserButtons';
 
 const NAV_LINKS = [
   { name: 'Home', path: '/', needsAuth: false, isRoute: true },
-  { name: 'Features', path: '/#features', needsAuth: false, isRoute: true },
+  { name: 'Dashboard', path: '/dashboard', needsAuth: true, isRoute: true },
+  { name: 'Tasks', path: '/tasks', needsAuth: true, isRoute: true },
+  { name: 'Notes', path: '/notes', needsAuth: true, isRoute: true },
   { name: 'Timer', path: '/timer', needsAuth: true, isRoute: true },
 ];
 
