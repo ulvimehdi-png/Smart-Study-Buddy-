@@ -2,8 +2,8 @@
 
 namespace App\Controller;
 
-use App\Cache\LiveTimerSessionStore;
 use App\Dto\LiveTimer\CreateLiveTimerSessionRequest;
+use App\Service\LiveTimerSessionStore;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
