@@ -3,6 +3,7 @@ import { Check, Clock, Flag, Plus, Sparkles, Trash2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import PageBackdrop from "../components/shared/PageBackdrop";
 import SmallStats from "../components/shared/SmallStats";
+import SubjectBadge from "../components/shared/SubjectBadge";
 
 export default function Tasks() {
   const [tasks, setTasks] = useState([]);
@@ -207,16 +208,10 @@ export default function Tasks() {
                       >
                         {task.title}
                       </p>
-                      <span
-                        className={cn(
-                          "rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-wide",
-                          task.isCompleted
-                            ? "bg-primary/10 text-primary"
-                            : "bg-accent/10 text-accent",
-                        )}
-                      >
-                        {task.subject || "General"}
-                      </span>
+                      <SubjectBadge
+                        subject={task.subject}
+                        tone={task.isCompleted ? "primary" : "accent"}
+                      />
                     </div>
                   </div>
 

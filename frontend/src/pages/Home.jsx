@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import {
     Clock, TrendingUp, Flag, BarChart3, FileText, Layout,
     Users, Trophy, Upload, Zap, Brain, Calendar,

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { BookText, CalendarDays, NotebookPen, Tags, Trash2 } from "lucide-react";
 import PageBackdrop from "../components/shared/PageBackdrop";
 import SmallStats from "../components/shared/SmallStats";
+import SubjectBadge from "../components/shared/SubjectBadge";
 
 const formatDate = (value) =>
   new Intl.DateTimeFormat(undefined, { dateStyle: "medium" }).format(
@@ -212,11 +213,8 @@ export default function Notes() {
                   >
                     <div className="flex items-start justify-between gap-4">
                       <div className="min-w-0">
-                        {/* TODO: Extract the subject badge from here and also use it in tasks/dashbaord */}
-                        <span className="rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-wide bg-primary/10 text-primary border border-primary/20">
-                          {note.subject || "General"}
-                        </span>
-                        <h3 className="mt-4 text-xl font-semibold break-words">
+                        <SubjectBadge subject={note.subject} />
+                        <h3 className="mt-4 text-xl font-semibold wrap-break-word">
                           {note.title}
                         </h3>
                       </div>

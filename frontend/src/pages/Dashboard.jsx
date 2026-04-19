@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { BarChart3, Clock, FileText, Flame, Sparkles, Target } from "lucide-react";
 import PageBackdrop from "../components/shared/PageBackdrop";
+import SubjectBadge from "../components/shared/SubjectBadge";
 
 const formatDate = (value) =>
   new Intl.DateTimeFormat(undefined, { dateStyle: "medium" }).format(
@@ -258,9 +259,7 @@ export default function Dashboard() {
                     className="rounded-2xl border border-border-base bg-bg-base p-4"
                   >
                     <div className="flex flex-wrap items-center gap-2">
-                      <span className="rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
-                        {note.subject || "General"}
-                      </span>
+                      <SubjectBadge subject={note.subject} />
                       <span className="text-xs text-text-muted">
                         {formatDate(note.createdAt)}
                       </span>

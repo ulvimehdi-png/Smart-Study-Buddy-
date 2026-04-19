@@ -26,7 +26,7 @@ export default function Footer() {
 
           <div>
             <h4 className="text-sm font-semibold uppercase tracking-widest text-text-secondary mb-4">Product</h4>
-            <ul className="space-y-3 text-text-secondary">
+            <ul className="space-y-3 text-text-secondary columns-3">
               { LINKS.map(link => (
                 <li key={link.name}>
                   <Link to={link.path} className="hover:text-primary transition-colors">{link.name}</Link>

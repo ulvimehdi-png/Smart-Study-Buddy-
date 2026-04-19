@@ -1,7 +1,6 @@
 import React from 'react';
 import Timer from '@/components/Timer';
 import TimerPip from '../components/TimerPip';
-import { useTimer } from '../lib/useTimer';
 import TimerDurationInputs from '../components/TimerDurationInputs';
 import { AnimatePresence, motion as Motion } from 'motion/react';
 
