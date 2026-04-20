@@ -424,3 +424,22 @@ flowchart LR
     B -->|stop-and-save| G[Finalizer]
     G --> H[(MySQL sessions / session_entries)]
 ```
+
+---
+
+### Current limitations
+- owner-only access
+- no share token / public read-only viewing
+- no collaborative control model
+- no per-phase historical breakdown beyond what is finalized into durable session data
+- the timer page is still primarily a reference/debug page, not the final UX
+
+---
+
+### Future extensions
+
+- read-only shared viewer tokens
+- richer stop-and-save inputs in the UI
+- subject/task selection in the timer page
+- stronger automated tests around state transitions and finalization
+- better extraction of a reusable pattern for other Mercure-backed live features
