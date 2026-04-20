@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from '../lib/auth';
 import { BookOpen, Brain, Sparkles } from 'lucide-react';
@@ -14,7 +14,7 @@ export default function Login() {
 
   const auth = useAuth();
   const from = location.state?.from?.pathname || "/timer";
-
+  
   const handleSubmit = (e) => {
     e.preventDefault();
     if (currentView === 'register') {
@@ -33,7 +33,7 @@ export default function Login() {
       setMessage('Error: Username might be taken.');
     }
   };
-
+  
   const handleLogin = async () => {
     try {
       await auth.login(username, password);
@@ -45,11 +45,11 @@ export default function Login() {
   };
 
   return (
-      <div className="relative min-h-screen w-full flex items-center justify-center p-4 pt-20">
-        {/* Floating Background Elements */}
-        <AnimatedBlobs />
+    <div className="relative min-h-screen w-full flex items-center justify-center p-4 pt-20">
+      {/* Floating Background Elements */}
+      <AnimatedBlobs />
 
-        {/* Main Card */}
+      {/* Main Card */}
 
         <div className="w-md bg-bg-card rounded-3xl shadow-2xl p-8 border">
           {/* Logo & Header */}
@@ -81,13 +81,13 @@ export default function Login() {
 
           {/* Message Display */}
           {(message || auth.error) && (
-              <div className={`mb-4 p-3 rounded-xl text-sm ${
-                  message.includes('successful')
-                      ? 'bg-green-50 text-green-700 border border-green-200'
-                      : 'bg-red-50 text-red-700 border border-red-200'
-              }`}>
-                {message || auth.error}
-              </div>
+            <div className={`mb-4 p-3 rounded-xl text-sm ${
+              message.includes('successful') 
+                ? 'bg-green-50 text-green-700 border border-green-200' 
+                : 'bg-red-50 text-red-700 border border-red-200'
+            }`}>
+              {message || auth.error}
+            </div>
           )}
 
           {/* Form */}
@@ -95,47 +95,47 @@ export default function Login() {
             <div className="text-center mb-6">
               <h2 className="text-2xl font-bold">
                 {currentView === 'register'
-                    ? 'Create Account'
-                    : 'Welcome Back'}
+                  ? 'Create Account'
+                  : 'Welcome Back'}
               </h2>
               <p className="text-sm text-text-secondary mt-1">
-                {currentView === 'register'
-                    ? 'Join thousands of successful students'
-                    : 'Continue your learning journey'}
+                {currentView === 'register' 
+                  ? 'Join thousands of successful students' 
+                  : 'Continue your learning journey'}
               </p>
             </div>
 
             <div className="space-y-4">
               <div className="relative">
-                <input
-                    type="text"
-                    placeholder="Username"
-                    value={username}
-                    onChange={e => setUsername(e.target.value)}
-                    required
-                    className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent transition-all duration-200 placeholder-gray-400 dark:placeholder-gray-500 text-gray-900 dark:text-gray-100"
+                <input 
+                  type="text"
+                  placeholder="Username" 
+                  value={username} 
+                  onChange={e => setUsername(e.target.value)} 
+                  required
+                  className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent transition-all duration-200 placeholder-gray-400 dark:placeholder-gray-500 text-gray-900 dark:text-gray-100"
                 />
               </div>
 
               <div className="relative">
-                <input
-                    type="password"
-                    placeholder="Password"
-                    value={password}
-                    onChange={e => setPassword(e.target.value)}
-                    required
-                    className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent transition-all duration-200 placeholder-gray-400 dark:placeholder-gray-500 text-gray-900 dark:text-gray-100"
+                <input 
+                  type="password"
+                  placeholder="Password" 
+                  value={password} 
+                  onChange={e => setPassword(e.target.value)} 
+                  required
+                  className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent transition-all duration-200 placeholder-gray-400 dark:placeholder-gray-500 text-gray-900 dark:text-gray-100"
                 />
               </div>
             </div>
 
-            <GradientButton
-                type="submit"
-                disabled={auth.loading}
-                className="w-full rounded-xl hover:shadow-lg hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+            <GradientButton 
+              type="submit" 
+              disabled={auth.loading}
+              className="w-full rounded-xl hover:shadow-lg hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
             >
               {auth.loading ? (
-                  <span className="flex items-center justify-center">
+                <span className="flex items-center justify-center">
                   <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
@@ -143,22 +143,22 @@ export default function Login() {
                   Please wait...
                 </span>
               ) : (
-                  currentView === 'register' ? 'Create Account' : 'Sign In'
+                currentView === 'register' ? 'Create Account' : 'Sign In'
               )}
             </GradientButton>
 
             <div className="text-center mt-6">
               <button
-                  type="button"
-                  onClick={() => {
-                    setMessage('');
-                    setCurrentView(currentView === 'register' ? 'login' : 'register');
-                  }}
-                  className="text-text-secondary hover:text-accent cursor-pointer text-sm font-medium transition-all"
+                type="button"
+                onClick={() => {
+                  setMessage('');
+                  setCurrentView(currentView === 'register' ? 'login' : 'register');
+                }}
+                className="text-text-secondary hover:text-accent cursor-pointer text-sm font-medium transition-all"
               >
-                {currentView === 'register'
-                    ? 'Already have an account? Sign in'
-                    : "Don't have an account? Sign up"}
+                {currentView === 'register' 
+                  ? 'Already have an account? Sign in' 
+                  : "Don't have an account? Sign up"}
               </button>
             </div>
           </form>

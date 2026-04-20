@@ -1,11 +1,9 @@
 import React, { useState } from 'react';
 import { AnimatePresence, motion as Motion } from 'framer-motion';
-import { Settings, X, ChevronLast, SkipForward, ClockArrowUp, FastForward, RotateCcw } from 'lucide-react';
-import TimerPip from './TimerPip';
+import { Share2, FastForward, Pause, Play, RotateCcw, BellRing } from 'lucide-react';
 import { CircularProgressbar, CircularProgressbarWithChildren, buildStyles } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 import { cn } from "@/lib/utils";
-import { BellRing, Play, Pause } from 'lucide-react';
 import { useTimer } from '@/lib/useTimer';
 import TimerDurationInputs from './TimerDurationInputs';
 import TimerButton from './Button/TimerButton';
@@ -21,7 +19,18 @@ function formatDate(ms) {
 }
 
 export default function Timer({ isPiP = false }) {
-  const { isPlaying, setIsPlaying, msLeft, durationMs, resetTimer, skipTimer, isResting, isResetting } = useTimer();
+  const {
+    isPlaying,
+    togglePlaying,
+    msLeft,
+    durationMs,
+    resetTimer,
+    skipTimer,
+    isResting,
+    isShared,
+    startSharing,
+    stopSharing,
+  } = useTimer();
 
   // Calculate values for the stateless UI
   const percentage = durationMs > 0 ? (msLeft / durationMs) * 100 : 0;
@@ -36,62 +45,69 @@ export default function Timer({ isPiP = false }) {
   }, [isPlaying, msLeft]);
 
   return (
-      <div className="flex flex-col items-center h-full justify-center" id="timer">
-        <div className={cn("relative flex flex-col md:flex-row justify-center items-center mt-2", isPiP ? "w-48 h-48" : "w-full h-full")} >
+    <div className="flex flex-col items-center h-full justify-center" id="timer">
+      <div className={cn("relative flex flex-col md:flex-row justify-center items-center mt-2", isPiP ? "w-48 h-48" : "w-full h-full")} >
 
-          <CircularProgressbarWithChildren
-              value={!isResetting ? 100 - percentage : percentage}
-              counterClockwise={false}
-              strokeWidth={isPiP ? 4 : 4}
-              styles={buildStyles({
-                pathColor: isResting ? 'var(--color-timer-rest)' : 'var(--color-timer-work)',
-                trailColor: 'var(--color-timer-trail)',
-                pathTransition: 'none', // Critical for 60fps fluidity
-              })}
-          >
+        <CircularProgressbarWithChildren
+          value={100 - percentage}
+          counterClockwise={false}
+          strokeWidth={isPiP ? 4 : 4}
+          styles={buildStyles({
+            pathColor: isResting ? 'var(--color-timer-rest)' : 'var(--color-timer-work)',
+            trailColor: 'var(--color-timer-trail)',
+            pathTransition: 'none', // Critical for 60fps fluidity
+          })}
+        >
 
-            <div
-                className="group relative w-full h-full inset-0 flex items-center justify-center rounded-full cursor-pointer"
-                onClick={() => setIsPlaying((current) => isResetting ? current : !current)}
-            >
-              <div className="flex flex-col items-center justify-center absolute w-full h-full transition-all duration-200 group-hover:opacity-20">
+        <div
+          className="group relative w-full h-full inset-0 flex items-center justify-center rounded-full cursor-pointer"
+          onClick={togglePlaying}
+        >
+          <div className="flex flex-col items-center justify-center absolute w-full h-full transition-all duration-200 group-hover:opacity-20">
             <span className={cn("font-mono text-text-main", isPiP ? "text-xl" : "text-2xl")}>
               {displayTime}
             </span>
-                {isPlaying && (
-                    <span className="absolute top-3/4 flex items-center gap-1 text-text-secondary text-sm mt-2">
+            {isPlaying && (
+              <span className="absolute top-3/4 flex items-center gap-1 text-text-secondary text-sm mt-2">
                 <BellRing size={14} /> { endTime }
               </span>
-                )}
-              </div>
-
-              <div className="absolute opacity-0 group-hover:opacity-100 transition-opacity">
-                {isPlaying ? <Pause strokeWidth={1} size={isPiP ? 40 : 60} className="-stroke-3 fill-text-secondary text-text-secondary"/> : <Play size={isPiP ? 40 : 60} className="fill-text-secondary text-text-secondary" />}
-              </div>
-
-            </div>
-          </CircularProgressbarWithChildren>
-
-          <AnimatePresence mode="wait" initial={false}>
-            {!isPlaying && !isPiP && <TimerDurationInputs />}
-          </AnimatePresence>
-
-        </div>
-
-        <AnimatePresence mode="wait" initial={false}>
-          <div className={cn("flex flex-col sm:flex-row gap-2 transition-all duration-300", isPiP ? "flex-row! m-2" : "m-8")}>
-            <TimerButton isPiP={isPiP} onClick={() => setIsPlaying((current) => isResetting ? current : !current)} IconComp={isPlaying ? Pause : Play}>
-              {isPlaying ? "Pause" : "Start"}
-            </TimerButton>
-            <TimerButton isPiP={isPiP} onClick={resetTimer} IconComp={RotateCcw}>
-              Reset
-            </TimerButton>
-            <TimerButton isPiP={isPiP} onClick={skipTimer} IconComp={FastForward}>
-              Skip to {isResting ? "Work" : "Rest"}
-            </TimerButton>
+            )}
           </div>
 
+          <div className="absolute opacity-0 group-hover:opacity-100 transition-opacity">
+            {isPlaying ? <Pause strokeWidth={1} size={isPiP ? 40 : 60} className="-stroke-3 fill-text-secondary text-text-secondary"/> : <Play size={isPiP ? 40 : 60} className="fill-text-secondary text-text-secondary" />}
+          </div>
+
+        </div>
+        </CircularProgressbarWithChildren>
+
+        <AnimatePresence mode="wait" initial={false}>
+          {!isPlaying && !isPiP && <TimerDurationInputs />}
         </AnimatePresence>
       </div>
+
+      <AnimatePresence mode="wait" initial={false}>
+        <div className={cn("flex flex-col sm:flex-row gap-2 transition-all duration-300", isPiP ? "flex-row! m-2" : "m-8")}>
+          <TimerButton isPiP={isPiP} onClick={togglePlaying} IconComp={isPlaying ? Pause : Play}>
+            {isPlaying ? "Pause" : "Start"}
+          </TimerButton>
+          <TimerButton isPiP={isPiP} onClick={resetTimer} IconComp={RotateCcw}>
+            Reset
+          </TimerButton>
+          <TimerButton isPiP={isPiP} onClick={skipTimer} IconComp={FastForward}>
+            Skip to {isResting ? "Work" : "Rest"}
+          </TimerButton>
+          <TimerButton
+            isPiP={isPiP}
+            onClick={isShared ? stopSharing : startSharing}
+            IconComp={Share2}
+            className={isShared ? 'bg-primary/10 text-primary' : ''}
+          >
+            {isShared ? 'Stop Sharing' : 'Share'}
+          </TimerButton>
+        </div>
+
+      </AnimatePresence>
+    </div>
   );
 }

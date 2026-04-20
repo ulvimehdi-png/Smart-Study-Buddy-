@@ -9,7 +9,9 @@ import UserButtons from './UserButtons';
 
 const NAV_LINKS = [
   { name: 'Home', path: '/', needsAuth: false, isRoute: true },
-  { name: 'Features', path: '/#features', needsAuth: false, isRoute: true },
+  { name: 'Dashboard', path: '/dashboard', needsAuth: true, isRoute: true },
+  { name: 'Tasks', path: '/tasks', needsAuth: true, isRoute: true },
+  { name: 'Notes', path: '/notes', needsAuth: true, isRoute: true },
   { name: 'Timer', path: '/timer', needsAuth: true, isRoute: true },
 ];
 
@@ -79,7 +81,7 @@ export default function Navbar() {
         {/* Desktop Actions */}
         <div className="hidden md:flex items-center gap-4">
           <UserButtons />
-          <div className="h-6 w-[1px] bg-border-base mx-2" /> {/* Divider */}
+          <div className="h-6 w-px bg-border-base mx-2" /> {/* Divider */}
           <ThemeToggle />
         </div>
 
@@ -101,7 +103,7 @@ export default function Navbar() {
         <div className="md:hidden bg-base border-t border-base shadow-xl animate-in fade-in slide-in-from-top-4 duration-200">
           <div className="px-4 py-6 flex flex-col gap-4 text-center">
             {NAV_LINKS.map((link) => renderNavLink(link, true))}
-            <div className="h-[1px] bg-border-base my-2" />
+            <div className="h-px bg-border-base my-2" />
             <div className="flex justify-center">
               <UserButtons />
             </div>

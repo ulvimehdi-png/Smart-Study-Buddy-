@@ -11,8 +11,8 @@ export default function TimerPip({className = ""}) {
   const { theme } = useTheme();
 
   const isSupported = useMemo(
-      () => typeof window !== 'undefined' && 'documentPictureInPicture' in window,
-      []
+    () => typeof window !== 'undefined' && 'documentPictureInPicture' in window,
+    []
   );
 
   useEffect(() => {
@@ -25,7 +25,7 @@ export default function TimerPip({className = ""}) {
     } else {
       pipWindow.document.documentElement.classList.remove("dark");
     }
-
+    
   }, [theme, pipWindow]);
 
   useEffect(() => {
@@ -65,8 +65,8 @@ export default function TimerPip({className = ""}) {
           const rules = styleSheet.cssRules;
           const style = target.createElement('style');
           style.textContent = Array.from(rules)
-              .map((rule) => rule.cssText)
-              .join('\n');
+            .map((rule) => rule.cssText)
+            .join('\n');
           target.head.appendChild(style);
         } catch (error) {
           const ownerNode = styleSheet.ownerNode;
@@ -78,8 +78,7 @@ export default function TimerPip({className = ""}) {
           }
         }
       });
-
-
+    
       // 3. Create a container for our React tree
       const pipDiv = nextPipWindow.document.createElement("div");
       pipDiv.setAttribute("id", "pip-root");
@@ -93,11 +92,11 @@ export default function TimerPip({className = ""}) {
   }
 
   return isSupported && (
-      <>
-        <TimerButton isPiP={false} onClick={openPip} IconComp={PictureInPicture2} className={className}>
-          PiP
-        </TimerButton>
-        {pipContainer && createPortal(<Timer isPiP />, pipContainer)}
-      </>
+    <>
+      <TimerButton isPiP={false} onClick={openPip} IconComp={PictureInPicture2} className={className}>
+        PiP
+      </TimerButton>
+      {pipContainer && createPortal(<Timer isPiP />, pipContainer)}
+    </>
   );
 }

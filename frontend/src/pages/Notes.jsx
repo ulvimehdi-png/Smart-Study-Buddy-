@@ -1,144 +1,248 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from "react";
+import { BookText, CalendarDays, NotebookPen, Tags, Trash2 } from "lucide-react";
+import PageBackdrop from "../components/shared/PageBackdrop";
+import SmallStats from "../components/shared/SmallStats";
+import SubjectBadge from "../components/shared/SubjectBadge";
+
+const formatDate = (value) =>
+  new Intl.DateTimeFormat(undefined, { dateStyle: "medium" }).format(
+    new Date(value),
+  );
+const formatCompactDate = (value) =>
+  new Intl.DateTimeFormat(undefined, { month: "short", day: "numeric" }).format(
+    new Date(value),
+  );
 
 export default function Notes() {
-    const [notes, setNotes] = useState([]);
-    const [title, setTitle] = useState('');
-    const [content, setContent] = useState('');
-    const [subject, setSubject] = useState('');
+  const [notes, setNotes] = useState([]);
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
+  const [subject, setSubject] = useState("");
 
-    // 1. Grab notes from the backend
-    const fetchNotes = () => {
-        fetch('/api/notes', {
-            credentials: 'include'
-        })
-            .then(res => res.json())
-            .then(data => setNotes(data))
-            .catch(err => console.error("Error fetching notes:", err));
-    };
+  const fetchNotes = () => {
+    fetch("/api/notes", {
+      credentials: "include",
+    })
+      .then((res) => res.json())
+      .then((data) => setNotes(data))
+      .catch((err) => console.error("Error fetching notes:", err));
+  };
 
-    useEffect(() => {
+  useEffect(() => {
+    fetchNotes();
+  }, []);
+
+  const handleDelete = (noteId) => {
+    fetch(`/api/notes/${noteId}`, {
+      method: "DELETE",
+      credentials: "include",
+    })
+      .then((res) => res.json())
+      .then(() => fetchNotes())
+      .catch((err) => console.error("Error deleting note:", err));
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!title || !content) return;
+
+    fetch("/api/notes", {
+      method: "POST",
+      credentials: "include",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ title, content, subject }),
+    })
+      .then((res) => res.json())
+      .then(() => {
+        setTitle("");
+        setContent("");
+        setSubject("");
         fetchNotes();
-    }, []);
+      })
+      .catch((err) => console.error("Error creating note:", err));
+  };
 
-    // 2. Delete a note
-    const handleDelete = (noteId) => {
-        fetch(`/api/notes/${noteId}`, {
-            method: 'DELETE',
-            credentials: 'include'
-        })
-            .then(res => res.json())
-            .then(() => fetchNotes()) // Refresh the list after deleting
-            .catch(err => console.error("Error deleting note:", err));
-    };
+  const uniqueSubjects = new Set(
+    notes.map((note) => note.subject?.trim()).filter(Boolean),
+  ).size;
+  const latestNote = notes.reduce((latest, note) => {
+    if (!note.createdAt) return latest;
+    if (!latest) return note;
+    return new Date(note.createdAt).getTime() >
+      new Date(latest.createdAt).getTime()
+      ? note
+      : latest;
+  }, null);
 
-    // 3. Create a new note
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        if (!title || !content) return;
+  const stats = [
+    {
+      label: "Saved Notes",
+      value: notes.length,
+      icon: <BookText className="h-5 w-5" />,
+      iconClass: "bg-primary/10 text-primary",
+    },
+    {
+      label: "Subjects",
+      value: uniqueSubjects,
+      icon: <Tags className="h-5 w-5" />,
+      iconClass: "bg-accent-light/10 text-accent-light",
+    },
+    {
+      label: "Latest Entry",
+      value: latestNote ? formatCompactDate(latestNote.createdAt) : "--",
+      icon: <CalendarDays className="h-5 w-5" />,
+      iconClass: "bg-accent/10 text-accent",
+    },
+  ];
 
-        fetch('/api/notes', {
-            method: 'POST',
-            credentials: 'include',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ title, content, subject })
-        })
-            .then(res => res.json())
-            .then(() => {
-                // Clear the form and refresh the notes list
-                setTitle('');
-                setContent('');
-                setSubject('');
-                fetchNotes();
-            })
-            .catch(err => console.error("Error creating note:", err));
-    };
+  return (
+    <div className="relative min-h-screen overflow-hidden bg-bg-base text-text-main">
+      <PageBackdrop />
 
-    return (
-        <div className="p-8 max-w-6xl mx-auto bg-gray-50 min-h-screen">
-            <h1 className="text-3xl font-bold mb-6 text-gray-800">My Study Notes</h1>
-
-            <div className="grid md:grid-cols-3 gap-8">
-
-                {/* Left Column: Create Note Form */}
-                <div className="md:col-span-1">
-                    <div className="bg-white p-6 rounded-lg shadow border border-gray-100">
-                        <h2 className="text-xl font-bold mb-4 text-gray-800">New Note</h2>
-                        <form onSubmit={handleSubmit} className="space-y-4">
-                            <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">Subject</label>
-                                <input
-                                    type="text"
-                                    value={subject}
-                                    onChange={(e) => setSubject(e.target.value)}
-                                    className="w-full p-2 border border-gray-300 rounded focus:ring-blue-500 focus:border-blue-500"
-                                    placeholder="e.g. Math"
-                                />
-                            </div>
-                            <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">Title *</label>
-                                <input
-                                    type="text"
-                                    value={title}
-                                    onChange={(e) => setTitle(e.target.value)}
-                                    className="w-full p-2 border border-gray-300 rounded focus:ring-blue-500 focus:border-blue-500"
-                                    required
-                                />
-                            </div>
-                            <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">Content *</label>
-                                <textarea
-                                    value={content}
-                                    onChange={(e) => setContent(e.target.value)}
-                                    className="w-full p-2 border border-gray-300 rounded h-32 focus:ring-blue-500 focus:border-blue-500"
-                                    required
-                                />
-                            </div>
-                            <button
-                                type="submit"
-                                className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition duration-200"
-                            >
-                                Save Note
-                            </button>
-                        </form>
-                    </div>
-                </div>
-
-                {/* Right Column: List of Notes */}
-                <div className="md:col-span-2 space-y-4">
-                    {notes.length === 0 ? (
-                        <p className="text-gray-500 italic">No notes found. Create one!</p>
-                    ) : (
-                        notes.map(note => (
-                            <div key={note.noteId} className="bg-white p-6 rounded-lg shadow border border-gray-100 relative group">
-                                <div className="flex justify-between items-start mb-2">
-                                    <div>
-                    <span className="inline-block bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full mb-2 font-semibold">
-                      {note.subject || 'General'}
-                    </span>
-                                        <h3 className="text-xl font-bold text-gray-800">{note.title}</h3>
-                                    </div>
-
-                                    {/* Delete Button */}
-                                    <button
-                                        onClick={() => handleDelete(note.noteId)}
-                                        className="text-red-500 hover:text-red-700 font-bold px-2 py-1 rounded border border-red-200 hover:bg-red-50 transition-colors"
-                                    >
-                                        Delete
-                                    </button>
-                                </div>
-
-                                <p className="text-sm text-gray-500 mb-4">{new Date(note.createdAt).toLocaleDateString()}</p>
-
-                                {/* The 'max-h-40 overflow-y-auto' classes prevent giant notes from taking up the whole screen */}
-                                <div className="text-gray-700 whitespace-pre-wrap max-h-40 overflow-y-auto pr-2 custom-scrollbar">
-                                    {note.content}
-                                </div>
-                            </div>
-                        ))
-                    )}
-                </div>
-
+      <div className="relative mx-auto max-w-7xl px-4 pb-12 pt-22 sm:px-6 lg:px-8">
+        <div className="mb-8 flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
+          <div>
+            <div className="flex items-center gap-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                <BookText className="h-5 w-5" />
+              </div>
+              <div>
+                <h1 className="text-2xl font-semibold sm:text-3xl">Notes</h1>
+                <p className="mt-1 text-sm text-text-secondary">
+                  Save and organize study notes by subject.
+                </p>
+              </div>
             </div>
+          </div>
+
+          <div className="grid gap-3 sm:grid-cols-3 lg:min-w-90">
+            {stats.map(({ label, value, icon, iconClass }) => (
+              <SmallStats
+                label={label}
+                value={value}
+                icon={icon}
+                iconClass={iconClass}
+              />
+            ))}
+          </div>
         </div>
-    );
+
+        <div className="grid gap-6 lg:grid-cols-[340px_minmax(0,1fr)]">
+          <section className="lg:sticky lg:top-24 lg:self-start">
+            <div className="rounded-3xl border border-border-base bg-bg-card p-5 shadow-sm">
+              <div className="flex items-start gap-4">
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                  <NotebookPen className="h-5 w-5" />
+                </div>
+                <div>
+                  <h2 className="text-lg font-semibold">New Note</h2>
+                  <p className="mt-1 text-sm text-text-secondary">
+                    Add a note without leaving the page.
+                  </p>
+                </div>
+              </div>
+
+              <form onSubmit={handleSubmit} className="mt-5 space-y-4">
+                <div>
+                  <label className="mb-2 block text-sm font-medium text-text-secondary">
+                    Subject
+                  </label>
+                  <input
+                    type="text"
+                    value={subject}
+                    onChange={(e) => setSubject(e.target.value)}
+                    className="w-full rounded-xl border border-border-base bg-bg-elevated px-4 py-3 text-text-main placeholder:text-text-muted outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/10"
+                    placeholder="e.g. Math"
+                  />
+                </div>
+
+                <div>
+                  <label className="mb-2 block text-sm font-medium text-text-secondary">
+                    Title *
+                  </label>
+                  <input
+                    type="text"
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                    className="w-full rounded-xl border border-border-base bg-bg-elevated px-4 py-3 text-text-main placeholder:text-text-muted outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/10"
+                    placeholder="What should you remember?"
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label className="mb-2 block text-sm font-medium text-text-secondary">
+                    Content *
+                  </label>
+                  <textarea
+                    value={content}
+                    onChange={(e) => setContent(e.target.value)}
+                    className="h-40 w-full resize-none rounded-xl border border-border-base bg-bg-elevated px-4 py-3 text-text-main placeholder:text-text-muted outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/10"
+                    placeholder="Write the key ideas, definitions, or examples here..."
+                    required
+                  />
+                </div>
+
+                <button
+                  type="submit"
+                  className="w-full rounded-xl bg-primary px-4 py-3 font-medium text-white transition hover:bg-primary-dark"
+                >
+                  Save Note
+                </button>
+              </form>
+            </div>
+          </section>
+
+          <section>
+            {notes.length === 0 ? (
+              <div className="rounded-3xl border border-dashed border-border-base bg-bg-card px-6 py-14 text-center shadow-sm">
+                <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                  <BookText className="h-6 w-6" />
+                </div>
+                <h2 className="mt-4 text-xl font-semibold">No notes yet</h2>
+                <p className="mx-auto mt-2 max-w-md text-sm text-text-secondary">
+                  Create a note from the panel on the left.
+                </p>
+              </div>
+            ) : (
+              <div className="grid gap-4 xl:grid-cols-2">
+                {notes.map((note) => (
+                  <article
+                    key={note.noteId}
+                    className="rounded-3xl border border-border-base bg-bg-card p-5 shadow-sm"
+                  >
+                    <div className="flex items-start justify-between gap-4">
+                      <div className="min-w-0">
+                        <SubjectBadge subject={note.subject} />
+                        <h3 className="mt-4 text-xl font-semibold wrap-break-word">
+                          {note.title}
+                        </h3>
+                      </div>
+
+                      <button
+                        onClick={() => handleDelete(note.noteId)}
+                        className="inline-flex shrink-0 items-center gap-2 rounded-lg border border-danger/20 bg-danger/10 px-3 py-2 text-sm font-medium text-danger transition hover:bg-danger/15"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                        Delete
+                      </button>
+                    </div>
+
+                    <div className="mt-4 flex items-center gap-2 text-sm text-text-muted">
+                      <CalendarDays className="h-4 w-4" />
+                      {formatDate(note.createdAt)}
+                    </div>
+
+                    <div className="mt-4 max-h-48 overflow-y-auto pr-1 text-sm leading-7 whitespace-pre-wrap text-text-secondary">
+                      {note.content}
+                    </div>
+                  </article>
+                ))}
+              </div>
+            )}
+          </section>
+        </div>
+      </div>
+    </div>
+  );
 }

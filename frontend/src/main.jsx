@@ -8,15 +8,15 @@ import { TimerProvider } from './lib/useTimer.js';
 import { ThemeProvider } from './lib/useTheme.js';
 
 createRoot(document.getElementById('root')).render(
-    <StrictMode>
-        <AuthProvider>
-            <TimerProvider>
-                <ThemeProvider>
-                    <BrowserRouter>
-                        <App />
-                    </BrowserRouter>
-                </ThemeProvider>
-            </TimerProvider>
-        </AuthProvider>
-    </StrictMode>,
+  <StrictMode>
+    <AuthProvider>
+      <TimerProvider>
+        <ThemeProvider>
+          <BrowserRouter>
+            <App />
+          </BrowserRouter>
+        </ThemeProvider>
+      </TimerProvider>
+    </AuthProvider>
+  </StrictMode>,
 )
