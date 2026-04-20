@@ -1,39 +1,148 @@
-## Realtime timer reference feature (Symfony + Mercure)
 
-This project contains a separate `TimerMercure` reference page that demonstrates a clean realtime feature pattern using Symfony, Symfony Cache, and Mercure.
+---
 
-### Why this exists
+{{ Proofread and edited, but please be aware that 
+this file was generated with AI and may contain mistakes. }}
 
-The original timer page is a local UI-first timer.  
-`TimerMercure` is a backend-owned realtime example intended to show how to build multi-client live features in this codebase without introducing a second backend.
+---
+# LiveTimerSession
 
-### Architecture
+Realtime Pomodoro-style timer reference feature built with Symfony, Symfony Cache, and Mercure.
 
-- **React page** sends HTTP commands
-- **Symfony controller/services** apply domain transitions
-- **Symfony Cache** stores ephemeral live session state
-- **Mercure** broadcasts the updated projection to subscribers
-- **MySQL/Doctrine** stores only finalized session data
+This module exists as a backend-owned realtime feature (example, for now) for the codebase. 
+It shows how to implement a multi-client live feature without introducing a separate websocket backend.
 
-### State split
+---
+## Why this exists
 
-There are three layers of state:
+The original timer page is a local UI-first timer.
 
-1. **Durable domain data**  
-   Persisted in MySQL (`sessions`, optionally `session_entries`)
+`LiveTimerSession` is the reference implementation for a backend-owned realtime timer:
+- the browser sends explicit commands
+- Symfony applies the state transition
+- ephemeral live state is stored in cache
+- Mercure broadcasts the resulting projection
+- only finalized session results are written to MySQL
 
-2. **Ephemeral live state**  
-   Stored in Symfony Cache while the timer is active
+---
 
-3. **Realtime transport**  
-   Mercure distributes projections to connected clients
+## Core architecture
 
-### Command model
+The feature is split into four responsibilities:
 
-The browser never sends full live state snapshots back as authority.  
-Instead, it sends explicit commands such as:
+1. **HTTP command/query boundary**
+    - controllers receive requests
+    - DTOs validate payloads
+    - owner checks are enforced at the boundary
 
-- create
+2. **Ephemeral live session state**
+    - the active timer lives in Symfony Cache
+    - this state is temporary runtime state, not durable domain history
+
+3. **Projection + realtime fanout**
+    - the backend produces a full projection for the current session
+    - Mercure publishes that projection to subscribed clients
+
+4. **Persistence on finalization**
+    - when the session is stopped and saved, the live state is converted into durable `Session` / `SessionEntry` data and persisted to MySQL
+
+---
+
+## Request flow
+
+### Read/query flow
+
+- client requests the current live session
+- backend loads the live state from cache
+- backend projects the state into the transport shape returned to the browser
+- browser renders from that projection
+
+### Command flow
+
+- client sends an explicit command such as start, pause, resume, skip phase, reset phase, change config, or stop and save
+- backend loads the current live state
+- backend applies the transition
+- backend persists the updated live state back into cache
+- backend projects the updated state
+- backend publishes the projection through Mercure
+- subscribed clients receive the full updated projection
+
+### Finalization flow
+
+- client sends `stop-and-save`
+- backend loads the live state
+- backend resolves the effective timer state
+- backend converts it into durable session data
+- backend persists the result to MySQL
+- backend publishes a deleted event for the live session
+- backend removes the ephemeral live session from cache
+
+---
+
+## State model
+
+The feature intentionally separates state into three layers.
+
+### 1. Durable domain state
+
+Persisted in MySQL:
+- `sessions`
+- `session_entries`
+
+This is historical data that should remain after the live timer is finished.
+
+### 2. Ephemeral live state
+
+Stored in Symfony Cache while the timer is active.
+
+This state contains the runtime information needed to drive the live timer, such as:
+- owner user id
+- status
+- phase
+- configured work/break durations
+- either `phaseEndsAt` or `remainingMs`
+- accumulated focus and break time
+- related subject/task ids
+- timestamps such as `startedAt` / `updatedAt`
+
+This state is temporary and should disappear when the live session is deleted or finalized.
+
+### 3. Realtime transport state
+
+Published through Mercure as a projection.
+
+The browser does not receive raw cache internals or mutate cache state directly. 
+It receives a projection intended for transport and rendering.
+
+---
+
+## Ownership model
+
+The authenticated user who creates a live session is the only user allowed to:
+- load it
+- mutate it
+- delete it
+- stop and save it
+
+So live timer sessions are currently **owner-only**.
+
+==> MUST BE CHANGED, THIS IS THE NEXT PART TO IMPLEMENT
+
+(A future extension could add read-only share 
+tokens for observers while keeping commands owner-only.
+After this, also implement other permissions to (not) share when desied.) 
+
+---
+
+## Command model
+
+The browser is not allowed to send full timer state back as authority.
+
+Instead, it sends explicit commands.
+
+Supported command categories:
+
+- create session
 - start
 - pause
 - resume
@@ -41,98 +150,92 @@ Instead, it sends explicit commands such as:
 - reset phase
 - change config
 - stop and save
+- delete session
 
-Symfony applies the command, stores the updated live state, projects it, and publishes the projection through Mercure.
-
-### Projection model
-
-Mercure publishes **full projections** on **discrete state transitions only**.
-
-No per-second server updates are sent.
-
-The client derives the visible countdown from the latest projected `phaseEndsAt` / `remainingMs` values.
-
-### Ownership model
-
-For now, live timer sessions are **owner-only**.
-
-The user who creates a live timer session is the only user allowed to:
-- load it
-- mutate it
-- delete it
-- stop and save it
-
-This keeps the feature simple and safe.
-
-A future extension could add a separate read-only share token for multi-user viewing while keeping commands owner-only.
-
-### Why Mercure instead of a custom WebSocket server
-
-Mercure fits this feature because the timer needs:
-- explicit backend-owned state transitions
-- low-latency fanout to multiple viewers
-- no continuous bidirectional socket stream
-- a simple subscriber model in the browser via `EventSource`
-
-### Why the live timer is not stored in MySQL
-
-The live timer state is temporary and should expire automatically.
-
-Persisting it permanently would mix transient UI/runtime state with real domain data.
-
-Only the finalized result is saved to MySQL when the session is stopped and committed.
-
-### Files of interest
-
-- `backend/src/Controller/LiveTimerSessionController.php`
-- `backend/src/Service/LiveTimerSessionStore.php`
-- `backend/src/Service/LiveTimerSessionManager.php`
-- `backend/src/Service/LiveTimerSessionProjector.php`
-- `backend/src/Service/LiveTimerSessionPublisher.php`
-- `backend/src/Service/LiveTimerSessionFinalizer.php`
-- `frontend/src/lib/mercure.js`
-- `frontend/src/lib/liveTimerSessionApi.js`
-- `frontend/src/features/liveTimerSession/useLiveTimerSession.js`
-- `frontend/src/pages/TimerMercurePage.jsx`
-
-
-That makes the architecture very easy to defend in review.
+This keeps ownership of business rules in the backend and 
+makes invalid state transitions much easier to prevent.
 
 ---
 
-# 4. What is actually left after this
+## Projection model
 
-Once ownership, tests, and README are in, the feature is effectively finished.
+Mercure publishes **full projections** on **discrete state transitions**.
 
-The only things left would be optional refinements:
+The server does **not** send per-second updates.
 
-- add note/distraction inputs to the UI for stop-and-save
-- attach subject/task selection in the page
-- add read-only share tokens if you want real multi-user viewing
-- add better UI polish
+Instead:
+- when the timer changes, the backend publishes a full projection
+- when the timer is running, the projection exposes `phaseEndsAt`
+- when the timer is not running, the projection exposes `remainingMs`
+- the frontend derives the visible countdown locally from the latest projection
 
-But architecturally, it is done.
+This is the key scalability and simplicity decision in the feature:
+- backend owns transitions
+- frontend owns visual ticking between transitions
+
+==> other timer/sessions options will have to be added/configured since
+right now it is solely pomodoro
 
 ---
 
-# 5. Recommended order right now
+## Why Symfony Cache is used for the live timer
 
-Do it in this order:
+The live timer is runtime state, not durable business history and thus
+should not be store in MySQL to avoid mixing temporary execution state
+with durable session history.
 
-1. add `ownerUserId` and controller ownership checks
-2. verify the feature still works in-browser
-3. add the projector and manager unit tests
-4. add the functional controller test
-5. add the README section and diagram
+That would make the domain model noisier and create cleanup concerns 
+for data that should naturally expire or be deleted after finalization.
 
-That is the clean finishing pass.
+Symfony Cache is a better fit because the live timer:
+- is short-lived
+- is mutable
+- is only relevant while active
+- does not need durable history until finalized
 
-```mermaid
-flowchart LR
-    A[React TimerMercure Page] -->|HTTP command| B[Symfony Controller]
-    B --> C[LiveTimerSessionManager]
-    C --> D[Symfony Cache]
-    C --> E[LiveTimerSessionProjector]
-    E --> F[Mercure Hub]
-    F -->|SSE/EventSource| A
-    B -->|stop-and-save| G[Doctrine/MySQL sessions]
+---
+
+## On the use of Mercure
+
+Mercure is a provides for this feature:
+- backend-owned transitions
+- low-latency fanout to one or more viewers
+- simple browser subscriptions via `EventSource`
+- no custom websocket protocol (→ SSE)
+- no permanently open bidirectional application channel
+
+This feature is fundamentally command-driven, not stream-driven.
+
+---
+
+## Structure
+
+Again, up for change when refining, changing and adding to this feauture.
+
+```text
+backend/src/LiveTimerSession/
+├── Controller
+│   ├── AbstractSessionController.php
+│   ├── SessionActionController.php
+│   └── SessionController.php
+├── DTO
+│   ├── Command
+│   │   ├── ChangeConfig.php
+│   │   ├── CreateSession.php
+│   │   ├── EmptyCommand.php
+│   │   └── StopSession.php
+│   └── DurationDto.php
+├── Enum
+│   ├── SessionPhase.php
+│   ├── SessionStatus.php
+│   └── SessionType.php
+├── README.md
+└── Service
+    ├── Finalizer.php
+    ├── Projector.php
+    ├── Publisher.php
+    ├── StateHydrator.php
+    ├── State.php
+    ├── Store.php
+    └── TimeService.php
+```
