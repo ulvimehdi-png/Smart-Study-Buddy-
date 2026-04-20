@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Dto\LiveTimer;
+namespace App\LiveTimerSession\DTO\Command;
 
+use App\LiveTimerSession\DTO\DurationDto;
 use Symfony\Component\Validator\Constraints as Assert;
 
-final class CreateLiveTimerSessionRequest
+final class CreateSession
 {
     public function __construct(
         #[Assert\Valid]

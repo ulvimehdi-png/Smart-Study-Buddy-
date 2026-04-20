@@ -1,10 +1,13 @@
 <?php
 
-namespace App\Enum;
+namespace App\LiveTimerSession\Enum;
 
 enum SessionStatus: string
 {
     case ACTIVE = 'active';
+    case PAUSED = 'paused';
+    case RUNNING = 'running';
+    case IDLE = 'idle';
     case COMPLETED = 'completed';
     case CANCELLED = 'cancelled';
 

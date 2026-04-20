@@ -3,8 +3,8 @@
 namespace App\Entity;
 
 use App\Entity\Traits\TimestampableTrait;
-use App\Enum\SessionType;
 use App\Enum\WeekStartDay;
+use App\LiveTimerSession\Enum\SessionType;
 use App\Repository\SettingsRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;

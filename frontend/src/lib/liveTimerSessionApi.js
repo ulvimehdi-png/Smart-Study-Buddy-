@@ -1,31 +1,62 @@
-async function parseJson(response) {
+async function parseResponse(response) {
     const text = await response.text();
-    const data = text ? JSON.parse(text) : null;
+
+    let data = null;
+
+    if (text) {
+        try {
+            data = JSON.parse(text);
+        } catch {
+            data = text;
+        }
+    }
 
     if (!response.ok) {
-        throw new Error(data?.error || text || 'Request failed');
+        const message =
+            typeof data === 'object' && data !== null
+                ? data.error || data.message || JSON.stringify(data)
+                : data || `Request failed with status ${response.status}`;
+
+        throw new Error(message);
     }
 
     return data;
 }
 
-async function api(path, options = {}) {
+async function api(path, { method = 'GET', body, headers, ...rest } = {}) {
     const response = await fetch(path, {
+        method,
         credentials: 'include',
-        ...options,
+        ...rest,
         headers: {
-            ...(options.body ? { 'Content-Type': 'application/json' } : {}),
-            ...(options.headers || {}),
+            Accept: 'application/json',
+            ...(body !== undefined ? { 'Content-Type': 'application/json' } : {}),
+            ...(headers || {}),
         },
+        body: body === undefined ? undefined : JSON.stringify(body),
     });
 
-    return parseJson(response);
+    return parseResponse(response);
+}
+
+function postAction(id, action, payload = {}) {
+    return api(`/api/live-timer-sessions/${id}/${action}`, {
+        method: 'POST',
+        body: payload,
+    });
+}
+
+export function durationPayload(minutes = 0, seconds = 0) {
+    return {
+        minutes: Math.max(0, Number(minutes) || 0),
+        seconds: Math.max(0, Number(seconds) || 0),
+    };
 }
 
 export function createLiveTimerSession(payload) {
     return api('/api/live-timer-sessions', {
         method: 'POST',
-        body: JSON.stringify(payload),
+        body: payload,
     });
 }
 
@@ -37,4 +68,38 @@ export function deleteLiveTimerSession(id) {
     return api(`/api/live-timer-sessions/${id}`, {
         method: 'DELETE',
     });
+}
+
+export function startLiveTimerSession(id) {
+    return postAction(id, 'start');
+}
+
+export function pauseLiveTimerSession(id) {
+    return postAction(id, 'pause');
+}
+
+export function resumeLiveTimerSession(id) {
+    return postAction(id, 'resume');
+}
+
+export function skipPhaseLiveTimerSession(id) {
+    return postAction(id, 'skip-phase');
+}
+
+export function resetPhaseLiveTimerSession(id) {
+    return postAction(id, 'reset-phase');
+}
+
+export function changeConfigLiveTimerSession(id, payload) {
+    return postAction(id, 'change-config', payload);
+}
+
+export function stopAndSaveLiveTimerSession(id, payload = {}) {
+    return postAction(id, 'stop-and-save', payload);
+}
+
+export function buildLiveTimerJoinUrl(id, currentUrl = window.location.href) {
+    const url = new URL(currentUrl);
+    url.searchParams.set('session', id);
+    return url.toString();
 }

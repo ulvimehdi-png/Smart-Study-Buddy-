@@ -3,8 +3,8 @@
 namespace App\Factory;
 
 use App\Entity\Settings;
-use App\Enum\SessionType;
 use App\Enum\WeekStartDay;
+use App\LiveTimerSession\Enum\SessionType;
 use Zenstruck\Foundry\Persistence\PersistentObjectFactory;
 
 /**

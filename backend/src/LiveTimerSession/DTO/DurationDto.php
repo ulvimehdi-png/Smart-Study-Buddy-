@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Dto\LiveTimer;
+namespace App\LiveTimerSession\DTO;
 
 use Symfony\Component\Validator\Constraints as Assert;
 

@@ -3,8 +3,8 @@
 namespace App\Entity;
 
 use App\Entity\Traits\TimestampableTrait;
-use App\Enum\SessionStatus;
-use App\Enum\SessionType;
+use App\LiveTimerSession\Enum\SessionStatus;
+use App\LiveTimerSession\Enum\SessionType;
 use App\Repository\SessionRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;

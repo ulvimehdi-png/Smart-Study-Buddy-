@@ -3,10 +3,9 @@
 namespace App\Factory;
 
 use App\Entity\Session;
-use App\Enum\SessionStatus;
-use App\Enum\SessionType;
+use App\LiveTimerSession\Enum\SessionStatus;
+use App\LiveTimerSession\Enum\SessionType;
 use App\Repository\SessionRepository;
-use phpDocumentor\Reflection\Types\Integer;
 use Zenstruck\Foundry\Persistence\PersistentObjectFactory;
 use Zenstruck\Foundry\Persistence\ProxyRepositoryDecorator;
 
