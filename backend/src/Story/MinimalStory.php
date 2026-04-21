@@ -2,12 +2,11 @@
 
 namespace App\Story;
 
-use App\Entity\User;
 use App\Factory\UserFactory;
 use Zenstruck\Foundry\Attribute\AsFixture;
 use Zenstruck\Foundry\Story;
 
-#[AsFixture(name: 'minimalStory', groups: ['minimal'])]
+#[AsFixture(name: 'minimal', groups: ['all'])]
 final class MinimalStory extends Story
 {
     public function build(): void
@@ -20,7 +19,6 @@ final class MinimalStory extends Story
             'admin',
             UserFactory::new()
                 ->admin()
-                ->create()
         );
 
         /*
@@ -29,9 +27,9 @@ final class MinimalStory extends Story
          */
         $this->addToPool(
             'users-basic',
-            UserFactory::createSequence(
-                ['username' => 'user1']
-            )
+            UserFactory::createOne([
+                'username' => 'user1',
+            ])
         );
     }
 }
