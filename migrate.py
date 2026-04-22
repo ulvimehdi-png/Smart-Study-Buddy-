@@ -16,11 +16,13 @@ def run_migration():
                 )
             """)
 
-            # Add priority column to tasks if not exists
-            cursor.execute("""
-                ALTER TABLE tasks
-                ADD COLUMN IF NOT EXISTS priority ENUM('low', 'medium', 'high') DEFAULT 'medium'
-            """)
+            # Check if priority column exists in tasks
+            cursor.execute("SHOW COLUMNS FROM tasks LIKE 'priority'")
+            if not cursor.fetchone():
+                cursor.execute("""
+                    ALTER TABLE tasks
+                    ADD COLUMN priority ENUM('low', 'medium', 'high') DEFAULT 'medium'
+                """)
 
         connection.commit()
         print("Migrations completed successfully.")
