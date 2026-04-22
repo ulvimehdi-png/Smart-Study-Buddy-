@@ -36,7 +36,14 @@ async function renderDashboard() {
         document.getElementById("todayHours").textContent = Number(data.todayHours ?? 0).toFixed(1);
 
         const streak = Number(data.studyStreak ?? 0);
-        document.getElementById("studyStreak").textContent = `${streak} day${streak === 1 ? "" : "s"}`;
+        const longest = Number(data.longestStreak ?? 0);
+        document.getElementById("studyStreak").textContent = `🔥 ${streak} day${streak === 1 ? "" : "s"}`;
+        document.getElementById("longestStreak").textContent = `🏆 ${longest} day${longest === 1 ? "" : "s"}`;
+
+        // Motivational message
+        if (streak > 7) {
+            document.getElementById("studyStreak").textContent += " - You're on fire! 🔥";
+        }
 
         renderProgressList(data.progress || []);
         renderRecentNotes(data.recentNotes || []);
@@ -261,6 +268,7 @@ async function saveTask() {
     const title = document.getElementById("taskTitle").value.trim();
     const description = document.getElementById("taskDescription").value.trim();
     const dueDate = document.getElementById("taskDueDate").value;
+    const priority = document.getElementById("taskPriority").value;
 
     if (!title) {
         alert("Task title is required.");
@@ -276,7 +284,8 @@ async function saveTask() {
                 subject,
                 title,
                 description,
-                dueDate
+                dueDate,
+                priority
             })
         });
 
@@ -294,6 +303,7 @@ function clearTaskFields() {
     document.getElementById("taskTitle").value = "";
     document.getElementById("taskDescription").value = "";
     document.getElementById("taskDueDate").value = "";
+    document.getElementById("taskPriority").value = "medium";
 }
 
 async function toggleTask(taskId) {
@@ -360,6 +370,9 @@ function renderTasks() {
         div.innerHTML = `
             <div class="badge ${completed ? "done" : "todo"}">
                 ${completed ? "Completed" : "Pending"}
+            </div>
+            <div class="priority-badge priority-${task.priority || 'medium'}">
+                ${getPriorityIcon(task.priority || 'medium')} ${capitalize(task.priority || 'medium')}
             </div>
             <h4>${escapeHtml(task.title)}</h4>
             <div class="task-meta">
@@ -474,6 +487,19 @@ function setupTabs() {
             document.getElementById(button.dataset.tab).classList.add("active");
         });
     });
+}
+
+function getPriorityIcon(priority) {
+    switch (priority) {
+        case 'high': return '🔴';
+        case 'medium': return '🟡';
+        case 'low': return '🟢';
+        default: return '🟡';
+    }
+}
+
+function capitalize(str) {
+    return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
 function initApp() {

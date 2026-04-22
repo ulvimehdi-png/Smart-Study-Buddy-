@@ -114,7 +114,11 @@ def study_sessions_post():
 @app.get("/api/tasks")
 def tasks_get():
     user_id = int(request.args.get("userId", 1))
-    return jsonify(get_tasks_by_user(user_id)), 200
+    priority_filter = request.args.get("priority")
+    if priority_filter:
+        return jsonify(get_tasks_by_user_and_priority(user_id, priority_filter)), 200
+    else:
+        return jsonify(get_tasks_by_user(user_id)), 200
 
 
 @app.post("/api/tasks")
@@ -126,8 +130,9 @@ def tasks_post():
     title = body["title"]
     description = get_optional_string(body, "description")
     due_date = get_optional_string(body, "dueDate")
+    priority = body.get("priority", "medium")
 
-    ok = save_task(user_id, subject, title, description, due_date)
+    ok = save_task(user_id, subject, title, description, due_date, priority)
 
     if not ok:
         return jsonify({"success": False, "message": "Could not save task"}), 400
@@ -291,6 +296,8 @@ def save_study_session(user_id, subject, minutes_studied, session_note):
             )
 
         connection.commit()
+        # Update streak after successful save
+        update_streak(user_id, today)
         return True
     except Exception as exc:
         print(f"save_study_session error: {exc}")
@@ -302,10 +309,10 @@ def save_study_session(user_id, subject, minutes_studied, session_note):
             connection.close()
 
 
-def save_task(user_id, subject, title, description, due_date):
+def save_task(user_id, subject, title, description, due_date, priority="medium"):
     sql = """
-          INSERT INTO tasks (user_id, subject_id, title, description, is_completed, due_date)
-          VALUES (%s, %s, %s, %s, FALSE, %s) \
+          INSERT INTO tasks (user_id, subject_id, title, description, is_completed, due_date, priority)
+          VALUES (%s, %s, %s, %s, FALSE, %s, %s) \
           """
 
     connection = None
@@ -322,6 +329,7 @@ def save_task(user_id, subject, title, description, due_date):
                     title,
                     description,
                     None if due_date is None or not str(due_date).strip() else due_date,
+                    priority,
                 ),
             )
 
@@ -460,11 +468,18 @@ def get_recent_notes(user_id):
 
 def get_tasks_by_user(user_id):
     sql = """
-          SELECT t.task_id, t.title, t.description, t.is_completed, t.due_date, t.created_at, t.completed_at, s.subject_name
+          SELECT t.task_id, t.title, t.description, t.is_completed, t.due_date, t.created_at, t.completed_at, s.subject_name, COALESCE(t.priority, 'medium') as priority
           FROM tasks t
                    LEFT JOIN subjects s ON t.subject_id = s.subject_id
           WHERE t.user_id = %s
-          ORDER BY t.is_completed ASC, t.created_at DESC, t.task_id DESC \
+          ORDER BY 
+              CASE t.priority 
+                  WHEN 'high' THEN 1 
+                  WHEN 'medium' THEN 2 
+                  WHEN 'low' THEN 3 
+                  ELSE 2
+              END,
+              t.is_completed ASC, t.created_at DESC, t.task_id DESC \
           """
 
     connection = None
@@ -484,11 +499,50 @@ def get_tasks_by_user(user_id):
                 "createdAt": normalize_value(row["created_at"]),
                 "completedAt": normalize_value(row["completed_at"]),
                 "subject": row["subject_name"],
+                "priority": row["priority"],
             }
             for row in rows
         ]
     except Exception as exc:
         print(f"get_tasks_by_user error: {exc}")
+        return []
+    finally:
+        if connection:
+            connection.close()
+
+
+def get_tasks_by_user_and_priority(user_id, priority):
+    sql = """
+          SELECT t.task_id, t.title, t.description, t.is_completed, t.due_date, t.created_at, t.completed_at, s.subject_name, t.priority
+          FROM tasks t
+                   LEFT JOIN subjects s ON t.subject_id = s.subject_id
+          WHERE t.user_id = %s AND t.priority = %s
+          ORDER BY t.is_completed ASC, t.created_at DESC, t.task_id DESC \
+          """
+
+    connection = None
+    try:
+        connection = get_connection()
+        with connection.cursor() as cursor:
+            cursor.execute(sql, (user_id, priority))
+            rows = cursor.fetchall()
+
+        return [
+            {
+                "taskId": row["task_id"],
+                "title": row["title"],
+                "description": row["description"],
+                "isCompleted": bool(row["is_completed"]),
+                "dueDate": normalize_value(row["due_date"]),
+                "createdAt": normalize_value(row["created_at"]),
+                "completedAt": normalize_value(row["completed_at"]),
+                "subject": row["subject_name"],
+                "priority": row["priority"],
+            }
+            for row in rows
+        ]
+    except Exception as exc:
+        print(f"get_tasks_by_user_and_priority error: {exc}")
         return []
     finally:
         if connection:
@@ -648,12 +702,100 @@ def get_study_streak_days(user_id):
             connection.close()
 
 
+@app.get("/api/streak")
+def streak_get():
+    user_id = int(request.args.get("userId", 1))
+    return jsonify(get_streak(user_id)), 200
+
+
+def get_streak(user_id):
+    sql = "SELECT current_streak, longest_streak FROM streaks WHERE user_id = %s"
+
+    connection = None
+    try:
+        connection = get_connection()
+        with connection.cursor() as cursor:
+            cursor.execute(sql, (user_id,))
+            row = cursor.fetchone()
+
+        if row:
+            return {
+                "currentStreak": int(row["current_streak"]),
+                "longestStreak": int(row["longest_streak"])
+            }
+        else:
+            return {
+                "currentStreak": 0,
+                "longestStreak": 0
+            }
+    except Exception as exc:
+        print(f"get_streak error: {exc}")
+        return {
+            "currentStreak": 0,
+            "longestStreak": 0
+        }
+    finally:
+        if connection:
+            connection.close()
+
+
+def update_streak(user_id, study_date):
+    sql_select = "SELECT current_streak, longest_streak, last_study_date FROM streaks WHERE user_id = %s"
+    sql_insert = "INSERT INTO streaks (user_id, current_streak, longest_streak, last_study_date) VALUES (%s, %s, %s, %s)"
+    sql_update = "UPDATE streaks SET current_streak = %s, longest_streak = %s, last_study_date = %s WHERE user_id = %s"
+
+    connection = None
+    try:
+        connection = get_connection()
+        with connection.cursor() as cursor:
+            cursor.execute(sql_select, (user_id,))
+            row = cursor.fetchone()
+
+            today = study_date
+            yesterday = today - timedelta(days=1)
+
+            if row:
+                last_date = row["last_study_date"]
+                current_streak = int(row["current_streak"])
+                longest_streak = int(row["longest_streak"])
+
+                if last_date == today:
+                    # Already studied today, no change
+                    pass
+                elif last_date == yesterday:
+                    # Consecutive day
+                    current_streak += 1
+                    if current_streak > longest_streak:
+                        longest_streak = current_streak
+                else:
+                    # Break in streak
+                    current_streak = 1
+                    if current_streak > longest_streak:
+                        longest_streak = current_streak
+
+                cursor.execute(sql_update, (current_streak, longest_streak, today, user_id))
+            else:
+                # First time
+                cursor.execute(sql_insert, (user_id, 1, 1, today))
+
+        connection.commit()
+    except Exception as exc:
+        print(f"update_streak error: {exc}")
+        if connection:
+            connection.rollback()
+    finally:
+        if connection:
+            connection.close()
+
+
 def get_dashboard_data(user_id):
+    streak_data = get_streak(user_id)
     return {
         "totalNotes": get_notes_count(user_id),
         "totalHours": get_total_hours(user_id),
         "todayHours": get_today_hours(user_id),
-        "studyStreak": get_study_streak_days(user_id),
+        "studyStreak": streak_data["currentStreak"],
+        "longestStreak": streak_data["longestStreak"],
         "progress": get_progress_by_user(user_id),
         "recentNotes": get_recent_notes(user_id),
     }

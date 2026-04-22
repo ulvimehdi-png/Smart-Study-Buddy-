@@ -38,7 +38,8 @@
 
       <div class="card">
         <h3>Study Streak</h3>
-        <p id="studyStreak">0 days</p>
+        <p id="studyStreak">🔥 0 days</p>
+        <p id="longestStreak">🏆 0 days</p>
       </div>
     </div>
 
@@ -72,6 +73,13 @@
 
         <label>Due Date</label>
         <input type="date" id="taskDueDate" />
+
+        <label>Priority</label>
+        <select id="taskPriority">
+          <option value="low">Low</option>
+          <option value="medium" selected>Medium</option>
+          <option value="high">High</option>
+        </select>
 
         <button id="saveTaskBtn">Save Task</button>
       </div>
@@ -150,6 +158,6 @@
   </section>
 </main>
 
-<script src="app.js"></script>
+<script src="script.js"></script>
 </body>
 </html>
