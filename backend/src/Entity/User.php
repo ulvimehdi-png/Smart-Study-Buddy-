@@ -67,6 +67,27 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Groups(['read', 'user:read'])]
     private ?\DateTimeImmutable $lastLoginAt = null;
 
+    #[ORM\Column(options: ['default' => 0])]
+    #[Groups(['read', 'user:read'])]
+    private ?int $points = 0;
+
+    public function getPoints(): ?int
+    {
+        return $this->points;
+    }
+
+    public function setPoints(int $points): static
+    {
+        $this->points = $points;
+        return $this;
+    }
+
+    public function addPoints(int $pointsToAdd): static
+    {
+        $this->points += $pointsToAdd;
+        return $this;
+    }
+
     #[ORM\OneToOne(targetEntity: Settings::class, mappedBy: 'user', cascade: ['persist', 'remove'])]
     private ?Settings $settings = null;
 

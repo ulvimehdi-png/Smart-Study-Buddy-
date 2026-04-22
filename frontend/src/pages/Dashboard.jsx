@@ -92,6 +92,13 @@ export default function Dashboard() {
       icon: <Flame className="h-5 w-5" />,
       iconClass: "bg-accent/10 text-accent",
     },
+    {
+      label: "My Points",
+      value: data.points || 0,
+      detail: "Academic rewards",
+      icon: <Sparkles className="h-5 w-5" />,
+      iconClass: "bg-accent/10 text-accent",
+    },
   ];
 
   return (

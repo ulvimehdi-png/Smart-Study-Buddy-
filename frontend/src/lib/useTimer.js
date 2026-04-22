@@ -109,13 +109,6 @@ export function TimerProvider({ children }) {
             return nextMsLeft;
           }
 
-          // if (!isResetting) {
-          //   setIsResetting(true);
-
-          //   return durationToMs(reset);
-          // }
-          // setIsResetting(false);
-
           const nextIsResting = !isResting;
           const nextPhase = nextIsResting ? rest : work;
 

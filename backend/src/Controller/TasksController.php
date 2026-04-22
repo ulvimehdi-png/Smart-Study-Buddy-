@@ -12,6 +12,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\CurrentUser;
+use App\Service\AchievementService;
 
 #[Route('/api/tasks')]
 final class TasksController extends AbstractController
@@ -125,7 +126,8 @@ final class TasksController extends AbstractController
     public function toggleTask(
         int $id,
         #[CurrentUser] ?User $user,
-        EntityManagerInterface $em
+        EntityManagerInterface $em,
+        AchievementService $achievementService
     ): JsonResponse {
         if (!$user) {
             return $this->json(['error' => 'Not logged in'], 401);
@@ -148,9 +150,15 @@ final class TasksController extends AbstractController
         if ($task->getStatus() === TaskStatus::DONE) {
             $task->setStatus(TaskStatus::TODO);
             $task->setCompletedAt(null);
+            
+            // Deduct points if they uncheck it
+            $achievementService->removePoints($user, 10); 
         } else {
             $task->setStatus(TaskStatus::DONE);
             $task->setCompletedAt(new \DateTimeImmutable());
+            
+            // Add points when completed
+            $achievementService->addPoints($user, 10); 
         }
 
         $em->flush();
