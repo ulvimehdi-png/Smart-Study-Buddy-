@@ -194,9 +194,10 @@ function renderNotes() {
         return;
     }
 
-    filtered.forEach(note => {
+    filtered.forEach((note, index) => {
         const div = document.createElement("div");
         div.className = "note-card";
+        div.style.animationDelay = `${index * 0.05}s`;
         div.innerHTML = `
             <h4>${escapeHtml(note.title)}</h4>
             <div class="note-meta">
@@ -362,10 +363,11 @@ function renderTasks() {
         return;
     }
 
-    filtered.forEach(task => {
+    filtered.forEach((task, index) => {
         const completed = !!task.isCompleted;
         const div = document.createElement("div");
         div.className = `task-card ${completed ? "completed" : "pending"}`;
+        div.style.animationDelay = `${index * 0.05}s`;
 
         div.innerHTML = `
             <div class="badge ${completed ? "done" : "todo"}">
