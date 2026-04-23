@@ -103,6 +103,7 @@ final class DashboardController extends AbstractController
             ->getResult();
 
         $progressMap = [];
+        $pendingTasks = [];
 
         foreach ($subjects as $subject) {
             $progressMap[$subject->getId()] = [
@@ -115,6 +116,15 @@ final class DashboardController extends AbstractController
 
         foreach ($tasks as $task) {
             $subject = $task->getSubject();
+
+            if ($task->getStatus() !== TaskStatus::DONE) {
+                 $pendingTasks[] = [
+                    'id' => $task->getId(),
+                    'title' => $task->getTitle(),
+                    'dueDate' => $task->getDueAt()?->format(DATE_ATOM),
+                    'subject' => $subject ? $subject->getName() : null
+                ];
+            }
 
             if (!$subject || $subject->isDeleted()) {
                 continue;
@@ -177,7 +187,8 @@ final class DashboardController extends AbstractController
             'studyStreak' => $studyStreak,
             'progress' => $progress,
             'recentNotes' => $recent,
-            'points' => $user->getPoints()
+            'points' => $user->getPoints(),
+            'pendingTasks' => array_slice($pendingTasks, 0, 5) // Return top 5 pending tasks
         ]);
     }
 }

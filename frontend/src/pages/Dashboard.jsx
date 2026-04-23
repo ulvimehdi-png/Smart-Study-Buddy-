@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { BarChart3, Clock, FileText, Flame, Sparkles, Target } from "lucide-react";
+import { BarChart3, Clock, FileText, Flame, Sparkles, Target, CheckSquare } from "lucide-react";
 import PageBackdrop from "../components/shared/PageBackdrop";
 import SubjectBadge from "../components/shared/SubjectBadge";
 
@@ -41,6 +41,7 @@ export default function Dashboard() {
 
   const progressItems = data.progress ?? [];
   const recentNotes = data.recentNotes ?? [];
+  const pendingTasks = data.pendingTasks ?? [];
 
   const totalTrackedTasks = progressItems.reduce(
     (sum, item) => sum + item.totalTasks,
@@ -176,11 +177,62 @@ export default function Dashboard() {
           ))}
         </div>
 
-        <div className="mt-6 grid gap-6 xl:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)]">
-          <section className="rounded-3xl border border-border-base bg-bg-card p-5 shadow-sm">
-            <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+        {/* Dashboard Sections Grid */}
+        <div className="mt-6 grid gap-6 xl:grid-cols-3">
+          
+          {/* To-Do List Section */}
+          <section className="rounded-3xl border border-border-base bg-bg-card p-5 shadow-sm xl:col-span-1 flex flex-col">
+              <div className="flex items-start gap-4 mb-6">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-green-500/10 text-green-500">
+                  <CheckSquare className="h-5 w-5" />
+                </div>
+                <div>
+                  <h2 className="text-lg font-semibold">To-Do List</h2>
+                  <p className="mt-1 text-sm text-text-secondary">
+                    Tasks needing your attention.
+                  </p>
+                </div>
+              </div>
+
+              {pendingTasks.length > 0 ? (
+                <div className="space-y-3 flex-1">
+                  {pendingTasks.map((task) => (
+                    <div
+                      key={task.id}
+                      className="flex items-start gap-3 rounded-xl border border-border-base bg-bg-base p-3 hover:border-primary/30 transition-colors"
+                    >
+                      <div className="mt-1 h-4 w-4 shrink-0 rounded border border-text-muted" />
+                      <div className="min-w-0 flex-1">
+                         <p className="truncate text-sm font-medium">{task.title}</p>
+                         <div className="mt-1 flex items-center gap-2 flex-wrap">
+                            {task.subject && <SubjectBadge subject={task.subject} />}
+                            {task.dueDate && (
+                               <span className="text-xs text-text-muted">
+                                   Due: {formatDate(task.dueDate)}
+                               </span>
+                            )}
+                         </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="flex flex-1 items-center justify-center rounded-xl border border-dashed border-border-base bg-bg-base p-6 text-center">
+                  <div>
+                      <CheckSquare className="mx-auto h-8 w-8 text-green-500/50" />
+                      <p className="mt-2 text-sm text-text-secondary">
+                        All caught up! No pending tasks.
+                      </p>
+                  </div>
+                </div>
+              )}
+          </section>
+
+          {/* Task Progress Section */}
+          <section className="rounded-3xl border border-border-base bg-bg-card p-5 shadow-sm xl:col-span-1 flex flex-col">
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between mb-6">
               <div className="flex items-start gap-4">
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
                   <BarChart3 className="h-5 w-5" />
                 </div>
                 <div>
@@ -192,15 +244,14 @@ export default function Dashboard() {
               </div>
 
               {totalTrackedTasks > 0 && (
-                <div className="rounded-full bg-accent/10 px-3 py-1 text-sm font-semibold text-accent">
-                  {progressItems.length} subject
-                  {progressItems.length === 1 ? "" : "s"} tracked
+                <div className="rounded-full bg-accent/10 px-3 py-1 text-sm font-semibold text-accent whitespace-nowrap">
+                  {progressItems.length} track{progressItems.length === 1 ? "" : "s"}
                 </div>
               )}
             </div>
 
             {progressItems.length > 0 ? (
-              <div className="mt-6 space-y-4">
+              <div className="space-y-4 flex-1">
                 {progressItems.map((prog, index) => (
                   <div
                     key={`${prog.subject}-${index}`}
@@ -208,21 +259,20 @@ export default function Dashboard() {
                   >
                     <div className="flex flex-wrap items-center justify-between gap-3">
                       <div>
-                        <p className="font-semibold">
+                        <p className="font-semibold text-sm">
                           {prog.subject || "General"}
                         </p>
-                        <p className="text-sm text-text-secondary">
-                          {prog.completedTasks} of {prog.totalTasks} tasks
-                          complete
+                        <p className="text-xs text-text-secondary">
+                          {prog.completedTasks} of {prog.totalTasks} done
                         </p>
                       </div>
 
-                      <span className="rounded-full bg-primary/10 px-3 py-1 text-sm font-semibold text-primary">
+                      <span className="rounded-full bg-primary/10 px-2 py-1 text-xs font-semibold text-primary">
                         {prog.progressPercent}%
                       </span>
                     </div>
 
-                    <div className="mt-4 h-3 overflow-hidden rounded-full bg-border-base">
+                    <div className="mt-3 h-2 overflow-hidden rounded-full bg-border-base">
                       <div
                         className="h-full rounded-full transition-all duration-500"
                         style={{
@@ -235,19 +285,21 @@ export default function Dashboard() {
                 ))}
               </div>
             ) : (
-              <div className="mt-6 rounded-2xl border border-dashed border-border-base bg-bg-base px-6 py-12 text-center">
-                <Sparkles className="mx-auto h-8 w-8 text-accent" />
-                <h3 className="mt-4 text-lg font-semibold">No tasks yet</h3>
-                <p className="mt-2 text-text-secondary">
-                  Add tasks to unlock subject-by-subject progress tracking here.
-                </p>
+              <div className="flex flex-1 items-center justify-center rounded-2xl border border-dashed border-border-base bg-bg-base px-6 py-12 text-center">
+                <div>
+                    <Sparkles className="mx-auto h-8 w-8 text-accent/50" />
+                    <p className="mt-2 text-sm text-text-secondary">
+                      Add tasks to see progress here.
+                    </p>
+                </div>
               </div>
             )}
           </section>
 
-          <section className="rounded-3xl border border-border-base bg-bg-card p-5 shadow-sm">
-            <div className="flex items-start gap-4">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-accent/10 text-accent">
+          {/* Recent Notes Section */}
+          <section className="rounded-3xl border border-border-base bg-bg-card p-5 shadow-sm xl:col-span-1 flex flex-col">
+            <div className="flex items-start gap-4 mb-6">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-accent/10 text-accent">
                 <FileText className="h-5 w-5" />
               </div>
               <div>
@@ -259,34 +311,33 @@ export default function Dashboard() {
             </div>
 
             {recentNotes.length > 0 ? (
-              <div className="mt-6 space-y-4">
+              <div className="space-y-4 flex-1">
                 {recentNotes.map((note) => (
                   <article
                     key={note.noteId}
                     className="rounded-2xl border border-border-base bg-bg-base p-4"
                   >
-                    <div className="flex flex-wrap items-center gap-2">
+                    <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
                       <SubjectBadge subject={note.subject} />
-                      <span className="text-xs text-text-muted">
+                      <span className="text-[10px] text-text-muted">
                         {formatDate(note.createdAt)}
                       </span>
                     </div>
-                    <h3 className="mt-3 text-lg font-semibold">{note.title}</h3>
-                    <p className="mt-2 text-sm leading-6 text-text-secondary line-clamp-3">
+                    <h3 className="text-sm font-semibold truncate">{note.title}</h3>
+                    <p className="mt-1 text-xs leading-relaxed text-text-secondary line-clamp-2">
                       {note.content}
                     </p>
                   </article>
                 ))}
               </div>
             ) : (
-              <div className="mt-6 rounded-2xl border border-dashed border-border-base bg-bg-base px-6 py-12 text-center">
-                <FileText className="mx-auto h-8 w-8 text-primary" />
-                <h3 className="mt-4 text-lg font-semibold">
-                  No notes created yet
-                </h3>
-                <p className="mt-2 text-text-secondary">
-                  As soon as you save notes, the latest ones will show up here.
-                </p>
+              <div className="flex flex-1 items-center justify-center rounded-2xl border border-dashed border-border-base bg-bg-base px-6 py-12 text-center">
+                 <div>
+                    <FileText className="mx-auto h-8 w-8 text-primary/50" />
+                    <p className="mt-2 text-sm text-text-secondary">
+                      No notes created yet.
+                    </p>
+                 </div>
               </div>
             )}
           </section>

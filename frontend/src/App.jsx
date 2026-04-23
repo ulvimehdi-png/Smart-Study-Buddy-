@@ -12,6 +12,7 @@ import Test from "./pages/Test";
 import Layout from "./components/Layout";
 import TimerMercurePage from "./pages/TimerMercurePage.jsx";
 import Leaderboard from './pages/Leaderboard';
+import Reports from './pages/Reports';
 
 function App() {
     return (
@@ -26,6 +27,7 @@ function App() {
                     <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
                     <Route path="/notes" element={<ProtectedRoute><Notes /></ProtectedRoute>} />
                     <Route path="/leaderboard" element={<ProtectedRoute><Leaderboard /></ProtectedRoute>} />
+                    <Route path="/reports" element={<ProtectedRoute><Reports /></ProtectedRoute>} />
 
                     <Route path="/test" element={<Test />} />
                     <Route path="/timerMercurePage" element={<ProtectedRoute><TimerMercurePage /></ProtectedRoute>} />
