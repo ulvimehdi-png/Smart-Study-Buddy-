@@ -78,10 +78,6 @@ export function pauseLiveTimerSession(id) {
     return postAction(id, 'pause');
 }
 
-export function resumeLiveTimerSession(id) {
-    return postAction(id, 'resume');
-}
-
 export function skipPhaseLiveTimerSession(id) {
     return postAction(id, 'skip-phase');
 }
@@ -92,10 +88,6 @@ export function resetPhaseLiveTimerSession(id) {
 
 export function changeConfigLiveTimerSession(id, payload) {
     return postAction(id, 'change-config', payload);
-}
-
-export function stopAndSaveLiveTimerSession(id, payload = {}) {
-    return postAction(id, 'stop-and-save', payload);
 }
 
 export function buildLiveTimerJoinUrl(id, currentUrl = window.location.href) {

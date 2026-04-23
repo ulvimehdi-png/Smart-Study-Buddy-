@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { AnimatePresence, motion as Motion } from 'framer-motion';
 import { Share2, FastForward, Pause, Play, RotateCcw, BellRing } from 'lucide-react';
 import { CircularProgressbarWithChildren, buildStyles } from 'react-circular-progressbar';
@@ -27,8 +27,10 @@ export default function Timer({ isPiP = false }) {
     skipTimer,
     isResting,
     isShared,
-    startSharing,
-    stopSharing,
+    hasCopiedShareLink,
+    shareTimer,
+    connectionStatus,
+    error,
   } = useTimer();
 
   const percentage = durationMs > 0 ? (msLeft / durationMs) * 100 : 0;
@@ -36,13 +38,13 @@ export default function Timer({ isPiP = false }) {
   const [endTime, setEndTime] = useState('--:--');
 
   // --- HIDDEN POINT TRACKER ---
-  const [sessionStartTime, setSessionStartTime] = useState(null);
+  const sessionStartTimeRef = useRef(null);
 
   React.useEffect(() => {
     if (isPlaying) {
-      setSessionStartTime(Date.now());
-    } else if (sessionStartTime) {
-      const elapsedMs = Date.now() - sessionStartTime;
+      sessionStartTimeRef.current = Date.now();
+    } else if (sessionStartTimeRef.current) {
+      const elapsedMs = Date.now() - sessionStartTimeRef.current;
       const minutes = Math.round(elapsedMs / 60000);
 
       if (minutes > 0) {
@@ -53,7 +55,7 @@ export default function Timer({ isPiP = false }) {
           credentials: "include",
         });
       }
-      setSessionStartTime(null);
+      sessionStartTimeRef.current = null;
     }
   }, [isPlaying]);
   // ----------------------------
@@ -113,14 +115,19 @@ export default function Timer({ isPiP = false }) {
           </TimerButton>
           <TimerButton
             isPiP={isPiP}
-            onClick={isShared ? stopSharing : startSharing}
+            onClick={shareTimer}
             IconComp={Share2}
             className={isShared ? 'bg-primary/10 text-primary' : ''}
           >
-            {isShared ? 'Stop Sharing' : 'Share'}
+            {hasCopiedShareLink ? 'Link Copied' : isShared ? 'Copy Link' : 'Share'}
           </TimerButton>
         </div>
       </AnimatePresence>
+      {!isPiP && (connectionStatus !== 'disconnected' || error) && (
+        <div className="mt-2 text-xs text-text-secondary">
+          {error ? error : `Live sync: ${connectionStatus}`}
+        </div>
+      )}
     </div>
   );
 }
