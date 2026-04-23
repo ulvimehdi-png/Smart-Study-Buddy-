@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <title>Dashboard for /app/src/StudyContent/Domain/Model</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="../../../_css/bootstrap.min.css?v=14.1.1" rel="stylesheet" type="text/css">
+  <link href="../../../_css/style.css?v=14.1.1" rel="stylesheet" type="text/css">
+  <link href="../../../_css/custom.css" rel="stylesheet" type="text/css">
+ </head>
+ <body>
+  <header>
+   <div class="container-fluid">
+    <div class="row">
+     <div class="col-md-12">
+      <nav aria-label="breadcrumb">
+       <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="../../../index.html">/app/src</a></li>
+         <li class="breadcrumb-item"><a href="../../index.html">StudyContent</a></li>
+         <li class="breadcrumb-item"><a href="../index.html">Domain</a></li>
+         <li class="breadcrumb-item"><a href="index.html">Model</a></li>
+         <li class="breadcrumb-item active">(Dashboard)</li>
+
+       </ol>
+      </nav>
+     </div>
+    </div>
+   </div>
+  </header>
+  <div class="container-fluid">
+   <div class="row dashboard-row">
+    <div class="col-md-6">
+     <h3>Classes</h3>
+     <p class="text-muted small">Bubble size = executable lines. Hover for details, click to navigate.</p>
+     <div class="file-coverage-chart">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400" preserveAspectRatio="xMidYMid meet">
+ <style>
+  .bubble-success { fill: var(--phpunit-success-bar); opacity: 0.7; }
+  .bubble-warning { fill: var(--phpunit-warning-bar); opacity: 0.7; }
+  .bubble-danger { fill: var(--phpunit-danger-bar); opacity: 0.7; }
+  .bubble-success:hover, .bubble-warning:hover, .bubble-danger:hover { opacity: 1; stroke: var(--bs-emphasis-color); stroke-width: 1.5; }
+  .chart-grid { stroke: var(--bs-border-color); stroke-width: 0.5; stroke-dasharray: 4,4; opacity: 0.5; }
+  .chart-axis { stroke: var(--bs-border-color); stroke-width: 1; }
+  .chart-label { fill: var(--bs-body-color); font-size: 11px; font-family: var(--bs-font-sans-serif, sans-serif); }
+  .chart-title { fill: var(--bs-body-color); font-size: 12px; font-family: var(--bs-font-sans-serif, sans-serif); }
+ </style>
+ <line x1="60.0" y1="20" x2="60.0" y2="350" class="chart-grid"/>
+ <text x="60.0" y="368" text-anchor="middle" class="chart-label">0%</text>
+ <line x1="204.0" y1="20" x2="204.0" y2="350" class="chart-grid"/>
+ <text x="204.0" y="368" text-anchor="middle" class="chart-label">20%</text>
+ <line x1="348.0" y1="20" x2="348.0" y2="350" class="chart-grid"/>
+ <text x="348.0" y="368" text-anchor="middle" class="chart-label">40%</text>
+ <line x1="492.0" y1="20" x2="492.0" y2="350" class="chart-grid"/>
+ <text x="492.0" y="368" text-anchor="middle" class="chart-label">60%</text>
+ <line x1="636.0" y1="20" x2="636.0" y2="350" class="chart-grid"/>
+ <text x="636.0" y="368" text-anchor="middle" class="chart-label">80%</text>
+ <line x1="780.0" y1="20" x2="780.0" y2="350" class="chart-grid"/>
+ <text x="780.0" y="368" text-anchor="middle" class="chart-label">100%</text>
+ <line x1="60" y1="350.0" x2="780" y2="350.0" class="chart-grid"/>
+ <text x="52" y="350.0" text-anchor="end" dominant-baseline="middle" class="chart-label">0</text>
+ <line x1="60" y1="267.5" x2="780" y2="267.5" class="chart-grid"/>
+ <text x="52" y="267.5" text-anchor="end" dominant-baseline="middle" class="chart-label">20</text>
+ <line x1="60" y1="185.0" x2="780" y2="185.0" class="chart-grid"/>
+ <text x="52" y="185.0" text-anchor="end" dominant-baseline="middle" class="chart-label">40</text>
+ <line x1="60" y1="102.5" x2="780" y2="102.5" class="chart-grid"/>
+ <text x="52" y="102.5" text-anchor="end" dominant-baseline="middle" class="chart-label">60</text>
+ <line x1="60" y1="20.0" x2="780" y2="20.0" class="chart-grid"/>
+ <text x="52" y="20.0" text-anchor="end" dominant-baseline="middle" class="chart-label">80</text>
+ <line x1="60" y1="20" x2="60" y2="350" class="chart-axis"/>
+ <line x1="60" y1="350" x2="780" y2="350" class="chart-axis"/>
+ <text x="420.0" y="395" text-anchor="middle" class="chart-title">Line Coverage (%)</text>
+ <text x="15" y="185.0" text-anchor="middle" transform="rotate(-90, 15, 185.0)" class="chart-title">Cyclomatic Complexity</text>
+ <a href="ContentItem/ContentItem.php.html#25"><circle cx="420.0" cy="102.5" r="20.0" class="bubble-danger"><title>App\StudyContent\Domain\Model\ContentItem\ContentItem — Coverage: 50.0% | Lines: 202 | Complexity: 60</title></circle></a>
+ <a href="Collection/Collection.php.html#17"><circle cx="344.8" cy="205.6" r="13.4" class="bubble-danger"><title>App\StudyContent\Domain\Model\Collection\Collection — Coverage: 39.6% | Lines: 91 | Complexity: 35</title></circle></a>
+ <a href="ContentItem/Provenance.php.html#10"><circle cx="460.0" cy="321.1" r="4.2" class="bubble-warning"><title>App\StudyContent\Domain\Model\ContentItem\Provenance — Coverage: 55.6% | Lines: 9 | Complexity: 7</title></circle></a>
+ <a href="Collection/CollectionEntry.php.html#11"><circle cx="510.0" cy="312.9" r="4.0" class="bubble-warning"><title>App\StudyContent\Domain\Model\Collection\CollectionEntry — Coverage: 62.5% | Lines: 8 | Complexity: 9</title></circle></a>
+ <a href="Collection/CollectionTitle.php.html#9"><circle cx="471.4" cy="333.5" r="4.0" class="bubble-warning"><title>App\StudyContent\Domain\Model\Collection\CollectionTitle — Coverage: 57.1% | Lines: 7 | Complexity: 4</title></circle></a>
+ <a href="ContentItem/ContentTitle.php.html#7"><circle cx="471.4" cy="333.5" r="4.0" class="bubble-warning"><title>App\StudyContent\Domain\Model\ContentItem\ContentTitle — Coverage: 57.1% | Lines: 7 | Complexity: 4</title></circle></a>
+ <a href="ContentItem/PolicyDecisionReason.php.html#9"><circle cx="471.4" cy="333.5" r="4.0" class="bubble-warning"><title>App\StudyContent\Domain\Model\ContentItem\PolicyDecisionReason — Coverage: 57.1% | Lines: 7 | Complexity: 4</title></circle></a>
+ <a href="ContentItem/PublicationPolicy.php.html#7"><circle cx="677.1" cy="321.1" r="4.0" class="bubble-warning"><title>App\StudyContent\Domain\Model\ContentItem\PublicationPolicy — Coverage: 85.7% | Lines: 7 | Complexity: 7</title></circle></a>
+ <a href="ContentItem/SourceReference.php.html#9"><circle cx="368.6" cy="317.0" r="4.0" class="bubble-danger"><title>App\StudyContent\Domain\Model\ContentItem\SourceReference — Coverage: 42.9% | Lines: 7 | Complexity: 8</title></circle></a>
+ <a href="ContentItem/ProvenanceSource.php.html#9"><circle cx="420.0" cy="325.2" r="4.0" class="bubble-danger"><title>App\StudyContent\Domain\Model\ContentItem\ProvenanceSource — Coverage: 50.0% | Lines: 6 | Complexity: 6</title></circle></a>
+ <a href="Collection/CollectionId.php.html#9"><circle cx="348.0" cy="329.4" r="4.0" class="bubble-danger"><title>App\StudyContent\Domain\Model\Collection\CollectionId — Coverage: 40.0% | Lines: 5 | Complexity: 5</title></circle></a>
+ <a href="ContentItem/ContentItemId.php.html#9"><circle cx="636.0" cy="329.4" r="4.0" class="bubble-warning"><title>App\StudyContent\Domain\Model\ContentItem\ContentItemId — Coverage: 80.0% | Lines: 5 | Complexity: 5</title></circle></a>
+ <a href="ContentItem/PublicationRecord.php.html#9"><circle cx="204.0" cy="329.4" r="4.0" class="bubble-danger"><title>App\StudyContent\Domain\Model\ContentItem\PublicationRecord — Coverage: 20.0% | Lines: 5 | Complexity: 5</title></circle></a>
+ <a href="ContentItem/Relationship.php.html#9"><circle cx="204.0" cy="325.2" r="4.0" class="bubble-danger"><title>App\StudyContent\Domain\Model\ContentItem\Relationship — Coverage: 20.0% | Lines: 5 | Complexity: 6</title></circle></a>
+ <a href="ContentItem/ReviewRecord.php.html#9"><circle cx="204.0" cy="329.4" r="4.0" class="bubble-danger"><title>App\StudyContent\Domain\Model\ContentItem\ReviewRecord — Coverage: 20.0% | Lines: 5 | Complexity: 5</title></circle></a>
+ <a href="ContentItem/RevisionNumber.php.html#9"><circle cx="636.0" cy="329.4" r="4.0" class="bubble-warning"><title>App\StudyContent\Domain\Model\ContentItem\RevisionNumber — Coverage: 80.0% | Lines: 5 | Complexity: 5</title></circle></a>
+ <a href="Collection/CollectionEntryPosition.php.html#9"><circle cx="420.0" cy="333.5" r="4.0" class="bubble-danger"><title>App\StudyContent\Domain\Model\Collection\CollectionEntryPosition — Coverage: 50.0% | Lines: 4 | Complexity: 4</title></circle></a>
+ <a href="Collection/CollectionPublicationRecord.php.html#10"><circle cx="60.0" cy="333.5" r="4.0" class="bubble-danger"><title>App\StudyContent\Domain\Model\Collection\CollectionPublicationRecord — Coverage: 0.0% | Lines: 4 | Complexity: 4</title></circle></a>
+ <a href="ContentItem/ContentBody.php.html#9"><circle cx="300.0" cy="337.6" r="4.0" class="bubble-danger"><title>App\StudyContent\Domain\Model\ContentItem\ContentBody — Coverage: 33.3% | Lines: 3 | Complexity: 3</title></circle></a>
+ <a href="ContentItem/OwnerId.php.html#9"><circle cx="300.0" cy="337.6" r="4.0" class="bubble-danger"><title>App\StudyContent\Domain\Model\ContentItem\OwnerId — Coverage: 33.3% | Lines: 3 | Complexity: 3</title></circle></a>
+ <a href="ContentItem/Supersession.php.html#9"><circle cx="60.0" cy="337.6" r="4.0" class="bubble-danger"><title>App\StudyContent\Domain\Model\ContentItem\Supersession — Coverage: 0.0% | Lines: 3 | Complexity: 3</title></circle></a>
+ <a href="ContentItem/LifecycleStatus.php.html#9"><circle cx="60.0" cy="345.9" r="4.0" class="bubble-danger"><title>App\StudyContent\Domain\Model\ContentItem\LifecycleStatus — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="ContentItem/RelationshipType.php.html#7"><circle cx="780.0" cy="345.9" r="4.0" class="bubble-success"><title>App\StudyContent\Domain\Model\ContentItem\RelationshipType — Coverage: 100.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Subject/Subject.php.html#7"><circle cx="60.0" cy="345.9" r="4.0" class="bubble-danger"><title>App\StudyContent\Domain\Model\Subject\Subject — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Subject/SubjectCode.php.html#7"><circle cx="60.0" cy="345.9" r="4.0" class="bubble-danger"><title>App\StudyContent\Domain\Model\Subject\SubjectCode — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Subject/SubjectId.php.html#7"><circle cx="60.0" cy="345.9" r="4.0" class="bubble-danger"><title>App\StudyContent\Domain\Model\Subject\SubjectId — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Subject/SubjectName.php.html#7"><circle cx="60.0" cy="345.9" r="4.0" class="bubble-danger"><title>App\StudyContent\Domain\Model\Subject\SubjectName — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Tag/Tag.php.html#7"><circle cx="60.0" cy="345.9" r="4.0" class="bubble-danger"><title>App\StudyContent\Domain\Model\Tag\Tag — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Tag/TagColor.php.html#7"><circle cx="60.0" cy="345.9" r="4.0" class="bubble-danger"><title>App\StudyContent\Domain\Model\Tag\TagColor — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Tag/TagId.php.html#7"><circle cx="60.0" cy="345.9" r="4.0" class="bubble-danger"><title>App\StudyContent\Domain\Model\Tag\TagId — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Tag/TagName.php.html#7"><circle cx="60.0" cy="345.9" r="4.0" class="bubble-danger"><title>App\StudyContent\Domain\Model\Tag\TagName — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+</svg>
+     </div>
+    </div>
+    <div class="col-md-6 dashboard-column">
+     <h3>&nbsp;</h3>
+     <p class="text-muted small">Sorted by descending CRAP (Change Risk Anti-Patterns) index.</p>
+     <div class="scrollbox">
+<table class="table">
+ <thead>
+  <tr>
+   <th>Class</th>
+   <th class="text-right"><abbr title="Change Risk Anti-Patterns (CRAP) Index">CRAP</abbr></th>
+   <th class="text-right">Coverage</th>
+  </tr>
+ </thead>
+ <tbody>
+  <tr><td><a href="ContentItem/ContentItem.php.html#25">App\StudyContent\Domain\Model\ContentItem\ContentItem</a></td><td class="text-right">510.00</td><td class="text-right">50.0%</td></tr>
+  <tr><td><a href="Collection/Collection.php.html#17">App\StudyContent\Domain\Model\Collection\Collection</a></td><td class="text-right">305.46</td><td class="text-right">39.6%</td></tr>
+  <tr><td><a href="ContentItem/Relationship.php.html#9">App\StudyContent\Domain\Model\ContentItem\Relationship</a></td><td class="text-right">24.43</td><td class="text-right">20.0%</td></tr>
+  <tr><td><a href="Collection/CollectionPublicationRecord.php.html#10">App\StudyContent\Domain\Model\Collection\CollectionPublicationRecord</a></td><td class="text-right">20</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="ContentItem/SourceReference.php.html#9">App\StudyContent\Domain\Model\ContentItem\SourceReference</a></td><td class="text-right">19.94</td><td class="text-right">42.9%</td></tr>
+  <tr><td><a href="ContentItem/PublicationRecord.php.html#9">App\StudyContent\Domain\Model\ContentItem\PublicationRecord</a></td><td class="text-right">17.80</td><td class="text-right">20.0%</td></tr>
+  <tr><td><a href="ContentItem/ReviewRecord.php.html#9">App\StudyContent\Domain\Model\ContentItem\ReviewRecord</a></td><td class="text-right">17.80</td><td class="text-right">20.0%</td></tr>
+  <tr><td><a href="Collection/CollectionEntry.php.html#11">App\StudyContent\Domain\Model\Collection\CollectionEntry</a></td><td class="text-right">13.27</td><td class="text-right">62.5%</td></tr>
+  <tr><td><a href="ContentItem/Supersession.php.html#9">App\StudyContent\Domain\Model\ContentItem\Supersession</a></td><td class="text-right">12</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="ContentItem/Provenance.php.html#10">App\StudyContent\Domain\Model\ContentItem\Provenance</a></td><td class="text-right">11.30</td><td class="text-right">55.6%</td></tr>
+  <tr><td><a href="ContentItem/ProvenanceSource.php.html#9">App\StudyContent\Domain\Model\ContentItem\ProvenanceSource</a></td><td class="text-right">10.50</td><td class="text-right">50.0%</td></tr>
+  <tr><td><a href="Collection/CollectionId.php.html#9">App\StudyContent\Domain\Model\Collection\CollectionId</a></td><td class="text-right">10.40</td><td class="text-right">40.0%</td></tr>
+  <tr><td><a href="ContentItem/PublicationPolicy.php.html#7">App\StudyContent\Domain\Model\ContentItem\PublicationPolicy</a></td><td class="text-right">7.14</td><td class="text-right">85.7%</td></tr>
+  <tr><td><a href="Collection/CollectionEntryPosition.php.html#9">App\StudyContent\Domain\Model\Collection\CollectionEntryPosition</a></td><td class="text-right">6.00</td><td class="text-right">50.0%</td></tr>
+  <tr><td><a href="ContentItem/ContentBody.php.html#9">App\StudyContent\Domain\Model\ContentItem\ContentBody</a></td><td class="text-right">5.67</td><td class="text-right">33.3%</td></tr>
+  <tr><td><a href="ContentItem/OwnerId.php.html#9">App\StudyContent\Domain\Model\ContentItem\OwnerId</a></td><td class="text-right">5.67</td><td class="text-right">33.3%</td></tr>
+  <tr><td><a href="Collection/CollectionTitle.php.html#9">App\StudyContent\Domain\Model\Collection\CollectionTitle</a></td><td class="text-right">5.26</td><td class="text-right">57.1%</td></tr>
+  <tr><td><a href="ContentItem/ContentTitle.php.html#7">App\StudyContent\Domain\Model\ContentItem\ContentTitle</a></td><td class="text-right">5.26</td><td class="text-right">57.1%</td></tr>
+  <tr><td><a href="ContentItem/PolicyDecisionReason.php.html#9">App\StudyContent\Domain\Model\ContentItem\PolicyDecisionReason</a></td><td class="text-right">5.26</td><td class="text-right">57.1%</td></tr>
+  <tr><td><a href="ContentItem/ContentItemId.php.html#9">App\StudyContent\Domain\Model\ContentItem\ContentItemId</a></td><td class="text-right">5.20</td><td class="text-right">80.0%</td></tr>
+  <tr><td><a href="ContentItem/RevisionNumber.php.html#9">App\StudyContent\Domain\Model\ContentItem\RevisionNumber</a></td><td class="text-right">5.20</td><td class="text-right">80.0%</td></tr>
+  <tr><td><a href="ContentItem/LifecycleStatus.php.html#9">App\StudyContent\Domain\Model\ContentItem\LifecycleStatus</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Subject/Subject.php.html#7">App\StudyContent\Domain\Model\Subject\Subject</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Subject/SubjectCode.php.html#7">App\StudyContent\Domain\Model\Subject\SubjectCode</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Subject/SubjectId.php.html#7">App\StudyContent\Domain\Model\Subject\SubjectId</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Subject/SubjectName.php.html#7">App\StudyContent\Domain\Model\Subject\SubjectName</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Tag/Tag.php.html#7">App\StudyContent\Domain\Model\Tag\Tag</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Tag/TagColor.php.html#7">App\StudyContent\Domain\Model\Tag\TagColor</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Tag/TagId.php.html#7">App\StudyContent\Domain\Model\Tag\TagId</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Tag/TagName.php.html#7">App\StudyContent\Domain\Model\Tag\TagName</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="ContentItem/RelationshipType.php.html#7">App\StudyContent\Domain\Model\ContentItem\RelationshipType</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="Collection/CollectionStatus.php.html#7">App\StudyContent\Domain\Model\Collection\CollectionStatus</a></td><td class="text-right">0</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="ContentItem/CanonicalStatus.php.html#7">App\StudyContent\Domain\Model\ContentItem\CanonicalStatus</a></td><td class="text-right">0</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="ContentItem/ContentKind.php.html#7">App\StudyContent\Domain\Model\ContentItem\ContentKind</a></td><td class="text-right">0</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="ContentItem/ContentMetadata.php.html#5">App\StudyContent\Domain\Model\ContentItem\ContentMetadata</a></td><td class="text-right">0</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="ContentItem/ContentOwner.php.html#5">App\StudyContent\Domain\Model\ContentItem\ContentOwner</a></td><td class="text-right">0</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="ContentItem/DerivationMethod.php.html#7">App\StudyContent\Domain\Model\ContentItem\DerivationMethod</a></td><td class="text-right">0</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="ContentItem/PublicationChannel.php.html#7">App\StudyContent\Domain\Model\ContentItem\PublicationChannel</a></td><td class="text-right">0</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="ContentItem/ReviewOutcome.php.html#7">App\StudyContent\Domain\Model\ContentItem\ReviewOutcome</a></td><td class="text-right">0</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="ContentItem/ReviewStatus.php.html#5">App\StudyContent\Domain\Model\ContentItem\ReviewStatus</a></td><td class="text-right">0</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="ContentItem/SharingScope.php.html#7">App\StudyContent\Domain\Model\ContentItem\SharingScope</a></td><td class="text-right">0</td><td class="text-right">100.0%</td></tr>
+ </tbody>
+</table>
+     </div>
+    </div>
+   </div>
+   <div class="row dashboard-row">
+    <div class="col-md-6">
+     <h3>Methods</h3>
+     <p class="text-muted small">Bubble size = executable lines. Hover for details, click to navigate.</p>
+     <div class="file-coverage-chart">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400" preserveAspectRatio="xMidYMid meet">
+ <style>
+  .bubble-success { fill: var(--phpunit-success-bar); opacity: 0.7; }
+  .bubble-warning { fill: var(--phpunit-warning-bar); opacity: 0.7; }
+  .bubble-danger { fill: var(--phpunit-danger-bar); opacity: 0.7; }
+  .bubble-success:hover, .bubble-warning:hover, .bubble-danger:hover { opacity: 1; stroke: var(--bs-emphasis-color); stroke-width: 1.5; }
+  .chart-grid { stroke: var(--bs-border-color); stroke-width: 0.5; stroke-dasharray: 4,4; opacity: 0.5; }
+  .chart-axis { stroke: var(--bs-border-color); stroke-width: 1; }
+  .chart-label { fill: var(--bs-body-color); font-size: 11px; font-family: var(--bs-font-sans-serif, sans-serif); }
+  .chart-title { fill: var(--bs-body-color); font-size: 12px; font-family: var(--bs-font-sans-serif, sans-serif); }
+ </style>
+ <line x1="60.0" y1="20" x2="60.0" y2="350" class="chart-grid"/>
+ <text x="60.0" y="368" text-anchor="middle" class="chart-label">0%</text>
+ <line x1="204.0" y1="20" x2="204.0" y2="350" class="chart-grid"/>
+ <text x="204.0" y="368" text-anchor="middle" class="chart-label">20%</text>
+ <line x1="348.0" y1="20" x2="348.0" y2="350" class="chart-grid"/>
+ <text x="348.0" y="368" text-anchor="middle" class="chart-label">40%</text>
+ <line x1="492.0" y1="20" x2="492.0" y2="350" class="chart-grid"/>
+ <text x="492.0" y="368" text-anchor="middle" class="chart-label">60%</text>
+ <line x1="636.0" y1="20" x2="636.0" y2="350" class="chart-grid"/>
+ <text x="636.0" y="368" text-anchor="middle" class="chart-label">80%</text>
+ <line x1="780.0" y1="20" x2="780.0" y2="350" class="chart-grid"/>
+ <text x="780.0" y="368" text-anchor="middle" class="chart-label">100%</text>
+ <line x1="60" y1="350.0" x2="780" y2="350.0" class="chart-grid"/>
+ <text x="52" y="350.0" text-anchor="end" dominant-baseline="middle" class="chart-label">0</text>
+ <line x1="60" y1="267.5" x2="780" y2="267.5" class="chart-grid"/>
+ <text x="52" y="267.5" text-anchor="end" dominant-baseline="middle" class="chart-label">2</text>
+ <line x1="60" y1="185.0" x2="780" y2="185.0" class="chart-grid"/>
+ <text x="52" y="185.0" text-anchor="end" dominant-baseline="middle" class="chart-label">4</text>
+ <line x1="60" y1="102.5" x2="780" y2="102.5" class="chart-grid"/>
+ <text x="52" y="102.5" text-anchor="end" dominant-baseline="middle" class="chart-label">6</text>
+ <line x1="60" y1="20.0" x2="780" y2="20.0" class="chart-grid"/>
+ <text x="52" y="20.0" text-anchor="end" dominant-baseline="middle" class="chart-label">8</text>
+ <line x1="60" y1="20" x2="60" y2="350" class="chart-axis"/>
+ <line x1="60" y1="350" x2="780" y2="350" class="chart-axis"/>
+ <text x="420.0" y="395" text-anchor="middle" class="chart-title">Line Coverage (%)</text>
+ <text x="15" y="185.0" text-anchor="middle" transform="rotate(-90, 15, 185.0)" class="chart-title">Cyclomatic Complexity</text>
+ <a href="ContentItem/ContentItem.php.html#142"><circle cx="60.0" cy="267.5" r="20.0" class="bubble-danger"><title>App\StudyContent\Domain\Model\ContentItem\ContentItem::createDerivative — Coverage: 0.0% | Lines: 22 | Complexity: 2</title></circle></a>
+ <a href="ContentItem/ContentItem.php.html#446"><circle cx="60.0" cy="308.8" r="19.5" class="bubble-danger"><title>App\StudyContent\Domain\Model\ContentItem\ContentItem::reconstitute — Coverage: 0.0% | Lines: 21 | Complexity: 1</title></circle></a>
+ <a href="Collection/Collection.php.html#126"><circle cx="666.3" cy="61.2" r="18.6" class="bubble-warning"><title>App\StudyContent\Domain\Model\Collection\Collection::reorder — Coverage: 84.2% | Lines: 19 | Complexity: 7</title></circle></a>
+ <a href="ContentItem/ContentItem.php.html#265"><circle cx="620.0" cy="61.2" r="18.1" class="bubble-warning"><title>App\StudyContent\Domain\Model\ContentItem\ContentItem::publish — Coverage: 77.8% | Lines: 18 | Complexity: 7</title></circle></a>
+ <a href="Collection/Collection.php.html#94"><circle cx="60.0" cy="102.5" r="17.6" class="bubble-danger"><title>App\StudyContent\Domain\Model\Collection\Collection::removeEntry — Coverage: 0.0% | Lines: 17 | Complexity: 6</title></circle></a>
+ <a href="ContentItem/ContentItem.php.html#78"><circle cx="780.0" cy="308.8" r="17.6" class="bubble-success"><title>App\StudyContent\Domain\Model\ContentItem\ContentItem::importSourceMaterial — Coverage: 100.0% | Lines: 17 | Complexity: 1</title></circle></a>
+ <a href="ContentItem/ContentItem.php.html#111"><circle cx="780.0" cy="308.8" r="16.0" class="bubble-success"><title>App\StudyContent\Domain\Model\ContentItem\ContentItem::createDraft — Coverage: 100.0% | Lines: 14 | Complexity: 1</title></circle></a>
+ <a href="Collection/Collection.php.html#67"><circle cx="714.5" cy="185.0" r="14.1" class="bubble-success"><title>App\StudyContent\Domain\Model\Collection\Collection::addEntry — Coverage: 90.9% | Lines: 11 | Complexity: 4</title></circle></a>
+ <a href="Collection/Collection.php.html#247"><circle cx="60.0" cy="308.8" r="14.1" class="bubble-danger"><title>App\StudyContent\Domain\Model\Collection\Collection::reconstitute — Coverage: 0.0% | Lines: 11 | Complexity: 1</title></circle></a>
+ <a href="ContentItem/ContentItem.php.html#51"><circle cx="780.0" cy="308.8" r="14.1" class="bubble-success"><title>App\StudyContent\Domain\Model\ContentItem\ContentItem::__construct — Coverage: 100.0% | Lines: 11 | Complexity: 1</title></circle></a>
+ <a href="Collection/Collection.php.html#166"><circle cx="60.0" cy="226.2" r="13.5" class="bubble-danger"><title>App\StudyContent\Domain\Model\Collection\Collection::publish — Coverage: 0.0% | Lines: 10 | Complexity: 3</title></circle></a>
+ <a href="ContentItem/ContentItem.php.html#184"><circle cx="540.0" cy="226.2" r="12.8" class="bubble-warning"><title>App\StudyContent\Domain\Model\ContentItem\ContentItem::markProcessed — Coverage: 66.7% | Lines: 9 | Complexity: 3</title></circle></a>
+ <a href="ContentItem/ContentItem.php.html#221"><circle cx="700.0" cy="267.5" r="12.8" class="bubble-warning"><title>App\StudyContent\Domain\Model\ContentItem\ContentItem::approve — Coverage: 88.9% | Lines: 9 | Complexity: 2</title></circle></a>
+ <a href="ContentItem/ContentItem.php.html#243"><circle cx="60.0" cy="267.5" r="12.8" class="bubble-danger"><title>App\StudyContent\Domain\Model\ContentItem\ContentItem::reject — Coverage: 0.0% | Lines: 9 | Complexity: 2</title></circle></a>
+ <a href="ContentItem/ContentItem.php.html#304"><circle cx="60.0" cy="267.5" r="12.8" class="bubble-danger"><title>App\StudyContent\Domain\Model\ContentItem\ContentItem::block — Coverage: 0.0% | Lines: 9 | Complexity: 2</title></circle></a>
+ <a href="ContentItem/ContentItem.php.html#372"><circle cx="540.0" cy="143.8" r="12.8" class="bubble-warning"><title>App\StudyContent\Domain\Model\ContentItem\ContentItem::addRelationship — Coverage: 66.7% | Lines: 9 | Complexity: 5</title></circle></a>
+ <a href="ContentItem/ContentItem.php.html#421"><circle cx="700.0" cy="185.0" r="12.8" class="bubble-warning"><title>App\StudyContent\Domain\Model\ContentItem\ContentItem::revise — Coverage: 88.9% | Lines: 9 | Complexity: 4</title></circle></a>
+ <a href="ContentItem/ContentItem.php.html#206"><circle cx="574.3" cy="267.5" r="11.3" class="bubble-warning"><title>App\StudyContent\Domain\Model\ContentItem\ContentItem::submitForReview — Coverage: 71.4% | Lines: 7 | Complexity: 2</title></circle></a>
+ <a href="ContentItem/ContentItem.php.html#325"><circle cx="60.0" cy="267.5" r="11.3" class="bubble-danger"><title>App\StudyContent\Domain\Model\ContentItem\ContentItem::deprecate — Coverage: 0.0% | Lines: 7 | Complexity: 2</title></circle></a>
+ <a href="Collection/CollectionTitle.php.html#11"><circle cx="540.0" cy="226.2" r="10.4" class="bubble-warning"><title>App\StudyContent\Domain\Model\Collection\CollectionTitle::__construct — Coverage: 66.7% | Lines: 6 | Complexity: 3</title></circle></a>
+ <a href="ContentItem/ContentItem.php.html#340"><circle cx="60.0" cy="267.5" r="10.4" class="bubble-danger"><title>App\StudyContent\Domain\Model\ContentItem\ContentItem::archive — Coverage: 0.0% | Lines: 6 | Complexity: 2</title></circle></a>
+ <a href="ContentItem/ContentTitle.php.html#9"><circle cx="540.0" cy="226.2" r="10.4" class="bubble-warning"><title>App\StudyContent\Domain\Model\ContentItem\ContentTitle::__construct — Coverage: 66.7% | Lines: 6 | Complexity: 3</title></circle></a>
+ <a href="ContentItem/PolicyDecisionReason.php.html#11"><circle cx="540.0" cy="226.2" r="10.4" class="bubble-warning"><title>App\StudyContent\Domain\Model\ContentItem\PolicyDecisionReason::__construct — Coverage: 66.7% | Lines: 6 | Complexity: 3</title></circle></a>
+ <a href="Collection/Collection.php.html#32"><circle cx="780.0" cy="308.8" r="9.5" class="bubble-success"><title>App\StudyContent\Domain\Model\Collection\Collection::__construct — Coverage: 100.0% | Lines: 5 | Complexity: 1</title></circle></a>
+ <a href="Collection/Collection.php.html#190"><circle cx="60.0" cy="267.5" r="9.5" class="bubble-danger"><title>App\StudyContent\Domain\Model\Collection\Collection::archive — Coverage: 0.0% | Lines: 5 | Complexity: 2</title></circle></a>
+ <a href="Collection/Collection.php.html#58"><circle cx="60.0" cy="267.5" r="7.4" class="bubble-danger"><title>App\StudyContent\Domain\Model\Collection\Collection::rename — Coverage: 0.0% | Lines: 3 | Complexity: 2</title></circle></a>
+ <a href="ContentItem/ContentItem.php.html#354"><circle cx="60.0" cy="267.5" r="7.4" class="bubble-danger"><title>App\StudyContent\Domain\Model\ContentItem\ContentItem::markCanonical — Coverage: 0.0% | Lines: 3 | Complexity: 2</title></circle></a>
+ <a href="ContentItem/Provenance.php.html#31"><circle cx="60.0" cy="267.5" r="7.4" class="bubble-danger"><title>App\StudyContent\Domain\Model\ContentItem\Provenance::derived — Coverage: 0.0% | Lines: 3 | Complexity: 2</title></circle></a>
+ <a href="ContentItem/PublicationPolicy.php.html#29"><circle cx="540.0" cy="185.0" r="7.4" class="bubble-warning"><title>App\StudyContent\Domain\Model\ContentItem\PublicationPolicy::allowsScope — Coverage: 66.7% | Lines: 3 | Complexity: 4</title></circle></a>
+ <a href="Collection/Collection.php.html#47"><circle cx="780.0" cy="308.8" r="6.0" class="bubble-success"><title>App\StudyContent\Domain\Model\Collection\Collection::create — Coverage: 100.0% | Lines: 2 | Complexity: 1</title></circle></a>
+ <a href="Collection/CollectionEntry.php.html#13"><circle cx="420.0" cy="226.2" r="6.0" class="bubble-danger"><title>App\StudyContent\Domain\Model\Collection\CollectionEntry::__construct — Coverage: 50.0% | Lines: 2 | Complexity: 3</title></circle></a>
+ <a href="Collection/CollectionEntryPosition.php.html#11"><circle cx="420.0" cy="267.5" r="6.0" class="bubble-danger"><title>App\StudyContent\Domain\Model\Collection\CollectionEntryPosition::__construct — Coverage: 50.0% | Lines: 2 | Complexity: 2</title></circle></a>
+ <a href="Collection/CollectionId.php.html#11"><circle cx="420.0" cy="267.5" r="6.0" class="bubble-danger"><title>App\StudyContent\Domain\Model\Collection\CollectionId::__construct — Coverage: 50.0% | Lines: 2 | Complexity: 2</title></circle></a>
+ <a href="ContentItem/ContentBody.php.html#11"><circle cx="420.0" cy="267.5" r="6.0" class="bubble-danger"><title>App\StudyContent\Domain\Model\ContentItem\ContentBody::__construct — Coverage: 50.0% | Lines: 2 | Complexity: 2</title></circle></a>
+ <a href="ContentItem/ContentItem.php.html#363"><circle cx="780.0" cy="308.8" r="6.0" class="bubble-success"><title>App\StudyContent\Domain\Model\ContentItem\ContentItem::markDuplicateOfCanonical — Coverage: 100.0% | Lines: 2 | Complexity: 1</title></circle></a>
+ <a href="ContentItem/ContentItem.php.html#570"><circle cx="60.0" cy="267.5" r="6.0" class="bubble-danger"><title>App\StudyContent\Domain\Model\ContentItem\ContentItem::isPublishable — Coverage: 0.0% | Lines: 2 | Complexity: 2</title></circle></a>
+ <a href="ContentItem/ContentItemId.php.html#11"><circle cx="420.0" cy="267.5" r="6.0" class="bubble-danger"><title>App\StudyContent\Domain\Model\ContentItem\ContentItemId::__construct — Coverage: 50.0% | Lines: 2 | Complexity: 2</title></circle></a>
+ <a href="ContentItem/OwnerId.php.html#11"><circle cx="420.0" cy="267.5" r="6.0" class="bubble-danger"><title>App\StudyContent\Domain\Model\ContentItem\OwnerId::__construct — Coverage: 50.0% | Lines: 2 | Complexity: 2</title></circle></a>
+ <a href="ContentItem/Provenance.php.html#40"><circle cx="780.0" cy="308.8" r="6.0" class="bubble-success"><title>App\StudyContent\Domain\Model\ContentItem\Provenance::manuallyAuthored — Coverage: 100.0% | Lines: 2 | Complexity: 1</title></circle></a>
+ <a href="ContentItem/PublicationPolicy.php.html#18"><circle cx="780.0" cy="308.8" r="6.0" class="bubble-success"><title>App\StudyContent\Domain\Model\ContentItem\PublicationPolicy::standard — Coverage: 100.0% | Lines: 2 | Complexity: 1</title></circle></a>
+ <a href="ContentItem/RevisionNumber.php.html#11"><circle cx="420.0" cy="267.5" r="6.0" class="bubble-danger"><title>App\StudyContent\Domain\Model\ContentItem\RevisionNumber::__construct — Coverage: 50.0% | Lines: 2 | Complexity: 2</title></circle></a>
+ <a href="ContentItem/SourceReference.php.html#11"><circle cx="420.0" cy="226.2" r="6.0" class="bubble-danger"><title>App\StudyContent\Domain\Model\ContentItem\SourceReference::__construct — Coverage: 50.0% | Lines: 2 | Complexity: 3</title></circle></a>
+ <a href="Collection/Collection.php.html#202"><circle cx="60.0" cy="308.8" r="4.3" class="bubble-danger"><title>App\StudyContent\Domain\Model\Collection\Collection::id — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Collection/Collection.php.html#207"><circle cx="60.0" cy="308.8" r="4.3" class="bubble-danger"><title>App\StudyContent\Domain\Model\Collection\Collection::title — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Collection/Collection.php.html#212"><circle cx="60.0" cy="308.8" r="4.3" class="bubble-danger"><title>App\StudyContent\Domain\Model\Collection\Collection::ownerId — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Collection/Collection.php.html#217"><circle cx="780.0" cy="308.8" r="4.3" class="bubble-success"><title>App\StudyContent\Domain\Model\Collection\Collection::scope — Coverage: 100.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Collection/Collection.php.html#222"><circle cx="780.0" cy="308.8" r="4.3" class="bubble-success"><title>App\StudyContent\Domain\Model\Collection\Collection::status — Coverage: 100.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Collection/Collection.php.html#230"><circle cx="780.0" cy="308.8" r="4.3" class="bubble-success"><title>App\StudyContent\Domain\Model\Collection\Collection::entries — Coverage: 100.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Collection/Collection.php.html#238"><circle cx="60.0" cy="308.8" r="4.3" class="bubble-danger"><title>App\StudyContent\Domain\Model\Collection\Collection::publicationHistory — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Collection/Collection.php.html#273"><circle cx="60.0" cy="308.8" r="4.3" class="bubble-danger"><title>App\StudyContent\Domain\Model\Collection\Collection::archivedAt — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Collection/CollectionEntry.php.html#25"><circle cx="780.0" cy="308.8" r="4.3" class="bubble-success"><title>App\StudyContent\Domain\Model\Collection\CollectionEntry::contentItemId — Coverage: 100.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Collection/CollectionEntry.php.html#30"><circle cx="780.0" cy="308.8" r="4.3" class="bubble-success"><title>App\StudyContent\Domain\Model\Collection\CollectionEntry::position — Coverage: 100.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Collection/CollectionEntry.php.html#35"><circle cx="780.0" cy="308.8" r="4.3" class="bubble-success"><title>App\StudyContent\Domain\Model\Collection\CollectionEntry::moveTo — Coverage: 100.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Collection/CollectionEntry.php.html#40"><circle cx="60.0" cy="308.8" r="4.3" class="bubble-danger"><title>App\StudyContent\Domain\Model\Collection\CollectionEntry::addedAt — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Collection/CollectionEntry.php.html#45"><circle cx="60.0" cy="308.8" r="4.3" class="bubble-danger"><title>App\StudyContent\Domain\Model\Collection\CollectionEntry::curationNote — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Collection/CollectionEntry.php.html#50"><circle cx="780.0" cy="308.8" r="4.3" class="bubble-success"><title>App\StudyContent\Domain\Model\Collection\CollectionEntry::sameContent — Coverage: 100.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Collection/CollectionEntryPosition.php.html#18"><circle cx="780.0" cy="308.8" r="4.3" class="bubble-success"><title>App\StudyContent\Domain\Model\Collection\CollectionEntryPosition::toInt — Coverage: 100.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Collection/CollectionEntryPosition.php.html#23"><circle cx="60.0" cy="308.8" r="4.3" class="bubble-danger"><title>App\StudyContent\Domain\Model\Collection\CollectionEntryPosition::equals — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Collection/CollectionId.php.html#18"><circle cx="780.0" cy="308.8" r="4.3" class="bubble-success"><title>App\StudyContent\Domain\Model\Collection\CollectionId::fromString — Coverage: 100.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Collection/CollectionId.php.html#23"><circle cx="60.0" cy="308.8" r="4.3" class="bubble-danger"><title>App\StudyContent\Domain\Model\Collection\CollectionId::equals — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Collection/CollectionId.php.html#28"><circle cx="60.0" cy="308.8" r="4.3" class="bubble-danger"><title>App\StudyContent\Domain\Model\Collection\CollectionId::toString — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Collection/CollectionPublicationRecord.php.html#12"><circle cx="60.0" cy="308.8" r="4.3" class="bubble-danger"><title>App\StudyContent\Domain\Model\Collection\CollectionPublicationRecord::__construct — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Collection/CollectionPublicationRecord.php.html#20"><circle cx="60.0" cy="308.8" r="4.3" class="bubble-danger"><title>App\StudyContent\Domain\Model\Collection\CollectionPublicationRecord::scope — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Collection/CollectionPublicationRecord.php.html#25"><circle cx="60.0" cy="308.8" r="4.3" class="bubble-danger"><title>App\StudyContent\Domain\Model\Collection\CollectionPublicationRecord::publishedBy — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Collection/CollectionPublicationRecord.php.html#30"><circle cx="60.0" cy="308.8" r="4.3" class="bubble-danger"><title>App\StudyContent\Domain\Model\Collection\CollectionPublicationRecord::publishedAt — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Collection/CollectionTitle.php.html#26"><circle cx="60.0" cy="308.8" r="4.3" class="bubble-danger"><title>App\StudyContent\Domain\Model\Collection\CollectionTitle::toString — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="ContentItem/ContentBody.php.html#18"><circle cx="60.0" cy="308.8" r="4.3" class="bubble-danger"><title>App\StudyContent\Domain\Model\ContentItem\ContentBody::toString — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="ContentItem/ContentItem.php.html#491"><circle cx="780.0" cy="308.8" r="4.3" class="bubble-success"><title>App\StudyContent\Domain\Model\ContentItem\ContentItem::id — Coverage: 100.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="ContentItem/ContentItem.php.html#496"><circle cx="60.0" cy="308.8" r="4.3" class="bubble-danger"><title>App\StudyContent\Domain\Model\ContentItem\ContentItem::kind — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="ContentItem/ContentItem.php.html#501"><circle cx="780.0" cy="308.8" r="4.3" class="bubble-success"><title>App\StudyContent\Domain\Model\ContentItem\ContentItem::title — Coverage: 100.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="ContentItem/ContentItem.php.html#506"><circle cx="780.0" cy="308.8" r="4.3" class="bubble-success"><title>App\StudyContent\Domain\Model\ContentItem\ContentItem::body — Coverage: 100.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="ContentItem/ContentItem.php.html#511"><circle cx="60.0" cy="308.8" r="4.3" class="bubble-danger"><title>App\StudyContent\Domain\Model\ContentItem\ContentItem::ownerId — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="ContentItem/ContentItem.php.html#516"><circle cx="780.0" cy="308.8" r="4.3" class="bubble-success"><title>App\StudyContent\Domain\Model\ContentItem\ContentItem::scope — Coverage: 100.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="ContentItem/ContentItem.php.html#521"><circle cx="780.0" cy="308.8" r="4.3" class="bubble-success"><title>App\StudyContent\Domain\Model\ContentItem\ContentItem::lifecycleStatus — Coverage: 100.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="ContentItem/ContentItem.php.html#526"><circle cx="780.0" cy="308.8" r="4.3" class="bubble-success"><title>App\StudyContent\Domain\Model\ContentItem\ContentItem::canonicalStatus — Coverage: 100.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="ContentItem/ContentItem.php.html#531"><circle cx="780.0" cy="308.8" r="4.3" class="bubble-success"><title>App\StudyContent\Domain\Model\ContentItem\ContentItem::provenance — Coverage: 100.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="ContentItem/ContentItem.php.html#536"><circle cx="780.0" cy="308.8" r="4.3" class="bubble-success"><title>App\StudyContent\Domain\Model\ContentItem\ContentItem::supersession — Coverage: 100.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="ContentItem/ContentItem.php.html#541"><circle cx="780.0" cy="308.8" r="4.3" class="bubble-success"><title>App\StudyContent\Domain\Model\ContentItem\ContentItem::revisionNumber — Coverage: 100.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="ContentItem/ContentItem.php.html#549"><circle cx="60.0" cy="308.8" r="4.3" class="bubble-danger"><title>App\StudyContent\Domain\Model\ContentItem\ContentItem::reviewHistory — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="ContentItem/ContentItem.php.html#557"><circle cx="780.0" cy="308.8" r="4.3" class="bubble-success"><title>App\StudyContent\Domain\Model\ContentItem\ContentItem::publicationHistory — Coverage: 100.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="ContentItem/ContentItem.php.html#565"><circle cx="60.0" cy="308.8" r="4.3" class="bubble-danger"><title>App\StudyContent\Domain\Model\ContentItem\ContentItem::relationships — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="ContentItem/ContentItem.php.html#576"><circle cx="60.0" cy="308.8" r="4.3" class="bubble-danger"><title>App\StudyContent\Domain\Model\ContentItem\ContentItem::publicationPolicy — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="ContentItem/ContentItem.php.html#581"><circle cx="60.0" cy="308.8" r="4.3" class="bubble-danger"><title>App\StudyContent\Domain\Model\ContentItem\ContentItem::approvedAt — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="ContentItem/ContentItem.php.html#586"><circle cx="60.0" cy="308.8" r="4.3" class="bubble-danger"><title>App\StudyContent\Domain\Model\ContentItem\ContentItem::blockedAt — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="ContentItem/ContentItem.php.html#591"><circle cx="60.0" cy="308.8" r="4.3" class="bubble-danger"><title>App\StudyContent\Domain\Model\ContentItem\ContentItem::archivedAt — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="ContentItem/ContentItemId.php.html#18"><circle cx="780.0" cy="308.8" r="4.3" class="bubble-success"><title>App\StudyContent\Domain\Model\ContentItem\ContentItemId::fromString — Coverage: 100.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="ContentItem/ContentItemId.php.html#23"><circle cx="780.0" cy="308.8" r="4.3" class="bubble-success"><title>App\StudyContent\Domain\Model\ContentItem\ContentItemId::equals — Coverage: 100.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="ContentItem/ContentItemId.php.html#28"><circle cx="780.0" cy="308.8" r="4.3" class="bubble-success"><title>App\StudyContent\Domain\Model\ContentItem\ContentItemId::toString — Coverage: 100.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="ContentItem/ContentTitle.php.html#24"><circle cx="60.0" cy="308.8" r="4.3" class="bubble-danger"><title>App\StudyContent\Domain\Model\ContentItem\ContentTitle::toString — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="ContentItem/LifecycleStatus.php.html#21"><circle cx="60.0" cy="308.8" r="4.3" class="bubble-danger"><title>App\StudyContent\Domain\Model\ContentItem\LifecycleStatus::isTerminalLike — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="ContentItem/OwnerId.php.html#18"><circle cx="60.0" cy="308.8" r="4.3" class="bubble-danger"><title>App\StudyContent\Domain\Model\ContentItem\OwnerId::toString — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="ContentItem/PolicyDecisionReason.php.html#26"><circle cx="60.0" cy="308.8" r="4.3" class="bubble-danger"><title>App\StudyContent\Domain\Model\ContentItem\PolicyDecisionReason::toString — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="ContentItem/Provenance.php.html#18"><circle cx="780.0" cy="308.8" r="4.3" class="bubble-success"><title>App\StudyContent\Domain\Model\ContentItem\Provenance::__construct — Coverage: 100.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="ContentItem/Provenance.php.html#23"><circle cx="780.0" cy="308.8" r="4.3" class="bubble-success"><title>App\StudyContent\Domain\Model\ContentItem\Provenance::imported — Coverage: 100.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="ContentItem/Provenance.php.html#49"><circle cx="780.0" cy="308.8" r="4.3" class="bubble-success"><title>App\StudyContent\Domain\Model\ContentItem\Provenance::sources — Coverage: 100.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="ContentItem/Provenance.php.html#54"><circle cx="60.0" cy="308.8" r="4.3" class="bubble-danger"><title>App\StudyContent\Domain\Model\ContentItem\Provenance::hasAtLeastOneSource — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="ContentItem/ProvenanceSource.php.html#11"><circle cx="780.0" cy="308.8" r="4.3" class="bubble-success"><title>App\StudyContent\Domain\Model\ContentItem\ProvenanceSource::__construct — Coverage: 100.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="ContentItem/ProvenanceSource.php.html#19"><circle cx="780.0" cy="308.8" r="4.3" class="bubble-success"><title>App\StudyContent\Domain\Model\ContentItem\ProvenanceSource::importedFrom — Coverage: 100.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="ContentItem/ProvenanceSource.php.html#27"><circle cx="60.0" cy="308.8" r="4.3" class="bubble-danger"><title>App\StudyContent\Domain\Model\ContentItem\ProvenanceSource::derivedFrom — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="ContentItem/ProvenanceSource.php.html#36"><circle cx="780.0" cy="308.8" r="4.3" class="bubble-success"><title>App\StudyContent\Domain\Model\ContentItem\ProvenanceSource::source — Coverage: 100.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="ContentItem/ProvenanceSource.php.html#41"><circle cx="60.0" cy="308.8" r="4.3" class="bubble-danger"><title>App\StudyContent\Domain\Model\ContentItem\ProvenanceSource::method — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="ContentItem/ProvenanceSource.php.html#46"><circle cx="60.0" cy="308.8" r="4.3" class="bubble-danger"><title>App\StudyContent\Domain\Model\ContentItem\ProvenanceSource::recordedAt — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="ContentItem/PublicationPolicy.php.html#9"><circle cx="780.0" cy="308.8" r="4.3" class="bubble-success"><title>App\StudyContent\Domain\Model\ContentItem\PublicationPolicy::__construct — Coverage: 100.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="ContentItem/PublicationPolicy.php.html#24"><circle cx="780.0" cy="308.8" r="4.3" class="bubble-success"><title>App\StudyContent\Domain\Model\ContentItem\PublicationPolicy::requiresApproval — Coverage: 100.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="ContentItem/PublicationRecord.php.html#11"><circle cx="780.0" cy="308.8" r="4.3" class="bubble-success"><title>App\StudyContent\Domain\Model\ContentItem\PublicationRecord::__construct — Coverage: 100.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="ContentItem/PublicationRecord.php.html#20"><circle cx="60.0" cy="308.8" r="4.3" class="bubble-danger"><title>App\StudyContent\Domain\Model\ContentItem\PublicationRecord::channel — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="ContentItem/PublicationRecord.php.html#25"><circle cx="60.0" cy="308.8" r="4.3" class="bubble-danger"><title>App\StudyContent\Domain\Model\ContentItem\PublicationRecord::scope — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="ContentItem/PublicationRecord.php.html#30"><circle cx="60.0" cy="308.8" r="4.3" class="bubble-danger"><title>App\StudyContent\Domain\Model\ContentItem\PublicationRecord::publishedBy — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="ContentItem/PublicationRecord.php.html#35"><circle cx="60.0" cy="308.8" r="4.3" class="bubble-danger"><title>App\StudyContent\Domain\Model\ContentItem\PublicationRecord::publishedAt — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="ContentItem/Relationship.php.html#11"><circle cx="780.0" cy="308.8" r="4.3" class="bubble-success"><title>App\StudyContent\Domain\Model\ContentItem\Relationship::__construct — Coverage: 100.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="ContentItem/Relationship.php.html#19"><circle cx="60.0" cy="308.8" r="4.3" class="bubble-danger"><title>App\StudyContent\Domain\Model\ContentItem\Relationship::type — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="ContentItem/Relationship.php.html#24"><circle cx="60.0" cy="308.8" r="4.3" class="bubble-danger"><title>App\StudyContent\Domain\Model\ContentItem\Relationship::targetId — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="ContentItem/Relationship.php.html#29"><circle cx="60.0" cy="308.8" r="4.3" class="bubble-danger"><title>App\StudyContent\Domain\Model\ContentItem\Relationship::recordedAt — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="ContentItem/Relationship.php.html#34"><circle cx="60.0" cy="267.5" r="4.3" class="bubble-danger"><title>App\StudyContent\Domain\Model\ContentItem\Relationship::sameAs — Coverage: 0.0% | Lines: 1 | Complexity: 2</title></circle></a>
+ <a href="ContentItem/RelationshipType.php.html#18"><circle cx="780.0" cy="308.8" r="4.3" class="bubble-success"><title>App\StudyContent\Domain\Model\ContentItem\RelationshipType::forbidsSelfReference — Coverage: 100.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="ContentItem/ReviewRecord.php.html#11"><circle cx="780.0" cy="308.8" r="4.3" class="bubble-success"><title>App\StudyContent\Domain\Model\ContentItem\ReviewRecord::__construct — Coverage: 100.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="ContentItem/ReviewRecord.php.html#20"><circle cx="60.0" cy="308.8" r="4.3" class="bubble-danger"><title>App\StudyContent\Domain\Model\ContentItem\ReviewRecord::reviewerId — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="ContentItem/ReviewRecord.php.html#25"><circle cx="60.0" cy="308.8" r="4.3" class="bubble-danger"><title>App\StudyContent\Domain\Model\ContentItem\ReviewRecord::outcome — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="ContentItem/ReviewRecord.php.html#30"><circle cx="60.0" cy="308.8" r="4.3" class="bubble-danger"><title>App\StudyContent\Domain\Model\ContentItem\ReviewRecord::reason — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="ContentItem/ReviewRecord.php.html#35"><circle cx="60.0" cy="308.8" r="4.3" class="bubble-danger"><title>App\StudyContent\Domain\Model\ContentItem\ReviewRecord::reviewedAt — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="ContentItem/RevisionNumber.php.html#18"><circle cx="780.0" cy="308.8" r="4.3" class="bubble-success"><title>App\StudyContent\Domain\Model\ContentItem\RevisionNumber::first — Coverage: 100.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="ContentItem/RevisionNumber.php.html#23"><circle cx="780.0" cy="308.8" r="4.3" class="bubble-success"><title>App\StudyContent\Domain\Model\ContentItem\RevisionNumber::next — Coverage: 100.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="ContentItem/RevisionNumber.php.html#28"><circle cx="780.0" cy="308.8" r="4.3" class="bubble-success"><title>App\StudyContent\Domain\Model\ContentItem\RevisionNumber::toInt — Coverage: 100.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="ContentItem/SourceReference.php.html#21"><circle cx="780.0" cy="308.8" r="4.3" class="bubble-success"><title>App\StudyContent\Domain\Model\ContentItem\SourceReference::uploadedFile — Coverage: 100.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="ContentItem/SourceReference.php.html#26"><circle cx="60.0" cy="308.8" r="4.3" class="bubble-danger"><title>App\StudyContent\Domain\Model\ContentItem\SourceReference::externalUrl — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="ContentItem/SourceReference.php.html#31"><circle cx="780.0" cy="308.8" r="4.3" class="bubble-success"><title>App\StudyContent\Domain\Model\ContentItem\SourceReference::manualAuthorship — Coverage: 100.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="ContentItem/SourceReference.php.html#36"><circle cx="60.0" cy="308.8" r="4.3" class="bubble-danger"><title>App\StudyContent\Domain\Model\ContentItem\SourceReference::type — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="ContentItem/SourceReference.php.html#41"><circle cx="60.0" cy="308.8" r="4.3" class="bubble-danger"><title>App\StudyContent\Domain\Model\ContentItem\SourceReference::value — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="ContentItem/Supersession.php.html#11"><circle cx="60.0" cy="308.8" r="4.3" class="bubble-danger"><title>App\StudyContent\Domain\Model\ContentItem\Supersession::__construct — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="ContentItem/Supersession.php.html#18"><circle cx="60.0" cy="308.8" r="4.3" class="bubble-danger"><title>App\StudyContent\Domain\Model\ContentItem\Supersession::successorId — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="ContentItem/Supersession.php.html#23"><circle cx="60.0" cy="308.8" r="4.3" class="bubble-danger"><title>App\StudyContent\Domain\Model\ContentItem\Supersession::supersededAt — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Subject/Subject.php.html#9"><circle cx="60.0" cy="308.8" r="4.3" class="bubble-danger"><title>App\StudyContent\Domain\Model\Subject\Subject::__construct — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Subject/SubjectCode.php.html#9"><circle cx="60.0" cy="308.8" r="4.3" class="bubble-danger"><title>App\StudyContent\Domain\Model\Subject\SubjectCode::__construct — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Subject/SubjectId.php.html#9"><circle cx="60.0" cy="308.8" r="4.3" class="bubble-danger"><title>App\StudyContent\Domain\Model\Subject\SubjectId::__construct — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Subject/SubjectName.php.html#9"><circle cx="60.0" cy="308.8" r="4.3" class="bubble-danger"><title>App\StudyContent\Domain\Model\Subject\SubjectName::__construct — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Tag/Tag.php.html#9"><circle cx="60.0" cy="308.8" r="4.3" class="bubble-danger"><title>App\StudyContent\Domain\Model\Tag\Tag::__construct — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Tag/TagColor.php.html#9"><circle cx="60.0" cy="308.8" r="4.3" class="bubble-danger"><title>App\StudyContent\Domain\Model\Tag\TagColor::__construct — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Tag/TagId.php.html#9"><circle cx="60.0" cy="308.8" r="4.3" class="bubble-danger"><title>App\StudyContent\Domain\Model\Tag\TagId::__construct — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Tag/TagName.php.html#9"><circle cx="60.0" cy="308.8" r="4.3" class="bubble-danger"><title>App\StudyContent\Domain\Model\Tag\TagName::__construct — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+</svg>
+     </div>
+    </div>
+    <div class="col-md-6 dashboard-column">
+     <h3>&nbsp;</h3>
+     <p class="text-muted small">Sorted by descending CRAP (Change Risk Anti-Patterns) index.</p>
+     <div class="scrollbox">
+<table class="table">
+ <thead>
+  <tr>
+   <th>Method</th>
+   <th class="text-right"><abbr title="Change Risk Anti-Patterns (CRAP) Index">CRAP</abbr></th>
+   <th class="text-right">Coverage</th>
+  </tr>
+ </thead>
+ <tbody>
+  <tr><td><a href="Collection/Collection.php.html#94">App\StudyContent\Domain\Model\Collection\Collection::removeEntry</a></td><td class="text-right">42</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Collection/Collection.php.html#166">App\StudyContent\Domain\Model\Collection\Collection::publish</a></td><td class="text-right">12</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="ContentItem/ContentItem.php.html#265">App\StudyContent\Domain\Model\ContentItem\ContentItem::publish</a></td><td class="text-right">7.54</td><td class="text-right">77.8%</td></tr>
+  <tr><td><a href="Collection/Collection.php.html#126">App\StudyContent\Domain\Model\Collection\Collection::reorder</a></td><td class="text-right">7.19</td><td class="text-right">84.2%</td></tr>
+  <tr><td><a href="Collection/Collection.php.html#58">App\StudyContent\Domain\Model\Collection\Collection::rename</a></td><td class="text-right">6</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Collection/Collection.php.html#190">App\StudyContent\Domain\Model\Collection\Collection::archive</a></td><td class="text-right">6</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="ContentItem/ContentItem.php.html#142">App\StudyContent\Domain\Model\ContentItem\ContentItem::createDerivative</a></td><td class="text-right">6</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="ContentItem/ContentItem.php.html#243">App\StudyContent\Domain\Model\ContentItem\ContentItem::reject</a></td><td class="text-right">6</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="ContentItem/ContentItem.php.html#304">App\StudyContent\Domain\Model\ContentItem\ContentItem::block</a></td><td class="text-right">6</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="ContentItem/ContentItem.php.html#325">App\StudyContent\Domain\Model\ContentItem\ContentItem::deprecate</a></td><td class="text-right">6</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="ContentItem/ContentItem.php.html#340">App\StudyContent\Domain\Model\ContentItem\ContentItem::archive</a></td><td class="text-right">6</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="ContentItem/ContentItem.php.html#354">App\StudyContent\Domain\Model\ContentItem\ContentItem::markCanonical</a></td><td class="text-right">6</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="ContentItem/ContentItem.php.html#570">App\StudyContent\Domain\Model\ContentItem\ContentItem::isPublishable</a></td><td class="text-right">6</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="ContentItem/Provenance.php.html#31">App\StudyContent\Domain\Model\ContentItem\Provenance::derived</a></td><td class="text-right">6</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="ContentItem/Relationship.php.html#34">App\StudyContent\Domain\Model\ContentItem\Relationship::sameAs</a></td><td class="text-right">6</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="ContentItem/ContentItem.php.html#372">App\StudyContent\Domain\Model\ContentItem\ContentItem::addRelationship</a></td><td class="text-right">5.93</td><td class="text-right">66.7%</td></tr>
+  <tr><td><a href="ContentItem/PublicationPolicy.php.html#29">App\StudyContent\Domain\Model\ContentItem\PublicationPolicy::allowsScope</a></td><td class="text-right">4.59</td><td class="text-right">66.7%</td></tr>
+  <tr><td><a href="Collection/CollectionEntry.php.html#13">App\StudyContent\Domain\Model\Collection\CollectionEntry::__construct</a></td><td class="text-right">4.12</td><td class="text-right">50.0%</td></tr>
+  <tr><td><a href="ContentItem/SourceReference.php.html#11">App\StudyContent\Domain\Model\ContentItem\SourceReference::__construct</a></td><td class="text-right">4.12</td><td class="text-right">50.0%</td></tr>
+  <tr><td><a href="ContentItem/ContentItem.php.html#421">App\StudyContent\Domain\Model\ContentItem\ContentItem::revise</a></td><td class="text-right">4.02</td><td class="text-right">88.9%</td></tr>
+  <tr><td><a href="Collection/Collection.php.html#67">App\StudyContent\Domain\Model\Collection\Collection::addEntry</a></td><td class="text-right">4.01</td><td class="text-right">90.9%</td></tr>
+  <tr><td><a href="Collection/CollectionTitle.php.html#11">App\StudyContent\Domain\Model\Collection\CollectionTitle::__construct</a></td><td class="text-right">3.33</td><td class="text-right">66.7%</td></tr>
+  <tr><td><a href="ContentItem/ContentItem.php.html#184">App\StudyContent\Domain\Model\ContentItem\ContentItem::markProcessed</a></td><td class="text-right">3.33</td><td class="text-right">66.7%</td></tr>
+  <tr><td><a href="ContentItem/ContentTitle.php.html#9">App\StudyContent\Domain\Model\ContentItem\ContentTitle::__construct</a></td><td class="text-right">3.33</td><td class="text-right">66.7%</td></tr>
+  <tr><td><a href="ContentItem/PolicyDecisionReason.php.html#11">App\StudyContent\Domain\Model\ContentItem\PolicyDecisionReason::__construct</a></td><td class="text-right">3.33</td><td class="text-right">66.7%</td></tr>
+  <tr><td><a href="Collection/CollectionEntryPosition.php.html#11">App\StudyContent\Domain\Model\Collection\CollectionEntryPosition::__construct</a></td><td class="text-right">2.50</td><td class="text-right">50.0%</td></tr>
+  <tr><td><a href="Collection/CollectionId.php.html#11">App\StudyContent\Domain\Model\Collection\CollectionId::__construct</a></td><td class="text-right">2.50</td><td class="text-right">50.0%</td></tr>
+  <tr><td><a href="ContentItem/ContentBody.php.html#11">App\StudyContent\Domain\Model\ContentItem\ContentBody::__construct</a></td><td class="text-right">2.50</td><td class="text-right">50.0%</td></tr>
+  <tr><td><a href="ContentItem/ContentItemId.php.html#11">App\StudyContent\Domain\Model\ContentItem\ContentItemId::__construct</a></td><td class="text-right">2.50</td><td class="text-right">50.0%</td></tr>
+  <tr><td><a href="ContentItem/OwnerId.php.html#11">App\StudyContent\Domain\Model\ContentItem\OwnerId::__construct</a></td><td class="text-right">2.50</td><td class="text-right">50.0%</td></tr>
+  <tr><td><a href="ContentItem/RevisionNumber.php.html#11">App\StudyContent\Domain\Model\ContentItem\RevisionNumber::__construct</a></td><td class="text-right">2.50</td><td class="text-right">50.0%</td></tr>
+  <tr><td><a href="ContentItem/ContentItem.php.html#206">App\StudyContent\Domain\Model\ContentItem\ContentItem::submitForReview</a></td><td class="text-right">2.09</td><td class="text-right">71.4%</td></tr>
+  <tr><td><a href="ContentItem/ContentItem.php.html#221">App\StudyContent\Domain\Model\ContentItem\ContentItem::approve</a></td><td class="text-right">2.01</td><td class="text-right">88.9%</td></tr>
+  <tr><td><a href="Collection/Collection.php.html#202">App\StudyContent\Domain\Model\Collection\Collection::id</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Collection/Collection.php.html#207">App\StudyContent\Domain\Model\Collection\Collection::title</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Collection/Collection.php.html#212">App\StudyContent\Domain\Model\Collection\Collection::ownerId</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Collection/Collection.php.html#238">App\StudyContent\Domain\Model\Collection\Collection::publicationHistory</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Collection/Collection.php.html#247">App\StudyContent\Domain\Model\Collection\Collection::reconstitute</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Collection/Collection.php.html#273">App\StudyContent\Domain\Model\Collection\Collection::archivedAt</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Collection/CollectionEntry.php.html#40">App\StudyContent\Domain\Model\Collection\CollectionEntry::addedAt</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Collection/CollectionEntry.php.html#45">App\StudyContent\Domain\Model\Collection\CollectionEntry::curationNote</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Collection/CollectionEntryPosition.php.html#23">App\StudyContent\Domain\Model\Collection\CollectionEntryPosition::equals</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Collection/CollectionId.php.html#23">App\StudyContent\Domain\Model\Collection\CollectionId::equals</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Collection/CollectionId.php.html#28">App\StudyContent\Domain\Model\Collection\CollectionId::toString</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Collection/CollectionPublicationRecord.php.html#12">App\StudyContent\Domain\Model\Collection\CollectionPublicationRecord::__construct</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Collection/CollectionPublicationRecord.php.html#20">App\StudyContent\Domain\Model\Collection\CollectionPublicationRecord::scope</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Collection/CollectionPublicationRecord.php.html#25">App\StudyContent\Domain\Model\Collection\CollectionPublicationRecord::publishedBy</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Collection/CollectionPublicationRecord.php.html#30">App\StudyContent\Domain\Model\Collection\CollectionPublicationRecord::publishedAt</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Collection/CollectionTitle.php.html#26">App\StudyContent\Domain\Model\Collection\CollectionTitle::toString</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="ContentItem/ContentBody.php.html#18">App\StudyContent\Domain\Model\ContentItem\ContentBody::toString</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="ContentItem/ContentItem.php.html#446">App\StudyContent\Domain\Model\ContentItem\ContentItem::reconstitute</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="ContentItem/ContentItem.php.html#496">App\StudyContent\Domain\Model\ContentItem\ContentItem::kind</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="ContentItem/ContentItem.php.html#511">App\StudyContent\Domain\Model\ContentItem\ContentItem::ownerId</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="ContentItem/ContentItem.php.html#549">App\StudyContent\Domain\Model\ContentItem\ContentItem::reviewHistory</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="ContentItem/ContentItem.php.html#565">App\StudyContent\Domain\Model\ContentItem\ContentItem::relationships</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="ContentItem/ContentItem.php.html#576">App\StudyContent\Domain\Model\ContentItem\ContentItem::publicationPolicy</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="ContentItem/ContentItem.php.html#581">App\StudyContent\Domain\Model\ContentItem\ContentItem::approvedAt</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="ContentItem/ContentItem.php.html#586">App\StudyContent\Domain\Model\ContentItem\ContentItem::blockedAt</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="ContentItem/ContentItem.php.html#591">App\StudyContent\Domain\Model\ContentItem\ContentItem::archivedAt</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="ContentItem/ContentTitle.php.html#24">App\StudyContent\Domain\Model\ContentItem\ContentTitle::toString</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="ContentItem/LifecycleStatus.php.html#21">App\StudyContent\Domain\Model\ContentItem\LifecycleStatus::isTerminalLike</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="ContentItem/OwnerId.php.html#18">App\StudyContent\Domain\Model\ContentItem\OwnerId::toString</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="ContentItem/PolicyDecisionReason.php.html#26">App\StudyContent\Domain\Model\ContentItem\PolicyDecisionReason::toString</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="ContentItem/Provenance.php.html#54">App\StudyContent\Domain\Model\ContentItem\Provenance::hasAtLeastOneSource</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="ContentItem/ProvenanceSource.php.html#27">App\StudyContent\Domain\Model\ContentItem\ProvenanceSource::derivedFrom</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="ContentItem/ProvenanceSource.php.html#41">App\StudyContent\Domain\Model\ContentItem\ProvenanceSource::method</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="ContentItem/ProvenanceSource.php.html#46">App\StudyContent\Domain\Model\ContentItem\ProvenanceSource::recordedAt</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="ContentItem/PublicationRecord.php.html#20">App\StudyContent\Domain\Model\ContentItem\PublicationRecord::channel</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="ContentItem/PublicationRecord.php.html#25">App\StudyContent\Domain\Model\ContentItem\PublicationRecord::scope</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="ContentItem/PublicationRecord.php.html#30">App\StudyContent\Domain\Model\ContentItem\PublicationRecord::publishedBy</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="ContentItem/PublicationRecord.php.html#35">App\StudyContent\Domain\Model\ContentItem\PublicationRecord::publishedAt</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="ContentItem/Relationship.php.html#19">App\StudyContent\Domain\Model\ContentItem\Relationship::type</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="ContentItem/Relationship.php.html#24">App\StudyContent\Domain\Model\ContentItem\Relationship::targetId</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="ContentItem/Relationship.php.html#29">App\StudyContent\Domain\Model\ContentItem\Relationship::recordedAt</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="ContentItem/ReviewRecord.php.html#20">App\StudyContent\Domain\Model\ContentItem\ReviewRecord::reviewerId</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="ContentItem/ReviewRecord.php.html#25">App\StudyContent\Domain\Model\ContentItem\ReviewRecord::outcome</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="ContentItem/ReviewRecord.php.html#30">App\StudyContent\Domain\Model\ContentItem\ReviewRecord::reason</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="ContentItem/ReviewRecord.php.html#35">App\StudyContent\Domain\Model\ContentItem\ReviewRecord::reviewedAt</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="ContentItem/SourceReference.php.html#26">App\StudyContent\Domain\Model\ContentItem\SourceReference::externalUrl</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="ContentItem/SourceReference.php.html#36">App\StudyContent\Domain\Model\ContentItem\SourceReference::type</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="ContentItem/SourceReference.php.html#41">App\StudyContent\Domain\Model\ContentItem\SourceReference::value</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="ContentItem/Supersession.php.html#11">App\StudyContent\Domain\Model\ContentItem\Supersession::__construct</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="ContentItem/Supersession.php.html#18">App\StudyContent\Domain\Model\ContentItem\Supersession::successorId</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="ContentItem/Supersession.php.html#23">App\StudyContent\Domain\Model\ContentItem\Supersession::supersededAt</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Subject/Subject.php.html#9">App\StudyContent\Domain\Model\Subject\Subject::__construct</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Subject/SubjectCode.php.html#9">App\StudyContent\Domain\Model\Subject\SubjectCode::__construct</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Subject/SubjectId.php.html#9">App\StudyContent\Domain\Model\Subject\SubjectId::__construct</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Subject/SubjectName.php.html#9">App\StudyContent\Domain\Model\Subject\SubjectName::__construct</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Tag/Tag.php.html#9">App\StudyContent\Domain\Model\Tag\Tag::__construct</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Tag/TagColor.php.html#9">App\StudyContent\Domain\Model\Tag\TagColor::__construct</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Tag/TagId.php.html#9">App\StudyContent\Domain\Model\Tag\TagId::__construct</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Tag/TagName.php.html#9">App\StudyContent\Domain\Model\Tag\TagName::__construct</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Collection/Collection.php.html#32">App\StudyContent\Domain\Model\Collection\Collection::__construct</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="Collection/Collection.php.html#47">App\StudyContent\Domain\Model\Collection\Collection::create</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="Collection/Collection.php.html#217">App\StudyContent\Domain\Model\Collection\Collection::scope</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="Collection/Collection.php.html#222">App\StudyContent\Domain\Model\Collection\Collection::status</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="Collection/Collection.php.html#230">App\StudyContent\Domain\Model\Collection\Collection::entries</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="Collection/CollectionEntry.php.html#25">App\StudyContent\Domain\Model\Collection\CollectionEntry::contentItemId</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="Collection/CollectionEntry.php.html#30">App\StudyContent\Domain\Model\Collection\CollectionEntry::position</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="Collection/CollectionEntry.php.html#35">App\StudyContent\Domain\Model\Collection\CollectionEntry::moveTo</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="Collection/CollectionEntry.php.html#50">App\StudyContent\Domain\Model\Collection\CollectionEntry::sameContent</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="Collection/CollectionEntryPosition.php.html#18">App\StudyContent\Domain\Model\Collection\CollectionEntryPosition::toInt</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="Collection/CollectionId.php.html#18">App\StudyContent\Domain\Model\Collection\CollectionId::fromString</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="ContentItem/ContentItem.php.html#51">App\StudyContent\Domain\Model\ContentItem\ContentItem::__construct</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="ContentItem/ContentItem.php.html#78">App\StudyContent\Domain\Model\ContentItem\ContentItem::importSourceMaterial</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="ContentItem/ContentItem.php.html#111">App\StudyContent\Domain\Model\ContentItem\ContentItem::createDraft</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="ContentItem/ContentItem.php.html#363">App\StudyContent\Domain\Model\ContentItem\ContentItem::markDuplicateOfCanonical</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="ContentItem/ContentItem.php.html#491">App\StudyContent\Domain\Model\ContentItem\ContentItem::id</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="ContentItem/ContentItem.php.html#501">App\StudyContent\Domain\Model\ContentItem\ContentItem::title</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="ContentItem/ContentItem.php.html#506">App\StudyContent\Domain\Model\ContentItem\ContentItem::body</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="ContentItem/ContentItem.php.html#516">App\StudyContent\Domain\Model\ContentItem\ContentItem::scope</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="ContentItem/ContentItem.php.html#521">App\StudyContent\Domain\Model\ContentItem\ContentItem::lifecycleStatus</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="ContentItem/ContentItem.php.html#526">App\StudyContent\Domain\Model\ContentItem\ContentItem::canonicalStatus</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="ContentItem/ContentItem.php.html#531">App\StudyContent\Domain\Model\ContentItem\ContentItem::provenance</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="ContentItem/ContentItem.php.html#536">App\StudyContent\Domain\Model\ContentItem\ContentItem::supersession</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="ContentItem/ContentItem.php.html#541">App\StudyContent\Domain\Model\ContentItem\ContentItem::revisionNumber</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="ContentItem/ContentItem.php.html#557">App\StudyContent\Domain\Model\ContentItem\ContentItem::publicationHistory</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="ContentItem/ContentItemId.php.html#18">App\StudyContent\Domain\Model\ContentItem\ContentItemId::fromString</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="ContentItem/ContentItemId.php.html#23">App\StudyContent\Domain\Model\ContentItem\ContentItemId::equals</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="ContentItem/ContentItemId.php.html#28">App\StudyContent\Domain\Model\ContentItem\ContentItemId::toString</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="ContentItem/Provenance.php.html#18">App\StudyContent\Domain\Model\ContentItem\Provenance::__construct</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="ContentItem/Provenance.php.html#23">App\StudyContent\Domain\Model\ContentItem\Provenance::imported</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="ContentItem/Provenance.php.html#40">App\StudyContent\Domain\Model\ContentItem\Provenance::manuallyAuthored</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="ContentItem/Provenance.php.html#49">App\StudyContent\Domain\Model\ContentItem\Provenance::sources</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="ContentItem/ProvenanceSource.php.html#11">App\StudyContent\Domain\Model\ContentItem\ProvenanceSource::__construct</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="ContentItem/ProvenanceSource.php.html#19">App\StudyContent\Domain\Model\ContentItem\ProvenanceSource::importedFrom</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="ContentItem/ProvenanceSource.php.html#36">App\StudyContent\Domain\Model\ContentItem\ProvenanceSource::source</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="ContentItem/PublicationPolicy.php.html#9">App\StudyContent\Domain\Model\ContentItem\PublicationPolicy::__construct</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="ContentItem/PublicationPolicy.php.html#18">App\StudyContent\Domain\Model\ContentItem\PublicationPolicy::standard</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="ContentItem/PublicationPolicy.php.html#24">App\StudyContent\Domain\Model\ContentItem\PublicationPolicy::requiresApproval</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="ContentItem/PublicationRecord.php.html#11">App\StudyContent\Domain\Model\ContentItem\PublicationRecord::__construct</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="ContentItem/Relationship.php.html#11">App\StudyContent\Domain\Model\ContentItem\Relationship::__construct</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="ContentItem/RelationshipType.php.html#18">App\StudyContent\Domain\Model\ContentItem\RelationshipType::forbidsSelfReference</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="ContentItem/ReviewRecord.php.html#11">App\StudyContent\Domain\Model\ContentItem\ReviewRecord::__construct</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="ContentItem/RevisionNumber.php.html#18">App\StudyContent\Domain\Model\ContentItem\RevisionNumber::first</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="ContentItem/RevisionNumber.php.html#23">App\StudyContent\Domain\Model\ContentItem\RevisionNumber::next</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="ContentItem/RevisionNumber.php.html#28">App\StudyContent\Domain\Model\ContentItem\RevisionNumber::toInt</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="ContentItem/SourceReference.php.html#21">App\StudyContent\Domain\Model\ContentItem\SourceReference::uploadedFile</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="ContentItem/SourceReference.php.html#31">App\StudyContent\Domain\Model\ContentItem\SourceReference::manualAuthorship</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+ </tbody>
+</table>
+     </div>
+    </div>
+   </div>
+   <footer>
+    <hr/>
+    <p>
+     <small>Generated by <a href="https://github.com/sebastianbergmann/php-code-coverage" target="_top">php-code-coverage 14.1.1</a> using <a href="https://www.php.net/" target="_top">PHP 8.5.5</a> and <a href="https://phpunit.de/">PHPUnit 13.1.3</a> at Wed Apr 22 21:20:07 UTC 2026.</small>
+    </p>
+   </footer>
+  </div>
+ </body>
+</html>

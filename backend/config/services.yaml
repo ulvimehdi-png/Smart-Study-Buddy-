@@ -31,3 +31,26 @@ services:
   App\Feature\User\Factory\SettingsFactory:
     arguments:
       $defaultTimezone: '%app.timezone%'
+
+  App\StudyContent\Application\Port\ContentItemIdentityGenerator:
+    class: App\StudyContent\Infrastructure\Persistence\Doctrine\Identity\UuidContentItemIdentityGenerator
+
+  App\StudyContent\Application\Port\CollectionIdentityGenerator:
+    class: App\StudyContent\Infrastructure\Persistence\Doctrine\Identity\UuidCollectionIdentityGenerator
+
+  App\StudyContent\Domain\Repository\ContentItemRepository:
+    class: App\StudyContent\Infrastructure\Persistence\Doctrine\Repository\DoctrineContentItemRepository
+
+  App\StudyContent\Domain\Repository\CollectionRepository:
+    class: App\StudyContent\Infrastructure\Persistence\Doctrine\Repository\DoctrineCollectionRepository
+
+  App\StudyContent\Infrastructure\Persistence\Doctrine\Mapper\ContentItemMapper:
+    class: App\StudyContent\Infrastructure\Persistence\Doctrine\Mapper\DoctrineContentItemMapper
+
+  App\StudyContent\Infrastructure\Persistence\Doctrine\Mapper\CollectionMapper:
+    class: App\StudyContent\Infrastructure\Persistence\Doctrine\Mapper\DoctrineCollectionMapper
+
+  App\StudyContent\Application\Port\TransactionRunner:
+    class: App\StudyContent\Infrastructure\Persistence\Doctrine\Transaction\DoctrineTransactionRunner
+
+  #EventBus && BinaryAssetGateway

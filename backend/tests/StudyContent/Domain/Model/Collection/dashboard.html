@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <title>Dashboard for /app/src/StudyContent/Domain/Model/Collection</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="../../../../_css/bootstrap.min.css?v=14.1.1" rel="stylesheet" type="text/css">
+  <link href="../../../../_css/style.css?v=14.1.1" rel="stylesheet" type="text/css">
+  <link href="../../../../_css/custom.css" rel="stylesheet" type="text/css">
+ </head>
+ <body>
+  <header>
+   <div class="container-fluid">
+    <div class="row">
+     <div class="col-md-12">
+      <nav aria-label="breadcrumb">
+       <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="../../../../index.html">/app/src</a></li>
+         <li class="breadcrumb-item"><a href="../../../index.html">StudyContent</a></li>
+         <li class="breadcrumb-item"><a href="../../index.html">Domain</a></li>
+         <li class="breadcrumb-item"><a href="../index.html">Model</a></li>
+         <li class="breadcrumb-item"><a href="index.html">Collection</a></li>
+         <li class="breadcrumb-item active">(Dashboard)</li>
+
+       </ol>
+      </nav>
+     </div>
+    </div>
+   </div>
+  </header>
+  <div class="container-fluid">
+   <div class="row dashboard-row">
+    <div class="col-md-6">
+     <h3>Classes</h3>
+     <p class="text-muted small">Bubble size = executable lines. Hover for details, click to navigate.</p>
+     <div class="file-coverage-chart">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400" preserveAspectRatio="xMidYMid meet">
+ <style>
+  .bubble-success { fill: var(--phpunit-success-bar); opacity: 0.7; }
+  .bubble-warning { fill: var(--phpunit-warning-bar); opacity: 0.7; }
+  .bubble-danger { fill: var(--phpunit-danger-bar); opacity: 0.7; }
+  .bubble-success:hover, .bubble-warning:hover, .bubble-danger:hover { opacity: 1; stroke: var(--bs-emphasis-color); stroke-width: 1.5; }
+  .chart-grid { stroke: var(--bs-border-color); stroke-width: 0.5; stroke-dasharray: 4,4; opacity: 0.5; }
+  .chart-axis { stroke: var(--bs-border-color); stroke-width: 1; }
+  .chart-label { fill: var(--bs-body-color); font-size: 11px; font-family: var(--bs-font-sans-serif, sans-serif); }
+  .chart-title { fill: var(--bs-body-color); font-size: 12px; font-family: var(--bs-font-sans-serif, sans-serif); }
+ </style>
+ <line x1="60.0" y1="20" x2="60.0" y2="350" class="chart-grid"/>
+ <text x="60.0" y="368" text-anchor="middle" class="chart-label">0%</text>
+ <line x1="204.0" y1="20" x2="204.0" y2="350" class="chart-grid"/>
+ <text x="204.0" y="368" text-anchor="middle" class="chart-label">20%</text>
+ <line x1="348.0" y1="20" x2="348.0" y2="350" class="chart-grid"/>
+ <text x="348.0" y="368" text-anchor="middle" class="chart-label">40%</text>
+ <line x1="492.0" y1="20" x2="492.0" y2="350" class="chart-grid"/>
+ <text x="492.0" y="368" text-anchor="middle" class="chart-label">60%</text>
+ <line x1="636.0" y1="20" x2="636.0" y2="350" class="chart-grid"/>
+ <text x="636.0" y="368" text-anchor="middle" class="chart-label">80%</text>
+ <line x1="780.0" y1="20" x2="780.0" y2="350" class="chart-grid"/>
+ <text x="780.0" y="368" text-anchor="middle" class="chart-label">100%</text>
+ <line x1="60" y1="350.0" x2="780" y2="350.0" class="chart-grid"/>
+ <text x="52" y="350.0" text-anchor="end" dominant-baseline="middle" class="chart-label">0</text>
+ <line x1="60" y1="267.5" x2="780" y2="267.5" class="chart-grid"/>
+ <text x="52" y="267.5" text-anchor="end" dominant-baseline="middle" class="chart-label">10</text>
+ <line x1="60" y1="185.0" x2="780" y2="185.0" class="chart-grid"/>
+ <text x="52" y="185.0" text-anchor="end" dominant-baseline="middle" class="chart-label">20</text>
+ <line x1="60" y1="102.5" x2="780" y2="102.5" class="chart-grid"/>
+ <text x="52" y="102.5" text-anchor="end" dominant-baseline="middle" class="chart-label">30</text>
+ <line x1="60" y1="20.0" x2="780" y2="20.0" class="chart-grid"/>
+ <text x="52" y="20.0" text-anchor="end" dominant-baseline="middle" class="chart-label">40</text>
+ <line x1="60" y1="20" x2="60" y2="350" class="chart-axis"/>
+ <line x1="60" y1="350" x2="780" y2="350" class="chart-axis"/>
+ <text x="420.0" y="395" text-anchor="middle" class="chart-title">Line Coverage (%)</text>
+ <text x="15" y="185.0" text-anchor="middle" transform="rotate(-90, 15, 185.0)" class="chart-title">Cyclomatic Complexity</text>
+ <a href="Collection.php.html#17"><circle cx="344.8" cy="61.2" r="20.0" class="bubble-danger"><title>App\StudyContent\Domain\Model\Collection\Collection — Coverage: 39.6% | Lines: 91 | Complexity: 35</title></circle></a>
+ <a href="CollectionEntry.php.html#11"><circle cx="510.0" cy="275.8" r="5.9" class="bubble-warning"><title>App\StudyContent\Domain\Model\Collection\CollectionEntry — Coverage: 62.5% | Lines: 8 | Complexity: 9</title></circle></a>
+ <a href="CollectionTitle.php.html#9"><circle cx="471.4" cy="317.0" r="5.5" class="bubble-warning"><title>App\StudyContent\Domain\Model\Collection\CollectionTitle — Coverage: 57.1% | Lines: 7 | Complexity: 4</title></circle></a>
+ <a href="CollectionId.php.html#9"><circle cx="348.0" cy="308.8" r="4.7" class="bubble-danger"><title>App\StudyContent\Domain\Model\Collection\CollectionId — Coverage: 40.0% | Lines: 5 | Complexity: 5</title></circle></a>
+ <a href="CollectionEntryPosition.php.html#9"><circle cx="420.0" cy="317.0" r="4.2" class="bubble-danger"><title>App\StudyContent\Domain\Model\Collection\CollectionEntryPosition — Coverage: 50.0% | Lines: 4 | Complexity: 4</title></circle></a>
+ <a href="CollectionPublicationRecord.php.html#10"><circle cx="60.0" cy="317.0" r="4.2" class="bubble-danger"><title>App\StudyContent\Domain\Model\Collection\CollectionPublicationRecord — Coverage: 0.0% | Lines: 4 | Complexity: 4</title></circle></a>
+</svg>
+     </div>
+    </div>
+    <div class="col-md-6 dashboard-column">
+     <h3>&nbsp;</h3>
+     <p class="text-muted small">Sorted by descending CRAP (Change Risk Anti-Patterns) index.</p>
+     <div class="scrollbox">
+<table class="table">
+ <thead>
+  <tr>
+   <th>Class</th>
+   <th class="text-right"><abbr title="Change Risk Anti-Patterns (CRAP) Index">CRAP</abbr></th>
+   <th class="text-right">Coverage</th>
+  </tr>
+ </thead>
+ <tbody>
+  <tr><td><a href="Collection.php.html#17">App\StudyContent\Domain\Model\Collection\Collection</a></td><td class="text-right">305.46</td><td class="text-right">39.6%</td></tr>
+  <tr><td><a href="CollectionPublicationRecord.php.html#10">App\StudyContent\Domain\Model\Collection\CollectionPublicationRecord</a></td><td class="text-right">20</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="CollectionEntry.php.html#11">App\StudyContent\Domain\Model\Collection\CollectionEntry</a></td><td class="text-right">13.27</td><td class="text-right">62.5%</td></tr>
+  <tr><td><a href="CollectionId.php.html#9">App\StudyContent\Domain\Model\Collection\CollectionId</a></td><td class="text-right">10.40</td><td class="text-right">40.0%</td></tr>
+  <tr><td><a href="CollectionEntryPosition.php.html#9">App\StudyContent\Domain\Model\Collection\CollectionEntryPosition</a></td><td class="text-right">6.00</td><td class="text-right">50.0%</td></tr>
+  <tr><td><a href="CollectionTitle.php.html#9">App\StudyContent\Domain\Model\Collection\CollectionTitle</a></td><td class="text-right">5.26</td><td class="text-right">57.1%</td></tr>
+  <tr><td><a href="CollectionStatus.php.html#7">App\StudyContent\Domain\Model\Collection\CollectionStatus</a></td><td class="text-right">0</td><td class="text-right">100.0%</td></tr>
+ </tbody>
+</table>
+     </div>
+    </div>
+   </div>
+   <div class="row dashboard-row">
+    <div class="col-md-6">
+     <h3>Methods</h3>
+     <p class="text-muted small">Bubble size = executable lines. Hover for details, click to navigate.</p>
+     <div class="file-coverage-chart">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400" preserveAspectRatio="xMidYMid meet">
+ <style>
+  .bubble-success { fill: var(--phpunit-success-bar); opacity: 0.7; }
+  .bubble-warning { fill: var(--phpunit-warning-bar); opacity: 0.7; }
+  .bubble-danger { fill: var(--phpunit-danger-bar); opacity: 0.7; }
+  .bubble-success:hover, .bubble-warning:hover, .bubble-danger:hover { opacity: 1; stroke: var(--bs-emphasis-color); stroke-width: 1.5; }
+  .chart-grid { stroke: var(--bs-border-color); stroke-width: 0.5; stroke-dasharray: 4,4; opacity: 0.5; }
+  .chart-axis { stroke: var(--bs-border-color); stroke-width: 1; }
+  .chart-label { fill: var(--bs-body-color); font-size: 11px; font-family: var(--bs-font-sans-serif, sans-serif); }
+  .chart-title { fill: var(--bs-body-color); font-size: 12px; font-family: var(--bs-font-sans-serif, sans-serif); }
+ </style>
+ <line x1="60.0" y1="20" x2="60.0" y2="350" class="chart-grid"/>
+ <text x="60.0" y="368" text-anchor="middle" class="chart-label">0%</text>
+ <line x1="204.0" y1="20" x2="204.0" y2="350" class="chart-grid"/>
+ <text x="204.0" y="368" text-anchor="middle" class="chart-label">20%</text>
+ <line x1="348.0" y1="20" x2="348.0" y2="350" class="chart-grid"/>
+ <text x="348.0" y="368" text-anchor="middle" class="chart-label">40%</text>
+ <line x1="492.0" y1="20" x2="492.0" y2="350" class="chart-grid"/>
+ <text x="492.0" y="368" text-anchor="middle" class="chart-label">60%</text>
+ <line x1="636.0" y1="20" x2="636.0" y2="350" class="chart-grid"/>
+ <text x="636.0" y="368" text-anchor="middle" class="chart-label">80%</text>
+ <line x1="780.0" y1="20" x2="780.0" y2="350" class="chart-grid"/>
+ <text x="780.0" y="368" text-anchor="middle" class="chart-label">100%</text>
+ <line x1="60" y1="350.0" x2="780" y2="350.0" class="chart-grid"/>
+ <text x="52" y="350.0" text-anchor="end" dominant-baseline="middle" class="chart-label">0</text>
+ <line x1="60" y1="267.5" x2="780" y2="267.5" class="chart-grid"/>
+ <text x="52" y="267.5" text-anchor="end" dominant-baseline="middle" class="chart-label">2</text>
+ <line x1="60" y1="185.0" x2="780" y2="185.0" class="chart-grid"/>
+ <text x="52" y="185.0" text-anchor="end" dominant-baseline="middle" class="chart-label">4</text>
+ <line x1="60" y1="102.5" x2="780" y2="102.5" class="chart-grid"/>
+ <text x="52" y="102.5" text-anchor="end" dominant-baseline="middle" class="chart-label">6</text>
+ <line x1="60" y1="20.0" x2="780" y2="20.0" class="chart-grid"/>
+ <text x="52" y="20.0" text-anchor="end" dominant-baseline="middle" class="chart-label">8</text>
+ <line x1="60" y1="20" x2="60" y2="350" class="chart-axis"/>
+ <line x1="60" y1="350" x2="780" y2="350" class="chart-axis"/>
+ <text x="420.0" y="395" text-anchor="middle" class="chart-title">Line Coverage (%)</text>
+ <text x="15" y="185.0" text-anchor="middle" transform="rotate(-90, 15, 185.0)" class="chart-title">Cyclomatic Complexity</text>
+ <a href="Collection.php.html#126"><circle cx="666.3" cy="61.2" r="20.0" class="bubble-warning"><title>App\StudyContent\Domain\Model\Collection\Collection::reorder — Coverage: 84.2% | Lines: 19 | Complexity: 7</title></circle></a>
+ <a href="Collection.php.html#94"><circle cx="60.0" cy="102.5" r="18.9" class="bubble-danger"><title>App\StudyContent\Domain\Model\Collection\Collection::removeEntry — Coverage: 0.0% | Lines: 17 | Complexity: 6</title></circle></a>
+ <a href="Collection.php.html#67"><circle cx="714.5" cy="185.0" r="15.2" class="bubble-success"><title>App\StudyContent\Domain\Model\Collection\Collection::addEntry — Coverage: 90.9% | Lines: 11 | Complexity: 4</title></circle></a>
+ <a href="Collection.php.html#247"><circle cx="60.0" cy="308.8" r="15.2" class="bubble-danger"><title>App\StudyContent\Domain\Model\Collection\Collection::reconstitute — Coverage: 0.0% | Lines: 11 | Complexity: 1</title></circle></a>
+ <a href="Collection.php.html#166"><circle cx="60.0" cy="226.2" r="14.5" class="bubble-danger"><title>App\StudyContent\Domain\Model\Collection\Collection::publish — Coverage: 0.0% | Lines: 10 | Complexity: 3</title></circle></a>
+ <a href="CollectionTitle.php.html#11"><circle cx="540.0" cy="226.2" r="11.2" class="bubble-warning"><title>App\StudyContent\Domain\Model\Collection\CollectionTitle::__construct — Coverage: 66.7% | Lines: 6 | Complexity: 3</title></circle></a>
+ <a href="Collection.php.html#32"><circle cx="780.0" cy="308.8" r="10.3" class="bubble-success"><title>App\StudyContent\Domain\Model\Collection\Collection::__construct — Coverage: 100.0% | Lines: 5 | Complexity: 1</title></circle></a>
+ <a href="Collection.php.html#190"><circle cx="60.0" cy="267.5" r="10.3" class="bubble-danger"><title>App\StudyContent\Domain\Model\Collection\Collection::archive — Coverage: 0.0% | Lines: 5 | Complexity: 2</title></circle></a>
+ <a href="Collection.php.html#58"><circle cx="60.0" cy="267.5" r="7.9" class="bubble-danger"><title>App\StudyContent\Domain\Model\Collection\Collection::rename — Coverage: 0.0% | Lines: 3 | Complexity: 2</title></circle></a>
+ <a href="Collection.php.html#47"><circle cx="780.0" cy="308.8" r="6.5" class="bubble-success"><title>App\StudyContent\Domain\Model\Collection\Collection::create — Coverage: 100.0% | Lines: 2 | Complexity: 1</title></circle></a>
+ <a href="CollectionEntry.php.html#13"><circle cx="420.0" cy="226.2" r="6.5" class="bubble-danger"><title>App\StudyContent\Domain\Model\Collection\CollectionEntry::__construct — Coverage: 50.0% | Lines: 2 | Complexity: 3</title></circle></a>
+ <a href="CollectionEntryPosition.php.html#11"><circle cx="420.0" cy="267.5" r="6.5" class="bubble-danger"><title>App\StudyContent\Domain\Model\Collection\CollectionEntryPosition::__construct — Coverage: 50.0% | Lines: 2 | Complexity: 2</title></circle></a>
+ <a href="CollectionId.php.html#11"><circle cx="420.0" cy="267.5" r="6.5" class="bubble-danger"><title>App\StudyContent\Domain\Model\Collection\CollectionId::__construct — Coverage: 50.0% | Lines: 2 | Complexity: 2</title></circle></a>
+ <a href="Collection.php.html#202"><circle cx="60.0" cy="308.8" r="4.6" class="bubble-danger"><title>App\StudyContent\Domain\Model\Collection\Collection::id — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Collection.php.html#207"><circle cx="60.0" cy="308.8" r="4.6" class="bubble-danger"><title>App\StudyContent\Domain\Model\Collection\Collection::title — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Collection.php.html#212"><circle cx="60.0" cy="308.8" r="4.6" class="bubble-danger"><title>App\StudyContent\Domain\Model\Collection\Collection::ownerId — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Collection.php.html#217"><circle cx="780.0" cy="308.8" r="4.6" class="bubble-success"><title>App\StudyContent\Domain\Model\Collection\Collection::scope — Coverage: 100.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Collection.php.html#222"><circle cx="780.0" cy="308.8" r="4.6" class="bubble-success"><title>App\StudyContent\Domain\Model\Collection\Collection::status — Coverage: 100.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Collection.php.html#230"><circle cx="780.0" cy="308.8" r="4.6" class="bubble-success"><title>App\StudyContent\Domain\Model\Collection\Collection::entries — Coverage: 100.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Collection.php.html#238"><circle cx="60.0" cy="308.8" r="4.6" class="bubble-danger"><title>App\StudyContent\Domain\Model\Collection\Collection::publicationHistory — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Collection.php.html#273"><circle cx="60.0" cy="308.8" r="4.6" class="bubble-danger"><title>App\StudyContent\Domain\Model\Collection\Collection::archivedAt — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="CollectionEntry.php.html#25"><circle cx="780.0" cy="308.8" r="4.6" class="bubble-success"><title>App\StudyContent\Domain\Model\Collection\CollectionEntry::contentItemId — Coverage: 100.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="CollectionEntry.php.html#30"><circle cx="780.0" cy="308.8" r="4.6" class="bubble-success"><title>App\StudyContent\Domain\Model\Collection\CollectionEntry::position — Coverage: 100.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="CollectionEntry.php.html#35"><circle cx="780.0" cy="308.8" r="4.6" class="bubble-success"><title>App\StudyContent\Domain\Model\Collection\CollectionEntry::moveTo — Coverage: 100.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="CollectionEntry.php.html#40"><circle cx="60.0" cy="308.8" r="4.6" class="bubble-danger"><title>App\StudyContent\Domain\Model\Collection\CollectionEntry::addedAt — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="CollectionEntry.php.html#45"><circle cx="60.0" cy="308.8" r="4.6" class="bubble-danger"><title>App\StudyContent\Domain\Model\Collection\CollectionEntry::curationNote — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="CollectionEntry.php.html#50"><circle cx="780.0" cy="308.8" r="4.6" class="bubble-success"><title>App\StudyContent\Domain\Model\Collection\CollectionEntry::sameContent — Coverage: 100.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="CollectionEntryPosition.php.html#18"><circle cx="780.0" cy="308.8" r="4.6" class="bubble-success"><title>App\StudyContent\Domain\Model\Collection\CollectionEntryPosition::toInt — Coverage: 100.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="CollectionEntryPosition.php.html#23"><circle cx="60.0" cy="308.8" r="4.6" class="bubble-danger"><title>App\StudyContent\Domain\Model\Collection\CollectionEntryPosition::equals — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="CollectionId.php.html#18"><circle cx="780.0" cy="308.8" r="4.6" class="bubble-success"><title>App\StudyContent\Domain\Model\Collection\CollectionId::fromString — Coverage: 100.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="CollectionId.php.html#23"><circle cx="60.0" cy="308.8" r="4.6" class="bubble-danger"><title>App\StudyContent\Domain\Model\Collection\CollectionId::equals — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="CollectionId.php.html#28"><circle cx="60.0" cy="308.8" r="4.6" class="bubble-danger"><title>App\StudyContent\Domain\Model\Collection\CollectionId::toString — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="CollectionPublicationRecord.php.html#12"><circle cx="60.0" cy="308.8" r="4.6" class="bubble-danger"><title>App\StudyContent\Domain\Model\Collection\CollectionPublicationRecord::__construct — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="CollectionPublicationRecord.php.html#20"><circle cx="60.0" cy="308.8" r="4.6" class="bubble-danger"><title>App\StudyContent\Domain\Model\Collection\CollectionPublicationRecord::scope — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="CollectionPublicationRecord.php.html#25"><circle cx="60.0" cy="308.8" r="4.6" class="bubble-danger"><title>App\StudyContent\Domain\Model\Collection\CollectionPublicationRecord::publishedBy — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="CollectionPublicationRecord.php.html#30"><circle cx="60.0" cy="308.8" r="4.6" class="bubble-danger"><title>App\StudyContent\Domain\Model\Collection\CollectionPublicationRecord::publishedAt — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="CollectionTitle.php.html#26"><circle cx="60.0" cy="308.8" r="4.6" class="bubble-danger"><title>App\StudyContent\Domain\Model\Collection\CollectionTitle::toString — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+</svg>
+     </div>
+    </div>
+    <div class="col-md-6 dashboard-column">
+     <h3>&nbsp;</h3>
+     <p class="text-muted small">Sorted by descending CRAP (Change Risk Anti-Patterns) index.</p>
+     <div class="scrollbox">
+<table class="table">
+ <thead>
+  <tr>
+   <th>Method</th>
+   <th class="text-right"><abbr title="Change Risk Anti-Patterns (CRAP) Index">CRAP</abbr></th>
+   <th class="text-right">Coverage</th>
+  </tr>
+ </thead>
+ <tbody>
+  <tr><td><a href="Collection.php.html#94">App\StudyContent\Domain\Model\Collection\Collection::removeEntry</a></td><td class="text-right">42</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Collection.php.html#166">App\StudyContent\Domain\Model\Collection\Collection::publish</a></td><td class="text-right">12</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Collection.php.html#126">App\StudyContent\Domain\Model\Collection\Collection::reorder</a></td><td class="text-right">7.19</td><td class="text-right">84.2%</td></tr>
+  <tr><td><a href="Collection.php.html#58">App\StudyContent\Domain\Model\Collection\Collection::rename</a></td><td class="text-right">6</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Collection.php.html#190">App\StudyContent\Domain\Model\Collection\Collection::archive</a></td><td class="text-right">6</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="CollectionEntry.php.html#13">App\StudyContent\Domain\Model\Collection\CollectionEntry::__construct</a></td><td class="text-right">4.12</td><td class="text-right">50.0%</td></tr>
+  <tr><td><a href="Collection.php.html#67">App\StudyContent\Domain\Model\Collection\Collection::addEntry</a></td><td class="text-right">4.01</td><td class="text-right">90.9%</td></tr>
+  <tr><td><a href="CollectionTitle.php.html#11">App\StudyContent\Domain\Model\Collection\CollectionTitle::__construct</a></td><td class="text-right">3.33</td><td class="text-right">66.7%</td></tr>
+  <tr><td><a href="CollectionEntryPosition.php.html#11">App\StudyContent\Domain\Model\Collection\CollectionEntryPosition::__construct</a></td><td class="text-right">2.50</td><td class="text-right">50.0%</td></tr>
+  <tr><td><a href="CollectionId.php.html#11">App\StudyContent\Domain\Model\Collection\CollectionId::__construct</a></td><td class="text-right">2.50</td><td class="text-right">50.0%</td></tr>
+  <tr><td><a href="Collection.php.html#202">App\StudyContent\Domain\Model\Collection\Collection::id</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Collection.php.html#207">App\StudyContent\Domain\Model\Collection\Collection::title</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Collection.php.html#212">App\StudyContent\Domain\Model\Collection\Collection::ownerId</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Collection.php.html#238">App\StudyContent\Domain\Model\Collection\Collection::publicationHistory</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Collection.php.html#247">App\StudyContent\Domain\Model\Collection\Collection::reconstitute</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Collection.php.html#273">App\StudyContent\Domain\Model\Collection\Collection::archivedAt</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="CollectionEntry.php.html#40">App\StudyContent\Domain\Model\Collection\CollectionEntry::addedAt</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="CollectionEntry.php.html#45">App\StudyContent\Domain\Model\Collection\CollectionEntry::curationNote</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="CollectionEntryPosition.php.html#23">App\StudyContent\Domain\Model\Collection\CollectionEntryPosition::equals</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="CollectionId.php.html#23">App\StudyContent\Domain\Model\Collection\CollectionId::equals</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="CollectionId.php.html#28">App\StudyContent\Domain\Model\Collection\CollectionId::toString</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="CollectionPublicationRecord.php.html#12">App\StudyContent\Domain\Model\Collection\CollectionPublicationRecord::__construct</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="CollectionPublicationRecord.php.html#20">App\StudyContent\Domain\Model\Collection\CollectionPublicationRecord::scope</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="CollectionPublicationRecord.php.html#25">App\StudyContent\Domain\Model\Collection\CollectionPublicationRecord::publishedBy</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="CollectionPublicationRecord.php.html#30">App\StudyContent\Domain\Model\Collection\CollectionPublicationRecord::publishedAt</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="CollectionTitle.php.html#26">App\StudyContent\Domain\Model\Collection\CollectionTitle::toString</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Collection.php.html#32">App\StudyContent\Domain\Model\Collection\Collection::__construct</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="Collection.php.html#47">App\StudyContent\Domain\Model\Collection\Collection::create</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="Collection.php.html#217">App\StudyContent\Domain\Model\Collection\Collection::scope</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="Collection.php.html#222">App\StudyContent\Domain\Model\Collection\Collection::status</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="Collection.php.html#230">App\StudyContent\Domain\Model\Collection\Collection::entries</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="CollectionEntry.php.html#25">App\StudyContent\Domain\Model\Collection\CollectionEntry::contentItemId</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="CollectionEntry.php.html#30">App\StudyContent\Domain\Model\Collection\CollectionEntry::position</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="CollectionEntry.php.html#35">App\StudyContent\Domain\Model\Collection\CollectionEntry::moveTo</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="CollectionEntry.php.html#50">App\StudyContent\Domain\Model\Collection\CollectionEntry::sameContent</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="CollectionEntryPosition.php.html#18">App\StudyContent\Domain\Model\Collection\CollectionEntryPosition::toInt</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="CollectionId.php.html#18">App\StudyContent\Domain\Model\Collection\CollectionId::fromString</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+ </tbody>
+</table>
+     </div>
+    </div>
+   </div>
+   <footer>
+    <hr/>
+    <p>
+     <small>Generated by <a href="https://github.com/sebastianbergmann/php-code-coverage" target="_top">php-code-coverage 14.1.1</a> using <a href="https://www.php.net/" target="_top">PHP 8.5.5</a> and <a href="https://phpunit.de/">PHPUnit 13.1.3</a> at Wed Apr 22 21:15:09 UTC 2026.</small>
+    </p>
+   </footer>
+  </div>
+ </body>
+</html>

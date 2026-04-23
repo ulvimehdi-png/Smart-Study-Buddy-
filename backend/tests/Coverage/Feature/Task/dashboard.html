@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <title>Dashboard for /app/src/Feature/Task</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="../../_css/bootstrap.min.css?v=14.1.1" rel="stylesheet" type="text/css">
+  <link href="../../_css/style.css?v=14.1.1" rel="stylesheet" type="text/css">
+  <link href="../../_css/custom.css" rel="stylesheet" type="text/css">
+ </head>
+ <body>
+  <header>
+   <div class="container-fluid">
+    <div class="row">
+     <div class="col-md-12">
+      <nav aria-label="breadcrumb">
+       <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="../../index.html">/app/src</a></li>
+         <li class="breadcrumb-item"><a href="../index.html">Feature</a></li>
+         <li class="breadcrumb-item"><a href="index.html">Task</a></li>
+         <li class="breadcrumb-item active">(Dashboard)</li>
+
+       </ol>
+      </nav>
+     </div>
+    </div>
+   </div>
+  </header>
+  <div class="container-fluid">
+   <div class="row dashboard-row">
+    <div class="col-md-6">
+     <h3>Classes</h3>
+     <p class="text-muted small">Bubble size = executable lines. Hover for details, click to navigate.</p>
+     <div class="file-coverage-chart">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400" preserveAspectRatio="xMidYMid meet">
+ <style>
+  .bubble-success { fill: var(--phpunit-success-bar); opacity: 0.7; }
+  .bubble-warning { fill: var(--phpunit-warning-bar); opacity: 0.7; }
+  .bubble-danger { fill: var(--phpunit-danger-bar); opacity: 0.7; }
+  .bubble-success:hover, .bubble-warning:hover, .bubble-danger:hover { opacity: 1; stroke: var(--bs-emphasis-color); stroke-width: 1.5; }
+  .chart-grid { stroke: var(--bs-border-color); stroke-width: 0.5; stroke-dasharray: 4,4; opacity: 0.5; }
+  .chart-axis { stroke: var(--bs-border-color); stroke-width: 1; }
+  .chart-label { fill: var(--bs-body-color); font-size: 11px; font-family: var(--bs-font-sans-serif, sans-serif); }
+  .chart-title { fill: var(--bs-body-color); font-size: 12px; font-family: var(--bs-font-sans-serif, sans-serif); }
+ </style>
+ <line x1="60.0" y1="20" x2="60.0" y2="350" class="chart-grid"/>
+ <text x="60.0" y="368" text-anchor="middle" class="chart-label">0%</text>
+ <line x1="204.0" y1="20" x2="204.0" y2="350" class="chart-grid"/>
+ <text x="204.0" y="368" text-anchor="middle" class="chart-label">20%</text>
+ <line x1="348.0" y1="20" x2="348.0" y2="350" class="chart-grid"/>
+ <text x="348.0" y="368" text-anchor="middle" class="chart-label">40%</text>
+ <line x1="492.0" y1="20" x2="492.0" y2="350" class="chart-grid"/>
+ <text x="492.0" y="368" text-anchor="middle" class="chart-label">60%</text>
+ <line x1="636.0" y1="20" x2="636.0" y2="350" class="chart-grid"/>
+ <text x="636.0" y="368" text-anchor="middle" class="chart-label">80%</text>
+ <line x1="780.0" y1="20" x2="780.0" y2="350" class="chart-grid"/>
+ <text x="780.0" y="368" text-anchor="middle" class="chart-label">100%</text>
+ <line x1="60" y1="350.0" x2="780" y2="350.0" class="chart-grid"/>
+ <text x="52" y="350.0" text-anchor="end" dominant-baseline="middle" class="chart-label">0</text>
+ <line x1="60" y1="284.0" x2="780" y2="284.0" class="chart-grid"/>
+ <text x="52" y="284.0" text-anchor="end" dominant-baseline="middle" class="chart-label">10</text>
+ <line x1="60" y1="218.0" x2="780" y2="218.0" class="chart-grid"/>
+ <text x="52" y="218.0" text-anchor="end" dominant-baseline="middle" class="chart-label">20</text>
+ <line x1="60" y1="152.0" x2="780" y2="152.0" class="chart-grid"/>
+ <text x="52" y="152.0" text-anchor="end" dominant-baseline="middle" class="chart-label">30</text>
+ <line x1="60" y1="86.0" x2="780" y2="86.0" class="chart-grid"/>
+ <text x="52" y="86.0" text-anchor="end" dominant-baseline="middle" class="chart-label">40</text>
+ <line x1="60" y1="20.0" x2="780" y2="20.0" class="chart-grid"/>
+ <text x="52" y="20.0" text-anchor="end" dominant-baseline="middle" class="chart-label">50</text>
+ <line x1="60" y1="20" x2="60" y2="350" class="chart-axis"/>
+ <line x1="60" y1="350" x2="780" y2="350" class="chart-axis"/>
+ <text x="420.0" y="395" text-anchor="middle" class="chart-title">Line Coverage (%)</text>
+ <text x="15" y="185.0" text-anchor="middle" transform="rotate(-90, 15, 185.0)" class="chart-title">Cyclomatic Complexity</text>
+ <a href="Controller/TasksController.php.html#17"><circle cx="60.0" cy="244.4" r="20.0" class="bubble-danger"><title>App\Feature\Task\Controller\TasksController — Coverage: 0.0% | Lines: 103 | Complexity: 16</title></circle></a>
+ <a href="Entity/Task.php.html#22"><circle cx="60.0" cy="72.8" r="16.3" class="bubble-danger"><title>App\Feature\Task\Entity\Task — Coverage: 0.0% | Lines: 68 | Complexity: 42</title></circle></a>
+ <a href="Factory/TaskFactory.php.html#16"><circle cx="60.0" cy="270.8" r="11.0" class="bubble-danger"><title>App\Feature\Task\Factory\TaskFactory — Coverage: 0.0% | Lines: 31 | Complexity: 12</title></circle></a>
+ <a href="Entity/TaskTag.php.html#11"><circle cx="60.0" cy="303.8" r="5.9" class="bubble-danger"><title>App\Feature\Task\Entity\TaskTag — Coverage: 0.0% | Lines: 9 | Complexity: 7</title></circle></a>
+ <a href="Factory/TaskTagFactory.php.html#13"><circle cx="60.0" cy="323.6" r="5.6" class="bubble-danger"><title>App\Feature\Task\Factory\TaskTagFactory — Coverage: 0.0% | Lines: 8 | Complexity: 4</title></circle></a>
+ <a href="Enum/TaskPriority.php.html#5"><circle cx="60.0" cy="343.4" r="4.0" class="bubble-danger"><title>App\Feature\Task\Enum\TaskPriority — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Enum/TaskStatus.php.html#5"><circle cx="60.0" cy="343.4" r="4.0" class="bubble-danger"><title>App\Feature\Task\Enum\TaskStatus — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Repository/TaskRepository.php.html#12"><circle cx="60.0" cy="343.4" r="4.0" class="bubble-danger"><title>App\Feature\Task\Repository\TaskRepository — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Repository/TaskTagRepository.php.html#12"><circle cx="60.0" cy="343.4" r="4.0" class="bubble-danger"><title>App\Feature\Task\Repository\TaskTagRepository — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+</svg>
+     </div>
+    </div>
+    <div class="col-md-6 dashboard-column">
+     <h3>&nbsp;</h3>
+     <p class="text-muted small">Sorted by descending CRAP (Change Risk Anti-Patterns) index.</p>
+     <div class="scrollbox">
+<table class="table">
+ <thead>
+  <tr>
+   <th>Class</th>
+   <th class="text-right"><abbr title="Change Risk Anti-Patterns (CRAP) Index">CRAP</abbr></th>
+   <th class="text-right">Coverage</th>
+  </tr>
+ </thead>
+ <tbody>
+  <tr><td><a href="Entity/Task.php.html#22">App\Feature\Task\Entity\Task</a></td><td class="text-right">1806</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Controller/TasksController.php.html#17">App\Feature\Task\Controller\TasksController</a></td><td class="text-right">272</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Factory/TaskFactory.php.html#16">App\Feature\Task\Factory\TaskFactory</a></td><td class="text-right">156</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Entity/TaskTag.php.html#11">App\Feature\Task\Entity\TaskTag</a></td><td class="text-right">56</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Factory/TaskTagFactory.php.html#13">App\Feature\Task\Factory\TaskTagFactory</a></td><td class="text-right">20</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Enum/TaskPriority.php.html#5">App\Feature\Task\Enum\TaskPriority</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Enum/TaskStatus.php.html#5">App\Feature\Task\Enum\TaskStatus</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Repository/TaskRepository.php.html#12">App\Feature\Task\Repository\TaskRepository</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Repository/TaskTagRepository.php.html#12">App\Feature\Task\Repository\TaskTagRepository</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+ </tbody>
+</table>
+     </div>
+    </div>
+   </div>
+   <div class="row dashboard-row">
+    <div class="col-md-6">
+     <h3>Methods</h3>
+     <p class="text-muted small">Bubble size = executable lines. Hover for details, click to navigate.</p>
+     <div class="file-coverage-chart">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400" preserveAspectRatio="xMidYMid meet">
+ <style>
+  .bubble-success { fill: var(--phpunit-success-bar); opacity: 0.7; }
+  .bubble-warning { fill: var(--phpunit-warning-bar); opacity: 0.7; }
+  .bubble-danger { fill: var(--phpunit-danger-bar); opacity: 0.7; }
+  .bubble-success:hover, .bubble-warning:hover, .bubble-danger:hover { opacity: 1; stroke: var(--bs-emphasis-color); stroke-width: 1.5; }
+  .chart-grid { stroke: var(--bs-border-color); stroke-width: 0.5; stroke-dasharray: 4,4; opacity: 0.5; }
+  .chart-axis { stroke: var(--bs-border-color); stroke-width: 1; }
+  .chart-label { fill: var(--bs-body-color); font-size: 11px; font-family: var(--bs-font-sans-serif, sans-serif); }
+  .chart-title { fill: var(--bs-body-color); font-size: 12px; font-family: var(--bs-font-sans-serif, sans-serif); }
+ </style>
+ <line x1="60.0" y1="20" x2="60.0" y2="350" class="chart-grid"/>
+ <text x="60.0" y="368" text-anchor="middle" class="chart-label">0%</text>
+ <line x1="204.0" y1="20" x2="204.0" y2="350" class="chart-grid"/>
+ <text x="204.0" y="368" text-anchor="middle" class="chart-label">20%</text>
+ <line x1="348.0" y1="20" x2="348.0" y2="350" class="chart-grid"/>
+ <text x="348.0" y="368" text-anchor="middle" class="chart-label">40%</text>
+ <line x1="492.0" y1="20" x2="492.0" y2="350" class="chart-grid"/>
+ <text x="492.0" y="368" text-anchor="middle" class="chart-label">60%</text>
+ <line x1="636.0" y1="20" x2="636.0" y2="350" class="chart-grid"/>
+ <text x="636.0" y="368" text-anchor="middle" class="chart-label">80%</text>
+ <line x1="780.0" y1="20" x2="780.0" y2="350" class="chart-grid"/>
+ <text x="780.0" y="368" text-anchor="middle" class="chart-label">100%</text>
+ <line x1="60" y1="350.0" x2="780" y2="350.0" class="chart-grid"/>
+ <text x="52" y="350.0" text-anchor="end" dominant-baseline="middle" class="chart-label">0</text>
+ <line x1="60" y1="240.0" x2="780" y2="240.0" class="chart-grid"/>
+ <text x="52" y="240.0" text-anchor="end" dominant-baseline="middle" class="chart-label">2</text>
+ <line x1="60" y1="130.0" x2="780" y2="130.0" class="chart-grid"/>
+ <text x="52" y="130.0" text-anchor="end" dominant-baseline="middle" class="chart-label">4</text>
+ <line x1="60" y1="20.0" x2="780" y2="20.0" class="chart-grid"/>
+ <text x="52" y="20.0" text-anchor="end" dominant-baseline="middle" class="chart-label">6</text>
+ <line x1="60" y1="20" x2="60" y2="350" class="chart-axis"/>
+ <line x1="60" y1="350" x2="780" y2="350" class="chart-axis"/>
+ <text x="420.0" y="395" text-anchor="middle" class="chart-title">Line Coverage (%)</text>
+ <text x="15" y="185.0" text-anchor="middle" transform="rotate(-90, 15, 185.0)" class="chart-title">Cyclomatic Complexity</text>
+ <a href="Controller/TasksController.php.html#20"><circle cx="60.0" cy="130.0" r="20.0" class="bubble-danger"><title>App\Feature\Task\Controller\TasksController::getTasks — Coverage: 0.0% | Lines: 35 | Complexity: 4</title></circle></a>
+ <a href="Controller/TasksController.php.html#74"><circle cx="60.0" cy="75.0" r="19.1" class="bubble-danger"><title>App\Feature\Task\Controller\TasksController::createTask — Coverage: 0.0% | Lines: 32 | Complexity: 5</title></circle></a>
+ <a href="Controller/TasksController.php.html#127"><circle cx="60.0" cy="130.0" r="15.1" class="bubble-danger"><title>App\Feature\Task\Controller\TasksController::toggleTask — Coverage: 0.0% | Lines: 20 | Complexity: 4</title></circle></a>
+ <a href="Controller/TasksController.php.html#165"><circle cx="60.0" cy="185.0" r="13.5" class="bubble-danger"><title>App\Feature\Task\Controller\TasksController::deleteTask — Coverage: 0.0% | Lines: 16 | Complexity: 3</title></circle></a>
+ <a href="Entity/Task.php.html#106"><circle cx="60.0" cy="295.0" r="7.6" class="bubble-danger"><title>App\Feature\Task\Entity\Task::__construct — Coverage: 0.0% | Lines: 5 | Complexity: 1</title></circle></a>
+ <a href="Factory/TaskFactory.php.html#89"><circle cx="60.0" cy="295.0" r="7.6" class="bubble-danger"><title>App\Feature\Task\Factory\TaskFactory::defaults — Coverage: 0.0% | Lines: 5 | Complexity: 1</title></circle></a>
+ <a href="Factory/TaskFactory.php.html#102"><circle cx="60.0" cy="240.0" r="7.6" class="bubble-danger"><title>App\Feature\Task\Factory\TaskFactory::initialize — Coverage: 0.0% | Lines: 5 | Complexity: 2</title></circle></a>
+ <a href="Entity/Task.php.html#174"><circle cx="60.0" cy="240.0" r="6.8" class="bubble-danger"><title>App\Feature\Task\Entity\Task::setStatus — Coverage: 0.0% | Lines: 4 | Complexity: 2</title></circle></a>
+ <a href="Entity/Task.php.html#261"><circle cx="60.0" cy="240.0" r="6.8" class="bubble-danger"><title>App\Feature\Task\Entity\Task::addNote — Coverage: 0.0% | Lines: 4 | Complexity: 2</title></circle></a>
+ <a href="Entity/Task.php.html#271"><circle cx="60.0" cy="185.0" r="6.8" class="bubble-danger"><title>App\Feature\Task\Entity\Task::removeNote — Coverage: 0.0% | Lines: 4 | Complexity: 3</title></circle></a>
+ <a href="Entity/Task.php.html#291"><circle cx="60.0" cy="240.0" r="6.8" class="bubble-danger"><title>App\Feature\Task\Entity\Task::addTaskTag — Coverage: 0.0% | Lines: 4 | Complexity: 2</title></circle></a>
+ <a href="Entity/Task.php.html#301"><circle cx="60.0" cy="185.0" r="6.8" class="bubble-danger"><title>App\Feature\Task\Entity\Task::removeTaskTag — Coverage: 0.0% | Lines: 4 | Complexity: 3</title></circle></a>
+ <a href="Entity/Task.php.html#320"><circle cx="60.0" cy="240.0" r="6.8" class="bubble-danger"><title>App\Feature\Task\Entity\Task::addSessionEntry — Coverage: 0.0% | Lines: 4 | Complexity: 2</title></circle></a>
+ <a href="Entity/Task.php.html#330"><circle cx="60.0" cy="185.0" r="6.8" class="bubble-danger"><title>App\Feature\Task\Entity\Task::removeSessionEntry — Coverage: 0.0% | Lines: 4 | Complexity: 3</title></circle></a>
+ <a href="Factory/TaskFactory.php.html#34"><circle cx="60.0" cy="240.0" r="6.8" class="bubble-danger"><title>App\Feature\Task\Factory\TaskFactory::withStatus — Coverage: 0.0% | Lines: 4 | Complexity: 2</title></circle></a>
+ <a href="Factory/TaskTagFactory.php.html#36"><circle cx="60.0" cy="295.0" r="6.8" class="bubble-danger"><title>App\Feature\Task\Factory\TaskTagFactory::defaults — Coverage: 0.0% | Lines: 4 | Complexity: 1</title></circle></a>
+ <a href="Entity/Task.php.html#185"><circle cx="60.0" cy="295.0" r="5.9" class="bubble-danger"><title>App\Feature\Task\Entity\Task::markDone — Coverage: 0.0% | Lines: 3 | Complexity: 1</title></circle></a>
+ <a href="Factory/TaskFactory.php.html#42"><circle cx="60.0" cy="295.0" r="5.9" class="bubble-danger"><title>App\Feature\Task\Factory\TaskFactory::withDescription — Coverage: 0.0% | Lines: 3 | Complexity: 1</title></circle></a>
+ <a href="Factory/TaskFactory.php.html#55"><circle cx="60.0" cy="295.0" r="5.9" class="bubble-danger"><title>App\Feature\Task\Factory\TaskFactory::withEstimatedMinutes — Coverage: 0.0% | Lines: 3 | Complexity: 1</title></circle></a>
+ <a href="Factory/TaskFactory.php.html#63"><circle cx="60.0" cy="295.0" r="5.9" class="bubble-danger"><title>App\Feature\Task\Factory\TaskFactory::withDueAt — Coverage: 0.0% | Lines: 3 | Complexity: 1</title></circle></a>
+ <a href="Factory/TaskFactory.php.html#70"><circle cx="60.0" cy="295.0" r="5.9" class="bubble-danger"><title>App\Feature\Task\Factory\TaskFactory::withScheduledFor — Coverage: 0.0% | Lines: 3 | Complexity: 1</title></circle></a>
+ <a href="Factory/TaskFactory.php.html#77"><circle cx="60.0" cy="295.0" r="5.9" class="bubble-danger"><title>App\Feature\Task\Factory\TaskFactory::archived — Coverage: 0.0% | Lines: 3 | Complexity: 1</title></circle></a>
+ <a href="Entity/Task.php.html#126"><circle cx="60.0" cy="295.0" r="4.8" class="bubble-danger"><title>App\Feature\Task\Entity\Task::setUser — Coverage: 0.0% | Lines: 2 | Complexity: 1</title></circle></a>
+ <a href="Entity/Task.php.html#138"><circle cx="60.0" cy="295.0" r="4.8" class="bubble-danger"><title>App\Feature\Task\Entity\Task::setSubject — Coverage: 0.0% | Lines: 2 | Complexity: 1</title></circle></a>
+ <a href="Entity/Task.php.html#150"><circle cx="60.0" cy="295.0" r="4.8" class="bubble-danger"><title>App\Feature\Task\Entity\Task::setTitle — Coverage: 0.0% | Lines: 2 | Complexity: 1</title></circle></a>
+ <a href="Entity/Task.php.html#162"><circle cx="60.0" cy="295.0" r="4.8" class="bubble-danger"><title>App\Feature\Task\Entity\Task::setDescription — Coverage: 0.0% | Lines: 2 | Complexity: 1</title></circle></a>
+ <a href="Entity/Task.php.html#198"><circle cx="60.0" cy="295.0" r="4.8" class="bubble-danger"><title>App\Feature\Task\Entity\Task::setPriority — Coverage: 0.0% | Lines: 2 | Complexity: 1</title></circle></a>
+ <a href="Entity/Task.php.html#210"><circle cx="60.0" cy="295.0" r="4.8" class="bubble-danger"><title>App\Feature\Task\Entity\Task::setEstimatedMinutes — Coverage: 0.0% | Lines: 2 | Complexity: 1</title></circle></a>
+ <a href="Entity/Task.php.html#222"><circle cx="60.0" cy="295.0" r="4.8" class="bubble-danger"><title>App\Feature\Task\Entity\Task::setDueAt — Coverage: 0.0% | Lines: 2 | Complexity: 1</title></circle></a>
+ <a href="Entity/Task.php.html#234"><circle cx="60.0" cy="295.0" r="4.8" class="bubble-danger"><title>App\Feature\Task\Entity\Task::setScheduledFor — Coverage: 0.0% | Lines: 2 | Complexity: 1</title></circle></a>
+ <a href="Entity/Task.php.html#246"><circle cx="60.0" cy="295.0" r="4.8" class="bubble-danger"><title>App\Feature\Task\Entity\Task::setCompletedAt — Coverage: 0.0% | Lines: 2 | Complexity: 1</title></circle></a>
+ <a href="Entity/TaskTag.php.html#51"><circle cx="60.0" cy="295.0" r="4.8" class="bubble-danger"><title>App\Feature\Task\Entity\TaskTag::setTask — Coverage: 0.0% | Lines: 2 | Complexity: 1</title></circle></a>
+ <a href="Entity/TaskTag.php.html#63"><circle cx="60.0" cy="295.0" r="4.8" class="bubble-danger"><title>App\Feature\Task\Entity\TaskTag::setTag — Coverage: 0.0% | Lines: 2 | Complexity: 1</title></circle></a>
+ <a href="Factory/TaskTagFactory.php.html#48"><circle cx="60.0" cy="295.0" r="4.8" class="bubble-danger"><title>App\Feature\Task\Factory\TaskTagFactory::initialize — Coverage: 0.0% | Lines: 2 | Complexity: 1</title></circle></a>
+ <a href="Entity/Task.php.html#116"><circle cx="60.0" cy="295.0" r="4.0" class="bubble-danger"><title>App\Feature\Task\Entity\Task::getId — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Entity/Task.php.html#121"><circle cx="60.0" cy="295.0" r="4.0" class="bubble-danger"><title>App\Feature\Task\Entity\Task::getUser — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Entity/Task.php.html#133"><circle cx="60.0" cy="295.0" r="4.0" class="bubble-danger"><title>App\Feature\Task\Entity\Task::getSubject — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Entity/Task.php.html#145"><circle cx="60.0" cy="295.0" r="4.0" class="bubble-danger"><title>App\Feature\Task\Entity\Task::getTitle — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Entity/Task.php.html#157"><circle cx="60.0" cy="295.0" r="4.0" class="bubble-danger"><title>App\Feature\Task\Entity\Task::getDescription — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Entity/Task.php.html#169"><circle cx="60.0" cy="295.0" r="4.0" class="bubble-danger"><title>App\Feature\Task\Entity\Task::getStatus — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Entity/Task.php.html#193"><circle cx="60.0" cy="295.0" r="4.0" class="bubble-danger"><title>App\Feature\Task\Entity\Task::getPriority — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Entity/Task.php.html#205"><circle cx="60.0" cy="295.0" r="4.0" class="bubble-danger"><title>App\Feature\Task\Entity\Task::getEstimatedMinutes — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Entity/Task.php.html#217"><circle cx="60.0" cy="295.0" r="4.0" class="bubble-danger"><title>App\Feature\Task\Entity\Task::getDueAt — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Entity/Task.php.html#229"><circle cx="60.0" cy="295.0" r="4.0" class="bubble-danger"><title>App\Feature\Task\Entity\Task::getScheduledFor — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Entity/Task.php.html#241"><circle cx="60.0" cy="295.0" r="4.0" class="bubble-danger"><title>App\Feature\Task\Entity\Task::getCompletedAt — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Entity/Task.php.html#256"><circle cx="60.0" cy="295.0" r="4.0" class="bubble-danger"><title>App\Feature\Task\Entity\Task::getNotes — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Entity/Task.php.html#286"><circle cx="60.0" cy="295.0" r="4.0" class="bubble-danger"><title>App\Feature\Task\Entity\Task::getTaskTags — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Entity/Task.php.html#315"><circle cx="60.0" cy="295.0" r="4.0" class="bubble-danger"><title>App\Feature\Task\Entity\Task::getSessionEntries — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Entity/TaskTag.php.html#35"><circle cx="60.0" cy="295.0" r="4.0" class="bubble-danger"><title>App\Feature\Task\Entity\TaskTag::setCreatedAtValue — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Entity/TaskTag.php.html#41"><circle cx="60.0" cy="295.0" r="4.0" class="bubble-danger"><title>App\Feature\Task\Entity\TaskTag::getId — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Entity/TaskTag.php.html#46"><circle cx="60.0" cy="295.0" r="4.0" class="bubble-danger"><title>App\Feature\Task\Entity\TaskTag::getTask — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Entity/TaskTag.php.html#58"><circle cx="60.0" cy="295.0" r="4.0" class="bubble-danger"><title>App\Feature\Task\Entity\TaskTag::getTag — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Entity/TaskTag.php.html#70"><circle cx="60.0" cy="295.0" r="4.0" class="bubble-danger"><title>App\Feature\Task\Entity\TaskTag::getCreatedAt — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Enum/TaskPriority.php.html#12"><circle cx="60.0" cy="295.0" r="4.0" class="bubble-danger"><title>App\Feature\Task\Enum\TaskPriority::default — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Enum/TaskStatus.php.html#12"><circle cx="60.0" cy="295.0" r="4.0" class="bubble-danger"><title>App\Feature\Task\Enum\TaskStatus::default — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Factory/TaskFactory.php.html#23"><circle cx="60.0" cy="295.0" r="4.0" class="bubble-danger"><title>App\Feature\Task\Factory\TaskFactory::__construct — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Factory/TaskFactory.php.html#28"><circle cx="60.0" cy="295.0" r="4.0" class="bubble-danger"><title>App\Feature\Task\Factory\TaskFactory::class — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Factory/TaskTagFactory.php.html#20"><circle cx="60.0" cy="295.0" r="4.0" class="bubble-danger"><title>App\Feature\Task\Factory\TaskTagFactory::__construct — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Factory/TaskTagFactory.php.html#25"><circle cx="60.0" cy="295.0" r="4.0" class="bubble-danger"><title>App\Feature\Task\Factory\TaskTagFactory::class — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Repository/TaskRepository.php.html#14"><circle cx="60.0" cy="295.0" r="4.0" class="bubble-danger"><title>App\Feature\Task\Repository\TaskRepository::__construct — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Repository/TaskTagRepository.php.html#14"><circle cx="60.0" cy="295.0" r="4.0" class="bubble-danger"><title>App\Feature\Task\Repository\TaskTagRepository::__construct — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+</svg>
+     </div>
+    </div>
+    <div class="col-md-6 dashboard-column">
+     <h3>&nbsp;</h3>
+     <p class="text-muted small">Sorted by descending CRAP (Change Risk Anti-Patterns) index.</p>
+     <div class="scrollbox">
+<table class="table">
+ <thead>
+  <tr>
+   <th>Method</th>
+   <th class="text-right"><abbr title="Change Risk Anti-Patterns (CRAP) Index">CRAP</abbr></th>
+   <th class="text-right">Coverage</th>
+  </tr>
+ </thead>
+ <tbody>
+  <tr><td><a href="Controller/TasksController.php.html#74">App\Feature\Task\Controller\TasksController::createTask</a></td><td class="text-right">30</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Controller/TasksController.php.html#20">App\Feature\Task\Controller\TasksController::getTasks</a></td><td class="text-right">20</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Controller/TasksController.php.html#127">App\Feature\Task\Controller\TasksController::toggleTask</a></td><td class="text-right">20</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Controller/TasksController.php.html#165">App\Feature\Task\Controller\TasksController::deleteTask</a></td><td class="text-right">12</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Entity/Task.php.html#271">App\Feature\Task\Entity\Task::removeNote</a></td><td class="text-right">12</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Entity/Task.php.html#301">App\Feature\Task\Entity\Task::removeTaskTag</a></td><td class="text-right">12</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Entity/Task.php.html#330">App\Feature\Task\Entity\Task::removeSessionEntry</a></td><td class="text-right">12</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Entity/Task.php.html#174">App\Feature\Task\Entity\Task::setStatus</a></td><td class="text-right">6</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Entity/Task.php.html#261">App\Feature\Task\Entity\Task::addNote</a></td><td class="text-right">6</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Entity/Task.php.html#291">App\Feature\Task\Entity\Task::addTaskTag</a></td><td class="text-right">6</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Entity/Task.php.html#320">App\Feature\Task\Entity\Task::addSessionEntry</a></td><td class="text-right">6</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Factory/TaskFactory.php.html#34">App\Feature\Task\Factory\TaskFactory::withStatus</a></td><td class="text-right">6</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Factory/TaskFactory.php.html#102">App\Feature\Task\Factory\TaskFactory::initialize</a></td><td class="text-right">6</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Entity/Task.php.html#106">App\Feature\Task\Entity\Task::__construct</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Entity/Task.php.html#116">App\Feature\Task\Entity\Task::getId</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Entity/Task.php.html#121">App\Feature\Task\Entity\Task::getUser</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Entity/Task.php.html#126">App\Feature\Task\Entity\Task::setUser</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Entity/Task.php.html#133">App\Feature\Task\Entity\Task::getSubject</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Entity/Task.php.html#138">App\Feature\Task\Entity\Task::setSubject</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Entity/Task.php.html#145">App\Feature\Task\Entity\Task::getTitle</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Entity/Task.php.html#150">App\Feature\Task\Entity\Task::setTitle</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Entity/Task.php.html#157">App\Feature\Task\Entity\Task::getDescription</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Entity/Task.php.html#162">App\Feature\Task\Entity\Task::setDescription</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Entity/Task.php.html#169">App\Feature\Task\Entity\Task::getStatus</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Entity/Task.php.html#185">App\Feature\Task\Entity\Task::markDone</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Entity/Task.php.html#193">App\Feature\Task\Entity\Task::getPriority</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Entity/Task.php.html#198">App\Feature\Task\Entity\Task::setPriority</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Entity/Task.php.html#205">App\Feature\Task\Entity\Task::getEstimatedMinutes</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Entity/Task.php.html#210">App\Feature\Task\Entity\Task::setEstimatedMinutes</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Entity/Task.php.html#217">App\Feature\Task\Entity\Task::getDueAt</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Entity/Task.php.html#222">App\Feature\Task\Entity\Task::setDueAt</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Entity/Task.php.html#229">App\Feature\Task\Entity\Task::getScheduledFor</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Entity/Task.php.html#234">App\Feature\Task\Entity\Task::setScheduledFor</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Entity/Task.php.html#241">App\Feature\Task\Entity\Task::getCompletedAt</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Entity/Task.php.html#246">App\Feature\Task\Entity\Task::setCompletedAt</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Entity/Task.php.html#256">App\Feature\Task\Entity\Task::getNotes</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Entity/Task.php.html#286">App\Feature\Task\Entity\Task::getTaskTags</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Entity/Task.php.html#315">App\Feature\Task\Entity\Task::getSessionEntries</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Entity/TaskTag.php.html#35">App\Feature\Task\Entity\TaskTag::setCreatedAtValue</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Entity/TaskTag.php.html#41">App\Feature\Task\Entity\TaskTag::getId</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Entity/TaskTag.php.html#46">App\Feature\Task\Entity\TaskTag::getTask</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Entity/TaskTag.php.html#51">App\Feature\Task\Entity\TaskTag::setTask</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Entity/TaskTag.php.html#58">App\Feature\Task\Entity\TaskTag::getTag</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Entity/TaskTag.php.html#63">App\Feature\Task\Entity\TaskTag::setTag</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Entity/TaskTag.php.html#70">App\Feature\Task\Entity\TaskTag::getCreatedAt</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Enum/TaskPriority.php.html#12">App\Feature\Task\Enum\TaskPriority::default</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Enum/TaskStatus.php.html#12">App\Feature\Task\Enum\TaskStatus::default</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Factory/TaskFactory.php.html#23">App\Feature\Task\Factory\TaskFactory::__construct</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Factory/TaskFactory.php.html#28">App\Feature\Task\Factory\TaskFactory::class</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Factory/TaskFactory.php.html#42">App\Feature\Task\Factory\TaskFactory::withDescription</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Factory/TaskFactory.php.html#55">App\Feature\Task\Factory\TaskFactory::withEstimatedMinutes</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Factory/TaskFactory.php.html#63">App\Feature\Task\Factory\TaskFactory::withDueAt</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Factory/TaskFactory.php.html#70">App\Feature\Task\Factory\TaskFactory::withScheduledFor</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Factory/TaskFactory.php.html#77">App\Feature\Task\Factory\TaskFactory::archived</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Factory/TaskFactory.php.html#89">App\Feature\Task\Factory\TaskFactory::defaults</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Factory/TaskTagFactory.php.html#20">App\Feature\Task\Factory\TaskTagFactory::__construct</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Factory/TaskTagFactory.php.html#25">App\Feature\Task\Factory\TaskTagFactory::class</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Factory/TaskTagFactory.php.html#36">App\Feature\Task\Factory\TaskTagFactory::defaults</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Factory/TaskTagFactory.php.html#48">App\Feature\Task\Factory\TaskTagFactory::initialize</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Repository/TaskRepository.php.html#14">App\Feature\Task\Repository\TaskRepository::__construct</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Repository/TaskTagRepository.php.html#14">App\Feature\Task\Repository\TaskTagRepository::__construct</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+ </tbody>
+</table>
+     </div>
+    </div>
+   </div>
+   <footer>
+    <hr/>
+    <p>
+     <small>Generated by <a href="https://github.com/sebastianbergmann/php-code-coverage" target="_top">php-code-coverage 14.1.1</a> using <a href="https://www.php.net/" target="_top">PHP 8.5.5</a> and <a href="https://phpunit.de/">PHPUnit 13.1.3</a> at Wed Apr 22 21:20:07 UTC 2026.</small>
+    </p>
+   </footer>
+  </div>
+ </body>
+</html>

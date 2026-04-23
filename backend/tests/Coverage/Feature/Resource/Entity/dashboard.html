@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <title>Dashboard for /app/src/Feature/Resource/Entity</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="../../../_css/bootstrap.min.css?v=14.1.1" rel="stylesheet" type="text/css">
+  <link href="../../../_css/style.css?v=14.1.1" rel="stylesheet" type="text/css">
+  <link href="../../../_css/custom.css" rel="stylesheet" type="text/css">
+ </head>
+ <body>
+  <header>
+   <div class="container-fluid">
+    <div class="row">
+     <div class="col-md-12">
+      <nav aria-label="breadcrumb">
+       <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="../../../index.html">/app/src</a></li>
+         <li class="breadcrumb-item"><a href="../../index.html">Feature</a></li>
+         <li class="breadcrumb-item"><a href="../index.html">Resource</a></li>
+         <li class="breadcrumb-item"><a href="index.html">Entity</a></li>
+         <li class="breadcrumb-item active">(Dashboard)</li>
+
+       </ol>
+      </nav>
+     </div>
+    </div>
+   </div>
+  </header>
+  <div class="container-fluid">
+   <div class="row dashboard-row">
+    <div class="col-md-6">
+     <h3>Classes</h3>
+     <p class="text-muted small">Bubble size = executable lines. Hover for details, click to navigate.</p>
+     <div class="file-coverage-chart">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400" preserveAspectRatio="xMidYMid meet">
+ <style>
+  .bubble-success { fill: var(--phpunit-success-bar); opacity: 0.7; }
+  .bubble-warning { fill: var(--phpunit-warning-bar); opacity: 0.7; }
+  .bubble-danger { fill: var(--phpunit-danger-bar); opacity: 0.7; }
+  .bubble-success:hover, .bubble-warning:hover, .bubble-danger:hover { opacity: 1; stroke: var(--bs-emphasis-color); stroke-width: 1.5; }
+  .chart-grid { stroke: var(--bs-border-color); stroke-width: 0.5; stroke-dasharray: 4,4; opacity: 0.5; }
+  .chart-axis { stroke: var(--bs-border-color); stroke-width: 1; }
+  .chart-label { fill: var(--bs-body-color); font-size: 11px; font-family: var(--bs-font-sans-serif, sans-serif); }
+  .chart-title { fill: var(--bs-body-color); font-size: 12px; font-family: var(--bs-font-sans-serif, sans-serif); }
+ </style>
+ <line x1="60.0" y1="20" x2="60.0" y2="350" class="chart-grid"/>
+ <text x="60.0" y="368" text-anchor="middle" class="chart-label">0%</text>
+ <line x1="204.0" y1="20" x2="204.0" y2="350" class="chart-grid"/>
+ <text x="204.0" y="368" text-anchor="middle" class="chart-label">20%</text>
+ <line x1="348.0" y1="20" x2="348.0" y2="350" class="chart-grid"/>
+ <text x="348.0" y="368" text-anchor="middle" class="chart-label">40%</text>
+ <line x1="492.0" y1="20" x2="492.0" y2="350" class="chart-grid"/>
+ <text x="492.0" y="368" text-anchor="middle" class="chart-label">60%</text>
+ <line x1="636.0" y1="20" x2="636.0" y2="350" class="chart-grid"/>
+ <text x="636.0" y="368" text-anchor="middle" class="chart-label">80%</text>
+ <line x1="780.0" y1="20" x2="780.0" y2="350" class="chart-grid"/>
+ <text x="780.0" y="368" text-anchor="middle" class="chart-label">100%</text>
+ <line x1="60" y1="350.0" x2="780" y2="350.0" class="chart-grid"/>
+ <text x="52" y="350.0" text-anchor="end" dominant-baseline="middle" class="chart-label">0</text>
+ <line x1="60" y1="284.0" x2="780" y2="284.0" class="chart-grid"/>
+ <text x="52" y="284.0" text-anchor="end" dominant-baseline="middle" class="chart-label">10</text>
+ <line x1="60" y1="218.0" x2="780" y2="218.0" class="chart-grid"/>
+ <text x="52" y="218.0" text-anchor="end" dominant-baseline="middle" class="chart-label">20</text>
+ <line x1="60" y1="152.0" x2="780" y2="152.0" class="chart-grid"/>
+ <text x="52" y="152.0" text-anchor="end" dominant-baseline="middle" class="chart-label">30</text>
+ <line x1="60" y1="86.0" x2="780" y2="86.0" class="chart-grid"/>
+ <text x="52" y="86.0" text-anchor="end" dominant-baseline="middle" class="chart-label">40</text>
+ <line x1="60" y1="20.0" x2="780" y2="20.0" class="chart-grid"/>
+ <text x="52" y="20.0" text-anchor="end" dominant-baseline="middle" class="chart-label">50</text>
+ <line x1="60" y1="20" x2="60" y2="350" class="chart-axis"/>
+ <line x1="60" y1="350" x2="780" y2="350" class="chart-axis"/>
+ <text x="420.0" y="395" text-anchor="middle" class="chart-title">Line Coverage (%)</text>
+ <text x="15" y="185.0" text-anchor="middle" transform="rotate(-90, 15, 185.0)" class="chart-title">Cyclomatic Complexity</text>
+ <a href="Resource.php.html#16"><circle cx="60.0" cy="105.8" r="20.0" class="bubble-danger"><title>App\Feature\Resource\Entity\Resource — Coverage: 0.0% | Lines: 48 | Complexity: 37</title></circle></a>
+ <a href="ResourceTag.php.html#11"><circle cx="60.0" cy="303.8" r="8.7" class="bubble-danger"><title>App\Feature\Resource\Entity\ResourceTag — Coverage: 0.0% | Lines: 9 | Complexity: 7</title></circle></a>
+</svg>
+     </div>
+    </div>
+    <div class="col-md-6 dashboard-column">
+     <h3>&nbsp;</h3>
+     <p class="text-muted small">Sorted by descending CRAP (Change Risk Anti-Patterns) index.</p>
+     <div class="scrollbox">
+<table class="table">
+ <thead>
+  <tr>
+   <th>Class</th>
+   <th class="text-right"><abbr title="Change Risk Anti-Patterns (CRAP) Index">CRAP</abbr></th>
+   <th class="text-right">Coverage</th>
+  </tr>
+ </thead>
+ <tbody>
+  <tr><td><a href="Resource.php.html#16">App\Feature\Resource\Entity\Resource</a></td><td class="text-right">1406</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="ResourceTag.php.html#11">App\Feature\Resource\Entity\ResourceTag</a></td><td class="text-right">56</td><td class="text-right">0.0%</td></tr>
+ </tbody>
+</table>
+     </div>
+    </div>
+   </div>
+   <div class="row dashboard-row">
+    <div class="col-md-6">
+     <h3>Methods</h3>
+     <p class="text-muted small">Bubble size = executable lines. Hover for details, click to navigate.</p>
+     <div class="file-coverage-chart">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400" preserveAspectRatio="xMidYMid meet">
+ <style>
+  .bubble-success { fill: var(--phpunit-success-bar); opacity: 0.7; }
+  .bubble-warning { fill: var(--phpunit-warning-bar); opacity: 0.7; }
+  .bubble-danger { fill: var(--phpunit-danger-bar); opacity: 0.7; }
+  .bubble-success:hover, .bubble-warning:hover, .bubble-danger:hover { opacity: 1; stroke: var(--bs-emphasis-color); stroke-width: 1.5; }
+  .chart-grid { stroke: var(--bs-border-color); stroke-width: 0.5; stroke-dasharray: 4,4; opacity: 0.5; }
+  .chart-axis { stroke: var(--bs-border-color); stroke-width: 1; }
+  .chart-label { fill: var(--bs-body-color); font-size: 11px; font-family: var(--bs-font-sans-serif, sans-serif); }
+  .chart-title { fill: var(--bs-body-color); font-size: 12px; font-family: var(--bs-font-sans-serif, sans-serif); }
+ </style>
+ <line x1="60.0" y1="20" x2="60.0" y2="350" class="chart-grid"/>
+ <text x="60.0" y="368" text-anchor="middle" class="chart-label">0%</text>
+ <line x1="204.0" y1="20" x2="204.0" y2="350" class="chart-grid"/>
+ <text x="204.0" y="368" text-anchor="middle" class="chart-label">20%</text>
+ <line x1="348.0" y1="20" x2="348.0" y2="350" class="chart-grid"/>
+ <text x="348.0" y="368" text-anchor="middle" class="chart-label">40%</text>
+ <line x1="492.0" y1="20" x2="492.0" y2="350" class="chart-grid"/>
+ <text x="492.0" y="368" text-anchor="middle" class="chart-label">60%</text>
+ <line x1="636.0" y1="20" x2="636.0" y2="350" class="chart-grid"/>
+ <text x="636.0" y="368" text-anchor="middle" class="chart-label">80%</text>
+ <line x1="780.0" y1="20" x2="780.0" y2="350" class="chart-grid"/>
+ <text x="780.0" y="368" text-anchor="middle" class="chart-label">100%</text>
+ <line x1="60" y1="350.0" x2="780" y2="350.0" class="chart-grid"/>
+ <text x="52" y="350.0" text-anchor="end" dominant-baseline="middle" class="chart-label">0</text>
+ <line x1="60" y1="284.0" x2="780" y2="284.0" class="chart-grid"/>
+ <text x="52" y="284.0" text-anchor="end" dominant-baseline="middle" class="chart-label">2</text>
+ <line x1="60" y1="218.0" x2="780" y2="218.0" class="chart-grid"/>
+ <text x="52" y="218.0" text-anchor="end" dominant-baseline="middle" class="chart-label">4</text>
+ <line x1="60" y1="152.0" x2="780" y2="152.0" class="chart-grid"/>
+ <text x="52" y="152.0" text-anchor="end" dominant-baseline="middle" class="chart-label">6</text>
+ <line x1="60" y1="86.0" x2="780" y2="86.0" class="chart-grid"/>
+ <text x="52" y="86.0" text-anchor="end" dominant-baseline="middle" class="chart-label">8</text>
+ <line x1="60" y1="20.0" x2="780" y2="20.0" class="chart-grid"/>
+ <text x="52" y="20.0" text-anchor="end" dominant-baseline="middle" class="chart-label">10</text>
+ <line x1="60" y1="20" x2="60" y2="350" class="chart-axis"/>
+ <line x1="60" y1="350" x2="780" y2="350" class="chart-axis"/>
+ <text x="420.0" y="395" text-anchor="middle" class="chart-title">Line Coverage (%)</text>
+ <text x="15" y="185.0" text-anchor="middle" transform="rotate(-90, 15, 185.0)" class="chart-title">Cyclomatic Complexity</text>
+ <a href="Resource.php.html#216"><circle cx="60.0" cy="53.0" r="20.0" class="bubble-danger"><title>App\Feature\Resource\Entity\Resource::validateResourceFields — Coverage: 0.0% | Lines: 14 | Complexity: 9</title></circle></a>
+ <a href="Resource.php.html#89"><circle cx="60.0" cy="317.0" r="7.6" class="bubble-danger"><title>App\Feature\Resource\Entity\Resource::setUser — Coverage: 0.0% | Lines: 2 | Complexity: 1</title></circle></a>
+ <a href="Resource.php.html#101"><circle cx="60.0" cy="317.0" r="7.6" class="bubble-danger"><title>App\Feature\Resource\Entity\Resource::setSubject — Coverage: 0.0% | Lines: 2 | Complexity: 1</title></circle></a>
+ <a href="Resource.php.html#113"><circle cx="60.0" cy="317.0" r="7.6" class="bubble-danger"><title>App\Feature\Resource\Entity\Resource::setTitle — Coverage: 0.0% | Lines: 2 | Complexity: 1</title></circle></a>
+ <a href="Resource.php.html#125"><circle cx="60.0" cy="317.0" r="7.6" class="bubble-danger"><title>App\Feature\Resource\Entity\Resource::setDescription — Coverage: 0.0% | Lines: 2 | Complexity: 1</title></circle></a>
+ <a href="Resource.php.html#137"><circle cx="60.0" cy="317.0" r="7.6" class="bubble-danger"><title>App\Feature\Resource\Entity\Resource::setResourceType — Coverage: 0.0% | Lines: 2 | Complexity: 1</title></circle></a>
+ <a href="Resource.php.html#149"><circle cx="60.0" cy="284.0" r="7.6" class="bubble-danger"><title>App\Feature\Resource\Entity\Resource::setExternalUrl — Coverage: 0.0% | Lines: 2 | Complexity: 2</title></circle></a>
+ <a href="Resource.php.html#161"><circle cx="60.0" cy="284.0" r="7.6" class="bubble-danger"><title>App\Feature\Resource\Entity\Resource::setoriginalFilename — Coverage: 0.0% | Lines: 2 | Complexity: 2</title></circle></a>
+ <a href="Resource.php.html#173"><circle cx="60.0" cy="284.0" r="7.6" class="bubble-danger"><title>App\Feature\Resource\Entity\Resource::setStoragePath — Coverage: 0.0% | Lines: 2 | Complexity: 2</title></circle></a>
+ <a href="Resource.php.html#185"><circle cx="60.0" cy="284.0" r="7.6" class="bubble-danger"><title>App\Feature\Resource\Entity\Resource::setMimeType — Coverage: 0.0% | Lines: 2 | Complexity: 2</title></circle></a>
+ <a href="Resource.php.html#197"><circle cx="60.0" cy="317.0" r="7.6" class="bubble-danger"><title>App\Feature\Resource\Entity\Resource::setSizeBytes — Coverage: 0.0% | Lines: 2 | Complexity: 1</title></circle></a>
+ <a href="Resource.php.html#209"><circle cx="60.0" cy="284.0" r="7.6" class="bubble-danger"><title>App\Feature\Resource\Entity\Resource::setChecksumSha256 — Coverage: 0.0% | Lines: 2 | Complexity: 2</title></circle></a>
+ <a href="ResourceTag.php.html#51"><circle cx="60.0" cy="317.0" r="7.6" class="bubble-danger"><title>App\Feature\Resource\Entity\ResourceTag::setResource — Coverage: 0.0% | Lines: 2 | Complexity: 1</title></circle></a>
+ <a href="ResourceTag.php.html#63"><circle cx="60.0" cy="317.0" r="7.6" class="bubble-danger"><title>App\Feature\Resource\Entity\ResourceTag::setTag — Coverage: 0.0% | Lines: 2 | Complexity: 1</title></circle></a>
+ <a href="Resource.php.html#79"><circle cx="60.0" cy="317.0" r="5.3" class="bubble-danger"><title>App\Feature\Resource\Entity\Resource::getId — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Resource.php.html#84"><circle cx="60.0" cy="317.0" r="5.3" class="bubble-danger"><title>App\Feature\Resource\Entity\Resource::getUser — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Resource.php.html#96"><circle cx="60.0" cy="317.0" r="5.3" class="bubble-danger"><title>App\Feature\Resource\Entity\Resource::getSubject — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Resource.php.html#108"><circle cx="60.0" cy="317.0" r="5.3" class="bubble-danger"><title>App\Feature\Resource\Entity\Resource::getTitle — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Resource.php.html#120"><circle cx="60.0" cy="317.0" r="5.3" class="bubble-danger"><title>App\Feature\Resource\Entity\Resource::getDescription — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Resource.php.html#132"><circle cx="60.0" cy="317.0" r="5.3" class="bubble-danger"><title>App\Feature\Resource\Entity\Resource::getResourceType — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Resource.php.html#144"><circle cx="60.0" cy="317.0" r="5.3" class="bubble-danger"><title>App\Feature\Resource\Entity\Resource::getExternalUrl — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Resource.php.html#156"><circle cx="60.0" cy="317.0" r="5.3" class="bubble-danger"><title>App\Feature\Resource\Entity\Resource::getoriginalFilename — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Resource.php.html#168"><circle cx="60.0" cy="317.0" r="5.3" class="bubble-danger"><title>App\Feature\Resource\Entity\Resource::getStoragePath — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Resource.php.html#180"><circle cx="60.0" cy="317.0" r="5.3" class="bubble-danger"><title>App\Feature\Resource\Entity\Resource::getMimeType — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Resource.php.html#192"><circle cx="60.0" cy="317.0" r="5.3" class="bubble-danger"><title>App\Feature\Resource\Entity\Resource::getSizeBytes — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Resource.php.html#204"><circle cx="60.0" cy="317.0" r="5.3" class="bubble-danger"><title>App\Feature\Resource\Entity\Resource::getChecksumSha256 — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="ResourceTag.php.html#35"><circle cx="60.0" cy="317.0" r="5.3" class="bubble-danger"><title>App\Feature\Resource\Entity\ResourceTag::setCreatedAtValue — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="ResourceTag.php.html#41"><circle cx="60.0" cy="317.0" r="5.3" class="bubble-danger"><title>App\Feature\Resource\Entity\ResourceTag::getId — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="ResourceTag.php.html#46"><circle cx="60.0" cy="317.0" r="5.3" class="bubble-danger"><title>App\Feature\Resource\Entity\ResourceTag::getResource — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="ResourceTag.php.html#58"><circle cx="60.0" cy="317.0" r="5.3" class="bubble-danger"><title>App\Feature\Resource\Entity\ResourceTag::getTag — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="ResourceTag.php.html#70"><circle cx="60.0" cy="317.0" r="5.3" class="bubble-danger"><title>App\Feature\Resource\Entity\ResourceTag::getCreatedAt — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+</svg>
+     </div>
+    </div>
+    <div class="col-md-6 dashboard-column">
+     <h3>&nbsp;</h3>
+     <p class="text-muted small">Sorted by descending CRAP (Change Risk Anti-Patterns) index.</p>
+     <div class="scrollbox">
+<table class="table">
+ <thead>
+  <tr>
+   <th>Method</th>
+   <th class="text-right"><abbr title="Change Risk Anti-Patterns (CRAP) Index">CRAP</abbr></th>
+   <th class="text-right">Coverage</th>
+  </tr>
+ </thead>
+ <tbody>
+  <tr><td><a href="Resource.php.html#216">App\Feature\Resource\Entity\Resource::validateResourceFields</a></td><td class="text-right">90</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Resource.php.html#149">App\Feature\Resource\Entity\Resource::setExternalUrl</a></td><td class="text-right">6</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Resource.php.html#161">App\Feature\Resource\Entity\Resource::setoriginalFilename</a></td><td class="text-right">6</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Resource.php.html#173">App\Feature\Resource\Entity\Resource::setStoragePath</a></td><td class="text-right">6</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Resource.php.html#185">App\Feature\Resource\Entity\Resource::setMimeType</a></td><td class="text-right">6</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Resource.php.html#209">App\Feature\Resource\Entity\Resource::setChecksumSha256</a></td><td class="text-right">6</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Resource.php.html#79">App\Feature\Resource\Entity\Resource::getId</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Resource.php.html#84">App\Feature\Resource\Entity\Resource::getUser</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Resource.php.html#89">App\Feature\Resource\Entity\Resource::setUser</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Resource.php.html#96">App\Feature\Resource\Entity\Resource::getSubject</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Resource.php.html#101">App\Feature\Resource\Entity\Resource::setSubject</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Resource.php.html#108">App\Feature\Resource\Entity\Resource::getTitle</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Resource.php.html#113">App\Feature\Resource\Entity\Resource::setTitle</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Resource.php.html#120">App\Feature\Resource\Entity\Resource::getDescription</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Resource.php.html#125">App\Feature\Resource\Entity\Resource::setDescription</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Resource.php.html#132">App\Feature\Resource\Entity\Resource::getResourceType</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Resource.php.html#137">App\Feature\Resource\Entity\Resource::setResourceType</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Resource.php.html#144">App\Feature\Resource\Entity\Resource::getExternalUrl</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Resource.php.html#156">App\Feature\Resource\Entity\Resource::getoriginalFilename</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Resource.php.html#168">App\Feature\Resource\Entity\Resource::getStoragePath</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Resource.php.html#180">App\Feature\Resource\Entity\Resource::getMimeType</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Resource.php.html#192">App\Feature\Resource\Entity\Resource::getSizeBytes</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Resource.php.html#197">App\Feature\Resource\Entity\Resource::setSizeBytes</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Resource.php.html#204">App\Feature\Resource\Entity\Resource::getChecksumSha256</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="ResourceTag.php.html#35">App\Feature\Resource\Entity\ResourceTag::setCreatedAtValue</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="ResourceTag.php.html#41">App\Feature\Resource\Entity\ResourceTag::getId</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="ResourceTag.php.html#46">App\Feature\Resource\Entity\ResourceTag::getResource</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="ResourceTag.php.html#51">App\Feature\Resource\Entity\ResourceTag::setResource</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="ResourceTag.php.html#58">App\Feature\Resource\Entity\ResourceTag::getTag</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="ResourceTag.php.html#63">App\Feature\Resource\Entity\ResourceTag::setTag</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="ResourceTag.php.html#70">App\Feature\Resource\Entity\ResourceTag::getCreatedAt</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+ </tbody>
+</table>
+     </div>
+    </div>
+   </div>
+   <footer>
+    <hr/>
+    <p>
+     <small>Generated by <a href="https://github.com/sebastianbergmann/php-code-coverage" target="_top">php-code-coverage 14.1.1</a> using <a href="https://www.php.net/" target="_top">PHP 8.5.5</a> and <a href="https://phpunit.de/">PHPUnit 13.1.3</a> at Wed Apr 22 21:20:07 UTC 2026.</small>
+    </p>
+   </footer>
+  </div>
+ </body>
+</html>

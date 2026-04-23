@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <title>Dashboard for /app/src/Feature/LiveTimerSession</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="../../_css/bootstrap.min.css?v=14.1.1" rel="stylesheet" type="text/css">
+  <link href="../../_css/style.css?v=14.1.1" rel="stylesheet" type="text/css">
+  <link href="../../_css/custom.css" rel="stylesheet" type="text/css">
+ </head>
+ <body>
+  <header>
+   <div class="container-fluid">
+    <div class="row">
+     <div class="col-md-12">
+      <nav aria-label="breadcrumb">
+       <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="../../index.html">/app/src</a></li>
+         <li class="breadcrumb-item"><a href="../index.html">Feature</a></li>
+         <li class="breadcrumb-item"><a href="index.html">LiveTimerSession</a></li>
+         <li class="breadcrumb-item active">(Dashboard)</li>
+
+       </ol>
+      </nav>
+     </div>
+    </div>
+   </div>
+  </header>
+  <div class="container-fluid">
+   <div class="row dashboard-row">
+    <div class="col-md-6">
+     <h3>Classes</h3>
+     <p class="text-muted small">Bubble size = executable lines. Hover for details, click to navigate.</p>
+     <div class="file-coverage-chart">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400" preserveAspectRatio="xMidYMid meet">
+ <style>
+  .bubble-success { fill: var(--phpunit-success-bar); opacity: 0.7; }
+  .bubble-warning { fill: var(--phpunit-warning-bar); opacity: 0.7; }
+  .bubble-danger { fill: var(--phpunit-danger-bar); opacity: 0.7; }
+  .bubble-success:hover, .bubble-warning:hover, .bubble-danger:hover { opacity: 1; stroke: var(--bs-emphasis-color); stroke-width: 1.5; }
+  .chart-grid { stroke: var(--bs-border-color); stroke-width: 0.5; stroke-dasharray: 4,4; opacity: 0.5; }
+  .chart-axis { stroke: var(--bs-border-color); stroke-width: 1; }
+  .chart-label { fill: var(--bs-body-color); font-size: 11px; font-family: var(--bs-font-sans-serif, sans-serif); }
+  .chart-title { fill: var(--bs-body-color); font-size: 12px; font-family: var(--bs-font-sans-serif, sans-serif); }
+ </style>
+ <line x1="60.0" y1="20" x2="60.0" y2="350" class="chart-grid"/>
+ <text x="60.0" y="368" text-anchor="middle" class="chart-label">0%</text>
+ <line x1="204.0" y1="20" x2="204.0" y2="350" class="chart-grid"/>
+ <text x="204.0" y="368" text-anchor="middle" class="chart-label">20%</text>
+ <line x1="348.0" y1="20" x2="348.0" y2="350" class="chart-grid"/>
+ <text x="348.0" y="368" text-anchor="middle" class="chart-label">40%</text>
+ <line x1="492.0" y1="20" x2="492.0" y2="350" class="chart-grid"/>
+ <text x="492.0" y="368" text-anchor="middle" class="chart-label">60%</text>
+ <line x1="636.0" y1="20" x2="636.0" y2="350" class="chart-grid"/>
+ <text x="636.0" y="368" text-anchor="middle" class="chart-label">80%</text>
+ <line x1="780.0" y1="20" x2="780.0" y2="350" class="chart-grid"/>
+ <text x="780.0" y="368" text-anchor="middle" class="chart-label">100%</text>
+ <line x1="60" y1="350.0" x2="780" y2="350.0" class="chart-grid"/>
+ <text x="52" y="350.0" text-anchor="end" dominant-baseline="middle" class="chart-label">0</text>
+ <line x1="60" y1="267.5" x2="780" y2="267.5" class="chart-grid"/>
+ <text x="52" y="267.5" text-anchor="end" dominant-baseline="middle" class="chart-label">10</text>
+ <line x1="60" y1="185.0" x2="780" y2="185.0" class="chart-grid"/>
+ <text x="52" y="185.0" text-anchor="end" dominant-baseline="middle" class="chart-label">20</text>
+ <line x1="60" y1="102.5" x2="780" y2="102.5" class="chart-grid"/>
+ <text x="52" y="102.5" text-anchor="end" dominant-baseline="middle" class="chart-label">30</text>
+ <line x1="60" y1="20.0" x2="780" y2="20.0" class="chart-grid"/>
+ <text x="52" y="20.0" text-anchor="end" dominant-baseline="middle" class="chart-label">40</text>
+ <line x1="60" y1="20" x2="60" y2="350" class="chart-axis"/>
+ <line x1="60" y1="350" x2="780" y2="350" class="chart-axis"/>
+ <text x="420.0" y="395" text-anchor="middle" class="chart-title">Line Coverage (%)</text>
+ <text x="15" y="185.0" text-anchor="middle" transform="rotate(-90, 15, 185.0)" class="chart-title">Cyclomatic Complexity</text>
+ <a href="Service/State.php.html#10"><circle cx="60.0" cy="152.0" r="20.0" class="bubble-danger"><title>App\Feature\LiveTimerSession\Service\State — Coverage: 0.0% | Lines: 88 | Complexity: 24</title></circle></a>
+ <a href="Service/Projector.php.html#8"><circle cx="60.0" cy="209.8" r="16.9" class="bubble-danger"><title>App\Feature\LiveTimerSession\Service\Projector — Coverage: 0.0% | Lines: 63 | Complexity: 17</title></circle></a>
+ <a href="Controller/SessionActionController.php.html#18"><circle cx="60.0" cy="292.2" r="16.2" class="bubble-danger"><title>App\Feature\LiveTimerSession\Controller\SessionActionController — Coverage: 0.0% | Lines: 58 | Complexity: 7</title></circle></a>
+ <a href="Entity/Session.php.html#19"><circle cx="60.0" cy="53.0" r="16.1" class="bubble-danger"><title>App\Feature\LiveTimerSession\Entity\Session — Coverage: 0.0% | Lines: 57 | Complexity: 36</title></circle></a>
+ <a href="Entity/SessionEntry.php.html#16"><circle cx="60.0" cy="77.8" r="14.6" class="bubble-danger"><title>App\Feature\LiveTimerSession\Entity\SessionEntry — Coverage: 0.0% | Lines: 47 | Complexity: 33</title></circle></a>
+ <a href="Service/Finalizer.php.html#15"><circle cx="60.0" cy="275.8" r="14.6" class="bubble-danger"><title>App\Feature\LiveTimerSession\Service\Finalizer — Coverage: 0.0% | Lines: 47 | Complexity: 9</title></circle></a>
+ <a href="Factory/SessionFactory.php.html#15"><circle cx="60.0" cy="300.5" r="12.2" class="bubble-danger"><title>App\Feature\LiveTimerSession\Factory\SessionFactory — Coverage: 0.0% | Lines: 33 | Complexity: 6</title></circle></a>
+ <a href="Service/StateHydrator.php.html#8"><circle cx="60.0" cy="325.2" r="12.1" class="bubble-danger"><title>App\Feature\LiveTimerSession\Service\StateHydrator — Coverage: 0.0% | Lines: 32 | Complexity: 3</title></circle></a>
+ <a href="Factory/SessionEntryFactory.php.html#15"><circle cx="60.0" cy="242.8" r="11.5" class="bubble-danger"><title>App\Feature\LiveTimerSession\Factory\SessionEntryFactory — Coverage: 0.0% | Lines: 29 | Complexity: 13</title></circle></a>
+ <a href="Controller/SessionController.php.html#16"><circle cx="60.0" cy="325.2" r="10.2" class="bubble-danger"><title>App\Feature\LiveTimerSession\Controller\SessionController — Coverage: 0.0% | Lines: 23 | Complexity: 3</title></circle></a>
+ <a href="Controller/AbstractSessionController.php.html#14"><circle cx="60.0" cy="275.8" r="9.0" class="bubble-danger"><title>App\Feature\LiveTimerSession\Controller\AbstractSessionController — Coverage: 0.0% | Lines: 18 | Complexity: 9</title></circle></a>
+ <a href="Service/Publisher.php.html#8"><circle cx="60.0" cy="317.0" r="9.0" class="bubble-danger"><title>App\Feature\LiveTimerSession\Service\Publisher — Coverage: 0.0% | Lines: 18 | Complexity: 4</title></circle></a>
+ <a href="Service/Store.php.html#7"><circle cx="60.0" cy="292.2" r="8.0" class="bubble-danger"><title>App\Feature\LiveTimerSession\Service\Store — Coverage: 0.0% | Lines: 14 | Complexity: 7</title></circle></a>
+ <a href="Service/TimeService.php.html#5"><circle cx="60.0" cy="317.0" r="5.2" class="bubble-danger"><title>App\Feature\LiveTimerSession\Service\TimeService — Coverage: 0.0% | Lines: 6 | Complexity: 4</title></circle></a>
+ <a href="Dto/Command/ChangeConfig.php.html#8"><circle cx="60.0" cy="341.8" r="4.0" class="bubble-danger"><title>App\Feature\LiveTimerSession\Dto\Command\ChangeConfig — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Dto/Command/CreateSession.php.html#8"><circle cx="60.0" cy="341.8" r="4.0" class="bubble-danger"><title>App\Feature\LiveTimerSession\Dto\Command\CreateSession — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Dto/Command/EmptyCommand.php.html#5"><circle cx="60.0" cy="341.8" r="4.0" class="bubble-danger"><title>App\Feature\LiveTimerSession\Dto\Command\EmptyCommand — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Dto/Command/StopSession.php.html#7"><circle cx="60.0" cy="341.8" r="4.0" class="bubble-danger"><title>App\Feature\LiveTimerSession\Dto\Command\StopSession — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Dto/DurationDto.php.html#7"><circle cx="60.0" cy="341.8" r="4.0" class="bubble-danger"><title>App\Feature\LiveTimerSession\Dto\DurationDto — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Enum/SessionPhase.php.html#5"><circle cx="60.0" cy="341.8" r="4.0" class="bubble-danger"><title>App\Feature\LiveTimerSession\Enum\SessionPhase — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Enum/SessionStatus.php.html#5"><circle cx="60.0" cy="341.8" r="4.0" class="bubble-danger"><title>App\Feature\LiveTimerSession\Enum\SessionStatus — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Enum/SessionType.php.html#5"><circle cx="60.0" cy="341.8" r="4.0" class="bubble-danger"><title>App\Feature\LiveTimerSession\Enum\SessionType — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Repository/SessionEntryRepository.php.html#12"><circle cx="60.0" cy="341.8" r="4.0" class="bubble-danger"><title>App\Feature\LiveTimerSession\Repository\SessionEntryRepository — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Repository/SessionRepository.php.html#12"><circle cx="60.0" cy="341.8" r="4.0" class="bubble-danger"><title>App\Feature\LiveTimerSession\Repository\SessionRepository — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+</svg>
+     </div>
+    </div>
+    <div class="col-md-6 dashboard-column">
+     <h3>&nbsp;</h3>
+     <p class="text-muted small">Sorted by descending CRAP (Change Risk Anti-Patterns) index.</p>
+     <div class="scrollbox">
+<table class="table">
+ <thead>
+  <tr>
+   <th>Class</th>
+   <th class="text-right"><abbr title="Change Risk Anti-Patterns (CRAP) Index">CRAP</abbr></th>
+   <th class="text-right">Coverage</th>
+  </tr>
+ </thead>
+ <tbody>
+  <tr><td><a href="Entity/Session.php.html#19">App\Feature\LiveTimerSession\Entity\Session</a></td><td class="text-right">1332</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Entity/SessionEntry.php.html#16">App\Feature\LiveTimerSession\Entity\SessionEntry</a></td><td class="text-right">1122</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Service/State.php.html#10">App\Feature\LiveTimerSession\Service\State</a></td><td class="text-right">600</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Service/Projector.php.html#8">App\Feature\LiveTimerSession\Service\Projector</a></td><td class="text-right">306</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Factory/SessionEntryFactory.php.html#15">App\Feature\LiveTimerSession\Factory\SessionEntryFactory</a></td><td class="text-right">182</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Controller/AbstractSessionController.php.html#14">App\Feature\LiveTimerSession\Controller\AbstractSessionController</a></td><td class="text-right">90</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Service/Finalizer.php.html#15">App\Feature\LiveTimerSession\Service\Finalizer</a></td><td class="text-right">90</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Controller/SessionActionController.php.html#18">App\Feature\LiveTimerSession\Controller\SessionActionController</a></td><td class="text-right">56</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Service/Store.php.html#7">App\Feature\LiveTimerSession\Service\Store</a></td><td class="text-right">56</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Factory/SessionFactory.php.html#15">App\Feature\LiveTimerSession\Factory\SessionFactory</a></td><td class="text-right">42</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Service/Publisher.php.html#8">App\Feature\LiveTimerSession\Service\Publisher</a></td><td class="text-right">20</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Service/TimeService.php.html#5">App\Feature\LiveTimerSession\Service\TimeService</a></td><td class="text-right">20</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Controller/SessionController.php.html#16">App\Feature\LiveTimerSession\Controller\SessionController</a></td><td class="text-right">12</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Service/StateHydrator.php.html#8">App\Feature\LiveTimerSession\Service\StateHydrator</a></td><td class="text-right">12</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Dto/Command/ChangeConfig.php.html#8">App\Feature\LiveTimerSession\Dto\Command\ChangeConfig</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Dto/Command/CreateSession.php.html#8">App\Feature\LiveTimerSession\Dto\Command\CreateSession</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Dto/Command/EmptyCommand.php.html#5">App\Feature\LiveTimerSession\Dto\Command\EmptyCommand</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Dto/Command/StopSession.php.html#7">App\Feature\LiveTimerSession\Dto\Command\StopSession</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Dto/DurationDto.php.html#7">App\Feature\LiveTimerSession\Dto\DurationDto</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Enum/SessionPhase.php.html#5">App\Feature\LiveTimerSession\Enum\SessionPhase</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Enum/SessionStatus.php.html#5">App\Feature\LiveTimerSession\Enum\SessionStatus</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Enum/SessionType.php.html#5">App\Feature\LiveTimerSession\Enum\SessionType</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Repository/SessionEntryRepository.php.html#12">App\Feature\LiveTimerSession\Repository\SessionEntryRepository</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Repository/SessionRepository.php.html#12">App\Feature\LiveTimerSession\Repository\SessionRepository</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+ </tbody>
+</table>
+     </div>
+    </div>
+   </div>
+   <div class="row dashboard-row">
+    <div class="col-md-6">
+     <h3>Methods</h3>
+     <p class="text-muted small">Bubble size = executable lines. Hover for details, click to navigate.</p>
+     <div class="file-coverage-chart">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400" preserveAspectRatio="xMidYMid meet">
+ <style>
+  .bubble-success { fill: var(--phpunit-success-bar); opacity: 0.7; }
+  .bubble-warning { fill: var(--phpunit-warning-bar); opacity: 0.7; }
+  .bubble-danger { fill: var(--phpunit-danger-bar); opacity: 0.7; }
+  .bubble-success:hover, .bubble-warning:hover, .bubble-danger:hover { opacity: 1; stroke: var(--bs-emphasis-color); stroke-width: 1.5; }
+  .chart-grid { stroke: var(--bs-border-color); stroke-width: 0.5; stroke-dasharray: 4,4; opacity: 0.5; }
+  .chart-axis { stroke: var(--bs-border-color); stroke-width: 1; }
+  .chart-label { fill: var(--bs-body-color); font-size: 11px; font-family: var(--bs-font-sans-serif, sans-serif); }
+  .chart-title { fill: var(--bs-body-color); font-size: 12px; font-family: var(--bs-font-sans-serif, sans-serif); }
+ </style>
+ <line x1="60.0" y1="20" x2="60.0" y2="350" class="chart-grid"/>
+ <text x="60.0" y="368" text-anchor="middle" class="chart-label">0%</text>
+ <line x1="204.0" y1="20" x2="204.0" y2="350" class="chart-grid"/>
+ <text x="204.0" y="368" text-anchor="middle" class="chart-label">20%</text>
+ <line x1="348.0" y1="20" x2="348.0" y2="350" class="chart-grid"/>
+ <text x="348.0" y="368" text-anchor="middle" class="chart-label">40%</text>
+ <line x1="492.0" y1="20" x2="492.0" y2="350" class="chart-grid"/>
+ <text x="492.0" y="368" text-anchor="middle" class="chart-label">60%</text>
+ <line x1="636.0" y1="20" x2="636.0" y2="350" class="chart-grid"/>
+ <text x="636.0" y="368" text-anchor="middle" class="chart-label">80%</text>
+ <line x1="780.0" y1="20" x2="780.0" y2="350" class="chart-grid"/>
+ <text x="780.0" y="368" text-anchor="middle" class="chart-label">100%</text>
+ <line x1="60" y1="350.0" x2="780" y2="350.0" class="chart-grid"/>
+ <text x="52" y="350.0" text-anchor="end" dominant-baseline="middle" class="chart-label">0</text>
+ <line x1="60" y1="284.0" x2="780" y2="284.0" class="chart-grid"/>
+ <text x="52" y="284.0" text-anchor="end" dominant-baseline="middle" class="chart-label">2</text>
+ <line x1="60" y1="218.0" x2="780" y2="218.0" class="chart-grid"/>
+ <text x="52" y="218.0" text-anchor="end" dominant-baseline="middle" class="chart-label">4</text>
+ <line x1="60" y1="152.0" x2="780" y2="152.0" class="chart-grid"/>
+ <text x="52" y="152.0" text-anchor="end" dominant-baseline="middle" class="chart-label">6</text>
+ <line x1="60" y1="86.0" x2="780" y2="86.0" class="chart-grid"/>
+ <text x="52" y="86.0" text-anchor="end" dominant-baseline="middle" class="chart-label">8</text>
+ <line x1="60" y1="20.0" x2="780" y2="20.0" class="chart-grid"/>
+ <text x="52" y="20.0" text-anchor="end" dominant-baseline="middle" class="chart-label">10</text>
+ <line x1="60" y1="20" x2="60" y2="350" class="chart-axis"/>
+ <line x1="60" y1="350" x2="780" y2="350" class="chart-axis"/>
+ <text x="420.0" y="395" text-anchor="middle" class="chart-title">Line Coverage (%)</text>
+ <text x="15" y="185.0" text-anchor="middle" transform="rotate(-90, 15, 185.0)" class="chart-title">Cyclomatic Complexity</text>
+ <a href="Service/Finalizer.php.html#25"><circle cx="60.0" cy="86.0" r="20.0" class="bubble-danger"><title>App\Feature\LiveTimerSession\Service\Finalizer::finalize — Coverage: 0.0% | Lines: 46 | Complexity: 8</title></circle></a>
+ <a href="Service/Projector.php.html#16"><circle cx="60.0" cy="251.0" r="15.6" class="bubble-danger"><title>App\Feature\LiveTimerSession\Service\Projector::project — Coverage: 0.0% | Lines: 28 | Complexity: 3</title></circle></a>
+ <a href="Service/Projector.php.html#50"><circle cx="60.0" cy="86.0" r="15.0" class="bubble-danger"><title>App\Feature\LiveTimerSession\Service\Projector::resolve — Coverage: 0.0% | Lines: 26 | Complexity: 8</title></circle></a>
+ <a href="Factory/SessionEntryFactory.php.html#33"><circle cx="60.0" cy="86.0" r="13.8" class="bubble-danger"><title>App\Feature\LiveTimerSession\Factory\SessionEntryFactory::timed — Coverage: 0.0% | Lines: 22 | Complexity: 8</title></circle></a>
+ <a href="Controller/SessionController.php.html#19"><circle cx="60.0" cy="317.0" r="12.2" class="bubble-danger"><title>App\Feature\LiveTimerSession\Controller\SessionController::create — Coverage: 0.0% | Lines: 17 | Complexity: 1</title></circle></a>
+ <a href="Factory/SessionFactory.php.html#33"><circle cx="60.0" cy="317.0" r="12.2" class="bubble-danger"><title>App\Feature\LiveTimerSession\Factory\SessionFactory::completed — Coverage: 0.0% | Lines: 17 | Complexity: 1</title></circle></a>
+ <a href="Service/State.php.html#31"><circle cx="60.0" cy="317.0" r="12.2" class="bubble-danger"><title>App\Feature\LiveTimerSession\Service\State::create — Coverage: 0.0% | Lines: 17 | Complexity: 1</title></circle></a>
+ <a href="Controller/SessionActionController.php.html#141"><circle cx="60.0" cy="317.0" r="11.8" class="bubble-danger"><title>App\Feature\LiveTimerSession\Controller\SessionActionController::stopAndSave — Coverage: 0.0% | Lines: 16 | Complexity: 1</title></circle></a>
+ <a href="Service/StateHydrator.php.html#10"><circle cx="60.0" cy="284.0" r="11.8" class="bubble-danger"><title>App\Feature\LiveTimerSession\Service\StateHydrator::fromArray — Coverage: 0.0% | Lines: 16 | Complexity: 2</title></circle></a>
+ <a href="Service/StateHydrator.php.html#30"><circle cx="60.0" cy="317.0" r="11.8" class="bubble-danger"><title>App\Feature\LiveTimerSession\Service\StateHydrator::toArray — Coverage: 0.0% | Lines: 16 | Complexity: 1</title></circle></a>
+ <a href="Entity/Session.php.html#256"><circle cx="60.0" cy="119.0" r="11.0" class="bubble-danger"><title>App\Feature\LiveTimerSession\Entity\Session::validateChronology — Coverage: 0.0% | Lines: 14 | Complexity: 7</title></circle></a>
+ <a href="Service/State.php.html#160"><circle cx="60.0" cy="251.0" r="11.0" class="bubble-danger"><title>App\Feature\LiveTimerSession\Service\State::changeConfig — Coverage: 0.0% | Lines: 14 | Complexity: 3</title></circle></a>
+ <a href="Service/State.php.html#99"><circle cx="60.0" cy="284.0" r="10.2" class="bubble-danger"><title>App\Feature\LiveTimerSession\Service\State::start — Coverage: 0.0% | Lines: 12 | Complexity: 2</title></circle></a>
+ <a href="Service/Publisher.php.html#26"><circle cx="60.0" cy="317.0" r="9.8" class="bubble-danger"><title>App\Feature\LiveTimerSession\Service\Publisher::publishDeleted — Coverage: 0.0% | Lines: 11 | Complexity: 1</title></circle></a>
+ <a href="Factory/SessionFactory.php.html#74"><circle cx="60.0" cy="317.0" r="9.3" class="bubble-danger"><title>App\Feature\LiveTimerSession\Factory\SessionFactory::defaults — Coverage: 0.0% | Lines: 10 | Complexity: 1</title></circle></a>
+ <a href="Service/State.php.html#66"><circle cx="60.0" cy="251.0" r="9.3" class="bubble-danger"><title>App\Feature\LiveTimerSession\Service\State::pause — Coverage: 0.0% | Lines: 10 | Complexity: 3</title></circle></a>
+ <a href="Service/State.php.html#206"><circle cx="60.0" cy="251.0" r="8.8" class="bubble-danger"><title>App\Feature\LiveTimerSession\Service\State::getElapsedInCurrentPhase — Coverage: 0.0% | Lines: 9 | Complexity: 3</title></circle></a>
+ <a href="Controller/SessionActionController.php.html#22"><circle cx="60.0" cy="317.0" r="7.8" class="bubble-danger"><title>App\Feature\LiveTimerSession\Controller\SessionActionController::start — Coverage: 0.0% | Lines: 7 | Complexity: 1</title></circle></a>
+ <a href="Controller/SessionActionController.php.html#42"><circle cx="60.0" cy="317.0" r="7.8" class="bubble-danger"><title>App\Feature\LiveTimerSession\Controller\SessionActionController::pause — Coverage: 0.0% | Lines: 7 | Complexity: 1</title></circle></a>
+ <a href="Controller/SessionActionController.php.html#62"><circle cx="60.0" cy="317.0" r="7.8" class="bubble-danger"><title>App\Feature\LiveTimerSession\Controller\SessionActionController::resume — Coverage: 0.0% | Lines: 7 | Complexity: 1</title></circle></a>
+ <a href="Controller/SessionActionController.php.html#82"><circle cx="60.0" cy="317.0" r="7.8" class="bubble-danger"><title>App\Feature\LiveTimerSession\Controller\SessionActionController::skipPhase — Coverage: 0.0% | Lines: 7 | Complexity: 1</title></circle></a>
+ <a href="Controller/SessionActionController.php.html#102"><circle cx="60.0" cy="317.0" r="7.8" class="bubble-danger"><title>App\Feature\LiveTimerSession\Controller\SessionActionController::resetPhase — Coverage: 0.0% | Lines: 7 | Complexity: 1</title></circle></a>
+ <a href="Controller/SessionActionController.php.html#121"><circle cx="60.0" cy="317.0" r="7.8" class="bubble-danger"><title>App\Feature\LiveTimerSession\Controller\SessionActionController::changeConfig — Coverage: 0.0% | Lines: 7 | Complexity: 1</title></circle></a>
+ <a href="Entity/SessionEntry.php.html#214"><circle cx="60.0" cy="218.0" r="7.8" class="bubble-danger"><title>App\Feature\LiveTimerSession\Entity\SessionEntry::validateChronology — Coverage: 0.0% | Lines: 7 | Complexity: 4</title></circle></a>
+ <a href="Service/State.php.html#190"><circle cx="60.0" cy="284.0" r="7.8" class="bubble-danger"><title>App\Feature\LiveTimerSession\Service\State::getTotalDurations — Coverage: 0.0% | Lines: 7 | Complexity: 2</title></circle></a>
+ <a href="Service/Store.php.html#16"><circle cx="60.0" cy="251.0" r="7.8" class="bubble-danger"><title>App\Feature\LiveTimerSession\Service\Store::get — Coverage: 0.0% | Lines: 7 | Complexity: 3</title></circle></a>
+ <a href="Controller/AbstractSessionController.php.html#32"><circle cx="60.0" cy="251.0" r="7.2" class="bubble-danger"><title>App\Feature\LiveTimerSession\Controller\AbstractSessionController::requireOwnedState — Coverage: 0.0% | Lines: 6 | Complexity: 3</title></circle></a>
+ <a href="Controller/AbstractSessionController.php.html#16"><circle cx="60.0" cy="317.0" r="6.6" class="bubble-danger"><title>App\Feature\LiveTimerSession\Controller\AbstractSessionController::applyCommand — Coverage: 0.0% | Lines: 5 | Complexity: 1</title></circle></a>
+ <a href="Service/Publisher.php.html#16"><circle cx="60.0" cy="317.0" r="6.6" class="bubble-danger"><title>App\Feature\LiveTimerSession\Service\Publisher::publishProjection — Coverage: 0.0% | Lines: 5 | Complexity: 1</title></circle></a>
+ <a href="Service/State.php.html#133"><circle cx="60.0" cy="317.0" r="6.6" class="bubble-danger"><title>App\Feature\LiveTimerSession\Service\State::skipPhase — Coverage: 0.0% | Lines: 5 | Complexity: 1</title></circle></a>
+ <a href="Controller/AbstractSessionController.php.html#50"><circle cx="60.0" cy="218.0" r="5.9" class="bubble-danger"><title>App\Feature\LiveTimerSession\Controller\AbstractSessionController::requireCurrentUserId — Coverage: 0.0% | Lines: 4 | Complexity: 4</title></circle></a>
+ <a href="Controller/SessionController.php.html#78"><circle cx="60.0" cy="317.0" r="5.9" class="bubble-danger"><title>App\Feature\LiveTimerSession\Controller\SessionController::delete — Coverage: 0.0% | Lines: 4 | Complexity: 1</title></circle></a>
+ <a href="Entity/Session.php.html#234"><circle cx="60.0" cy="284.0" r="5.9" class="bubble-danger"><title>App\Feature\LiveTimerSession\Entity\Session::addSessionEntry — Coverage: 0.0% | Lines: 4 | Complexity: 2</title></circle></a>
+ <a href="Entity/Session.php.html#244"><circle cx="60.0" cy="251.0" r="5.9" class="bubble-danger"><title>App\Feature\LiveTimerSession\Entity\Session::removeSessionEntry — Coverage: 0.0% | Lines: 4 | Complexity: 3</title></circle></a>
+ <a href="Entity/SessionEntry.php.html#93"><circle cx="60.0" cy="251.0" r="5.9" class="bubble-danger"><title>App\Feature\LiveTimerSession\Entity\SessionEntry::setSubject — Coverage: 0.0% | Lines: 4 | Complexity: 3</title></circle></a>
+ <a href="Entity/SessionEntry.php.html#107"><circle cx="60.0" cy="251.0" r="5.9" class="bubble-danger"><title>App\Feature\LiveTimerSession\Entity\SessionEntry::setTask — Coverage: 0.0% | Lines: 4 | Complexity: 3</title></circle></a>
+ <a href="Entity/SessionEntry.php.html#121"><circle cx="60.0" cy="251.0" r="5.9" class="bubble-danger"><title>App\Feature\LiveTimerSession\Entity\SessionEntry::setNote — Coverage: 0.0% | Lines: 4 | Complexity: 3</title></circle></a>
+ <a href="Service/Projector.php.html#95"><circle cx="60.0" cy="284.0" r="5.9" class="bubble-danger"><title>App\Feature\LiveTimerSession\Service\Projector::addFullPhaseDuration — Coverage: 0.0% | Lines: 4 | Complexity: 2</title></circle></a>
+ <a href="Service/State.php.html#151"><circle cx="60.0" cy="317.0" r="5.9" class="bubble-danger"><title>App\Feature\LiveTimerSession\Service\State::resetPhase — Coverage: 0.0% | Lines: 4 | Complexity: 1</title></circle></a>
+ <a href="Service/Store.php.html#38"><circle cx="60.0" cy="317.0" r="5.9" class="bubble-danger"><title>App\Feature\LiveTimerSession\Service\Store::save — Coverage: 0.0% | Lines: 4 | Complexity: 1</title></circle></a>
+ <a href="Controller/AbstractSessionController.php.html#61"><circle cx="60.0" cy="317.0" r="5.1" class="bubble-danger"><title>App\Feature\LiveTimerSession\Controller\AbstractSessionController::jsonProjection — Coverage: 0.0% | Lines: 3 | Complexity: 1</title></circle></a>
+ <a href="Entity/Session.php.html#93"><circle cx="60.0" cy="317.0" r="5.1" class="bubble-danger"><title>App\Feature\LiveTimerSession\Entity\Session::__construct — Coverage: 0.0% | Lines: 3 | Complexity: 1</title></circle></a>
+ <a href="Factory/SessionEntryFactory.php.html#76"><circle cx="60.0" cy="317.0" r="5.1" class="bubble-danger"><title>App\Feature\LiveTimerSession\Factory\SessionEntryFactory::forSession — Coverage: 0.0% | Lines: 3 | Complexity: 1</title></circle></a>
+ <a href="Factory/SessionFactory.php.html#56"><circle cx="60.0" cy="317.0" r="5.1" class="bubble-danger"><title>App\Feature\LiveTimerSession\Factory\SessionFactory::cancelled — Coverage: 0.0% | Lines: 3 | Complexity: 1</title></circle></a>
+ <a href="Service/Projector.php.html#105"><circle cx="60.0" cy="284.0" r="5.1" class="bubble-danger"><title>App\Feature\LiveTimerSession\Service\Projector::phaseDuration — Coverage: 0.0% | Lines: 3 | Complexity: 2</title></circle></a>
+ <a href="Service/State.php.html#120"><circle cx="60.0" cy="284.0" r="5.1" class="bubble-danger"><title>App\Feature\LiveTimerSession\Service\State::currentPhaseDuration — Coverage: 0.0% | Lines: 3 | Complexity: 2</title></circle></a>
+ <a href="Service/State.php.html#144"><circle cx="60.0" cy="284.0" r="5.1" class="bubble-danger"><title>App\Feature\LiveTimerSession\Service\State::switchPhase — Coverage: 0.0% | Lines: 3 | Complexity: 2</title></circle></a>
+ <a href="Service/TimeService.php.html#7"><circle cx="60.0" cy="317.0" r="5.1" class="bubble-danger"><title>App\Feature\LiveTimerSession\Service\TimeService::durationToMs — Coverage: 0.0% | Lines: 3 | Complexity: 1</title></circle></a>
+ <a href="Controller/SessionController.php.html#66"><circle cx="60.0" cy="317.0" r="4.2" class="bubble-danger"><title>App\Feature\LiveTimerSession\Controller\SessionController::getOne — Coverage: 0.0% | Lines: 2 | Complexity: 1</title></circle></a>
+ <a href="Entity/Session.php.html#111"><circle cx="60.0" cy="317.0" r="4.2" class="bubble-danger"><title>App\Feature\LiveTimerSession\Entity\Session::setUser — Coverage: 0.0% | Lines: 2 | Complexity: 1</title></circle></a>
+ <a href="Entity/Session.php.html#123"><circle cx="60.0" cy="317.0" r="4.2" class="bubble-danger"><title>App\Feature\LiveTimerSession\Entity\Session::setStatus — Coverage: 0.0% | Lines: 2 | Complexity: 1</title></circle></a>
+ <a href="Entity/Session.php.html#135"><circle cx="60.0" cy="317.0" r="4.2" class="bubble-danger"><title>App\Feature\LiveTimerSession\Entity\Session::setSessionType — Coverage: 0.0% | Lines: 2 | Complexity: 1</title></circle></a>
+ <a href="Entity/Session.php.html#147"><circle cx="60.0" cy="317.0" r="4.2" class="bubble-danger"><title>App\Feature\LiveTimerSession\Entity\Session::setStartedAt — Coverage: 0.0% | Lines: 2 | Complexity: 1</title></circle></a>
+ <a href="Entity/Session.php.html#159"><circle cx="60.0" cy="317.0" r="4.2" class="bubble-danger"><title>App\Feature\LiveTimerSession\Entity\Session::setEndedAt — Coverage: 0.0% | Lines: 2 | Complexity: 1</title></circle></a>
+ <a href="Entity/Session.php.html#171"><circle cx="60.0" cy="317.0" r="4.2" class="bubble-danger"><title>App\Feature\LiveTimerSession\Entity\Session::setPlannedMinutes — Coverage: 0.0% | Lines: 2 | Complexity: 1</title></circle></a>
+ <a href="Entity/Session.php.html#183"><circle cx="60.0" cy="317.0" r="4.2" class="bubble-danger"><title>App\Feature\LiveTimerSession\Entity\Session::setActualFocusMinutes — Coverage: 0.0% | Lines: 2 | Complexity: 1</title></circle></a>
+ <a href="Entity/Session.php.html#195"><circle cx="60.0" cy="317.0" r="4.2" class="bubble-danger"><title>App\Feature\LiveTimerSession\Entity\Session::setBreakMinutes — Coverage: 0.0% | Lines: 2 | Complexity: 1</title></circle></a>
+ <a href="Entity/Session.php.html#207"><circle cx="60.0" cy="317.0" r="4.2" class="bubble-danger"><title>App\Feature\LiveTimerSession\Entity\Session::setDistractionCount — Coverage: 0.0% | Lines: 2 | Complexity: 1</title></circle></a>
+ <a href="Entity/Session.php.html#219"><circle cx="60.0" cy="284.0" r="4.2" class="bubble-danger"><title>App\Feature\LiveTimerSession\Entity\Session::setSessionNote — Coverage: 0.0% | Lines: 2 | Complexity: 2</title></circle></a>
+ <a href="Entity/SessionEntry.php.html#81"><circle cx="60.0" cy="317.0" r="4.2" class="bubble-danger"><title>App\Feature\LiveTimerSession\Entity\SessionEntry::setSession — Coverage: 0.0% | Lines: 2 | Complexity: 1</title></circle></a>
+ <a href="Entity/SessionEntry.php.html#135"><circle cx="60.0" cy="317.0" r="4.2" class="bubble-danger"><title>App\Feature\LiveTimerSession\Entity\SessionEntry::setPlannedMinutes — Coverage: 0.0% | Lines: 2 | Complexity: 1</title></circle></a>
+ <a href="Entity/SessionEntry.php.html#147"><circle cx="60.0" cy="317.0" r="4.2" class="bubble-danger"><title>App\Feature\LiveTimerSession\Entity\SessionEntry::setActualFocusMinutes — Coverage: 0.0% | Lines: 2 | Complexity: 1</title></circle></a>
+ <a href="Entity/SessionEntry.php.html#159"><circle cx="60.0" cy="317.0" r="4.2" class="bubble-danger"><title>App\Feature\LiveTimerSession\Entity\SessionEntry::setEntryStartedAt — Coverage: 0.0% | Lines: 2 | Complexity: 1</title></circle></a>
+ <a href="Entity/SessionEntry.php.html#171"><circle cx="60.0" cy="317.0" r="4.2" class="bubble-danger"><title>App\Feature\LiveTimerSession\Entity\SessionEntry::setEntryEndedAt — Coverage: 0.0% | Lines: 2 | Complexity: 1</title></circle></a>
+ <a href="Entity/SessionEntry.php.html#183"><circle cx="60.0" cy="317.0" r="4.2" class="bubble-danger"><title>App\Feature\LiveTimerSession\Entity\SessionEntry::setSubjectNameSnapshot — Coverage: 0.0% | Lines: 2 | Complexity: 1</title></circle></a>
+ <a href="Entity/SessionEntry.php.html#195"><circle cx="60.0" cy="317.0" r="4.2" class="bubble-danger"><title>App\Feature\LiveTimerSession\Entity\SessionEntry::setTaskTitleSnapshot — Coverage: 0.0% | Lines: 2 | Complexity: 1</title></circle></a>
+ <a href="Entity/SessionEntry.php.html#207"><circle cx="60.0" cy="317.0" r="4.2" class="bubble-danger"><title>App\Feature\LiveTimerSession\Entity\SessionEntry::setNoteTitleSnapshot — Coverage: 0.0% | Lines: 2 | Complexity: 1</title></circle></a>
+ <a href="Dto/Command/ChangeConfig.php.html#10"><circle cx="60.0" cy="317.0" r="4.0" class="bubble-danger"><title>App\Feature\LiveTimerSession\Dto\Command\ChangeConfig::__construct — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Dto/Command/CreateSession.php.html#10"><circle cx="60.0" cy="317.0" r="4.0" class="bubble-danger"><title>App\Feature\LiveTimerSession\Dto\Command\CreateSession::__construct — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Dto/Command/EmptyCommand.php.html#7"><circle cx="60.0" cy="317.0" r="4.0" class="bubble-danger"><title>App\Feature\LiveTimerSession\Dto\Command\EmptyCommand::__construct — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Dto/Command/StopSession.php.html#9"><circle cx="60.0" cy="317.0" r="4.0" class="bubble-danger"><title>App\Feature\LiveTimerSession\Dto\Command\StopSession::__construct — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Dto/DurationDto.php.html#9"><circle cx="60.0" cy="317.0" r="4.0" class="bubble-danger"><title>App\Feature\LiveTimerSession\Dto\DurationDto::__construct — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Entity/Session.php.html#101"><circle cx="60.0" cy="317.0" r="4.0" class="bubble-danger"><title>App\Feature\LiveTimerSession\Entity\Session::getId — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Entity/Session.php.html#106"><circle cx="60.0" cy="317.0" r="4.0" class="bubble-danger"><title>App\Feature\LiveTimerSession\Entity\Session::getUser — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Entity/Session.php.html#118"><circle cx="60.0" cy="317.0" r="4.0" class="bubble-danger"><title>App\Feature\LiveTimerSession\Entity\Session::getStatus — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Entity/Session.php.html#130"><circle cx="60.0" cy="317.0" r="4.0" class="bubble-danger"><title>App\Feature\LiveTimerSession\Entity\Session::getSessionType — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Entity/Session.php.html#142"><circle cx="60.0" cy="317.0" r="4.0" class="bubble-danger"><title>App\Feature\LiveTimerSession\Entity\Session::getStartedAt — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Entity/Session.php.html#154"><circle cx="60.0" cy="317.0" r="4.0" class="bubble-danger"><title>App\Feature\LiveTimerSession\Entity\Session::getEndedAt — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Entity/Session.php.html#166"><circle cx="60.0" cy="317.0" r="4.0" class="bubble-danger"><title>App\Feature\LiveTimerSession\Entity\Session::getPlannedMinutes — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Entity/Session.php.html#178"><circle cx="60.0" cy="317.0" r="4.0" class="bubble-danger"><title>App\Feature\LiveTimerSession\Entity\Session::getActualFocusMinutes — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Entity/Session.php.html#190"><circle cx="60.0" cy="317.0" r="4.0" class="bubble-danger"><title>App\Feature\LiveTimerSession\Entity\Session::getBreakMinutes — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Entity/Session.php.html#202"><circle cx="60.0" cy="317.0" r="4.0" class="bubble-danger"><title>App\Feature\LiveTimerSession\Entity\Session::getDistractionCount — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Entity/Session.php.html#214"><circle cx="60.0" cy="317.0" r="4.0" class="bubble-danger"><title>App\Feature\LiveTimerSession\Entity\Session::getSessionNote — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Entity/Session.php.html#229"><circle cx="60.0" cy="317.0" r="4.0" class="bubble-danger"><title>App\Feature\LiveTimerSession\Entity\Session::getSessionEntries — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Entity/SessionEntry.php.html#71"><circle cx="60.0" cy="317.0" r="4.0" class="bubble-danger"><title>App\Feature\LiveTimerSession\Entity\SessionEntry::getId — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Entity/SessionEntry.php.html#76"><circle cx="60.0" cy="317.0" r="4.0" class="bubble-danger"><title>App\Feature\LiveTimerSession\Entity\SessionEntry::getSession — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Entity/SessionEntry.php.html#88"><circle cx="60.0" cy="317.0" r="4.0" class="bubble-danger"><title>App\Feature\LiveTimerSession\Entity\SessionEntry::getSubject — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Entity/SessionEntry.php.html#102"><circle cx="60.0" cy="317.0" r="4.0" class="bubble-danger"><title>App\Feature\LiveTimerSession\Entity\SessionEntry::getTask — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Entity/SessionEntry.php.html#116"><circle cx="60.0" cy="317.0" r="4.0" class="bubble-danger"><title>App\Feature\LiveTimerSession\Entity\SessionEntry::getNote — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Entity/SessionEntry.php.html#130"><circle cx="60.0" cy="317.0" r="4.0" class="bubble-danger"><title>App\Feature\LiveTimerSession\Entity\SessionEntry::getPlannedMinutes — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Entity/SessionEntry.php.html#142"><circle cx="60.0" cy="317.0" r="4.0" class="bubble-danger"><title>App\Feature\LiveTimerSession\Entity\SessionEntry::getActualFocusMinutes — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Entity/SessionEntry.php.html#154"><circle cx="60.0" cy="317.0" r="4.0" class="bubble-danger"><title>App\Feature\LiveTimerSession\Entity\SessionEntry::getEntryStartedAt — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Entity/SessionEntry.php.html#166"><circle cx="60.0" cy="317.0" r="4.0" class="bubble-danger"><title>App\Feature\LiveTimerSession\Entity\SessionEntry::getEntryEndedAt — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Entity/SessionEntry.php.html#178"><circle cx="60.0" cy="317.0" r="4.0" class="bubble-danger"><title>App\Feature\LiveTimerSession\Entity\SessionEntry::getSubjectNameSnapshot — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Entity/SessionEntry.php.html#190"><circle cx="60.0" cy="317.0" r="4.0" class="bubble-danger"><title>App\Feature\LiveTimerSession\Entity\SessionEntry::getTaskTitleSnapshot — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Entity/SessionEntry.php.html#202"><circle cx="60.0" cy="317.0" r="4.0" class="bubble-danger"><title>App\Feature\LiveTimerSession\Entity\SessionEntry::getNoteTitleSnapshot — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Enum/SessionPhase.php.html#10"><circle cx="60.0" cy="317.0" r="4.0" class="bubble-danger"><title>App\Feature\LiveTimerSession\Enum\SessionPhase::default — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Enum/SessionStatus.php.html#14"><circle cx="60.0" cy="317.0" r="4.0" class="bubble-danger"><title>App\Feature\LiveTimerSession\Enum\SessionStatus::default — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Enum/SessionType.php.html#13"><circle cx="60.0" cy="317.0" r="4.0" class="bubble-danger"><title>App\Feature\LiveTimerSession\Enum\SessionType::default — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Factory/SessionEntryFactory.php.html#22"><circle cx="60.0" cy="317.0" r="4.0" class="bubble-danger"><title>App\Feature\LiveTimerSession\Factory\SessionEntryFactory::__construct — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Factory/SessionEntryFactory.php.html#27"><circle cx="60.0" cy="317.0" r="4.0" class="bubble-danger"><title>App\Feature\LiveTimerSession\Factory\SessionEntryFactory::class — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Factory/SessionEntryFactory.php.html#94"><circle cx="60.0" cy="317.0" r="4.0" class="bubble-danger"><title>App\Feature\LiveTimerSession\Factory\SessionEntryFactory::defaults — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Factory/SessionEntryFactory.php.html#103"><circle cx="60.0" cy="317.0" r="4.0" class="bubble-danger"><title>App\Feature\LiveTimerSession\Factory\SessionEntryFactory::initialize — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Factory/SessionFactory.php.html#22"><circle cx="60.0" cy="317.0" r="4.0" class="bubble-danger"><title>App\Feature\LiveTimerSession\Factory\SessionFactory::__construct — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Factory/SessionFactory.php.html#27"><circle cx="60.0" cy="317.0" r="4.0" class="bubble-danger"><title>App\Feature\LiveTimerSession\Factory\SessionFactory::class — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Factory/SessionFactory.php.html#93"><circle cx="60.0" cy="317.0" r="4.0" class="bubble-danger"><title>App\Feature\LiveTimerSession\Factory\SessionFactory::initialize — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Repository/SessionEntryRepository.php.html#14"><circle cx="60.0" cy="317.0" r="4.0" class="bubble-danger"><title>App\Feature\LiveTimerSession\Repository\SessionEntryRepository::__construct — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Repository/SessionRepository.php.html#14"><circle cx="60.0" cy="317.0" r="4.0" class="bubble-danger"><title>App\Feature\LiveTimerSession\Repository\SessionRepository::__construct — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Service/Finalizer.php.html#17"><circle cx="60.0" cy="317.0" r="4.0" class="bubble-danger"><title>App\Feature\LiveTimerSession\Service\Finalizer::__construct — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Service/Projector.php.html#10"><circle cx="60.0" cy="317.0" r="4.0" class="bubble-danger"><title>App\Feature\LiveTimerSession\Service\Projector::__construct — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Service/Projector.php.html#112"><circle cx="60.0" cy="317.0" r="4.0" class="bubble-danger"><title>App\Feature\LiveTimerSession\Service\Projector::topicForId — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Service/Publisher.php.html#10"><circle cx="60.0" cy="317.0" r="4.0" class="bubble-danger"><title>App\Feature\LiveTimerSession\Service\Publisher::__construct — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Service/Publisher.php.html#43"><circle cx="60.0" cy="317.0" r="4.0" class="bubble-danger"><title>App\Feature\LiveTimerSession\Service\Publisher::topicForId — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Service/State.php.html#12"><circle cx="60.0" cy="317.0" r="4.0" class="bubble-danger"><title>App\Feature\LiveTimerSession\Service\State::__construct — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Service/State.php.html#84"><circle cx="60.0" cy="317.0" r="4.0" class="bubble-danger"><title>App\Feature\LiveTimerSession\Service\State::isRunning — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Service/State.php.html#89"><circle cx="60.0" cy="317.0" r="4.0" class="bubble-danger"><title>App\Feature\LiveTimerSession\Service\State::touch — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Service/State.php.html#94"><circle cx="60.0" cy="317.0" r="4.0" class="bubble-danger"><title>App\Feature\LiveTimerSession\Service\State::resume — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Service/Store.php.html#9"><circle cx="60.0" cy="317.0" r="4.0" class="bubble-danger"><title>App\Feature\LiveTimerSession\Service\Store::__construct — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Service/Store.php.html#33"><circle cx="60.0" cy="317.0" r="4.0" class="bubble-danger"><title>App\Feature\LiveTimerSession\Service\Store::key — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Service/Store.php.html#48"><circle cx="60.0" cy="317.0" r="4.0" class="bubble-danger"><title>App\Feature\LiveTimerSession\Service\Store::delete — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Service/TimeService.php.html#15"><circle cx="60.0" cy="317.0" r="4.0" class="bubble-danger"><title>App\Feature\LiveTimerSession\Service\TimeService::nowMs — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Service/TimeService.php.html#20"><circle cx="60.0" cy="317.0" r="4.0" class="bubble-danger"><title>App\Feature\LiveTimerSession\Service\TimeService::isoFromMs — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Service/TimeService.php.html#25"><circle cx="60.0" cy="317.0" r="4.0" class="bubble-danger"><title>App\Feature\LiveTimerSession\Service\TimeService::isoToMs — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+</svg>
+     </div>
+    </div>
+    <div class="col-md-6 dashboard-column">
+     <h3>&nbsp;</h3>
+     <p class="text-muted small">Sorted by descending CRAP (Change Risk Anti-Patterns) index.</p>
+     <div class="scrollbox">
+<table class="table">
+ <thead>
+  <tr>
+   <th>Method</th>
+   <th class="text-right"><abbr title="Change Risk Anti-Patterns (CRAP) Index">CRAP</abbr></th>
+   <th class="text-right">Coverage</th>
+  </tr>
+ </thead>
+ <tbody>
+  <tr><td><a href="Factory/SessionEntryFactory.php.html#33">App\Feature\LiveTimerSession\Factory\SessionEntryFactory::timed</a></td><td class="text-right">72</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Service/Finalizer.php.html#25">App\Feature\LiveTimerSession\Service\Finalizer::finalize</a></td><td class="text-right">72</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Service/Projector.php.html#50">App\Feature\LiveTimerSession\Service\Projector::resolve</a></td><td class="text-right">72</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Entity/Session.php.html#256">App\Feature\LiveTimerSession\Entity\Session::validateChronology</a></td><td class="text-right">56</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Controller/AbstractSessionController.php.html#50">App\Feature\LiveTimerSession\Controller\AbstractSessionController::requireCurrentUserId</a></td><td class="text-right">20</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Entity/SessionEntry.php.html#214">App\Feature\LiveTimerSession\Entity\SessionEntry::validateChronology</a></td><td class="text-right">20</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Controller/AbstractSessionController.php.html#32">App\Feature\LiveTimerSession\Controller\AbstractSessionController::requireOwnedState</a></td><td class="text-right">12</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Entity/Session.php.html#244">App\Feature\LiveTimerSession\Entity\Session::removeSessionEntry</a></td><td class="text-right">12</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Entity/SessionEntry.php.html#93">App\Feature\LiveTimerSession\Entity\SessionEntry::setSubject</a></td><td class="text-right">12</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Entity/SessionEntry.php.html#107">App\Feature\LiveTimerSession\Entity\SessionEntry::setTask</a></td><td class="text-right">12</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Entity/SessionEntry.php.html#121">App\Feature\LiveTimerSession\Entity\SessionEntry::setNote</a></td><td class="text-right">12</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Service/Projector.php.html#16">App\Feature\LiveTimerSession\Service\Projector::project</a></td><td class="text-right">12</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Service/State.php.html#66">App\Feature\LiveTimerSession\Service\State::pause</a></td><td class="text-right">12</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Service/State.php.html#160">App\Feature\LiveTimerSession\Service\State::changeConfig</a></td><td class="text-right">12</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Service/State.php.html#206">App\Feature\LiveTimerSession\Service\State::getElapsedInCurrentPhase</a></td><td class="text-right">12</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Service/Store.php.html#16">App\Feature\LiveTimerSession\Service\Store::get</a></td><td class="text-right">12</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Entity/Session.php.html#219">App\Feature\LiveTimerSession\Entity\Session::setSessionNote</a></td><td class="text-right">6</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Entity/Session.php.html#234">App\Feature\LiveTimerSession\Entity\Session::addSessionEntry</a></td><td class="text-right">6</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Service/Projector.php.html#95">App\Feature\LiveTimerSession\Service\Projector::addFullPhaseDuration</a></td><td class="text-right">6</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Service/Projector.php.html#105">App\Feature\LiveTimerSession\Service\Projector::phaseDuration</a></td><td class="text-right">6</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Service/State.php.html#99">App\Feature\LiveTimerSession\Service\State::start</a></td><td class="text-right">6</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Service/State.php.html#120">App\Feature\LiveTimerSession\Service\State::currentPhaseDuration</a></td><td class="text-right">6</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Service/State.php.html#144">App\Feature\LiveTimerSession\Service\State::switchPhase</a></td><td class="text-right">6</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Service/State.php.html#190">App\Feature\LiveTimerSession\Service\State::getTotalDurations</a></td><td class="text-right">6</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Service/StateHydrator.php.html#10">App\Feature\LiveTimerSession\Service\StateHydrator::fromArray</a></td><td class="text-right">6</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Controller/AbstractSessionController.php.html#16">App\Feature\LiveTimerSession\Controller\AbstractSessionController::applyCommand</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Controller/AbstractSessionController.php.html#61">App\Feature\LiveTimerSession\Controller\AbstractSessionController::jsonProjection</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Controller/SessionActionController.php.html#22">App\Feature\LiveTimerSession\Controller\SessionActionController::start</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Controller/SessionActionController.php.html#42">App\Feature\LiveTimerSession\Controller\SessionActionController::pause</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Controller/SessionActionController.php.html#62">App\Feature\LiveTimerSession\Controller\SessionActionController::resume</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Controller/SessionActionController.php.html#82">App\Feature\LiveTimerSession\Controller\SessionActionController::skipPhase</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Controller/SessionActionController.php.html#102">App\Feature\LiveTimerSession\Controller\SessionActionController::resetPhase</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Controller/SessionActionController.php.html#121">App\Feature\LiveTimerSession\Controller\SessionActionController::changeConfig</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Controller/SessionActionController.php.html#141">App\Feature\LiveTimerSession\Controller\SessionActionController::stopAndSave</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Controller/SessionController.php.html#19">App\Feature\LiveTimerSession\Controller\SessionController::create</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Controller/SessionController.php.html#66">App\Feature\LiveTimerSession\Controller\SessionController::getOne</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Controller/SessionController.php.html#78">App\Feature\LiveTimerSession\Controller\SessionController::delete</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Dto/Command/ChangeConfig.php.html#10">App\Feature\LiveTimerSession\Dto\Command\ChangeConfig::__construct</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Dto/Command/CreateSession.php.html#10">App\Feature\LiveTimerSession\Dto\Command\CreateSession::__construct</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Dto/Command/EmptyCommand.php.html#7">App\Feature\LiveTimerSession\Dto\Command\EmptyCommand::__construct</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Dto/Command/StopSession.php.html#9">App\Feature\LiveTimerSession\Dto\Command\StopSession::__construct</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Dto/DurationDto.php.html#9">App\Feature\LiveTimerSession\Dto\DurationDto::__construct</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Entity/Session.php.html#93">App\Feature\LiveTimerSession\Entity\Session::__construct</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Entity/Session.php.html#101">App\Feature\LiveTimerSession\Entity\Session::getId</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Entity/Session.php.html#106">App\Feature\LiveTimerSession\Entity\Session::getUser</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Entity/Session.php.html#111">App\Feature\LiveTimerSession\Entity\Session::setUser</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Entity/Session.php.html#118">App\Feature\LiveTimerSession\Entity\Session::getStatus</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Entity/Session.php.html#123">App\Feature\LiveTimerSession\Entity\Session::setStatus</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Entity/Session.php.html#130">App\Feature\LiveTimerSession\Entity\Session::getSessionType</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Entity/Session.php.html#135">App\Feature\LiveTimerSession\Entity\Session::setSessionType</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Entity/Session.php.html#142">App\Feature\LiveTimerSession\Entity\Session::getStartedAt</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Entity/Session.php.html#147">App\Feature\LiveTimerSession\Entity\Session::setStartedAt</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Entity/Session.php.html#154">App\Feature\LiveTimerSession\Entity\Session::getEndedAt</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Entity/Session.php.html#159">App\Feature\LiveTimerSession\Entity\Session::setEndedAt</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Entity/Session.php.html#166">App\Feature\LiveTimerSession\Entity\Session::getPlannedMinutes</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Entity/Session.php.html#171">App\Feature\LiveTimerSession\Entity\Session::setPlannedMinutes</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Entity/Session.php.html#178">App\Feature\LiveTimerSession\Entity\Session::getActualFocusMinutes</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Entity/Session.php.html#183">App\Feature\LiveTimerSession\Entity\Session::setActualFocusMinutes</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Entity/Session.php.html#190">App\Feature\LiveTimerSession\Entity\Session::getBreakMinutes</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Entity/Session.php.html#195">App\Feature\LiveTimerSession\Entity\Session::setBreakMinutes</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Entity/Session.php.html#202">App\Feature\LiveTimerSession\Entity\Session::getDistractionCount</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Entity/Session.php.html#207">App\Feature\LiveTimerSession\Entity\Session::setDistractionCount</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Entity/Session.php.html#214">App\Feature\LiveTimerSession\Entity\Session::getSessionNote</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Entity/Session.php.html#229">App\Feature\LiveTimerSession\Entity\Session::getSessionEntries</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Entity/SessionEntry.php.html#71">App\Feature\LiveTimerSession\Entity\SessionEntry::getId</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Entity/SessionEntry.php.html#76">App\Feature\LiveTimerSession\Entity\SessionEntry::getSession</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Entity/SessionEntry.php.html#81">App\Feature\LiveTimerSession\Entity\SessionEntry::setSession</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Entity/SessionEntry.php.html#88">App\Feature\LiveTimerSession\Entity\SessionEntry::getSubject</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Entity/SessionEntry.php.html#102">App\Feature\LiveTimerSession\Entity\SessionEntry::getTask</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Entity/SessionEntry.php.html#116">App\Feature\LiveTimerSession\Entity\SessionEntry::getNote</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Entity/SessionEntry.php.html#130">App\Feature\LiveTimerSession\Entity\SessionEntry::getPlannedMinutes</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Entity/SessionEntry.php.html#135">App\Feature\LiveTimerSession\Entity\SessionEntry::setPlannedMinutes</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Entity/SessionEntry.php.html#142">App\Feature\LiveTimerSession\Entity\SessionEntry::getActualFocusMinutes</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Entity/SessionEntry.php.html#147">App\Feature\LiveTimerSession\Entity\SessionEntry::setActualFocusMinutes</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Entity/SessionEntry.php.html#154">App\Feature\LiveTimerSession\Entity\SessionEntry::getEntryStartedAt</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Entity/SessionEntry.php.html#159">App\Feature\LiveTimerSession\Entity\SessionEntry::setEntryStartedAt</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Entity/SessionEntry.php.html#166">App\Feature\LiveTimerSession\Entity\SessionEntry::getEntryEndedAt</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Entity/SessionEntry.php.html#171">App\Feature\LiveTimerSession\Entity\SessionEntry::setEntryEndedAt</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Entity/SessionEntry.php.html#178">App\Feature\LiveTimerSession\Entity\SessionEntry::getSubjectNameSnapshot</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Entity/SessionEntry.php.html#183">App\Feature\LiveTimerSession\Entity\SessionEntry::setSubjectNameSnapshot</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Entity/SessionEntry.php.html#190">App\Feature\LiveTimerSession\Entity\SessionEntry::getTaskTitleSnapshot</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Entity/SessionEntry.php.html#195">App\Feature\LiveTimerSession\Entity\SessionEntry::setTaskTitleSnapshot</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Entity/SessionEntry.php.html#202">App\Feature\LiveTimerSession\Entity\SessionEntry::getNoteTitleSnapshot</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Entity/SessionEntry.php.html#207">App\Feature\LiveTimerSession\Entity\SessionEntry::setNoteTitleSnapshot</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Enum/SessionPhase.php.html#10">App\Feature\LiveTimerSession\Enum\SessionPhase::default</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Enum/SessionStatus.php.html#14">App\Feature\LiveTimerSession\Enum\SessionStatus::default</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Enum/SessionType.php.html#13">App\Feature\LiveTimerSession\Enum\SessionType::default</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Factory/SessionEntryFactory.php.html#22">App\Feature\LiveTimerSession\Factory\SessionEntryFactory::__construct</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Factory/SessionEntryFactory.php.html#27">App\Feature\LiveTimerSession\Factory\SessionEntryFactory::class</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Factory/SessionEntryFactory.php.html#76">App\Feature\LiveTimerSession\Factory\SessionEntryFactory::forSession</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Factory/SessionEntryFactory.php.html#94">App\Feature\LiveTimerSession\Factory\SessionEntryFactory::defaults</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Factory/SessionEntryFactory.php.html#103">App\Feature\LiveTimerSession\Factory\SessionEntryFactory::initialize</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Factory/SessionFactory.php.html#22">App\Feature\LiveTimerSession\Factory\SessionFactory::__construct</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Factory/SessionFactory.php.html#27">App\Feature\LiveTimerSession\Factory\SessionFactory::class</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Factory/SessionFactory.php.html#33">App\Feature\LiveTimerSession\Factory\SessionFactory::completed</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Factory/SessionFactory.php.html#56">App\Feature\LiveTimerSession\Factory\SessionFactory::cancelled</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Factory/SessionFactory.php.html#74">App\Feature\LiveTimerSession\Factory\SessionFactory::defaults</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Factory/SessionFactory.php.html#93">App\Feature\LiveTimerSession\Factory\SessionFactory::initialize</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Repository/SessionEntryRepository.php.html#14">App\Feature\LiveTimerSession\Repository\SessionEntryRepository::__construct</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Repository/SessionRepository.php.html#14">App\Feature\LiveTimerSession\Repository\SessionRepository::__construct</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Service/Finalizer.php.html#17">App\Feature\LiveTimerSession\Service\Finalizer::__construct</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Service/Projector.php.html#10">App\Feature\LiveTimerSession\Service\Projector::__construct</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Service/Projector.php.html#112">App\Feature\LiveTimerSession\Service\Projector::topicForId</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Service/Publisher.php.html#10">App\Feature\LiveTimerSession\Service\Publisher::__construct</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Service/Publisher.php.html#16">App\Feature\LiveTimerSession\Service\Publisher::publishProjection</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Service/Publisher.php.html#26">App\Feature\LiveTimerSession\Service\Publisher::publishDeleted</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Service/Publisher.php.html#43">App\Feature\LiveTimerSession\Service\Publisher::topicForId</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Service/State.php.html#12">App\Feature\LiveTimerSession\Service\State::__construct</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Service/State.php.html#31">App\Feature\LiveTimerSession\Service\State::create</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Service/State.php.html#84">App\Feature\LiveTimerSession\Service\State::isRunning</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Service/State.php.html#89">App\Feature\LiveTimerSession\Service\State::touch</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Service/State.php.html#94">App\Feature\LiveTimerSession\Service\State::resume</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Service/State.php.html#133">App\Feature\LiveTimerSession\Service\State::skipPhase</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Service/State.php.html#151">App\Feature\LiveTimerSession\Service\State::resetPhase</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Service/StateHydrator.php.html#30">App\Feature\LiveTimerSession\Service\StateHydrator::toArray</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Service/Store.php.html#9">App\Feature\LiveTimerSession\Service\Store::__construct</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Service/Store.php.html#33">App\Feature\LiveTimerSession\Service\Store::key</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Service/Store.php.html#38">App\Feature\LiveTimerSession\Service\Store::save</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Service/Store.php.html#48">App\Feature\LiveTimerSession\Service\Store::delete</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Service/TimeService.php.html#7">App\Feature\LiveTimerSession\Service\TimeService::durationToMs</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Service/TimeService.php.html#15">App\Feature\LiveTimerSession\Service\TimeService::nowMs</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Service/TimeService.php.html#20">App\Feature\LiveTimerSession\Service\TimeService::isoFromMs</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Service/TimeService.php.html#25">App\Feature\LiveTimerSession\Service\TimeService::isoToMs</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+ </tbody>
+</table>
+     </div>
+    </div>
+   </div>
+   <footer>
+    <hr/>
+    <p>
+     <small>Generated by <a href="https://github.com/sebastianbergmann/php-code-coverage" target="_top">php-code-coverage 14.1.1</a> using <a href="https://www.php.net/" target="_top">PHP 8.5.5</a> and <a href="https://phpunit.de/">PHPUnit 13.1.3</a> at Wed Apr 22 21:20:07 UTC 2026.</small>
+    </p>
+   </footer>
+  </div>
+ </body>
+</html>

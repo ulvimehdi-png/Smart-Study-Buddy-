@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <title>Dashboard for /app/src/StudyContent/Domain/Event</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="../../../_css/bootstrap.min.css?v=14.1.1" rel="stylesheet" type="text/css">
+  <link href="../../../_css/style.css?v=14.1.1" rel="stylesheet" type="text/css">
+  <link href="../../../_css/custom.css" rel="stylesheet" type="text/css">
+ </head>
+ <body>
+  <header>
+   <div class="container-fluid">
+    <div class="row">
+     <div class="col-md-12">
+      <nav aria-label="breadcrumb">
+       <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="../../../index.html">/app/src</a></li>
+         <li class="breadcrumb-item"><a href="../../index.html">StudyContent</a></li>
+         <li class="breadcrumb-item"><a href="../index.html">Domain</a></li>
+         <li class="breadcrumb-item"><a href="index.html">Event</a></li>
+         <li class="breadcrumb-item active">(Dashboard)</li>
+
+       </ol>
+      </nav>
+     </div>
+    </div>
+   </div>
+  </header>
+  <div class="container-fluid">
+   <div class="row dashboard-row">
+    <div class="col-md-6">
+     <h3>Classes</h3>
+     <p class="text-muted small">Bubble size = executable lines. Hover for details, click to navigate.</p>
+     <div class="file-coverage-chart">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400" preserveAspectRatio="xMidYMid meet">
+ <style>
+  .bubble-success { fill: var(--phpunit-success-bar); opacity: 0.7; }
+  .bubble-warning { fill: var(--phpunit-warning-bar); opacity: 0.7; }
+  .bubble-danger { fill: var(--phpunit-danger-bar); opacity: 0.7; }
+  .bubble-success:hover, .bubble-warning:hover, .bubble-danger:hover { opacity: 1; stroke: var(--bs-emphasis-color); stroke-width: 1.5; }
+  .chart-grid { stroke: var(--bs-border-color); stroke-width: 0.5; stroke-dasharray: 4,4; opacity: 0.5; }
+  .chart-axis { stroke: var(--bs-border-color); stroke-width: 1; }
+  .chart-label { fill: var(--bs-body-color); font-size: 11px; font-family: var(--bs-font-sans-serif, sans-serif); }
+  .chart-title { fill: var(--bs-body-color); font-size: 12px; font-family: var(--bs-font-sans-serif, sans-serif); }
+ </style>
+ <line x1="60.0" y1="20" x2="60.0" y2="350" class="chart-grid"/>
+ <text x="60.0" y="368" text-anchor="middle" class="chart-label">0%</text>
+ <line x1="204.0" y1="20" x2="204.0" y2="350" class="chart-grid"/>
+ <text x="204.0" y="368" text-anchor="middle" class="chart-label">20%</text>
+ <line x1="348.0" y1="20" x2="348.0" y2="350" class="chart-grid"/>
+ <text x="348.0" y="368" text-anchor="middle" class="chart-label">40%</text>
+ <line x1="492.0" y1="20" x2="492.0" y2="350" class="chart-grid"/>
+ <text x="492.0" y="368" text-anchor="middle" class="chart-label">60%</text>
+ <line x1="636.0" y1="20" x2="636.0" y2="350" class="chart-grid"/>
+ <text x="636.0" y="368" text-anchor="middle" class="chart-label">80%</text>
+ <line x1="780.0" y1="20" x2="780.0" y2="350" class="chart-grid"/>
+ <text x="780.0" y="368" text-anchor="middle" class="chart-label">100%</text>
+ <line x1="60" y1="350.0" x2="780" y2="350.0" class="chart-grid"/>
+ <text x="52" y="350.0" text-anchor="end" dominant-baseline="middle" class="chart-label">0</text>
+ <line x1="60" y1="240.0" x2="780" y2="240.0" class="chart-grid"/>
+ <text x="52" y="240.0" text-anchor="end" dominant-baseline="middle" class="chart-label">2</text>
+ <line x1="60" y1="130.0" x2="780" y2="130.0" class="chart-grid"/>
+ <text x="52" y="130.0" text-anchor="end" dominant-baseline="middle" class="chart-label">4</text>
+ <line x1="60" y1="20.0" x2="780" y2="20.0" class="chart-grid"/>
+ <text x="52" y="20.0" text-anchor="end" dominant-baseline="middle" class="chart-label">6</text>
+ <line x1="60" y1="20" x2="60" y2="350" class="chart-axis"/>
+ <line x1="60" y1="350" x2="780" y2="350" class="chart-axis"/>
+ <text x="420.0" y="395" text-anchor="middle" class="chart-title">Line Coverage (%)</text>
+ <text x="15" y="185.0" text-anchor="middle" transform="rotate(-90, 15, 185.0)" class="chart-title">Cyclomatic Complexity</text>
+ <a href="RelationshipDeclared.php.html#12"><circle cx="204.0" cy="75.0" r="20.0" class="bubble-danger"><title>App\StudyContent\Domain\Event\RelationshipDeclared — Coverage: 20.0% | Lines: 5 | Complexity: 5</title></circle></a>
+ <a href="CollectionPublished.php.html#12"><circle cx="60.0" cy="130.0" r="17.9" class="bubble-danger"><title>App\StudyContent\Domain\Event\CollectionPublished — Coverage: 0.0% | Lines: 4 | Complexity: 4</title></circle></a>
+ <a href="ContentAddedToCollection.php.html#12"><circle cx="240.0" cy="130.0" r="17.9" class="bubble-danger"><title>App\StudyContent\Domain\Event\ContentAddedToCollection — Coverage: 25.0% | Lines: 4 | Complexity: 4</title></circle></a>
+ <a href="ContentApproved.php.html#11"><circle cx="240.0" cy="130.0" r="17.9" class="bubble-danger"><title>App\StudyContent\Domain\Event\ContentApproved — Coverage: 25.0% | Lines: 4 | Complexity: 4</title></circle></a>
+ <a href="ContentPublished.php.html#12"><circle cx="240.0" cy="130.0" r="17.9" class="bubble-danger"><title>App\StudyContent\Domain\Event\ContentPublished — Coverage: 25.0% | Lines: 4 | Complexity: 4</title></circle></a>
+ <a href="ContentRejected.php.html#11"><circle cx="60.0" cy="130.0" r="17.9" class="bubble-danger"><title>App\StudyContent\Domain\Event\ContentRejected — Coverage: 0.0% | Lines: 4 | Complexity: 4</title></circle></a>
+ <a href="ContentSuperseded.php.html#11"><circle cx="60.0" cy="130.0" r="17.9" class="bubble-danger"><title>App\StudyContent\Domain\Event\ContentSuperseded — Coverage: 0.0% | Lines: 4 | Complexity: 4</title></circle></a>
+ <a href="CollectionArchived.php.html#11"><circle cx="60.0" cy="185.0" r="15.5" class="bubble-danger"><title>App\StudyContent\Domain\Event\CollectionArchived — Coverage: 0.0% | Lines: 3 | Complexity: 3</title></circle></a>
+ <a href="CollectionReordered.php.html#11"><circle cx="60.0" cy="185.0" r="15.5" class="bubble-danger"><title>App\StudyContent\Domain\Event\CollectionReordered — Coverage: 0.0% | Lines: 3 | Complexity: 3</title></circle></a>
+ <a href="ContentArchived.php.html#11"><circle cx="60.0" cy="185.0" r="15.5" class="bubble-danger"><title>App\StudyContent\Domain\Event\ContentArchived — Coverage: 0.0% | Lines: 3 | Complexity: 3</title></circle></a>
+ <a href="ContentBlocked.php.html#11"><circle cx="60.0" cy="185.0" r="15.5" class="bubble-danger"><title>App\StudyContent\Domain\Event\ContentBlocked — Coverage: 0.0% | Lines: 3 | Complexity: 3</title></circle></a>
+ <a href="ContentDeprecated.php.html#11"><circle cx="60.0" cy="185.0" r="15.5" class="bubble-danger"><title>App\StudyContent\Domain\Event\ContentDeprecated — Coverage: 0.0% | Lines: 3 | Complexity: 3</title></circle></a>
+ <a href="ContentImported.php.html#11"><circle cx="300.0" cy="185.0" r="15.5" class="bubble-danger"><title>App\StudyContent\Domain\Event\ContentImported — Coverage: 33.3% | Lines: 3 | Complexity: 3</title></circle></a>
+ <a href="ContentProcessed.php.html#11"><circle cx="300.0" cy="185.0" r="15.5" class="bubble-danger"><title>App\StudyContent\Domain\Event\ContentProcessed — Coverage: 33.3% | Lines: 3 | Complexity: 3</title></circle></a>
+ <a href="ContentRemovedFromCollection.php.html#11"><circle cx="60.0" cy="185.0" r="15.5" class="bubble-danger"><title>App\StudyContent\Domain\Event\ContentRemovedFromCollection — Coverage: 0.0% | Lines: 3 | Complexity: 3</title></circle></a>
+ <a href="ContentSubmittedForReview.php.html#11"><circle cx="300.0" cy="185.0" r="15.5" class="bubble-danger"><title>App\StudyContent\Domain\Event\ContentSubmittedForReview — Coverage: 33.3% | Lines: 3 | Complexity: 3</title></circle></a>
+</svg>
+     </div>
+    </div>
+    <div class="col-md-6 dashboard-column">
+     <h3>&nbsp;</h3>
+     <p class="text-muted small">Sorted by descending CRAP (Change Risk Anti-Patterns) index.</p>
+     <div class="scrollbox">
+<table class="table">
+ <thead>
+  <tr>
+   <th>Class</th>
+   <th class="text-right"><abbr title="Change Risk Anti-Patterns (CRAP) Index">CRAP</abbr></th>
+   <th class="text-right">Coverage</th>
+  </tr>
+ </thead>
+ <tbody>
+  <tr><td><a href="CollectionPublished.php.html#12">App\StudyContent\Domain\Event\CollectionPublished</a></td><td class="text-right">20</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="ContentRejected.php.html#11">App\StudyContent\Domain\Event\ContentRejected</a></td><td class="text-right">20</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="ContentSuperseded.php.html#11">App\StudyContent\Domain\Event\ContentSuperseded</a></td><td class="text-right">20</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="RelationshipDeclared.php.html#12">App\StudyContent\Domain\Event\RelationshipDeclared</a></td><td class="text-right">17.80</td><td class="text-right">20.0%</td></tr>
+  <tr><td><a href="CollectionArchived.php.html#11">App\StudyContent\Domain\Event\CollectionArchived</a></td><td class="text-right">12</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="CollectionReordered.php.html#11">App\StudyContent\Domain\Event\CollectionReordered</a></td><td class="text-right">12</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="ContentArchived.php.html#11">App\StudyContent\Domain\Event\ContentArchived</a></td><td class="text-right">12</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="ContentBlocked.php.html#11">App\StudyContent\Domain\Event\ContentBlocked</a></td><td class="text-right">12</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="ContentDeprecated.php.html#11">App\StudyContent\Domain\Event\ContentDeprecated</a></td><td class="text-right">12</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="ContentRemovedFromCollection.php.html#11">App\StudyContent\Domain\Event\ContentRemovedFromCollection</a></td><td class="text-right">12</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="ContentAddedToCollection.php.html#12">App\StudyContent\Domain\Event\ContentAddedToCollection</a></td><td class="text-right">10.75</td><td class="text-right">25.0%</td></tr>
+  <tr><td><a href="ContentApproved.php.html#11">App\StudyContent\Domain\Event\ContentApproved</a></td><td class="text-right">10.75</td><td class="text-right">25.0%</td></tr>
+  <tr><td><a href="ContentPublished.php.html#12">App\StudyContent\Domain\Event\ContentPublished</a></td><td class="text-right">10.75</td><td class="text-right">25.0%</td></tr>
+  <tr><td><a href="ContentImported.php.html#11">App\StudyContent\Domain\Event\ContentImported</a></td><td class="text-right">5.67</td><td class="text-right">33.3%</td></tr>
+  <tr><td><a href="ContentProcessed.php.html#11">App\StudyContent\Domain\Event\ContentProcessed</a></td><td class="text-right">5.67</td><td class="text-right">33.3%</td></tr>
+  <tr><td><a href="ContentSubmittedForReview.php.html#11">App\StudyContent\Domain\Event\ContentSubmittedForReview</a></td><td class="text-right">5.67</td><td class="text-right">33.3%</td></tr>
+ </tbody>
+</table>
+     </div>
+    </div>
+   </div>
+   <div class="row dashboard-row">
+    <div class="col-md-6">
+     <h3>Methods</h3>
+     <p class="text-muted small">Bubble size = executable lines. Hover for details, click to navigate.</p>
+     <div class="file-coverage-chart">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400" preserveAspectRatio="xMidYMid meet">
+ <style>
+  .bubble-success { fill: var(--phpunit-success-bar); opacity: 0.7; }
+  .bubble-warning { fill: var(--phpunit-warning-bar); opacity: 0.7; }
+  .bubble-danger { fill: var(--phpunit-danger-bar); opacity: 0.7; }
+  .bubble-success:hover, .bubble-warning:hover, .bubble-danger:hover { opacity: 1; stroke: var(--bs-emphasis-color); stroke-width: 1.5; }
+  .chart-grid { stroke: var(--bs-border-color); stroke-width: 0.5; stroke-dasharray: 4,4; opacity: 0.5; }
+  .chart-axis { stroke: var(--bs-border-color); stroke-width: 1; }
+  .chart-label { fill: var(--bs-body-color); font-size: 11px; font-family: var(--bs-font-sans-serif, sans-serif); }
+  .chart-title { fill: var(--bs-body-color); font-size: 12px; font-family: var(--bs-font-sans-serif, sans-serif); }
+ </style>
+ <line x1="60.0" y1="20" x2="60.0" y2="350" class="chart-grid"/>
+ <text x="60.0" y="368" text-anchor="middle" class="chart-label">0%</text>
+ <line x1="204.0" y1="20" x2="204.0" y2="350" class="chart-grid"/>
+ <text x="204.0" y="368" text-anchor="middle" class="chart-label">20%</text>
+ <line x1="348.0" y1="20" x2="348.0" y2="350" class="chart-grid"/>
+ <text x="348.0" y="368" text-anchor="middle" class="chart-label">40%</text>
+ <line x1="492.0" y1="20" x2="492.0" y2="350" class="chart-grid"/>
+ <text x="492.0" y="368" text-anchor="middle" class="chart-label">60%</text>
+ <line x1="636.0" y1="20" x2="636.0" y2="350" class="chart-grid"/>
+ <text x="636.0" y="368" text-anchor="middle" class="chart-label">80%</text>
+ <line x1="780.0" y1="20" x2="780.0" y2="350" class="chart-grid"/>
+ <text x="780.0" y="368" text-anchor="middle" class="chart-label">100%</text>
+ <line x1="60" y1="350.0" x2="780" y2="350.0" class="chart-grid"/>
+ <text x="52" y="350.0" text-anchor="end" dominant-baseline="middle" class="chart-label">0</text>
+ <line x1="60" y1="185.0" x2="780" y2="185.0" class="chart-grid"/>
+ <text x="52" y="185.0" text-anchor="end" dominant-baseline="middle" class="chart-label">1</text>
+ <line x1="60" y1="20.0" x2="780" y2="20.0" class="chart-grid"/>
+ <text x="52" y="20.0" text-anchor="end" dominant-baseline="middle" class="chart-label">2</text>
+ <line x1="60" y1="20" x2="60" y2="350" class="chart-axis"/>
+ <line x1="60" y1="350" x2="780" y2="350" class="chart-axis"/>
+ <text x="420.0" y="395" text-anchor="middle" class="chart-title">Line Coverage (%)</text>
+ <text x="15" y="185.0" text-anchor="middle" transform="rotate(-90, 15, 185.0)" class="chart-title">Cyclomatic Complexity</text>
+ <a href="CollectionArchived.php.html#14"><circle cx="60.0" cy="185.0" r="20.0" class="bubble-danger"><title>App\StudyContent\Domain\Event\CollectionArchived::__construct — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="CollectionArchived.php.html#21"><circle cx="60.0" cy="185.0" r="20.0" class="bubble-danger"><title>App\StudyContent\Domain\Event\CollectionArchived::collectionId — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="CollectionArchived.php.html#26"><circle cx="60.0" cy="185.0" r="20.0" class="bubble-danger"><title>App\StudyContent\Domain\Event\CollectionArchived::occurredAt — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="CollectionPublished.php.html#15"><circle cx="60.0" cy="185.0" r="20.0" class="bubble-danger"><title>App\StudyContent\Domain\Event\CollectionPublished::__construct — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="CollectionPublished.php.html#23"><circle cx="60.0" cy="185.0" r="20.0" class="bubble-danger"><title>App\StudyContent\Domain\Event\CollectionPublished::collectionId — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="CollectionPublished.php.html#28"><circle cx="60.0" cy="185.0" r="20.0" class="bubble-danger"><title>App\StudyContent\Domain\Event\CollectionPublished::scope — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="CollectionPublished.php.html#33"><circle cx="60.0" cy="185.0" r="20.0" class="bubble-danger"><title>App\StudyContent\Domain\Event\CollectionPublished::occurredAt — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="CollectionReordered.php.html#14"><circle cx="60.0" cy="185.0" r="20.0" class="bubble-danger"><title>App\StudyContent\Domain\Event\CollectionReordered::__construct — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="CollectionReordered.php.html#21"><circle cx="60.0" cy="185.0" r="20.0" class="bubble-danger"><title>App\StudyContent\Domain\Event\CollectionReordered::collectionId — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="CollectionReordered.php.html#26"><circle cx="60.0" cy="185.0" r="20.0" class="bubble-danger"><title>App\StudyContent\Domain\Event\CollectionReordered::occurredAt — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="ContentAddedToCollection.php.html#15"><circle cx="780.0" cy="185.0" r="20.0" class="bubble-success"><title>App\StudyContent\Domain\Event\ContentAddedToCollection::__construct — Coverage: 100.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="ContentAddedToCollection.php.html#23"><circle cx="60.0" cy="185.0" r="20.0" class="bubble-danger"><title>App\StudyContent\Domain\Event\ContentAddedToCollection::collectionId — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="ContentAddedToCollection.php.html#28"><circle cx="60.0" cy="185.0" r="20.0" class="bubble-danger"><title>App\StudyContent\Domain\Event\ContentAddedToCollection::contentItemId — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="ContentAddedToCollection.php.html#33"><circle cx="60.0" cy="185.0" r="20.0" class="bubble-danger"><title>App\StudyContent\Domain\Event\ContentAddedToCollection::occurredAt — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="ContentApproved.php.html#14"><circle cx="780.0" cy="185.0" r="20.0" class="bubble-success"><title>App\StudyContent\Domain\Event\ContentApproved::__construct — Coverage: 100.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="ContentApproved.php.html#22"><circle cx="60.0" cy="185.0" r="20.0" class="bubble-danger"><title>App\StudyContent\Domain\Event\ContentApproved::contentItemId — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="ContentApproved.php.html#27"><circle cx="60.0" cy="185.0" r="20.0" class="bubble-danger"><title>App\StudyContent\Domain\Event\ContentApproved::reviewerId — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="ContentApproved.php.html#32"><circle cx="60.0" cy="185.0" r="20.0" class="bubble-danger"><title>App\StudyContent\Domain\Event\ContentApproved::occurredAt — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="ContentArchived.php.html#14"><circle cx="60.0" cy="185.0" r="20.0" class="bubble-danger"><title>App\StudyContent\Domain\Event\ContentArchived::__construct — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="ContentArchived.php.html#21"><circle cx="60.0" cy="185.0" r="20.0" class="bubble-danger"><title>App\StudyContent\Domain\Event\ContentArchived::contentItemId — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="ContentArchived.php.html#26"><circle cx="60.0" cy="185.0" r="20.0" class="bubble-danger"><title>App\StudyContent\Domain\Event\ContentArchived::occurredAt — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="ContentBlocked.php.html#14"><circle cx="60.0" cy="185.0" r="20.0" class="bubble-danger"><title>App\StudyContent\Domain\Event\ContentBlocked::__construct — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="ContentBlocked.php.html#21"><circle cx="60.0" cy="185.0" r="20.0" class="bubble-danger"><title>App\StudyContent\Domain\Event\ContentBlocked::contentItemId — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="ContentBlocked.php.html#26"><circle cx="60.0" cy="185.0" r="20.0" class="bubble-danger"><title>App\StudyContent\Domain\Event\ContentBlocked::occurredAt — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="ContentDeprecated.php.html#14"><circle cx="60.0" cy="185.0" r="20.0" class="bubble-danger"><title>App\StudyContent\Domain\Event\ContentDeprecated::__construct — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="ContentDeprecated.php.html#21"><circle cx="60.0" cy="185.0" r="20.0" class="bubble-danger"><title>App\StudyContent\Domain\Event\ContentDeprecated::contentItemId — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="ContentDeprecated.php.html#26"><circle cx="60.0" cy="185.0" r="20.0" class="bubble-danger"><title>App\StudyContent\Domain\Event\ContentDeprecated::occurredAt — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="ContentImported.php.html#14"><circle cx="780.0" cy="185.0" r="20.0" class="bubble-success"><title>App\StudyContent\Domain\Event\ContentImported::__construct — Coverage: 100.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="ContentImported.php.html#21"><circle cx="60.0" cy="185.0" r="20.0" class="bubble-danger"><title>App\StudyContent\Domain\Event\ContentImported::contentItemId — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="ContentImported.php.html#26"><circle cx="60.0" cy="185.0" r="20.0" class="bubble-danger"><title>App\StudyContent\Domain\Event\ContentImported::occurredAt — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="ContentProcessed.php.html#14"><circle cx="780.0" cy="185.0" r="20.0" class="bubble-success"><title>App\StudyContent\Domain\Event\ContentProcessed::__construct — Coverage: 100.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="ContentProcessed.php.html#21"><circle cx="60.0" cy="185.0" r="20.0" class="bubble-danger"><title>App\StudyContent\Domain\Event\ContentProcessed::contentItemId — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="ContentProcessed.php.html#26"><circle cx="60.0" cy="185.0" r="20.0" class="bubble-danger"><title>App\StudyContent\Domain\Event\ContentProcessed::occurredAt — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="ContentPublished.php.html#15"><circle cx="780.0" cy="185.0" r="20.0" class="bubble-success"><title>App\StudyContent\Domain\Event\ContentPublished::__construct — Coverage: 100.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="ContentPublished.php.html#23"><circle cx="60.0" cy="185.0" r="20.0" class="bubble-danger"><title>App\StudyContent\Domain\Event\ContentPublished::contentItemId — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="ContentPublished.php.html#28"><circle cx="60.0" cy="185.0" r="20.0" class="bubble-danger"><title>App\StudyContent\Domain\Event\ContentPublished::channel — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="ContentPublished.php.html#33"><circle cx="60.0" cy="185.0" r="20.0" class="bubble-danger"><title>App\StudyContent\Domain\Event\ContentPublished::occurredAt — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="ContentRejected.php.html#14"><circle cx="60.0" cy="185.0" r="20.0" class="bubble-danger"><title>App\StudyContent\Domain\Event\ContentRejected::__construct — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="ContentRejected.php.html#22"><circle cx="60.0" cy="185.0" r="20.0" class="bubble-danger"><title>App\StudyContent\Domain\Event\ContentRejected::contentItemId — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="ContentRejected.php.html#27"><circle cx="60.0" cy="185.0" r="20.0" class="bubble-danger"><title>App\StudyContent\Domain\Event\ContentRejected::reviewerId — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="ContentRejected.php.html#32"><circle cx="60.0" cy="185.0" r="20.0" class="bubble-danger"><title>App\StudyContent\Domain\Event\ContentRejected::occurredAt — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="ContentRemovedFromCollection.php.html#14"><circle cx="60.0" cy="185.0" r="20.0" class="bubble-danger"><title>App\StudyContent\Domain\Event\ContentRemovedFromCollection::__construct — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="ContentRemovedFromCollection.php.html#21"><circle cx="60.0" cy="185.0" r="20.0" class="bubble-danger"><title>App\StudyContent\Domain\Event\ContentRemovedFromCollection::collectionId — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="ContentRemovedFromCollection.php.html#26"><circle cx="60.0" cy="185.0" r="20.0" class="bubble-danger"><title>App\StudyContent\Domain\Event\ContentRemovedFromCollection::occurredAt — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="ContentSubmittedForReview.php.html#14"><circle cx="780.0" cy="185.0" r="20.0" class="bubble-success"><title>App\StudyContent\Domain\Event\ContentSubmittedForReview::__construct — Coverage: 100.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="ContentSubmittedForReview.php.html#21"><circle cx="60.0" cy="185.0" r="20.0" class="bubble-danger"><title>App\StudyContent\Domain\Event\ContentSubmittedForReview::contentItemId — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="ContentSubmittedForReview.php.html#26"><circle cx="60.0" cy="185.0" r="20.0" class="bubble-danger"><title>App\StudyContent\Domain\Event\ContentSubmittedForReview::occurredAt — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="ContentSuperseded.php.html#14"><circle cx="60.0" cy="185.0" r="20.0" class="bubble-danger"><title>App\StudyContent\Domain\Event\ContentSuperseded::__construct — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="ContentSuperseded.php.html#22"><circle cx="60.0" cy="185.0" r="20.0" class="bubble-danger"><title>App\StudyContent\Domain\Event\ContentSuperseded::contentItemId — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="ContentSuperseded.php.html#27"><circle cx="60.0" cy="185.0" r="20.0" class="bubble-danger"><title>App\StudyContent\Domain\Event\ContentSuperseded::successorId — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="ContentSuperseded.php.html#32"><circle cx="60.0" cy="185.0" r="20.0" class="bubble-danger"><title>App\StudyContent\Domain\Event\ContentSuperseded::occurredAt — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="RelationshipDeclared.php.html#15"><circle cx="780.0" cy="185.0" r="20.0" class="bubble-success"><title>App\StudyContent\Domain\Event\RelationshipDeclared::__construct — Coverage: 100.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="RelationshipDeclared.php.html#24"><circle cx="60.0" cy="185.0" r="20.0" class="bubble-danger"><title>App\StudyContent\Domain\Event\RelationshipDeclared::contentItemId — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="RelationshipDeclared.php.html#29"><circle cx="60.0" cy="185.0" r="20.0" class="bubble-danger"><title>App\StudyContent\Domain\Event\RelationshipDeclared::type — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="RelationshipDeclared.php.html#34"><circle cx="60.0" cy="185.0" r="20.0" class="bubble-danger"><title>App\StudyContent\Domain\Event\RelationshipDeclared::targetId — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="RelationshipDeclared.php.html#39"><circle cx="60.0" cy="185.0" r="20.0" class="bubble-danger"><title>App\StudyContent\Domain\Event\RelationshipDeclared::occurredAt — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+</svg>
+     </div>
+    </div>
+    <div class="col-md-6 dashboard-column">
+     <h3>&nbsp;</h3>
+     <p class="text-muted small">Sorted by descending CRAP (Change Risk Anti-Patterns) index.</p>
+     <div class="scrollbox">
+<table class="table">
+ <thead>
+  <tr>
+   <th>Method</th>
+   <th class="text-right"><abbr title="Change Risk Anti-Patterns (CRAP) Index">CRAP</abbr></th>
+   <th class="text-right">Coverage</th>
+  </tr>
+ </thead>
+ <tbody>
+  <tr><td><a href="CollectionArchived.php.html#14">App\StudyContent\Domain\Event\CollectionArchived::__construct</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="CollectionArchived.php.html#21">App\StudyContent\Domain\Event\CollectionArchived::collectionId</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="CollectionArchived.php.html#26">App\StudyContent\Domain\Event\CollectionArchived::occurredAt</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="CollectionPublished.php.html#15">App\StudyContent\Domain\Event\CollectionPublished::__construct</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="CollectionPublished.php.html#23">App\StudyContent\Domain\Event\CollectionPublished::collectionId</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="CollectionPublished.php.html#28">App\StudyContent\Domain\Event\CollectionPublished::scope</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="CollectionPublished.php.html#33">App\StudyContent\Domain\Event\CollectionPublished::occurredAt</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="CollectionReordered.php.html#14">App\StudyContent\Domain\Event\CollectionReordered::__construct</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="CollectionReordered.php.html#21">App\StudyContent\Domain\Event\CollectionReordered::collectionId</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="CollectionReordered.php.html#26">App\StudyContent\Domain\Event\CollectionReordered::occurredAt</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="ContentAddedToCollection.php.html#23">App\StudyContent\Domain\Event\ContentAddedToCollection::collectionId</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="ContentAddedToCollection.php.html#28">App\StudyContent\Domain\Event\ContentAddedToCollection::contentItemId</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="ContentAddedToCollection.php.html#33">App\StudyContent\Domain\Event\ContentAddedToCollection::occurredAt</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="ContentApproved.php.html#22">App\StudyContent\Domain\Event\ContentApproved::contentItemId</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="ContentApproved.php.html#27">App\StudyContent\Domain\Event\ContentApproved::reviewerId</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="ContentApproved.php.html#32">App\StudyContent\Domain\Event\ContentApproved::occurredAt</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="ContentArchived.php.html#14">App\StudyContent\Domain\Event\ContentArchived::__construct</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="ContentArchived.php.html#21">App\StudyContent\Domain\Event\ContentArchived::contentItemId</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="ContentArchived.php.html#26">App\StudyContent\Domain\Event\ContentArchived::occurredAt</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="ContentBlocked.php.html#14">App\StudyContent\Domain\Event\ContentBlocked::__construct</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="ContentBlocked.php.html#21">App\StudyContent\Domain\Event\ContentBlocked::contentItemId</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="ContentBlocked.php.html#26">App\StudyContent\Domain\Event\ContentBlocked::occurredAt</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="ContentDeprecated.php.html#14">App\StudyContent\Domain\Event\ContentDeprecated::__construct</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="ContentDeprecated.php.html#21">App\StudyContent\Domain\Event\ContentDeprecated::contentItemId</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="ContentDeprecated.php.html#26">App\StudyContent\Domain\Event\ContentDeprecated::occurredAt</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="ContentImported.php.html#21">App\StudyContent\Domain\Event\ContentImported::contentItemId</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="ContentImported.php.html#26">App\StudyContent\Domain\Event\ContentImported::occurredAt</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="ContentProcessed.php.html#21">App\StudyContent\Domain\Event\ContentProcessed::contentItemId</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="ContentProcessed.php.html#26">App\StudyContent\Domain\Event\ContentProcessed::occurredAt</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="ContentPublished.php.html#23">App\StudyContent\Domain\Event\ContentPublished::contentItemId</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="ContentPublished.php.html#28">App\StudyContent\Domain\Event\ContentPublished::channel</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="ContentPublished.php.html#33">App\StudyContent\Domain\Event\ContentPublished::occurredAt</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="ContentRejected.php.html#14">App\StudyContent\Domain\Event\ContentRejected::__construct</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="ContentRejected.php.html#22">App\StudyContent\Domain\Event\ContentRejected::contentItemId</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="ContentRejected.php.html#27">App\StudyContent\Domain\Event\ContentRejected::reviewerId</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="ContentRejected.php.html#32">App\StudyContent\Domain\Event\ContentRejected::occurredAt</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="ContentRemovedFromCollection.php.html#14">App\StudyContent\Domain\Event\ContentRemovedFromCollection::__construct</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="ContentRemovedFromCollection.php.html#21">App\StudyContent\Domain\Event\ContentRemovedFromCollection::collectionId</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="ContentRemovedFromCollection.php.html#26">App\StudyContent\Domain\Event\ContentRemovedFromCollection::occurredAt</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="ContentSubmittedForReview.php.html#21">App\StudyContent\Domain\Event\ContentSubmittedForReview::contentItemId</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="ContentSubmittedForReview.php.html#26">App\StudyContent\Domain\Event\ContentSubmittedForReview::occurredAt</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="ContentSuperseded.php.html#14">App\StudyContent\Domain\Event\ContentSuperseded::__construct</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="ContentSuperseded.php.html#22">App\StudyContent\Domain\Event\ContentSuperseded::contentItemId</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="ContentSuperseded.php.html#27">App\StudyContent\Domain\Event\ContentSuperseded::successorId</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="ContentSuperseded.php.html#32">App\StudyContent\Domain\Event\ContentSuperseded::occurredAt</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="RelationshipDeclared.php.html#24">App\StudyContent\Domain\Event\RelationshipDeclared::contentItemId</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="RelationshipDeclared.php.html#29">App\StudyContent\Domain\Event\RelationshipDeclared::type</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="RelationshipDeclared.php.html#34">App\StudyContent\Domain\Event\RelationshipDeclared::targetId</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="RelationshipDeclared.php.html#39">App\StudyContent\Domain\Event\RelationshipDeclared::occurredAt</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="ContentAddedToCollection.php.html#15">App\StudyContent\Domain\Event\ContentAddedToCollection::__construct</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="ContentApproved.php.html#14">App\StudyContent\Domain\Event\ContentApproved::__construct</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="ContentImported.php.html#14">App\StudyContent\Domain\Event\ContentImported::__construct</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="ContentProcessed.php.html#14">App\StudyContent\Domain\Event\ContentProcessed::__construct</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="ContentPublished.php.html#15">App\StudyContent\Domain\Event\ContentPublished::__construct</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="ContentSubmittedForReview.php.html#14">App\StudyContent\Domain\Event\ContentSubmittedForReview::__construct</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="RelationshipDeclared.php.html#15">App\StudyContent\Domain\Event\RelationshipDeclared::__construct</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+ </tbody>
+</table>
+     </div>
+    </div>
+   </div>
+   <footer>
+    <hr/>
+    <p>
+     <small>Generated by <a href="https://github.com/sebastianbergmann/php-code-coverage" target="_top">php-code-coverage 14.1.1</a> using <a href="https://www.php.net/" target="_top">PHP 8.5.5</a> and <a href="https://phpunit.de/">PHPUnit 13.1.3</a> at Wed Apr 22 21:20:07 UTC 2026.</small>
+    </p>
+   </footer>
+  </div>
+ </body>
+</html>

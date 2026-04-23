@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <title>Dashboard for /app/src/Feature/User/Entity</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="../../../_css/bootstrap.min.css?v=14.1.1" rel="stylesheet" type="text/css">
+  <link href="../../../_css/style.css?v=14.1.1" rel="stylesheet" type="text/css">
+  <link href="../../../_css/custom.css" rel="stylesheet" type="text/css">
+ </head>
+ <body>
+  <header>
+   <div class="container-fluid">
+    <div class="row">
+     <div class="col-md-12">
+      <nav aria-label="breadcrumb">
+       <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="../../../index.html">/app/src</a></li>
+         <li class="breadcrumb-item"><a href="../../index.html">Feature</a></li>
+         <li class="breadcrumb-item"><a href="../index.html">User</a></li>
+         <li class="breadcrumb-item"><a href="index.html">Entity</a></li>
+         <li class="breadcrumb-item active">(Dashboard)</li>
+
+       </ol>
+      </nav>
+     </div>
+    </div>
+   </div>
+  </header>
+  <div class="container-fluid">
+   <div class="row dashboard-row">
+    <div class="col-md-6">
+     <h3>Classes</h3>
+     <p class="text-muted small">Bubble size = executable lines. Hover for details, click to navigate.</p>
+     <div class="file-coverage-chart">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400" preserveAspectRatio="xMidYMid meet">
+ <style>
+  .bubble-success { fill: var(--phpunit-success-bar); opacity: 0.7; }
+  .bubble-warning { fill: var(--phpunit-warning-bar); opacity: 0.7; }
+  .bubble-danger { fill: var(--phpunit-danger-bar); opacity: 0.7; }
+  .bubble-success:hover, .bubble-warning:hover, .bubble-danger:hover { opacity: 1; stroke: var(--bs-emphasis-color); stroke-width: 1.5; }
+  .chart-grid { stroke: var(--bs-border-color); stroke-width: 0.5; stroke-dasharray: 4,4; opacity: 0.5; }
+  .chart-axis { stroke: var(--bs-border-color); stroke-width: 1; }
+  .chart-label { fill: var(--bs-body-color); font-size: 11px; font-family: var(--bs-font-sans-serif, sans-serif); }
+  .chart-title { fill: var(--bs-body-color); font-size: 12px; font-family: var(--bs-font-sans-serif, sans-serif); }
+ </style>
+ <line x1="60.0" y1="20" x2="60.0" y2="350" class="chart-grid"/>
+ <text x="60.0" y="368" text-anchor="middle" class="chart-label">0%</text>
+ <line x1="204.0" y1="20" x2="204.0" y2="350" class="chart-grid"/>
+ <text x="204.0" y="368" text-anchor="middle" class="chart-label">20%</text>
+ <line x1="348.0" y1="20" x2="348.0" y2="350" class="chart-grid"/>
+ <text x="348.0" y="368" text-anchor="middle" class="chart-label">40%</text>
+ <line x1="492.0" y1="20" x2="492.0" y2="350" class="chart-grid"/>
+ <text x="492.0" y="368" text-anchor="middle" class="chart-label">60%</text>
+ <line x1="636.0" y1="20" x2="636.0" y2="350" class="chart-grid"/>
+ <text x="636.0" y="368" text-anchor="middle" class="chart-label">80%</text>
+ <line x1="780.0" y1="20" x2="780.0" y2="350" class="chart-grid"/>
+ <text x="780.0" y="368" text-anchor="middle" class="chart-label">100%</text>
+ <line x1="60" y1="350.0" x2="780" y2="350.0" class="chart-grid"/>
+ <text x="52" y="350.0" text-anchor="end" dominant-baseline="middle" class="chart-label">0</text>
+ <line x1="60" y1="267.5" x2="780" y2="267.5" class="chart-grid"/>
+ <text x="52" y="267.5" text-anchor="end" dominant-baseline="middle" class="chart-label">20</text>
+ <line x1="60" y1="185.0" x2="780" y2="185.0" class="chart-grid"/>
+ <text x="52" y="185.0" text-anchor="end" dominant-baseline="middle" class="chart-label">40</text>
+ <line x1="60" y1="102.5" x2="780" y2="102.5" class="chart-grid"/>
+ <text x="52" y="102.5" text-anchor="end" dominant-baseline="middle" class="chart-label">60</text>
+ <line x1="60" y1="20.0" x2="780" y2="20.0" class="chart-grid"/>
+ <text x="52" y="20.0" text-anchor="end" dominant-baseline="middle" class="chart-label">80</text>
+ <line x1="60" y1="20" x2="60" y2="350" class="chart-axis"/>
+ <line x1="60" y1="350" x2="780" y2="350" class="chart-axis"/>
+ <text x="420.0" y="395" text-anchor="middle" class="chart-title">Line Coverage (%)</text>
+ <text x="15" y="185.0" text-anchor="middle" transform="rotate(-90, 15, 185.0)" class="chart-title">Cyclomatic Complexity</text>
+ <a href="User.php.html#24"><circle cx="60.0" cy="102.5" r="20.0" class="bubble-danger"><title>App\Feature\User\Entity\User — Coverage: 0.0% | Lines: 95 | Complexity: 60</title></circle></a>
+ <a href="Settings.php.html#15"><circle cx="60.0" cy="292.2" r="10.3" class="bubble-danger"><title>App\Feature\User\Entity\Settings — Coverage: 0.0% | Lines: 25 | Complexity: 14</title></circle></a>
+</svg>
+     </div>
+    </div>
+    <div class="col-md-6 dashboard-column">
+     <h3>&nbsp;</h3>
+     <p class="text-muted small">Sorted by descending CRAP (Change Risk Anti-Patterns) index.</p>
+     <div class="scrollbox">
+<table class="table">
+ <thead>
+  <tr>
+   <th>Class</th>
+   <th class="text-right"><abbr title="Change Risk Anti-Patterns (CRAP) Index">CRAP</abbr></th>
+   <th class="text-right">Coverage</th>
+  </tr>
+ </thead>
+ <tbody>
+  <tr><td><a href="User.php.html#24">App\Feature\User\Entity\User</a></td><td class="text-right">3660</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Settings.php.html#15">App\Feature\User\Entity\Settings</a></td><td class="text-right">210</td><td class="text-right">0.0%</td></tr>
+ </tbody>
+</table>
+     </div>
+    </div>
+   </div>
+   <div class="row dashboard-row">
+    <div class="col-md-6">
+     <h3>Methods</h3>
+     <p class="text-muted small">Bubble size = executable lines. Hover for details, click to navigate.</p>
+     <div class="file-coverage-chart">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400" preserveAspectRatio="xMidYMid meet">
+ <style>
+  .bubble-success { fill: var(--phpunit-success-bar); opacity: 0.7; }
+  .bubble-warning { fill: var(--phpunit-warning-bar); opacity: 0.7; }
+  .bubble-danger { fill: var(--phpunit-danger-bar); opacity: 0.7; }
+  .bubble-success:hover, .bubble-warning:hover, .bubble-danger:hover { opacity: 1; stroke: var(--bs-emphasis-color); stroke-width: 1.5; }
+  .chart-grid { stroke: var(--bs-border-color); stroke-width: 0.5; stroke-dasharray: 4,4; opacity: 0.5; }
+  .chart-axis { stroke: var(--bs-border-color); stroke-width: 1; }
+  .chart-label { fill: var(--bs-body-color); font-size: 11px; font-family: var(--bs-font-sans-serif, sans-serif); }
+  .chart-title { fill: var(--bs-body-color); font-size: 12px; font-family: var(--bs-font-sans-serif, sans-serif); }
+ </style>
+ <line x1="60.0" y1="20" x2="60.0" y2="350" class="chart-grid"/>
+ <text x="60.0" y="368" text-anchor="middle" class="chart-label">0%</text>
+ <line x1="204.0" y1="20" x2="204.0" y2="350" class="chart-grid"/>
+ <text x="204.0" y="368" text-anchor="middle" class="chart-label">20%</text>
+ <line x1="348.0" y1="20" x2="348.0" y2="350" class="chart-grid"/>
+ <text x="348.0" y="368" text-anchor="middle" class="chart-label">40%</text>
+ <line x1="492.0" y1="20" x2="492.0" y2="350" class="chart-grid"/>
+ <text x="492.0" y="368" text-anchor="middle" class="chart-label">60%</text>
+ <line x1="636.0" y1="20" x2="636.0" y2="350" class="chart-grid"/>
+ <text x="636.0" y="368" text-anchor="middle" class="chart-label">80%</text>
+ <line x1="780.0" y1="20" x2="780.0" y2="350" class="chart-grid"/>
+ <text x="780.0" y="368" text-anchor="middle" class="chart-label">100%</text>
+ <line x1="60" y1="350.0" x2="780" y2="350.0" class="chart-grid"/>
+ <text x="52" y="350.0" text-anchor="end" dominant-baseline="middle" class="chart-label">0</text>
+ <line x1="60" y1="267.5" x2="780" y2="267.5" class="chart-grid"/>
+ <text x="52" y="267.5" text-anchor="end" dominant-baseline="middle" class="chart-label">1</text>
+ <line x1="60" y1="185.0" x2="780" y2="185.0" class="chart-grid"/>
+ <text x="52" y="185.0" text-anchor="end" dominant-baseline="middle" class="chart-label">2</text>
+ <line x1="60" y1="102.5" x2="780" y2="102.5" class="chart-grid"/>
+ <text x="52" y="102.5" text-anchor="end" dominant-baseline="middle" class="chart-label">3</text>
+ <line x1="60" y1="20.0" x2="780" y2="20.0" class="chart-grid"/>
+ <text x="52" y="20.0" text-anchor="end" dominant-baseline="middle" class="chart-label">4</text>
+ <line x1="60" y1="20" x2="60" y2="350" class="chart-axis"/>
+ <line x1="60" y1="350" x2="780" y2="350" class="chart-axis"/>
+ <text x="420.0" y="395" text-anchor="middle" class="chart-title">Line Coverage (%)</text>
+ <text x="15" y="185.0" text-anchor="middle" transform="rotate(-90, 15, 185.0)" class="chart-title">Cyclomatic Complexity</text>
+ <a href="User.php.html#116"><circle cx="60.0" cy="267.5" r="20.0" class="bubble-danger"><title>App\Feature\User\Entity\User::__construct — Coverage: 0.0% | Lines: 7 | Complexity: 1</title></circle></a>
+ <a href="Settings.php.html#52"><circle cx="60.0" cy="267.5" r="16.9" class="bubble-danger"><title>App\Feature\User\Entity\Settings::__construct — Coverage: 0.0% | Lines: 5 | Complexity: 1</title></circle></a>
+ <a href="Settings.php.html#66"><circle cx="60.0" cy="185.0" r="15.1" class="bubble-danger"><title>App\Feature\User\Entity\Settings::setUser — Coverage: 0.0% | Lines: 4 | Complexity: 2</title></circle></a>
+ <a href="User.php.html#260"><circle cx="60.0" cy="185.0" r="15.1" class="bubble-danger"><title>App\Feature\User\Entity\User::setSettings — Coverage: 0.0% | Lines: 4 | Complexity: 2</title></circle></a>
+ <a href="User.php.html#280"><circle cx="60.0" cy="185.0" r="15.1" class="bubble-danger"><title>App\Feature\User\Entity\User::addSubject — Coverage: 0.0% | Lines: 4 | Complexity: 2</title></circle></a>
+ <a href="User.php.html#290"><circle cx="60.0" cy="102.5" r="15.1" class="bubble-danger"><title>App\Feature\User\Entity\User::removeSubject — Coverage: 0.0% | Lines: 4 | Complexity: 3</title></circle></a>
+ <a href="User.php.html#310"><circle cx="60.0" cy="185.0" r="15.1" class="bubble-danger"><title>App\Feature\User\Entity\User::addTask — Coverage: 0.0% | Lines: 4 | Complexity: 2</title></circle></a>
+ <a href="User.php.html#320"><circle cx="60.0" cy="102.5" r="15.1" class="bubble-danger"><title>App\Feature\User\Entity\User::removeTask — Coverage: 0.0% | Lines: 4 | Complexity: 3</title></circle></a>
+ <a href="User.php.html#340"><circle cx="60.0" cy="185.0" r="15.1" class="bubble-danger"><title>App\Feature\User\Entity\User::addSession — Coverage: 0.0% | Lines: 4 | Complexity: 2</title></circle></a>
+ <a href="User.php.html#350"><circle cx="60.0" cy="102.5" r="15.1" class="bubble-danger"><title>App\Feature\User\Entity\User::removeSession — Coverage: 0.0% | Lines: 4 | Complexity: 3</title></circle></a>
+ <a href="User.php.html#370"><circle cx="60.0" cy="185.0" r="15.1" class="bubble-danger"><title>App\Feature\User\Entity\User::addNote — Coverage: 0.0% | Lines: 4 | Complexity: 2</title></circle></a>
+ <a href="User.php.html#380"><circle cx="60.0" cy="102.5" r="15.1" class="bubble-danger"><title>App\Feature\User\Entity\User::removeNote — Coverage: 0.0% | Lines: 4 | Complexity: 3</title></circle></a>
+ <a href="User.php.html#400"><circle cx="60.0" cy="185.0" r="15.1" class="bubble-danger"><title>App\Feature\User\Entity\User::addResource — Coverage: 0.0% | Lines: 4 | Complexity: 2</title></circle></a>
+ <a href="User.php.html#410"><circle cx="60.0" cy="102.5" r="15.1" class="bubble-danger"><title>App\Feature\User\Entity\User::removeResource — Coverage: 0.0% | Lines: 4 | Complexity: 3</title></circle></a>
+ <a href="User.php.html#429"><circle cx="60.0" cy="185.0" r="15.1" class="bubble-danger"><title>App\Feature\User\Entity\User::addTag — Coverage: 0.0% | Lines: 4 | Complexity: 2</title></circle></a>
+ <a href="User.php.html#439"><circle cx="60.0" cy="102.5" r="15.1" class="bubble-danger"><title>App\Feature\User\Entity\User::removeTag — Coverage: 0.0% | Lines: 4 | Complexity: 3</title></circle></a>
+ <a href="User.php.html#182"><circle cx="60.0" cy="267.5" r="13.1" class="bubble-danger"><title>App\Feature\User\Entity\User::getRoles — Coverage: 0.0% | Lines: 3 | Complexity: 1</title></circle></a>
+ <a href="User.php.html#223"><circle cx="60.0" cy="267.5" r="13.1" class="bubble-danger"><title>App\Feature\User\Entity\User::__serialize — Coverage: 0.0% | Lines: 3 | Complexity: 1</title></circle></a>
+ <a href="Settings.php.html#82"><circle cx="60.0" cy="267.5" r="10.7" class="bubble-danger"><title>App\Feature\User\Entity\Settings::setTimezone — Coverage: 0.0% | Lines: 2 | Complexity: 1</title></circle></a>
+ <a href="Settings.php.html#94"><circle cx="60.0" cy="267.5" r="10.7" class="bubble-danger"><title>App\Feature\User\Entity\Settings::setWeekStartDay — Coverage: 0.0% | Lines: 2 | Complexity: 1</title></circle></a>
+ <a href="Settings.php.html#106"><circle cx="60.0" cy="267.5" r="10.7" class="bubble-danger"><title>App\Feature\User\Entity\Settings::setDefaultSessionType — Coverage: 0.0% | Lines: 2 | Complexity: 1</title></circle></a>
+ <a href="Settings.php.html#118"><circle cx="60.0" cy="267.5" r="10.7" class="bubble-danger"><title>App\Feature\User\Entity\Settings::setDefaultSessionMinutes — Coverage: 0.0% | Lines: 2 | Complexity: 1</title></circle></a>
+ <a href="Settings.php.html#130"><circle cx="60.0" cy="267.5" r="10.7" class="bubble-danger"><title>App\Feature\User\Entity\Settings::setDefaultBreakMinutes — Coverage: 0.0% | Lines: 2 | Complexity: 1</title></circle></a>
+ <a href="User.php.html#138"><circle cx="60.0" cy="267.5" r="10.7" class="bubble-danger"><title>App\Feature\User\Entity\User::setUsername — Coverage: 0.0% | Lines: 2 | Complexity: 1</title></circle></a>
+ <a href="User.php.html#160"><circle cx="60.0" cy="185.0" r="10.7" class="bubble-danger"><title>App\Feature\User\Entity\User::setEmail — Coverage: 0.0% | Lines: 2 | Complexity: 2</title></circle></a>
+ <a href="User.php.html#172"><circle cx="60.0" cy="185.0" r="10.7" class="bubble-danger"><title>App\Feature\User\Entity\User::setDisplayName — Coverage: 0.0% | Lines: 2 | Complexity: 2</title></circle></a>
+ <a href="User.php.html#194"><circle cx="60.0" cy="267.5" r="10.7" class="bubble-danger"><title>App\Feature\User\Entity\User::setRoles — Coverage: 0.0% | Lines: 2 | Complexity: 1</title></circle></a>
+ <a href="User.php.html#213"><circle cx="60.0" cy="267.5" r="10.7" class="bubble-danger"><title>App\Feature\User\Entity\User::setPassword — Coverage: 0.0% | Lines: 2 | Complexity: 1</title></circle></a>
+ <a href="User.php.html#236"><circle cx="60.0" cy="267.5" r="10.7" class="bubble-danger"><title>App\Feature\User\Entity\User::setIsActive — Coverage: 0.0% | Lines: 2 | Complexity: 1</title></circle></a>
+ <a href="User.php.html#248"><circle cx="60.0" cy="267.5" r="10.7" class="bubble-danger"><title>App\Feature\User\Entity\User::setLastLoginAt — Coverage: 0.0% | Lines: 2 | Complexity: 1</title></circle></a>
+ <a href="Settings.php.html#61"><circle cx="60.0" cy="267.5" r="7.6" class="bubble-danger"><title>App\Feature\User\Entity\Settings::getUser — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Settings.php.html#77"><circle cx="60.0" cy="267.5" r="7.6" class="bubble-danger"><title>App\Feature\User\Entity\Settings::getTimezone — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Settings.php.html#89"><circle cx="60.0" cy="267.5" r="7.6" class="bubble-danger"><title>App\Feature\User\Entity\Settings::getWeekStartDay — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Settings.php.html#101"><circle cx="60.0" cy="267.5" r="7.6" class="bubble-danger"><title>App\Feature\User\Entity\Settings::getDefaultSessionType — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Settings.php.html#113"><circle cx="60.0" cy="267.5" r="7.6" class="bubble-danger"><title>App\Feature\User\Entity\Settings::getDefaultSessionMinutes — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Settings.php.html#125"><circle cx="60.0" cy="267.5" r="7.6" class="bubble-danger"><title>App\Feature\User\Entity\Settings::getDefaultBreakMinutes — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="User.php.html#128"><circle cx="60.0" cy="267.5" r="7.6" class="bubble-danger"><title>App\Feature\User\Entity\User::getId — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="User.php.html#133"><circle cx="60.0" cy="267.5" r="7.6" class="bubble-danger"><title>App\Feature\User\Entity\User::getUsername — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="User.php.html#150"><circle cx="60.0" cy="267.5" r="7.6" class="bubble-danger"><title>App\Feature\User\Entity\User::getUserIdentifier — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="User.php.html#155"><circle cx="60.0" cy="267.5" r="7.6" class="bubble-danger"><title>App\Feature\User\Entity\User::getEmail — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="User.php.html#167"><circle cx="60.0" cy="267.5" r="7.6" class="bubble-danger"><title>App\Feature\User\Entity\User::getDisplayName — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="User.php.html#201"><circle cx="60.0" cy="267.5" r="7.6" class="bubble-danger"><title>App\Feature\User\Entity\User::eraseCredentials — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="User.php.html#208"><circle cx="60.0" cy="267.5" r="7.6" class="bubble-danger"><title>App\Feature\User\Entity\User::getPassword — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="User.php.html#231"><circle cx="60.0" cy="267.5" r="7.6" class="bubble-danger"><title>App\Feature\User\Entity\User::isActive — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="User.php.html#243"><circle cx="60.0" cy="267.5" r="7.6" class="bubble-danger"><title>App\Feature\User\Entity\User::getLastLoginAt — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="User.php.html#255"><circle cx="60.0" cy="267.5" r="7.6" class="bubble-danger"><title>App\Feature\User\Entity\User::getSettings — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="User.php.html#275"><circle cx="60.0" cy="267.5" r="7.6" class="bubble-danger"><title>App\Feature\User\Entity\User::getSubjects — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="User.php.html#305"><circle cx="60.0" cy="267.5" r="7.6" class="bubble-danger"><title>App\Feature\User\Entity\User::getTasks — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="User.php.html#335"><circle cx="60.0" cy="267.5" r="7.6" class="bubble-danger"><title>App\Feature\User\Entity\User::getSessions — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="User.php.html#365"><circle cx="60.0" cy="267.5" r="7.6" class="bubble-danger"><title>App\Feature\User\Entity\User::getNotes — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="User.php.html#395"><circle cx="60.0" cy="267.5" r="7.6" class="bubble-danger"><title>App\Feature\User\Entity\User::getResources — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="User.php.html#424"><circle cx="60.0" cy="267.5" r="7.6" class="bubble-danger"><title>App\Feature\User\Entity\User::getTags — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+</svg>
+     </div>
+    </div>
+    <div class="col-md-6 dashboard-column">
+     <h3>&nbsp;</h3>
+     <p class="text-muted small">Sorted by descending CRAP (Change Risk Anti-Patterns) index.</p>
+     <div class="scrollbox">
+<table class="table">
+ <thead>
+  <tr>
+   <th>Method</th>
+   <th class="text-right"><abbr title="Change Risk Anti-Patterns (CRAP) Index">CRAP</abbr></th>
+   <th class="text-right">Coverage</th>
+  </tr>
+ </thead>
+ <tbody>
+  <tr><td><a href="User.php.html#290">App\Feature\User\Entity\User::removeSubject</a></td><td class="text-right">12</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="User.php.html#320">App\Feature\User\Entity\User::removeTask</a></td><td class="text-right">12</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="User.php.html#350">App\Feature\User\Entity\User::removeSession</a></td><td class="text-right">12</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="User.php.html#380">App\Feature\User\Entity\User::removeNote</a></td><td class="text-right">12</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="User.php.html#410">App\Feature\User\Entity\User::removeResource</a></td><td class="text-right">12</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="User.php.html#439">App\Feature\User\Entity\User::removeTag</a></td><td class="text-right">12</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Settings.php.html#66">App\Feature\User\Entity\Settings::setUser</a></td><td class="text-right">6</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="User.php.html#160">App\Feature\User\Entity\User::setEmail</a></td><td class="text-right">6</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="User.php.html#172">App\Feature\User\Entity\User::setDisplayName</a></td><td class="text-right">6</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="User.php.html#260">App\Feature\User\Entity\User::setSettings</a></td><td class="text-right">6</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="User.php.html#280">App\Feature\User\Entity\User::addSubject</a></td><td class="text-right">6</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="User.php.html#310">App\Feature\User\Entity\User::addTask</a></td><td class="text-right">6</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="User.php.html#340">App\Feature\User\Entity\User::addSession</a></td><td class="text-right">6</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="User.php.html#370">App\Feature\User\Entity\User::addNote</a></td><td class="text-right">6</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="User.php.html#400">App\Feature\User\Entity\User::addResource</a></td><td class="text-right">6</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="User.php.html#429">App\Feature\User\Entity\User::addTag</a></td><td class="text-right">6</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Settings.php.html#52">App\Feature\User\Entity\Settings::__construct</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Settings.php.html#61">App\Feature\User\Entity\Settings::getUser</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Settings.php.html#77">App\Feature\User\Entity\Settings::getTimezone</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Settings.php.html#82">App\Feature\User\Entity\Settings::setTimezone</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Settings.php.html#89">App\Feature\User\Entity\Settings::getWeekStartDay</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Settings.php.html#94">App\Feature\User\Entity\Settings::setWeekStartDay</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Settings.php.html#101">App\Feature\User\Entity\Settings::getDefaultSessionType</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Settings.php.html#106">App\Feature\User\Entity\Settings::setDefaultSessionType</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Settings.php.html#113">App\Feature\User\Entity\Settings::getDefaultSessionMinutes</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Settings.php.html#118">App\Feature\User\Entity\Settings::setDefaultSessionMinutes</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Settings.php.html#125">App\Feature\User\Entity\Settings::getDefaultBreakMinutes</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Settings.php.html#130">App\Feature\User\Entity\Settings::setDefaultBreakMinutes</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="User.php.html#116">App\Feature\User\Entity\User::__construct</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="User.php.html#128">App\Feature\User\Entity\User::getId</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="User.php.html#133">App\Feature\User\Entity\User::getUsername</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="User.php.html#138">App\Feature\User\Entity\User::setUsername</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="User.php.html#150">App\Feature\User\Entity\User::getUserIdentifier</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="User.php.html#155">App\Feature\User\Entity\User::getEmail</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="User.php.html#167">App\Feature\User\Entity\User::getDisplayName</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="User.php.html#182">App\Feature\User\Entity\User::getRoles</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="User.php.html#194">App\Feature\User\Entity\User::setRoles</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="User.php.html#201">App\Feature\User\Entity\User::eraseCredentials</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="User.php.html#208">App\Feature\User\Entity\User::getPassword</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="User.php.html#213">App\Feature\User\Entity\User::setPassword</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="User.php.html#223">App\Feature\User\Entity\User::__serialize</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="User.php.html#231">App\Feature\User\Entity\User::isActive</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="User.php.html#236">App\Feature\User\Entity\User::setIsActive</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="User.php.html#243">App\Feature\User\Entity\User::getLastLoginAt</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="User.php.html#248">App\Feature\User\Entity\User::setLastLoginAt</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="User.php.html#255">App\Feature\User\Entity\User::getSettings</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="User.php.html#275">App\Feature\User\Entity\User::getSubjects</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="User.php.html#305">App\Feature\User\Entity\User::getTasks</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="User.php.html#335">App\Feature\User\Entity\User::getSessions</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="User.php.html#365">App\Feature\User\Entity\User::getNotes</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="User.php.html#395">App\Feature\User\Entity\User::getResources</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="User.php.html#424">App\Feature\User\Entity\User::getTags</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+ </tbody>
+</table>
+     </div>
+    </div>
+   </div>
+   <footer>
+    <hr/>
+    <p>
+     <small>Generated by <a href="https://github.com/sebastianbergmann/php-code-coverage" target="_top">php-code-coverage 14.1.1</a> using <a href="https://www.php.net/" target="_top">PHP 8.5.5</a> and <a href="https://phpunit.de/">PHPUnit 13.1.3</a> at Wed Apr 22 21:20:07 UTC 2026.</small>
+    </p>
+   </footer>
+  </div>
+ </body>
+</html>

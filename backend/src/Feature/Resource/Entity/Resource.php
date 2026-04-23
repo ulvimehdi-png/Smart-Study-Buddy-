@@ -153,12 +153,12 @@ class Resource
         return $this;
     }
 
-    public function getOriginalFilename(): ?string
+    public function getoriginalFilename(): ?string
     {
         return $this->originalFilename;
     }
 
-    public function setOriginalFilename(?string $originalFilename): static
+    public function setoriginalFilename(?string $originalFilename): static
     {
         $this->originalFilename = null !== $originalFilename ? trim($originalFilename) : null;
 
