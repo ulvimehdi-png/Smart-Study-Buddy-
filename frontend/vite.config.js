@@ -14,11 +14,14 @@ export default defineConfig({
     tsconfigPaths: true
   },
   server: {
+    host: true,
+    port: 5173,
+    strictPort: true,
     proxy: {
       '/api': {
-        target: 'http://localhost:8000',
+        target: 'http://php:8000',
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, '')
+        //rewrite: (path) => path.replace(/^\/api/, '')
       }
     }
   }

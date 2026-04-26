@@ -1,6 +1,7 @@
 import { useState, useCallback, createContext, useContext, createElement, useEffect } from 'react';
 
 const AuthContext = createContext(null);
+const DEBUG = false;
 
 export function AuthProvider({ children }) {
     const [user, setUser] = useState(null);
@@ -9,6 +10,12 @@ export function AuthProvider({ children }) {
     const [authChecked, setAuthChecked] = useState(false);
 
     const getUser = useCallback(async () => {
+        if (DEBUG) {
+            const mockUser = { username: 'testuser' };
+            setUser(mockUser);
+            setAuthChecked(true);
+            return mockUser;
+        }
         setLoading(true);
         try {
             const response = await fetch('/api/user', { credentials: 'include' });
@@ -33,6 +40,11 @@ export function AuthProvider({ children }) {
     }, [getUser]);
 
     const login = useCallback(async (email, password) => {
+        if (DEBUG) {
+            const mockUser = { username: 'testuser' };
+            setUser(mockUser);
+            return mockUser;
+        }
         setLoading(true);
         setError(null);
         try {
@@ -55,6 +67,11 @@ export function AuthProvider({ children }) {
     }, []);
 
     const register = useCallback(async (username, password) => {
+        if (DEBUG) {
+            const mockUser = { username: 'testuser' };
+            setUser(mockUser);
+            return mockUser;
+        }
         setLoading(true);
         setError(null);
         try {
@@ -76,6 +93,10 @@ export function AuthProvider({ children }) {
     }, []);
 
     const logout = useCallback(async () => {
+        if (DEBUG) {
+            setUser(null);
+            return;
+        }
         setLoading(true);
         setError(null);
         try {

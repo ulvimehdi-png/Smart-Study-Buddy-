@@ -1,0 +1,96 @@
+services:
+  database:
+    image: mysql:9.6.0
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: app
+      MYSQL_USER: app
+      MYSQL_PASSWORD: app
+    ports:
+      - "3307:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 5s
+      retries: 5
+      start_period: 60s
+    volumes:
+      - database_data:/var/lib/mysql:rw
+      # You may use a bind-mounted host directory instead, so that it is harder to accidentally remove the volume and lose all your data!
+      # - ./docker/db/data:/var/lib/mysql/data:rw
+
+  mailer:
+    image: axllent/mailpit
+    ports:
+      - "1025:1025"
+      - "8025:8025"
+    environment:
+      MP_SMTP_AUTH_ACCEPT_ANY: 1
+      MP_SMTP_AUTH_ALLOW_INSECURE: 1
+
+  mercure:
+    image: dunglas/mercure
+    restart: unless-stopped
+    environment:
+      # Uncomment the following line to disable HTTPS
+      SERVER_NAME: ':80'
+      MERCURE_PUBLISHER_JWT_KEY: ${MERCURE_JWT_SECRET}
+      MERCURE_SUBSCRIBER_JWT_KEY: ${MERCURE_JWT_SECRET}
+      #CADDY_EXTRA_CONFIG: 'auto_https off'
+      MERCURE_EXTRA_DIRECTIVES: |
+        anonymous
+        cors_origins http://localhost:5173 http://localhost:8000
+        publish_origins http://localhost:5173 http://localhost:8000
+        demo
+      # Uncomment the following line to enable the development mode
+      # command: /usr/bin/caddy run --config /etc/caddy/dev.Caddyfile
+    healthcheck:
+#      test: [ "CMD", "wget", "-q", "--spider", "https://localhost/healthz" ]
+      test: [ "CMD", "wget", "-q", "--spider", "http://localhost/healthz" ]
+      timeout: 5s
+      retries: 5
+      start_period: 60s
+    ports:
+      #- "80:80"
+      #- "443:443"
+      - "3000:80"
+    volumes:
+      #- ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - mercure_data:/data
+      - mercure_config:/config
+
+  php:
+    build:
+      context: ..
+      dockerfile: ./docker/Dockerfile
+    user: "${UID:-1000}:${GID:-1000}"
+    volumes:
+      - ../backend:/app
+      - ./xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini
+    working_dir: /app
+    depends_on:
+      - database
+      - mercure
+    ports:
+      - "8000:8000"
+    command: php -S 0.0.0.0:8000 -t public
+    environment:
+      MERCURE_JWT_SECRET: ${MERCURE_JWT_SECRET}
+      MERCURE_URL: "http://mercure/.well-known/mercure"
+      MERCURE_PUBLIC_URL: "http://localhost:3000/.well-known/mercure"
+
+  node:
+    image: node:25.9.0
+    working_dir: /app
+    user: "${UID:-1000}:${GID:-1000}"
+    volumes:
+      - ../frontend:/app
+    ports:
+      - "5173:5173"
+    command: sh -c "npm install && npm run dev -- --host --port 5173"
+    environment:
+      VITE_MERCURE_PUBLIC_URL: "http://localhost:3000/.well-known/mercure"
+
+volumes:
+  database_data:
+  mercure_data:
+  mercure_config:
