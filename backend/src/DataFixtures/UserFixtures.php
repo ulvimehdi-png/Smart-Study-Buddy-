@@ -43,7 +43,6 @@ class UserFixtures extends Fixture implements FixtureGroupInterface
         );
         $user->setRoles(['ROLE_USER', 'ROLE_ADMIN']);
         $user->setIsActive(true);
-        $user->setPoints(0);
 
         $manager->persist($user);
         $manager->flush();
