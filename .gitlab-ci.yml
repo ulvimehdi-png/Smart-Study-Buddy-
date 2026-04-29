@@ -3,11 +3,16 @@ image: composer:2.9.5
 stages:
     - check
 
-basic_checks:
+.ssh_setup:
+    before_script:
+        - mkdir -p ~/.ssh
+        - eval $(ssh-agent -s)
+        - ssh-add "$SSH_PRIVATE_KEY"
+        - ssh-keyscan shell.studev.groept.be > ~/.ssh/known_hosts
+
+ssh-check:
     stage: check
     only:
         - main
     script:
-        - php -v
-        - composer --version
-        - ls -la
+        - ssh a25sewt301@shell.studev.groept.be 'pwd && ls -la ~ && ls -la /var/www'
