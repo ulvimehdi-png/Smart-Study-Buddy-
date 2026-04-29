@@ -1,0 +1,13 @@
+image: composer:2.9.5
+
+stages:
+    - check
+
+basic_checks:
+    stage: check
+    only:
+        - main
+    script:
+        - php -v
+        - composer --version
+        - ls -la
