@@ -27,6 +27,7 @@ export default function Timer({ isPiP = false }) {
     skipTimer,
     isResting,
     isShared,
+    isOwner,
     hasCopiedShareLink,
     shareTimer,
     connectionStatus,
@@ -80,10 +81,11 @@ export default function Timer({ isPiP = false }) {
           })}
         >
           <div
-            className="group relative w-full h-full inset-0 flex items-center justify-center rounded-full cursor-pointer"
-            onClick={togglePlaying}
+            className={cn("group relative w-full h-full inset-0 flex items-center justify-center rounded-full",
+                          isOwner ? "cursor-pointer" : "")}
+            onClick={isOwner ? togglePlaying : undefined}
           >
-            <div className="flex flex-col items-center justify-center absolute w-full h-full transition-all duration-200 group-hover:opacity-20">
+            <div className={cn("flex flex-col items-center justify-center absolute w-full h-full transition-all duration-200", isOwner ? "group-hover:opacity-20" : "")}>
               <span className={cn("font-mono text-text-main", isPiP ? "text-xl" : "text-2xl")}>
                 {displayTime}
               </span>
@@ -93,7 +95,7 @@ export default function Timer({ isPiP = false }) {
                 </span>
               )}
             </div>
-            <div className="absolute opacity-0 group-hover:opacity-100 transition-opacity">
+            <div className={cn("absolute opacity-0 transition-opacity", isOwner ? "group-hover:opacity-100" : "")}>
               {isPlaying ? <Pause strokeWidth={1} size={isPiP ? 40 : 60} className="-stroke-3 fill-text-secondary text-text-secondary"/> : <Play size={isPiP ? 40 : 60} className="fill-text-secondary text-text-secondary" />}
             </div>
           </div>
@@ -104,20 +106,20 @@ export default function Timer({ isPiP = false }) {
       </div>
       <AnimatePresence mode="wait" initial={false}>
         <div className={cn("flex flex-col sm:flex-row gap-2 transition-all duration-300", isPiP ? "flex-row! m-2" : "m-8")}>
-          <TimerButton isPiP={isPiP} onClick={togglePlaying} IconComp={isPlaying ? Pause : Play}>
+          <TimerButton isPiP={isPiP} onClick={togglePlaying} IconComp={isPlaying ? Pause : Play} enabled={isOwner}>
             {isPlaying ? "Pause" : "Start"}
           </TimerButton>
-          <TimerButton isPiP={isPiP} onClick={resetTimer} IconComp={RotateCcw}>
+          <TimerButton isPiP={isPiP} onClick={resetTimer} IconComp={RotateCcw} enabled={isOwner}>
             Reset
           </TimerButton>
-          <TimerButton isPiP={isPiP} onClick={skipTimer} IconComp={FastForward}>
+          <TimerButton isPiP={isPiP} onClick={skipTimer} IconComp={FastForward} enabled={isOwner}>
             Skip to {isResting ? "Work" : "Rest"}
           </TimerButton>
           <TimerButton
             isPiP={isPiP}
             onClick={shareTimer}
             IconComp={Share2}
-            className={isShared ? 'bg-primary/10 text-primary' : ''}
+            className={isShared ? 'bg-primary/20 hover:bg-primary/30 inset-shadow-primary/30 text-primary' : ''}
           >
             {hasCopiedShareLink ? 'Link Copied' : isShared ? 'Copy Link' : 'Share'}
           </TimerButton>

@@ -4,7 +4,6 @@ import {
   buildLiveTimerJoinUrl,
   changeConfigLiveTimerSession,
   createLiveTimerSession,
-  deleteLiveTimerSession,
   durationPayload,
   getLiveTimerSession,
   pauseLiveTimerSession,
@@ -150,10 +149,11 @@ export function TimerProvider({ children }) {
   const [localIsResting, setLocalIsResting] = useState(false);
   const [localMsLeft, setLocalMsLeft] = useState(durationToMs({ minutes: 25, seconds: 0 }));
   const [localDurationMs, setLocalDurationMs] = useState(durationToMs({ minutes: 25, seconds: 0 }));
+  const [isShared, setIsShared] = useState(false);
   const [hasCopiedShareLink, setHasCopiedShareLink] = useState(false);
+  const [isOwner, setIsOwner] = useState(true);
 
   const subscriptionRef = useRef(null);
-  const pendingCreateRef = useRef(null);
   const bootstrappedFromUrlRef = useRef(false);
 
   const isRemote = Boolean(projection?.state);
@@ -165,6 +165,8 @@ export function TimerProvider({ children }) {
   const clearSession = useCallback(({ preserveId = false } = {}) => {
     setProjection(null);
     setConnectionStatus('disconnected');
+    setIsShared(false);
+    setHasCopiedShareLink(false);
 
     if (!preserveId) {
       setSessionId('');
@@ -185,6 +187,11 @@ export function TimerProvider({ children }) {
 
     if (nextProjection?.id) {
       setSessionId(nextProjection.id);
+    }
+    if (typeof nextProjection?.isOwner === 'boolean') {
+      console.log(nextProjection);
+      
+      setIsOwner(nextProjection.isOwner);
     }
   }, []);
 
@@ -246,11 +253,22 @@ export function TimerProvider({ children }) {
     }
   }, [applyProjection]);
 
-  const createSession = useCallback(({ workMinutes, workSeconds = 0, breakMinutes, breakSeconds = 0 }) => {
+  const createSession = useCallback(({
+    workMinutes,
+    workSeconds = 0,
+    breakMinutes,
+    breakSeconds = 0,
+    phase = 'focus',
+    status = 'idle',
+    remainingMs = null,
+  }) => {
     return runRequest(
       () => createLiveTimerSession({
         work: durationPayload(workMinutes, workSeconds),
         break: durationPayload(breakMinutes, breakSeconds),
+        phase,
+        status,
+        remainingMs,
         subjectId: null,
         taskId: null,
       }),
@@ -274,6 +292,7 @@ export function TimerProvider({ children }) {
       {
         afterSuccess: (result) => {
           setSessionId(id);
+          setIsShared(true);
 
           if (result?.topic) {
             subscribeToTopic(result.topic);
@@ -282,22 +301,6 @@ export function TimerProvider({ children }) {
       }
     );
   }, [runRequest, sessionId, subscribeToTopic]);
-
-  const deleteSession = useCallback(() => {
-    if (!sessionId) {
-      return Promise.resolve(null);
-    }
-
-    return runRequest(
-      () => deleteLiveTimerSession(sessionId),
-      {
-        afterSuccess: () => {
-          closeSubscription();
-          clearSession();
-        },
-      }
-    );
-  }, [clearSession, closeSubscription, runRequest, sessionId]);
 
   const runAction = useCallback((action, id = sessionId) => {
     if (!id) {
@@ -410,30 +413,46 @@ export function TimerProvider({ children }) {
     };
   }, [isRemote, localIsPlaying, localIsResting, restDraft, workDraft]);
 
-  const ensureSession = useCallback(async () => {
-    if (sessionId) {
-      return sessionId;
+  useEffect(() => {
+    if (isRemote || !localIsPlaying) {
+      return undefined;
     }
 
-    if (pendingCreateRef.current) {
-      const pendingResult = await pendingCreateRef.current;
-      return pendingResult?.id ?? '';
-    }
+    let previousTime;
+    let requestId;
 
-    pendingCreateRef.current = createSession({
-      workMinutes: workDraft.minutes,
-      workSeconds: workDraft.seconds,
-      breakMinutes: restDraft.minutes,
-      breakSeconds: restDraft.seconds,
-    });
+    const animate = (time) => {
+      if (previousTime !== undefined) {
+        const deltaTime = time - previousTime;
 
-    try {
-      const result = await pendingCreateRef.current;
-      return result?.id ?? '';
-    } finally {
-      pendingCreateRef.current = null;
-    }
-  }, [createSession, restDraft.minutes, restDraft.seconds, sessionId, workDraft.minutes, workDraft.seconds]);
+        setLocalMsLeft((previousMsLeft) => {
+          const nextMsLeft = previousMsLeft - deltaTime;
+
+          if (nextMsLeft > 0) {
+            return nextMsLeft;
+          }
+
+          const nextIsResting = !localIsResting;
+          const nextPhase = nextIsResting ? restDraft : workDraft;
+          const nextDurationMs = durationToMs(nextPhase);
+
+          setLocalIsResting(nextIsResting);
+          setLocalDurationMs(nextDurationMs);
+
+          return Math.max(0, nextDurationMs + nextMsLeft);
+        });
+      }
+
+      previousTime = time;
+      requestId = requestAnimationFrame(animate);
+    };
+
+    requestId = requestAnimationFrame(animate);
+
+    return () => {
+      cancelAnimationFrame(requestId);
+    };
+  }, [isRemote, localIsPlaying, localIsResting, restDraft, workDraft]);
 
   const syncConfig = useCallback((nextWork, nextRest) => {
     if (!sessionId) {
@@ -519,13 +538,8 @@ export function TimerProvider({ children }) {
 
   const togglePlaying = useCallback(async () => {
     if (!sessionId) {
-      const createdId = await ensureSession();
-
-      if (!createdId) {
-        return null;
-      }
-
-      return start(createdId);
+      setLocalIsPlaying((current) => !current);
+      return null;
     }
 
     if (display?.isRunning) {
@@ -533,7 +547,7 @@ export function TimerProvider({ children }) {
     }
 
     return start();
-  }, [display?.isRunning, ensureSession, pause, sessionId, start]);
+  }, [display?.isRunning, pause, sessionId, start]);
 
   const resetTimer = useCallback(async () => {
     if (!sessionId) {
@@ -566,15 +580,40 @@ export function TimerProvider({ children }) {
   }, [restDraft, sessionId, skipPhase, workDraft]);
 
   const shareTimer = useCallback(async () => {
-    const ensuredSessionId = sessionId || await ensureSession();
+    let ensuredSessionId = sessionId;
+
+    if (!ensuredSessionId) {
+      const created = await createSession({
+        workMinutes: workDraft.minutes,
+        workSeconds: workDraft.seconds,
+        breakMinutes: restDraft.minutes,
+        breakSeconds: restDraft.seconds,
+        phase: localIsResting ? 'break' : 'focus',
+        status: localIsPlaying ? 'running' : localMsLeft === durationToMs(localIsResting ? restDraft : workDraft)
+          ? 'idle'
+          : 'paused',
+        remainingMs: localMsLeft,
+      });
+
+      ensuredSessionId = created?.id ?? '';
+
+      if (!ensuredSessionId) {
+        return null;
+      }
+    }
 
     if (!ensuredSessionId) {
       return null;
     }
 
+    setIsShared(true);
     setHasCopiedShareLink(false);
 
     const nextJoinUrl = joinUrl || buildLiveTimerJoinUrl(ensuredSessionId);
+
+    if (nextJoinUrl) {
+      window.history.replaceState(window.history.state, '', nextJoinUrl);
+    }
 
     if (nextJoinUrl && navigator.clipboard?.writeText) {
       try {
@@ -586,17 +625,22 @@ export function TimerProvider({ children }) {
     }
 
     return ensuredSessionId;
-  }, [ensureSession, joinUrl, sessionId]);
+  }, [
+    createSession,
+    joinUrl,
+    localIsPlaying,
+    localIsResting,
+    localMsLeft,
+    restDraft,
+    sessionId,
+    workDraft,
+  ]);
 
   const stopSharing = useCallback(async () => {
-    if (!sessionId) {
-      setHasCopiedShareLink(false);
-      return null;
-    }
-
+    setIsShared(false);
     setHasCopiedShareLink(false);
-    return deleteSession();
-  }, [deleteSession, sessionId]);
+    return null;
+  }, []);
 
   const value = useMemo(() => ({
     isPlaying: localIsPlaying,
@@ -610,7 +654,8 @@ export function TimerProvider({ children }) {
     setRest,
     msLeft: localMsLeft,
     durationMs: localDurationMs,
-    isShared: Boolean(sessionId),
+    isShared,
+    isOwner,
     hasCopiedShareLink,
     shareTimer,
     startSharing: shareTimer,
@@ -627,6 +672,7 @@ export function TimerProvider({ children }) {
     error,
     hasCopiedShareLink,
     isPending,
+    isOwner,
     joinUrl,
     localDurationMs,
     localIsPlaying,
@@ -637,7 +683,7 @@ export function TimerProvider({ children }) {
     setRest,
     setTimerDuration,
     setWork,
-    sessionId,
+    isShared,
     shareTimer,
     skipTimer,
     stopSharing,
