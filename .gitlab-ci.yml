@@ -15,5 +15,6 @@ ssh-check:
     stage: check
     only:
         - main
+    extends: .ssh_setup
     script:
         - ssh a25sewt301@shell.studev.groept.be 'pwd && ls -la ~ && ls -la /var/www'
