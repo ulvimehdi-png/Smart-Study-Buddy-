@@ -13,7 +13,7 @@ stages:
 ssh-check:
     stage: check
     only:
-        - main
+        - symonfy/init
     extends: .ssh_setup
     script:
         - ssh a25sewt301@shell.studev.groept.be 'pwd && ls -la ~ && ls -la /var/www'
