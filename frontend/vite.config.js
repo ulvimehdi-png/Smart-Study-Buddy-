@@ -28,5 +28,11 @@ export default defineConfig({
         //rewrite: (path) => path.replace(/^\/api/, '')
       }
     }
-  }
+  },
+  build: {
+    rolldownOptions: {
+      outDir: "../backend/public",
+      assetsDir: "../assets",
+    },
+  },
 })
