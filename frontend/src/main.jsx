@@ -12,7 +12,7 @@ createRoot(document.getElementById('root')).render(
     <AuthProvider>
       <TimerProvider>
         <ThemeProvider>
-          <BrowserRouter basename={process.env.BASE_URL}>
+          <BrowserRouter basename="/public">
             <App />
           </BrowserRouter>
         </ThemeProvider>

@@ -15,10 +15,12 @@ export default defineConfig({
     tsconfigPaths: true
   },
   server: {
-    host: true,
+    host: false,
     port: 5173,
-    baseURL: import.meta.env.BASE_URL,
+    origin: "./",
+    base: "/public",
     strictPort: true,
+    //allowedHosts: ['https://a25sewt301.studev.groept.be/'],
     proxy: {
       '/api': {
         target: "/src",
