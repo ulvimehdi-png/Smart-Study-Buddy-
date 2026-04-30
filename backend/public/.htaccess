@@ -1,1 +1,9 @@
-FallbackResource /public/index.php
+RewriteEngine On
+
+RewriteRule ^api(/|$) index.php [QSA,L]
+
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+
+RewriteRule ^ index.html [L]

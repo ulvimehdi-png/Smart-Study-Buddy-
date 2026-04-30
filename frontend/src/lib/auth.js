@@ -18,7 +18,7 @@ export function AuthProvider({ children }) {
         }
         setLoading(true);
         try {
-            const response = await fetch('/public/api/user', { credentials: 'include' });
+            const response = await fetch('/api/user', { credentials: 'include' });
             if (!response.ok) {
                 setUser(null);
                 return null;
@@ -48,7 +48,7 @@ export function AuthProvider({ children }) {
         setLoading(true);
         setError(null);
         try {
-            const response = await fetch('/public/api/login', {
+            const response = await fetch('/api/login', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 credentials: 'include',
@@ -75,7 +75,7 @@ export function AuthProvider({ children }) {
         setLoading(true);
         setError(null);
         try {
-            const response = await fetch('/public/api/register', {
+            const response = await fetch('/api/register', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 credentials: 'include',
@@ -100,7 +100,7 @@ export function AuthProvider({ children }) {
         setLoading(true);
         setError(null);
         try {
-            const response = await fetch('/public/api/logout', {
+            const response = await fetch('/api/logout', {
                 method: 'POST',
                 credentials: 'include',
             });
