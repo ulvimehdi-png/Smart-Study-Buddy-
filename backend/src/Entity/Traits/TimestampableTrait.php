@@ -21,7 +21,9 @@ trait TimestampableTrait
     {
         $now = new \DateTimeImmutable();
 
-        $this->createdAt = $now;
+        if (!isset($this->createdAt)) {
+            $this->createdAt = $now;
+        }
         $this->updatedAt = $now;
     }
 

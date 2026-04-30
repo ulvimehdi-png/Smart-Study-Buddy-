@@ -1,33 +1,14 @@
-import React from 'react';
-import { CheckCircle2 } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import React from "react";
+import { cn } from "@/lib/utils";
 
-export default function FeatureCard({ 
-  icon: Icon, 
-  title, 
-  description, 
-  color = '',
-  showCheck = true,
-  className 
-}) {
+export default function FeatureCard({ icon: Icon, title, description, color }) {
   return (
-    <div className={cn(
-      'group relative bg-bg-card rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border',
-      className
-    )}>
-      <div className={cn(
-        'w-14 h-14 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-all shadow-lg',
-        color
-      )}>
+    <div className="glass-card rounded-2xl p-6 transition-all duration-300 hover:border-primary/20 hover:scale-[1.03] hover:shadow-lg hover:shadow-primary/10 group">
+      <div className={cn("w-14 h-14 rounded-2xl flex items-center justify-center mb-4 transition-all duration-300", color || "bg-primary/15")}>
         <Icon className="w-7 h-7 text-white" />
       </div>
-      <h3 className="text-xl font-bold text-primary mb-2">{title}</h3>
-      <p className="text-text-secondary">{description}</p>
-      {showCheck && (
-        <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-all">
-          <CheckCircle2 className="w-6 h-6 text-green-500" />
-        </div>
-      )}
+      <h3 className="text-lg font-semibold mb-2 group-hover:text-primary transition-colors">{title}</h3>
+      <p className="text-text-secondary text-sm leading-relaxed">{description}</p>
     </div>
   );
 }

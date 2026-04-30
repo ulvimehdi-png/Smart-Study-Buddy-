@@ -89,6 +89,35 @@ def calendar_tasks():
     return jsonify(get_calendar_tasks(user_id, start, end)), 200
 
 
+@app.get("/api/export/notes")
+def export_notes():
+    user_id = int(request.args.get("userId", 1))
+    return jsonify(get_notes_by_user(user_id)), 200
+
+
+@app.get("/api/export/tasks")
+def export_tasks():
+    user_id = int(request.args.get("userId", 1))
+    return jsonify(get_tasks_by_user(user_id)), 200
+
+
+@app.put("/api/notes/<int:note_id>")
+def notes_update(note_id: int):
+    body = request.get_json(force=True)
+    user_id = int(body.get("userId", 1))
+    title = body.get("title", "").strip()
+    content = body.get("content", "").strip()
+
+    if not title or not content:
+        return jsonify({"success": False, "message": "Title and content required"}), 400
+
+    ok = update_note(note_id, user_id, title, content)
+    if not ok:
+        return jsonify({"success": False, "message": "Could not update note"}), 400
+
+    return jsonify({"success": True}), 200
+
+
 @app.post("/api/notes")
 def notes_post():
     body = request.get_json(force=True)
@@ -279,6 +308,27 @@ def delete_note(note_id, user_id):
         return affected > 0
     except Exception as exc:
         print(f"delete_note error: {exc}")
+        if connection:
+            connection.rollback()
+        return False
+    finally:
+        if connection:
+            connection.close()
+
+
+def update_note(note_id, user_id, title, content):
+    sql = "UPDATE notes SET title = %s, content = %s WHERE note_id = %s AND user_id = %s"
+
+    connection = None
+    try:
+        connection = get_connection()
+        with connection.cursor() as cursor:
+            affected = cursor.execute(sql, (title, content, note_id, user_id))
+
+        connection.commit()
+        return affected > 0
+    except Exception as exc:
+        print(f"update_note error: {exc}")
         if connection:
             connection.rollback()
         return False

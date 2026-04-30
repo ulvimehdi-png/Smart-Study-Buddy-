@@ -3,44 +3,41 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Study Management Dashboard — track notes, tasks, sessions and progress with a premium futuristic interface." />
   <title>Study Dashboard</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+
 <div class="ambient-bg">
+  <div class="blob"></div>
   <div class="blob"></div>
   <div class="blob"></div>
 </div>
 
+<div id="toastContainer" class="toast-container"></div>
+
 <header class="topbar">
-  <h1>Study Dashboard</h1>
+  <h1>✦ Study Dashboard</h1>
   <nav>
     <button class="tab-btn active" data-tab="dashboardTab">Dashboard</button>
     <button class="tab-btn" data-tab="notesTab">Notes</button>
     <button class="tab-btn" data-tab="tasksTab">Tasks</button>
+    <button class="tab-btn" data-tab="importExportTab">Import / Export</button>
+    <button class="tab-btn" data-tab="calendarTab">Calendar</button>
   </nav>
 </header>
 
 <main class="container">
+
+  <!-- ═══════════════ DASHBOARD ═══════════════ -->
   <section id="dashboardTab" class="tab-content active">
-    <h2>Dashboard</h2>
+    <h2 class="section-title">Dashboard</h2>
 
     <div class="cards">
-      <div class="card">
-        <h3>Total Notes</h3>
-        <p id="totalNotes">0</p>
-      </div>
-
-      <div class="card">
-        <h3>Total Study Hours</h3>
-        <p id="totalHours">0.0</p>
-      </div>
-
-      <div class="card">
-        <h3>Today's Hours</h3>
-        <p id="todayHours">0.0</p>
-      </div>
-
+      <div class="card"><h3>Total Notes</h3><p id="totalNotes">0</p></div>
+      <div class="card"><h3>Total Study Hours</h3><p id="totalHours">0.0</p></div>
+      <div class="card"><h3>Today's Hours</h3><p id="todayHours">0.0</p></div>
       <div class="card">
         <h3>Study Streak</h3>
         <p id="studyStreak">🔥 0 days</p>
@@ -51,117 +48,181 @@
     <div class="dashboard-grid">
       <div class="panel">
         <h3>Add Study Session</h3>
-
         <label>Subject</label>
-        <input type="text" id="studySubject" placeholder="e.g. Math" />
-
+        <input type="text" id="studySubject" placeholder="e.g. Mathematics" />
         <label>Minutes Studied</label>
         <input type="number" id="studyMinutes" placeholder="e.g. 90" />
-
         <label>Note</label>
         <input type="text" id="studySessionNote" placeholder="Optional session note" />
-
-        <button id="saveStudyBtn">Save Study Session</button>
+        <div class="button-row"><button id="saveStudyBtn">Save Session</button></div>
       </div>
 
       <div class="panel">
         <h3>Quick Add Task</h3>
-
         <label>Subject</label>
         <input type="text" id="taskSubject" placeholder="e.g. Physics" />
-
         <label>Task Title</label>
         <input type="text" id="taskTitle" placeholder="e.g. Solve chapter 2 exercises" />
-
         <label>Description</label>
         <textarea id="taskDescription" placeholder="Optional description"></textarea>
-
         <label>Due Date</label>
         <input type="date" id="taskDueDate" />
-
         <label>Priority</label>
         <select id="taskPriority">
           <option value="low">Low</option>
           <option value="medium" selected>Medium</option>
           <option value="high">High</option>
         </select>
-
-        <button id="saveTaskBtn">Save Task</button>
+        <div class="button-row"><button id="saveTaskBtn">Save Task</button></div>
       </div>
     </div>
 
-    <div class="panel">
-      <h3>Progress by Subject</h3>
-      <div id="progressList"></div>
-    </div>
-
-    <div class="panel">
-      <h3>Recent Notes</h3>
-      <div id="recentNotes"></div>
-    </div>
+    <div class="panel"><h3>Progress by Subject</h3><div id="progressList"></div></div>
+    <br />
+    <div class="panel"><h3>Recent Notes</h3><div id="recentNotes"></div></div>
   </section>
 
+  <!-- ═══════════════ NOTES ═══════════════ -->
   <section id="notesTab" class="tab-content">
-    <h2>Notes</h2>
+    <h2 class="section-title">Notes</h2>
 
     <div class="notes-layout">
       <div class="panel">
-        <h3>Create / Save Note</h3>
-
+        <h3 id="noteFormTitle">Create Note</h3>
+        <input type="hidden" id="editNoteId" value="" />
         <label>Subject</label>
         <input type="text" id="noteSubject" placeholder="e.g. Programming" />
-
         <label>Title</label>
         <input type="text" id="noteTitle" placeholder="Enter note title" />
-
         <label>Content</label>
-        <textarea id="noteContent" placeholder="Write your study note here..."></textarea>
-
+        <textarea id="noteContent" placeholder="Write your study note here…"></textarea>
         <div class="button-row">
           <button id="saveNoteBtn">Save Note</button>
           <button id="clearNoteBtn" class="secondary">Clear</button>
         </div>
-
-        <hr />
-
-        <h3>Import Existing Data</h3>
-        <input type="file" id="fileInput" accept=".txt,text/plain,.json,application/json" />
-        <div class="button-row">
-          <button id="importFileBtn">Import File</button>
-        </div>
-        <p class="hint">Supported: .txt and .json</p>
       </div>
 
       <div class="panel">
         <h3>Organise Notes</h3>
-
         <label>Search</label>
-        <input type="text" id="searchInput" placeholder="Search title/content..." />
-
+        <input type="text" id="searchInput" placeholder="Search title / content…" />
         <label>Filter by Subject</label>
         <input type="text" id="filterSubject" placeholder="e.g. Math" />
-
         <div id="notesList"></div>
       </div>
     </div>
   </section>
 
+  <!-- ═══════════════ TASKS ═══════════════ -->
   <section id="tasksTab" class="tab-content">
-    <h2>Task Board</h2>
-
+    <h2 class="section-title">Task Board</h2>
     <div class="panel">
       <h3>Your Tasks</h3>
-
       <label>Search Tasks</label>
-      <input type="text" id="taskSearchInput" placeholder="Search tasks..." />
-
+      <input type="text" id="taskSearchInput" placeholder="Search tasks…" />
       <label>Filter by Subject</label>
       <input type="text" id="taskFilterSubject" placeholder="e.g. Math" />
-
       <div id="tasksList"></div>
     </div>
   </section>
+
+  <!-- ═══════════════ IMPORT / EXPORT ═══════════════ -->
+  <section id="importExportTab" class="tab-content">
+    <h2 class="section-title">Import &amp; Export</h2>
+
+    <div class="ie-grid">
+      <!-- IMPORT -->
+      <div class="panel">
+        <h3>📥 Import Data</h3>
+        <p class="hint" style="margin-bottom:14px">Upload a JSON or CSV file containing notes. Preview before confirming.</p>
+
+        <div id="dropZone" class="drop-zone">
+          <div class="icon">📂</div>
+          <p>Drag &amp; drop file here or <strong>click to browse</strong></p>
+          <p class="hint">Supports .json and .csv</p>
+        </div>
+        <input type="file" id="fileInput" class="file-input-hidden" accept=".json,.csv" />
+
+        <div id="importPreview" class="hidden">
+          <h4 style="margin:18px 0 8px">Preview (<span id="previewCount">0</span> records)</h4>
+          <div class="preview-table-wrap">
+            <table class="preview-table"><thead id="previewHead"></thead><tbody id="previewBody"></tbody></table>
+          </div>
+          <div class="button-row">
+            <button id="confirmImportBtn" class="success">✓ Confirm Import</button>
+            <button id="cancelImportBtn" class="secondary">Cancel</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- EXPORT -->
+      <div class="panel">
+        <h3>📤 Export Data</h3>
+        <p class="hint" style="margin-bottom:18px">Download your data as JSON or CSV files.</p>
+
+        <div class="export-card">
+          <div class="info"><h4>Notes — JSON</h4><p>Full notes data with metadata</p></div>
+          <button class="btn-sm" onclick="exportData('notes','json')">Download</button>
+        </div>
+        <div class="export-card">
+          <div class="info"><h4>Notes — CSV</h4><p>Spreadsheet-compatible format</p></div>
+          <button class="btn-sm" onclick="exportData('notes','csv')">Download</button>
+        </div>
+        <div class="export-card">
+          <div class="info"><h4>Tasks — JSON</h4><p>Full tasks data with metadata</p></div>
+          <button class="btn-sm" onclick="exportData('tasks','json')">Download</button>
+        </div>
+        <div class="export-card">
+          <div class="info"><h4>Tasks — CSV</h4><p>Spreadsheet-compatible format</p></div>
+          <button class="btn-sm" onclick="exportData('tasks','csv')">Download</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════ CALENDAR ═══════════════ -->
+  <section id="calendarTab" class="tab-content">
+    <h2 class="section-title">Calendar</h2>
+    <div class="panel">
+      <div class="calendar-header">
+        <div class="calendar-nav">
+          <button class="btn-sm secondary" id="prevMonthBtn">◀ Prev</button>
+        </div>
+        <h3 id="calendarMonth">April 2026</h3>
+        <div class="calendar-nav">
+          <button class="btn-sm secondary" id="nextMonthBtn">Next ▶</button>
+        </div>
+      </div>
+      <div class="calendar-grid" id="calendarGrid"></div>
+    </div>
+  </section>
+
 </main>
+
+<!-- Day Detail Modal -->
+<div id="dayModal" class="modal-overlay hidden">
+  <div class="modal">
+    <h3 id="dayModalTitle">Day Detail</h3>
+    <div id="dayModalContent"></div>
+    <div class="button-row" style="margin-top:18px"><button class="secondary" onclick="closeDayModal()">Close</button></div>
+  </div>
+</div>
+
+<!-- Edit Note Modal -->
+<div id="editNoteModal" class="modal-overlay hidden edit-note-modal">
+  <div class="modal" style="position:relative">
+    <h3>Edit Note</h3>
+    <input type="hidden" id="editModalNoteId" />
+    <label>Title</label>
+    <input type="text" id="editModalTitle" />
+    <label>Content</label>
+    <textarea id="editModalContent" style="min-height:140px"></textarea>
+    <div class="button-row">
+      <button id="editModalSaveBtn">Save Changes</button>
+      <button class="secondary" onclick="closeEditModal()">Cancel</button>
+    </div>
+  </div>
+</div>
 
 <script src="script.js"></script>
 </body>

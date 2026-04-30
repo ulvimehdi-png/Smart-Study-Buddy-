@@ -6,15 +6,18 @@ import App from './App.jsx'
 import { AuthProvider } from './lib/auth'
 import { TimerProvider } from './lib/useTimer.js';
 import { ThemeProvider } from './lib/useTheme.js';
+import { ToastProvider } from './lib/useToast.jsx';
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <AuthProvider>
       <TimerProvider>
         <ThemeProvider>
-          <BrowserRouter>
-            <App />
-          </BrowserRouter>
+          <ToastProvider>
+            <BrowserRouter>
+              <App />
+            </BrowserRouter>
+          </ToastProvider>
         </ThemeProvider>
       </TimerProvider>
     </AuthProvider>

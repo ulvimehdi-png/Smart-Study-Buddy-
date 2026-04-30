@@ -1,16 +1,17 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
 
-export default function Badge({ icon: Icon, children, className }) {
-
+export default function Badge({ children, icon: Icon, variant = 'primary', className }) {
   return (
-    <div className={cn(
-      'inline-flex items-center px-4 py-2 rounded-full',
-      'bg-badge-text/10 text-badge-text border border-badge-text/20',
+    <span className={cn(
+      'inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-sm font-medium border',
+      variant === 'accent'
+        ? 'bg-accent/10 text-accent border-accent/20'
+        : 'bg-primary/10 text-primary border-primary/20',
       className
     )}>
-      {Icon && <Icon className="w-4 h-4 mr-2" />}
-      <span className="text-sm font-medium">{children}</span>
-    </div>
+      {Icon && <Icon className="w-4 h-4" />}
+      {children}
+    </span>
   );
 }

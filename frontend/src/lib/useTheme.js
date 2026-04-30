@@ -5,12 +5,9 @@ export const ThemeContext = createContext(null);
 export function ThemeProvider({ children }) {
 
   const [theme, setTheme] = useState(() => {
-    // Check localStorage first
+    // Default to dark mode for futuristic design
     const stored = localStorage.getItem('theme');
-    if (stored) return stored;
-    
-    // Otherwise check system preference
-    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    return stored || 'dark';
   });
 
   useEffect(() => {

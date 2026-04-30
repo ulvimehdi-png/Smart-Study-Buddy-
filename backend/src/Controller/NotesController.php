@@ -122,6 +122,14 @@ final class NotesController extends AbstractController
         $note->setContent($content);
         $note->setSourceType(NoteSourceType::MANUAL);
 
+        if (!empty($data['createdAt'])) {
+            try {
+                $note->setCreatedAt(new \DateTimeImmutable((string) $data['createdAt']));
+            } catch (\Exception $e) {
+                // Fallback to default if date format is invalid
+            }
+        }
+
         $em->persist($note);
         $em->flush();
 
