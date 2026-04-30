@@ -12,7 +12,7 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\CurrentUser;
 
-#[Route('/api')]
+#[Route('/public/api')]
 final class SecurityController extends AbstractController
 {
     #[Route('/register', methods: ['POST'])]

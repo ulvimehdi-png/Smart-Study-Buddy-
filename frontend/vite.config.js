@@ -12,7 +12,7 @@ export default defineConfig({
         babel({ presets: [reactCompilerPreset()] })
     ],
 
-    base: '/',
+    base: '/public/',
 
     server: {
     host: '127.0.0.1',

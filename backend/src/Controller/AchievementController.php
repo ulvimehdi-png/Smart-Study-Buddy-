@@ -10,7 +10,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\CurrentUser;
 
-#[Route('/api/achievements')]
+#[Route('/public/api/achievements')]
 final class AchievementController extends AbstractController
 {
     #[Route('/leaderboard', methods: ['GET'])]

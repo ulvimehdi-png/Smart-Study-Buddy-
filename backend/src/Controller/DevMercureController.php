@@ -8,7 +8,7 @@ use Symfony\Component\Mercure\HubInterface;
 use Symfony\Component\Mercure\Update;
 use Symfony\Component\Routing\Attribute\Route;
 
-#[Route('/api/dev/mercure')]
+#[Route('/public/api/dev/mercure')]
 final class DevMercureController extends AbstractController
 {
     #[Route('/ping', methods: ['POST'])]

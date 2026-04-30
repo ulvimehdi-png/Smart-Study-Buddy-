@@ -16,7 +16,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\Routing\Attribute\Route;
 
-#[Route('/api/live-timer-sessions/{id}')]
+#[Route('/public/api/live-timer-sessions/{id}')]
 final class SessionActionController extends AbstractSessionController
 {
     #[Route('/start', methods: ['POST'], format: 'json')]

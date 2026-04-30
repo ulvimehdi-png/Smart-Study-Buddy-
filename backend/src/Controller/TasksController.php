@@ -14,7 +14,7 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\CurrentUser;
 use App\Service\AchievementService;
 
-#[Route('/api/tasks')]
+#[Route('/public/api/tasks')]
 final class TasksController extends AbstractController
 {
     #[Route('', methods: ['GET'])]
