@@ -33,7 +33,7 @@ export default defineConfig({
     build: {
         outDir: '../backend/public',
         assetsDir: 'assets',
-        emptyOutDir: true,
+        emptyOutDir: false,
         sourcemap: false,
         manifest: false,
     },
