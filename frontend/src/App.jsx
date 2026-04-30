@@ -10,7 +10,6 @@ import ProtectedRoute from "./pages/ProtectedRoute";
 import TimerPage from "./pages/TimerPage";
 import Test from "./pages/Test";
 import Layout from "./components/Layout";
-import TimerMercurePage from "./pages/TimerMercurePage.jsx";
 import Leaderboard from './pages/Leaderboard';
 
 function App() {
@@ -28,7 +27,6 @@ function App() {
                     <Route path="/leaderboard" element={<ProtectedRoute><Leaderboard /></ProtectedRoute>} />
 
                     <Route path="/test" element={<Test />} />
-                    <Route path="/timerMercurePage" element={<ProtectedRoute><TimerMercurePage /></ProtectedRoute>} />
                 </Route>
             </Routes>
         </>

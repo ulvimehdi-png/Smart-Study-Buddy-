@@ -15,4 +15,13 @@ enum SessionStatus: string
     {
         return self::ACTIVE;
     }
+
+    public static function shareableValues(): array
+    {
+        return [
+            self::IDLE->value,
+            self::PAUSED->value,
+            self::RUNNING->value,
+        ];
+    }
 }
