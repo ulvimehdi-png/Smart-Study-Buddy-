@@ -38,14 +38,14 @@ deploy:
 
         # DEPLOY
         - > 
-            rsync -av --delete
+            rsync -rv --delete
             --exclude="index.php"
             --exclude=".htaccess"
             "$FRONTEND_DIR/dist/"
             "$BACKEND_DIR/"
 
         - >
-            rsync -avz --delete
+            rsync -rvz --delete
             --exclude=".git/"
             --exclude=".editorconfig"
             --exclude=".gitignore"
