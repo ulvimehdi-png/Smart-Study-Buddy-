@@ -6,19 +6,13 @@ stages:
     #- test
     - deploy
 
-variables:
-    BACKEND_ROOT: /app/backend
-    FRONTEND_ROOT: /app/frontend
-    # ENVIRONMENT VARIABLES
-    APP_ENV: prod
-
 backend:
     stage: build
     before_script:
         - export APP_ENV=prod
         #- git config --global --add safe.directory /app
     script:
-        - cd "$BACKEND_DIR"
+        - cd /app/backend
         - composer validate --no-check-publish
         - composer install -n --no-dev --no-scripts --no-cache
         - php bin/console lint:yaml config
@@ -31,7 +25,7 @@ frontend:
     before_script:
         - apk add --update nodejs npm
     script:
-        - cd "$FRONTEND_DIR"
+        - cd /app/frontend
         - npm install
         - npm run build
     after_script:
