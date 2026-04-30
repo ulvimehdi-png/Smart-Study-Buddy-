@@ -15,14 +15,14 @@ export default defineConfig({
     base: '/public/',
 
     server: {
-    host: '127.0.0.1',
-    port: 5173,
-    strictPort: true,
+        host: '127.0.0.1',
+        port: 5173,
+        strictPort: true,
 
-        proxy: {'/api': {
-            target: 'http://127.0.0.1:8000',
-            changeOrigin: true,
-            //rewrite: (path) => path.replace(/^\/api/, '')
+        proxy: {'/public/api': {
+                target: 'http://127.0.0.1:8000',
+                changeOrigin: true,
+                //rewrite: (path) => path.replace(/^\/public/api/, '')
             },
         },
     },

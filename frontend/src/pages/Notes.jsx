@@ -20,7 +20,7 @@ export default function Notes() {
   const [subject, setSubject] = useState("");
 
   const fetchNotes = () => {
-    fetch("/api/notes", {
+    fetch("/public/api/notes", {
       credentials: "include",
     })
       .then((res) => res.json())
@@ -33,7 +33,7 @@ export default function Notes() {
   }, []);
 
   const handleDelete = (noteId) => {
-    fetch(`/api/notes/${noteId}`, {
+    fetch(`/public/api/notes/${noteId}`, {
       method: "DELETE",
       credentials: "include",
     })
@@ -46,7 +46,7 @@ export default function Notes() {
     e.preventDefault();
     if (!title || !content) return;
 
-    fetch("/api/notes", {
+    fetch("/public/api/notes", {
       method: "POST",
       credentials: "include",
       headers: { "Content-Type": "application/json" },

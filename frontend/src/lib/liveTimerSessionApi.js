@@ -40,7 +40,7 @@ async function api(path, { method = 'GET', body, headers, ...rest } = {}) {
 }
 
 function postAction(id, action, payload = {}) {
-    return api(`/api/live-timer-sessions/${id}/${action}`, {
+    return api(`/public/api/live-timer-sessions/${id}/${action}`, {
         method: 'POST',
         body: payload,
     });
@@ -54,18 +54,18 @@ export function durationPayload(minutes = 0, seconds = 0) {
 }
 
 export function createLiveTimerSession(payload) {
-    return api('/api/live-timer-sessions', {
+    return api('/public/api/live-timer-sessions', {
         method: 'POST',
         body: payload,
     });
 }
 
 export function getLiveTimerSession(id) {
-    return api(`/api/live-timer-sessions/${id}`);
+    return api(`/public/api/live-timer-sessions/${id}`);
 }
 
 export function deleteLiveTimerSession(id) {
-    return api(`/api/live-timer-sessions/${id}`, {
+    return api(`/public/api/live-timer-sessions/${id}`, {
         method: 'DELETE',
     });
 }
