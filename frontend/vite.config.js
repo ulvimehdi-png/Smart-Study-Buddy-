@@ -17,8 +17,8 @@ export default defineConfig({
   server: {
     host: false,
     port: 5173,
-    origin: "./",
-    base: "/public",
+    origin: "http://a25sewt301.studev.groept.be/public",
+    base: "/public/",
     strictPort: true,
     //allowedHosts: ['https://a25sewt301.studev.groept.be/'],
     proxy: {
