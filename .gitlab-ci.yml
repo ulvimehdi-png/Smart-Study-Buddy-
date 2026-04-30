@@ -1,60 +1,34 @@
 image: composer:2.9.5
 
-stages:
-    - source
-    - build
-    #- test
-    - deploy
+before_script:
+    - echo $PWD
+    - export APP_ENV=prod
+    - export BACKEND_DIR=$PWD/backend
+    - export FRONTEND_DIR=$PWD/frontend
+    - echo $BACKEND_DIR && echo $FRONTEND_DIR
+    - ls -la $BACKEND_DIR $FRONTEND_DIR
+    - env
+    - apk add --update nodejs npm
+    - apk add rsync
+    - mkdir -p ~/.ssh -m 700
+    - eval $(ssh-agent -s)
+    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
+    - ssh-keyscan shell.studev.groept.be > ~/.ssh/known_hosts
+    - ssh a25sewt301@shell.studev.groept.be 'pwd && ls -la ~ && ls -la /var/www'
 
-environment:
-    stage: source
+deploy:
     script:
-        - echo $PWD
-        - export BACKEND_DIR=$PWD/backend
-        - export FRONTEND_DIR=$PWD/frontend
-        - echo $BACKEND_DIR && echo $FRONTEND_DIR
-        - ls -la $BACKEND_DIR $FRONTEND_DIR
-        - env
-
-
-backend:
-    stage: build
-    before_script:
-        - export APP_ENV=prod
-        #- git config --global --add safe.directory /app
-    script:
+        # BACKEND
         - cd $BACKEND_DIR
         - composer validate --no-check-publish
         - composer install -n --no-dev --no-scripts --no-cache
         - php bin/console lint:yaml config
         - php bin/console lint:container
-    after_script:
         - cd ..
-
-frontend:
-    stage: build
-    before_script:
-        - apk add --update nodejs npm
-    script:
+        # FRONTEND
         - cd $FRONTEND_DIR
         - npm install
         - npm run build
-    after_script:
         - cd ..
-
-deployment:
-    stage: deploy
-    extends:
-        - .ssh_setup
-    before_script:
-        - apk add rsync
-    script:
+        # DEPLOY
         - rsync -rv --exclude=".git/" --exclude=".env" --exclude="upload" --delete ./ a25sewtxxx@shell.studev.groept.be:/var/www/html
-
-.ssh_setup:
-    before_script:
-        - mkdir -p ~/.ssh -m 700
-        - eval $(ssh-agent -s)
-        - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
-        - ssh-keyscan shell.studev.groept.be > ~/.ssh/known_hosts
-        - ssh a25sewt301@shell.studev.groept.be 'pwd && ls -la ~ && ls -la /var/www'
