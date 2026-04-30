@@ -1,7 +1,50 @@
 image: composer:2.9.5
 
 stages:
-    - check
+    #- source
+    - build
+    #- test
+    - deploy
+
+variables:
+    BACKEND_ROOT: /app/backend
+    FRONTEND_ROOT: /app/frontend
+    # ENVIRONMENT VARIABLES
+    APP_ENV: prod
+
+backend:
+    stage: build
+    before_script:
+        - export APP_ENV=prod
+        #- git config --global --add safe.directory /app
+    script:
+        - cd "$BACKEND_DIR"
+        - composer validate --no-check-publish
+        - composer install -n --no-dev --no-scripts --no-cache
+        - php bin/console lint:yaml config
+        - php bin/console lint:container
+    after_script:
+        - cd ..
+
+frontend:
+    stage: build
+    before_script:
+        - apk add --update nodejs npm
+    script:
+        - cd "$FRONTEND_DIR"
+        - npm install
+        - npm run build
+    after_script:
+        - cd ..
+
+deployment:
+    stage: deploy
+    extends:
+        - .ssh_setup
+    before_script:
+        - apk add rsync
+    script:
+        - rsync -rv --exclude=".git/" --exclude=".env" --exclude="upload" --delete ./ a25sewtxxx@shell.studev.groept.be:/var/www/html
 
 .ssh_setup:
     before_script:
@@ -9,11 +52,4 @@ stages:
         - eval $(ssh-agent -s)
         - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
         - ssh-keyscan shell.studev.groept.be > ~/.ssh/known_hosts
-
-ssh-check:
-    stage: check
-    only:
-        - main
-    extends: .ssh_setup
-    script:
         - ssh a25sewt301@shell.studev.groept.be 'pwd && ls -la ~ && ls -la /var/www'
