@@ -5,14 +5,14 @@ import tailwindcss from '@tailwindcss/vite'
 
 
 // https://vite.dev/config/
-export default defineConfig(({ command }) => ({
+export default defineConfig({
     plugins: [
         tailwindcss(),
         react(),
         babel({ presets: [reactCompilerPreset()] })
     ],
 
-    //base: command === 'build' ? '/public/' : '/',
+    base: '/',
 
     server: {
     host: '127.0.0.1',
@@ -37,4 +37,4 @@ export default defineConfig(({ command }) => ({
         sourcemap: false,
         manifest: false,
     },
-}))
+})
