@@ -5,7 +5,6 @@ stages:
 
 variables:
     APP_ENV: prod
-    BASE_URL: /public
     BACKEND_DIR: "$CI_PROJECT_DIR/backend"
     FRONTEND_DIR: "$CI_PROJECT_DIR/frontend"
     DEPLOY_USER: "a25sewt301"
@@ -37,13 +36,6 @@ deploy:
         - npm run build
 
         # DEPLOY
-        - >
-            rsync -rv --delete 
-            --exclude="index.php"
-            --exclude=".htaccess"
-            "$FRONTEND_DIR/dist/"
-            "$BACKEND_DIR/public/"
-
         - >
             rsync -rvz --delete
             --exclude=".git/"
