@@ -85,8 +85,41 @@ final class Finalizer
             $this->em->persist($entry);
         }
 
+        $this->updateUserStreak($user);
+
         $this->em->flush();
 
         return $session;
+    }
+
+    private function updateUserStreak(User $user): void
+    {
+        $today = new \DateTimeImmutable('today');
+        
+        $sessionHistory = $this->em->getRepository(Session::class)
+            ->createQueryBuilder('s')
+            ->where('s.user = :user')
+            ->andWhere('s.actualFocusMinutes > 0')
+            ->orderBy('s.startedAt', 'DESC')
+            ->setParameter('user', $user)
+            ->getQuery()
+            ->getResult();
+
+        $studyDates = [];
+        foreach ($sessionHistory as $s) {
+            if ($s->getStartedAt()) {
+                $studyDates[$s->getStartedAt()->format('Y-m-d')] = true;
+            }
+        }
+
+        $streak = 0;
+        $cursor = $today;
+
+        while (isset($studyDates[$cursor->format('Y-m-d')])) {
+            $streak++;
+            $cursor = $cursor->modify('-1 day');
+        }
+
+        $user->setCurrentStreak($streak);
     }
 }

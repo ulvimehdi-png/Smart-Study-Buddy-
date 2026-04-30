@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Task;
 use App\Entity\User;
+use App\Enum\TaskPriority;
 use App\Enum\TaskStatus;
 use App\Service\SubjectService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -62,6 +63,7 @@ final class TasksController extends AbstractController
                 'dueDate' => $task->getDueAt()?->format(DATE_ATOM),
                 'createdAt' => $task->getCreatedAt()?->format(DATE_ATOM),
                 'completedAt' => $task->getCompletedAt()?->format(DATE_ATOM),
+                'priority' => $task->getPriority()->value,
                 'subject' => $task->getSubject()?->getName(),
             ];
         }
@@ -97,6 +99,10 @@ final class TasksController extends AbstractController
         $task->setTitle($title);
         $task->setDescription($description);
 
+        if (!empty($data['priority'])) {
+            $task->setPriority(TaskPriority::from((string) $data['priority']));
+        }
+
         if (!empty($data['dueDate'])) {
             $task->setDueAt(new \DateTimeImmutable((string) $data['dueDate']));
         }
@@ -116,6 +122,7 @@ final class TasksController extends AbstractController
                 'dueDate' => $task->getDueAt()?->format(DATE_ATOM),
                 'createdAt' => $task->getCreatedAt()?->format(DATE_ATOM),
                 'completedAt' => null,
+                'priority' => $task->getPriority()->value,
                 'subject' => $task->getSubject()?->getName(),
             ],
         ], 201);

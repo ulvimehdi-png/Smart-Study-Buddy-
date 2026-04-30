@@ -5,6 +5,7 @@ import Login from "@/pages/Login";
 import Timer from "@/components/Timer";
 import Tasks from "@/pages/Tasks";
 import Notes from "@/pages/Notes";
+import Calendar from "@/pages/Calendar";
 import Dashboard from "@/pages/Dashboard"; // Make sure this points to your new dashboard file
 import ProtectedRoute from "./pages/ProtectedRoute";
 import TimerPage from "./pages/TimerPage";
@@ -24,6 +25,7 @@ function App() {
                     <Route path="/tasks" element={<ProtectedRoute><Tasks /></ProtectedRoute>} />
                     <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
                     <Route path="/notes" element={<ProtectedRoute><Notes /></ProtectedRoute>} />
+                    <Route path="/calendar" element={<ProtectedRoute><Calendar /></ProtectedRoute>} />
 
                     <Route path="/test" element={<Test />} />
                     <Route path="/timerMercurePage" element={<ProtectedRoute><TimerMercurePage /></ProtectedRoute>} />

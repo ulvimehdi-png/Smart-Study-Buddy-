@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { BookText, CalendarDays, NotebookPen, Tags, Trash2 } from "lucide-react";
+import { BookText, CalendarDays, NotebookPen, Tags, Trash2, Search, X } from "lucide-react";
 import PageBackdrop from "../components/shared/PageBackdrop";
 import SmallStats from "../components/shared/SmallStats";
 import SubjectBadge from "../components/shared/SubjectBadge";
@@ -18,9 +18,11 @@ export default function Notes() {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [subject, setSubject] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
 
-  const fetchNotes = () => {
-    fetch("/api/notes", {
+  const fetchNotes = (query = "") => {
+    const url = query ? `/api/notes/search?q=${encodeURIComponent(query)}` : "/api/notes";
+    fetch(url, {
       credentials: "include",
     })
       .then((res) => res.json())
@@ -124,6 +126,34 @@ export default function Notes() {
                 iconClass={iconClass}
               />
             ))}
+          </div>
+        </div>
+
+        {/* Search Bar */}
+        <div className="mb-6">
+          <div className="relative max-w-md">
+            <Search className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-text-muted" />
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => {
+                setSearchQuery(e.target.value);
+                fetchNotes(e.target.value);
+              }}
+              className="w-full rounded-xl border border-border-base bg-bg-elevated py-3 pl-12 pr-10 text-text-main placeholder:text-text-muted outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/10"
+              placeholder="Search notes by title or content..."
+            />
+            {searchQuery && (
+              <button
+                onClick={() => {
+                  setSearchQuery("");
+                  fetchNotes("");
+                }}
+                className="absolute right-3 top-1/2 -translate-y-1/2 rounded-lg p-1 text-text-muted hover:bg-bg-card hover:text-text-main"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            )}
           </div>
         </div>
 

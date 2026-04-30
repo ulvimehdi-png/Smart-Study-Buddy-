@@ -12,6 +12,7 @@ const NAV_LINKS = [
   { name: 'Dashboard', path: '/dashboard', needsAuth: true, isRoute: true },
   { name: 'Tasks', path: '/tasks', needsAuth: true, isRoute: true },
   { name: 'Notes', path: '/notes', needsAuth: true, isRoute: true },
+  { name: 'Calendar', path: '/calendar', needsAuth: true, isRoute: true },
   { name: 'Timer', path: '/timer', needsAuth: true, isRoute: true },
 ];
 

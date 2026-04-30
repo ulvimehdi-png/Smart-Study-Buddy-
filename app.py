@@ -64,6 +64,31 @@ def notes_get():
     return jsonify(get_notes_by_user(user_id)), 200
 
 
+@app.get("/api/notes/search")
+def notes_search():
+    user_id = int(request.args.get("userId", 1))
+    query = request.args.get("q", "")
+    if not query:
+        return jsonify(get_notes_by_user(user_id)), 200
+    return jsonify(search_notes(user_id, query)), 200
+
+
+@app.get("/api/calendar/sessions")
+def calendar_sessions():
+    user_id = int(request.args.get("userId", 1))
+    start = request.args.get("start")
+    end = request.args.get("end")
+    return jsonify(get_calendar_sessions(user_id, start, end)), 200
+
+
+@app.get("/api/calendar/tasks")
+def calendar_tasks():
+    user_id = int(request.args.get("userId", 1))
+    start = request.args.get("start")
+    end = request.args.get("end")
+    return jsonify(get_calendar_tasks(user_id, start, end)), 200
+
+
 @app.post("/api/notes")
 def notes_post():
     body = request.get_json(force=True)
@@ -425,6 +450,43 @@ def get_notes_by_user(user_id):
         ]
     except Exception as exc:
         print(f"get_notes_by_user error: {exc}")
+        return []
+    finally:
+        if connection:
+            connection.close()
+
+
+def search_notes(user_id, query):
+    sql = """
+          SELECT n.note_id, n.title, n.content, n.source_type, n.file_name, n.created_at, s.subject_name
+          FROM notes n
+                   LEFT JOIN subjects s ON n.subject_id = s.subject_id
+          WHERE n.user_id = %s AND (n.title LIKE %s OR n.content LIKE %s)
+          ORDER BY n.created_at DESC, n.note_id DESC \
+          """
+
+    connection = None
+    try:
+        connection = get_connection()
+        search_pattern = f"%{query}%"
+        with connection.cursor() as cursor:
+            cursor.execute(sql, (user_id, search_pattern, search_pattern))
+            rows = cursor.fetchall()
+
+        return [
+            {
+                "noteId": row["note_id"],
+                "title": row["title"],
+                "content": row["content"],
+                "sourceType": row["source_type"],
+                "fileName": row["file_name"],
+                "createdAt": normalize_value(row["created_at"]),
+                "subject": row["subject_name"],
+            }
+            for row in rows
+        ]
+    except Exception as exc:
+        print(f"search_notes error: {exc}")
         return []
     finally:
         if connection:
@@ -799,6 +861,74 @@ def get_dashboard_data(user_id):
         "progress": get_progress_by_user(user_id),
         "recentNotes": get_recent_notes(user_id),
     }
+
+
+def get_calendar_sessions(user_id, start_date, end_date):
+    sql = """
+          SELECT se.session_id, se.study_date, se.minutes_spent, s.subject_name
+          FROM sessions se
+                   JOIN subjects s ON se.subject_id = s.subject_id
+          WHERE s.user_id = %s AND se.study_date BETWEEN %s AND %s
+          ORDER BY se.study_date \
+          """
+
+    connection = None
+    try:
+        connection = get_connection()
+        with connection.cursor() as cursor:
+            cursor.execute(sql, (user_id, start_date, end_date))
+            rows = cursor.fetchall()
+
+        return [
+            {
+                "id": row["session_id"],
+                "date": normalize_value(row["study_date"]),
+                "minutes": row["minutes_spent"],
+                "subject": row["subject_name"]
+            }
+            for row in rows
+        ]
+    except Exception as exc:
+        print(f"get_calendar_sessions error: {exc}")
+        return []
+    finally:
+        if connection:
+            connection.close()
+
+
+def get_calendar_tasks(user_id, start_date, end_date):
+    sql = """
+          SELECT t.task_id, t.title, t.due_date, t.is_completed, t.priority, s.subject_name
+          FROM tasks t
+                   LEFT JOIN subjects s ON t.subject_id = s.subject_id
+          WHERE t.user_id = %s AND t.due_date BETWEEN %s AND %s
+          ORDER BY t.due_date \
+          """
+
+    connection = None
+    try:
+        connection = get_connection()
+        with connection.cursor() as cursor:
+            cursor.execute(sql, (user_id, start_date, end_date))
+            rows = cursor.fetchall()
+
+        return [
+            {
+                "id": row["task_id"],
+                "title": row["title"],
+                "dueDate": normalize_value(row["due_date"]),
+                "status": "done" if row["is_completed"] else "pending",
+                "priority": row["priority"],
+                "subject": row["subject_name"]
+            }
+            for row in rows
+        ]
+    except Exception as exc:
+        print(f"get_calendar_tasks error: {exc}")
+        return []
+    finally:
+        if connection:
+            connection.close()
 
 
 if __name__ == "__main__":

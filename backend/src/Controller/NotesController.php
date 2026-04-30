@@ -52,6 +52,47 @@ final class NotesController extends AbstractController
         return $this->json($data);
     }
 
+    #[Route('/search', methods: ['GET'])]
+    public function searchNotes(
+        Request $request,
+        #[CurrentUser] ?User $user,
+        EntityManagerInterface $em
+    ): JsonResponse {
+        if (!$user) {
+            return $this->json(['error' => 'Not logged in'], 401);
+        }
+
+        $query = $request->query->get('q', '');
+
+        $notes = $em->getRepository(Note::class)
+            ->createQueryBuilder('n')
+            ->leftJoin('n.subject', 's')
+            ->addSelect('s')
+            ->where('n.user = :user')
+            ->andWhere('n.deletedAt IS NULL')
+            ->andWhere('n.title LIKE :query OR n.content LIKE :query')
+            ->orderBy('n.createdAt', 'DESC')
+            ->setParameter('user', $user)
+            ->setParameter('query', '%' . $query . '%')
+            ->getQuery()
+            ->getResult();
+
+        $data = [];
+
+        foreach ($notes as $note) {
+            $data[] = [
+                'noteId' => $note->getId(),
+                'id' => $note->getId(),
+                'title' => $note->getTitle(),
+                'content' => $note->getContent(),
+                'subject' => $note->getSubject()?->getName(),
+                'createdAt' => $note->getCreatedAt()?->format(DATE_ATOM),
+            ];
+        }
+
+        return $this->json($data);
+    }
+
     #[Route('', methods: ['POST'])]
     public function createNote(
         Request $request,

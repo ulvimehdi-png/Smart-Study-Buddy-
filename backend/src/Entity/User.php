@@ -67,6 +67,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Groups(['read', 'user:read'])]
     private ?\DateTimeImmutable $lastLoginAt = null;
 
+    #[ORM\Column(options: ['default' => 0])]
+    #[Groups(['read', 'user:read'])]
+    private ?int $currentStreak = 0;
+
+    #[ORM\Column(options: ['default' => 0])]
+    #[Groups(['read', 'user:read'])]
+    private ?int $longestStreak = 0;
+
+    #[ORM\Column(options: ['default' => 0])]
+    #[Groups(['read', 'user:read'])]
+    private ?int $points = 0;
+
     #[ORM\OneToOne(targetEntity: Settings::class, mappedBy: 'user', cascade: ['persist', 'remove'])]
     private ?Settings $settings = null;
 
@@ -242,6 +254,48 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $this->lastLoginAt = $lastLoginAt;
 
+        return $this;
+    }
+
+    public function getCurrentStreak(): ?int
+    {
+        return $this->currentStreak;
+    }
+
+    public function setCurrentStreak(int $currentStreak): static
+    {
+        $this->currentStreak = $currentStreak;
+        if ($this->currentStreak > $this->longestStreak) {
+            $this->longestStreak = $this->currentStreak;
+        }
+        return $this;
+    }
+
+    public function getLongestStreak(): ?int
+    {
+        return $this->longestStreak;
+    }
+
+    public function setLongestStreak(int $longestStreak): static
+    {
+        $this->longestStreak = $longestStreak;
+        return $this;
+    }
+
+    public function getPoints(): ?int
+    {
+        return $this->points;
+    }
+
+    public function setPoints(int $points): static
+    {
+        $this->points = $points;
+        return $this;
+    }
+
+    public function addPoints(int $points): static
+    {
+        $this->points += $points;
         return $this;
     }
 

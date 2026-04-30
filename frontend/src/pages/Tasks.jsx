@@ -9,6 +9,7 @@ export default function Tasks() {
   const [tasks, setTasks] = useState([]);
   const [title, setTitle] = useState("");
   const [subject, setSubject] = useState("");
+  const [priority, setPriority] = useState("medium");
 
   const fetchTasks = () => {
     fetch("/api/tasks", {
@@ -45,10 +46,11 @@ export default function Tasks() {
       method: "POST",
       credentials: "include",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ title, subject }),
+      body: JSON.stringify({ title, subject, priority }),
     }).then(() => {
       setTitle("");
       setSubject("");
+      setPriority("medium");
       fetchTasks();
     });
   };
@@ -139,6 +141,15 @@ export default function Tasks() {
               className="rounded-xl border border-border-base bg-bg-elevated px-4 py-3 text-text-main placeholder:text-text-muted outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/10"
               required
             />
+            <select
+              value={priority}
+              onChange={(e) => setPriority(e.target.value)}
+              className="rounded-xl border border-border-base bg-bg-elevated px-4 py-3 text-text-main outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/10"
+            >
+              <option value="low">Low Priority</option>
+              <option value="medium">Medium Priority</option>
+              <option value="high">High Priority</option>
+            </select>
             <button
               type="submit"
               className="inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-6 py-3 font-medium text-white transition hover:bg-primary-dark"
@@ -212,6 +223,14 @@ export default function Tasks() {
                         subject={task.subject}
                         tone={task.isCompleted ? "primary" : "accent"}
                       />
+                      <span className={cn(
+                        "rounded-full px-2 py-0.5 text-xs font-semibold uppercase tracking-wider",
+                        task.priority === "high" ? "bg-danger/20 text-danger" :
+                        task.priority === "medium" ? "bg-accent/20 text-accent" :
+                        "bg-primary/20 text-primary"
+                      )}>
+                        {task.priority}
+                      </span>
                     </div>
                   </div>
 
