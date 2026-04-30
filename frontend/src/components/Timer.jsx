@@ -49,7 +49,7 @@ export default function Timer({ isPiP = false }) {
       const minutes = Math.round(elapsedMs / 60000);
 
       if (minutes > 0) {
-        fetch("/public/api/achievements/award-manual", {
+        fetch("/api/achievements/award-manual", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ minutes }),

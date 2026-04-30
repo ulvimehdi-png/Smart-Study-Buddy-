@@ -11,7 +11,7 @@ export default function Tasks() {
   const [subject, setSubject] = useState("");
 
   const fetchTasks = () => {
-    fetch("/public/api/tasks", {
+    fetch("/api/tasks", {
       credentials: "include",
     })
       .then((res) => res.json())
@@ -24,14 +24,14 @@ export default function Tasks() {
   }, []);
 
   const handleToggle = (taskId) => {
-    fetch(`/public/api/tasks/${taskId}/toggle`, {
+    fetch(`/api/tasks/${taskId}/toggle`, {
       method: "PUT",
       credentials: "include",
     }).then(() => fetchTasks());
   };
 
   const handleDelete = (taskId) => {
-    fetch(`/public/api/tasks/${taskId}`, {
+    fetch(`/api/tasks/${taskId}`, {
       method: "DELETE",
       credentials: "include",
     }).then(() => fetchTasks());
@@ -41,7 +41,7 @@ export default function Tasks() {
     e.preventDefault();
     if (!title) return;
 
-    fetch("/public/api/tasks", {
+    fetch("/api/tasks", {
       method: "POST",
       credentials: "include",
       headers: { "Content-Type": "application/json" },

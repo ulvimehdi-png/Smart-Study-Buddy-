@@ -13,12 +13,12 @@ export default function Leaderboard() {
   const [myBadges, setMyBadges] = useState([]);
 
   useEffect(() => {
-    fetch("/public/api/achievements/leaderboard", { credentials: "include" })
+    fetch("/api/achievements/leaderboard", { credentials: "include" })
       .then((res) => res.json())
       .then((data) => setLeaderboard(data))
       .catch((err) => console.error(err));
 
-    fetch("/public/api/achievements/mine", { credentials: "include" })
+    fetch("/api/achievements/mine", { credentials: "include" })
       .then((res) => res.json())
       .then((data) => {
         setMyPoints(data.points);
