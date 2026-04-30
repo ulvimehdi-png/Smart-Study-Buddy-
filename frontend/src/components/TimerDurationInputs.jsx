@@ -5,9 +5,10 @@ import { cn } from "@/lib/utils";
 
 export default function TimerDurationInputs({ isPiP = false }) {
   const { 
-    isResting, 
-    work, setWork, 
-    rest, setRest, 
+    isResting,
+    isOwner,
+    work, setWork,
+    rest, setRest,
     setTimerDuration // This should now update msLeft and durationMs
   } = useTimer();
 
@@ -33,7 +34,9 @@ export default function TimerDurationInputs({ isPiP = false }) {
     }
   }
 
-  const inputClass = "border rounded px-2 py-1 w-16 bg-bg-elevated text-text-main focus:ring-2 focus:ring-primary-light outline-none transition-all";
+  const inputClass = cn("border rounded px-2 py-1 w-16 bg-bg-elevated text-text-main focus:ring-2 focus:ring-primary-light outline-none transition-all",
+                        isOwner ? "" : "cursor-not-allowed"
+                      );
 
   return (
     <Motion.div
@@ -44,7 +47,7 @@ export default function TimerDurationInputs({ isPiP = false }) {
       transition={{ duration: 0.25, ease: 'easeInOut' }}
       className={cn("overflow-hidden mt-4 md:ml-4")}
     >
-      <div className="flex flex-col items-end gap-3 py-2 text-text-main">
+      <div className={cn("flex flex-col items-end gap-3 py-2 text-text-main", isOwner ? "opacity-100" : "opacity-50")}>
         {/* Work Duration Row */}
         <div className="flex items-center gap-4">
           <div className="gap-1 flex items-center">
@@ -55,6 +58,7 @@ export default function TimerDurationInputs({ isPiP = false }) {
               value={work.minutes}
               onChange={handleDurationChange}
               className={inputClass}
+              disabled={!isOwner}
             />
             <span>{isPiP ? "m" : "min"}</span>
           </div>
@@ -65,6 +69,7 @@ export default function TimerDurationInputs({ isPiP = false }) {
               value={work.seconds}
               onChange={handleDurationChange}
               className={inputClass}
+              disabled={!isOwner}
             />
             <span>{isPiP ? "s" : "sec"}</span>
           </div>
@@ -80,6 +85,7 @@ export default function TimerDurationInputs({ isPiP = false }) {
               value={rest.minutes}
               onChange={handleDurationChange}
               className={inputClass}
+              disabled={!isOwner}
             />
             <span>{isPiP ? "m" : "min"}</span>
           </div>
@@ -90,6 +96,7 @@ export default function TimerDurationInputs({ isPiP = false }) {
               value={rest.seconds}
               onChange={handleDurationChange}
               className={inputClass}
+              disabled={!isOwner}
             />
             <span>{isPiP ? "s" : "sec"}</span>
           </div>

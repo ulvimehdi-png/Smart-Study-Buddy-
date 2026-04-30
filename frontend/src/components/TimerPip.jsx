@@ -68,7 +68,7 @@ export default function TimerPip({className = ""}) {
             .map((rule) => rule.cssText)
             .join('\n');
           target.head.appendChild(style);
-        } catch (error) {
+        } catch {
           const ownerNode = styleSheet.ownerNode;
           if (ownerNode?.tagName === 'LINK' && ownerNode.href) {
             const link = target.createElement('link');

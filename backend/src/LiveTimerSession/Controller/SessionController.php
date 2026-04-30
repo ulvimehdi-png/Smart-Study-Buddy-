@@ -3,6 +3,8 @@
 namespace App\LiveTimerSession\Controller;
 
 use App\LiveTimerSession\DTO\Command\CreateSession;
+use App\LiveTimerSession\Enum\SessionPhase;
+use App\LiveTimerSession\Enum\SessionStatus;
 use App\LiveTimerSession\Service\Projector;
 use App\LiveTimerSession\Service\Publisher;
 use App\LiveTimerSession\Service\State;
@@ -12,8 +14,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\Routing\Attribute\Route;
-use App\Service\AchievementService;
-
 #[Route('/api/live-timer-sessions')]
 final class SessionController extends AbstractSessionController
 {
@@ -55,6 +55,10 @@ final class SessionController extends AbstractSessionController
                 'minutes' => $request->break->minutes,
                 'seconds' => $request->break->seconds,
             ]),
+            time: $time,
+            phase: SessionPhase::from($request->phase),
+            status: SessionStatus::from($request->status),
+            remainingMs: $request->remainingMs,
             subjectId: $request->subjectId,
             taskId: $request->taskId,
         );
@@ -71,9 +75,9 @@ final class SessionController extends AbstractSessionController
         Projector $projector,
     ): JsonResponse
     {
-        $state = $this->requireOwnedState($id, $store);
+        $state = $this->requireState($id, $store);
 
-        return $this->json($projector->project($state));
+        return $this->jsonProjection($state, $projector);
     }
 
     #[Route('/{id}', methods: ['DELETE'])]

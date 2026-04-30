@@ -1,0 +1,19 @@
+image: composer:2.9.5
+
+stages:
+    - check
+
+.ssh_setup:
+    before_script:
+        - mkdir -p ~/.ssh -m 700
+        - eval $(ssh-agent -s)
+        - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
+        - ssh-keyscan shell.studev.groept.be > ~/.ssh/known_hosts
+
+ssh-check:
+    stage: check
+    only:
+        - main
+    extends: .ssh_setup
+    script:
+        - ssh a25sewt301@shell.studev.groept.be 'pwd && ls -la ~ && ls -la /var/www'

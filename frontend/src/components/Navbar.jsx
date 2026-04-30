@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { Menu, X } from 'lucide-react'; // Removed unused User, LogOut
 import { useAuth } from '../lib/auth';
 import { cn } from '@/lib/utils';

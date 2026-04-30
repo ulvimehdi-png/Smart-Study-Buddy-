@@ -32,21 +32,33 @@ final class State
         int    $ownerUserId,
         int    $workDurationMs,
         int    $breakDurationMs,
+        TimeService $time,
+        SessionPhase $phase = SessionPhase::FOCUS,
+        SessionStatus $status = SessionStatus::IDLE,
+        ?int   $remainingMs = null,
         ?int   $subjectId = null,
         ?int   $taskId = null,
     ): self
     {
         $now = new \DateTimeImmutable()->format(DATE_ATOM);
+        $phaseDurationMs = $phase === SessionPhase::BREAK
+            ? $breakDurationMs
+            : $workDurationMs;
+        $resolvedRemainingMs = max(0, $remainingMs ?? $phaseDurationMs);
 
         return new self(
             id: $id,
-            status: SessionStatus::IDLE,
-            phase: SessionPhase::FOCUS,
+            status: $status,
+            phase: $phase,
             workDurationMs: $workDurationMs,
             breakDurationMs: $breakDurationMs,
-            phaseEndsAt: null,
-            remainingMs: $workDurationMs,
-            startedAt: null,
+            phaseEndsAt: $status === SessionStatus::RUNNING
+                ? $time->isoFromMs($time->nowMs() + max(1000, $resolvedRemainingMs))
+                : null,
+            remainingMs: $status === SessionStatus::RUNNING
+                ? null
+                : $resolvedRemainingMs,
+            startedAt: $status === SessionStatus::RUNNING ? $now : null,
             accumulatedFocusMs: 0,
             accumulatedBreakMs: 0,
             subjectId: $subjectId,
