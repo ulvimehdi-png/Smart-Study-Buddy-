@@ -55,16 +55,15 @@ export function AuthProvider({ children }) {
                 body: JSON.stringify({ username: email, password }),
             });
             if (!response.ok) throw new Error('Login failed');
-            const data = await response.json();
-            setUser(email);
-            return data;
+            await response.json();
+            return await getUser();
         } catch (err) {
             setError(err.message);
             throw err;
         } finally {
             setLoading(false);
         }
-    }, []);
+    }, [getUser]);
 
     const register = useCallback(async (username, password) => {
         if (DEBUG) {
