@@ -20,7 +20,8 @@ deploy:
         # BACKEND
         - cd $BACKEND_DIR
         - composer validate --no-check-publish
-        - composer install -n --no-dev --no-scripts --optimize-autoloader
+        #- composer install -n --no-dev --no-scripts --optimize-autoloader
+        - composer install -n --no-dev --no-scripts
         - php bin/console lint:yaml config
         - php bin/console lint:container
         - cd ..
