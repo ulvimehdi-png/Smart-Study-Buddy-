@@ -64,6 +64,3 @@ deploy:
             "test -f $DEPLOY_PATH/public/index.php &&
             test -f $DEPLOY_PATH/public/index.html &&
             test -d $DEPLOY_PATH/vendor"
-
-    after_script:
-        - ssh "$DEPLOY_USER@$DEPLOY_HOST" "tree /var/www/html"
