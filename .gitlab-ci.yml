@@ -37,33 +37,24 @@ deploy:
         - npm run build
 
         # DEPLOY
-        - > 
-            rsync -av --delete
-            --exclude="index.php"
-            --exclude=".htaccess"
-            "$FRONTEND_DIR/dist/"
-            "$BACKEND_DIR/"
+        - >
+            rsync -rv --delete \
+            --exclude="index.php" \
+            --exclude=".htaccess" \
+            "$FRONTEND_DIR/dist/" \
+            "$BACKEND_DIR/public/"
 
         - >
-            rsync -avz --delete
-            --exclude=".git/"
-            --exclude=".editorconfig"
-            --exclude=".gitignore"
-            --exclude=".env"
-            --exclude=".env.dev"
-            --include=".env.test"
-            --exclude="phpunit.dist.xml"
-            --exclude="README.md"
-            --exclude="tests/"
-            --exclude="upload/"
-            "$BACKEND_DIR/"
+            rsync -rvz --delete \
+            --exclude=".git/" \
+            --exclude=".editorconfig" \
+            --exclude=".gitignore" \
+            --exclude=".env" \
+            --exclude=".env.dev" \
+            --include=".env.test" \
+            --exclude="phpunit.dist.xml" \
+            --exclude="README.md" \
+            --exclude="tests/" \
+            --exclude="upload/" \
+            "$BACKEND_DIR/" \
             "$DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH/"
-
-        - >
-            ssh "$DEPLOY_USER@$DEPLOY_HOST"
-            "test -f $DEPLOY_PATH/public/index.php &&
-            test -f $DEPLOY_PATH/public/index.html &&
-            test -d $DEPLOY_PATH/vendor"
-
-    after_script:
-        - ssh "$DEPLOY_USER@$DEPLOY_HOST" "tree /var/www/html"

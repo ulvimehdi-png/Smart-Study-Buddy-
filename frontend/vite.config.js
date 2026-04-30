@@ -5,15 +5,14 @@ import tailwindcss from '@tailwindcss/vite'
 
 
 // https://vite.dev/config/
-export default defineConfig({
-
+export default defineConfig(({ command }) => ({
     plugins: [
         tailwindcss(),
         react(),
         babel({ presets: [reactCompilerPreset()] })
     ],
 
-    base: process.env.command === 'build' ? '/public/' : '/',
+    base: command === 'build' ? '/public/' : '/',
 
     server: {
     host: '127.0.0.1',
@@ -31,27 +30,11 @@ export default defineConfig({
     resolve: {
         tsconfigPaths: true
     },
-
-  // server: {
-  //   host: false,
-  //   port: 5173,
-  //   origin: "http://a25sewt301.studev.groept.be/public",
-  //   base: "/public/",
-  //   strictPort: true,
-  //   //allowedHosts: ['https://a25sewt301.studev.groept.be/'],
-  //   proxy: {
-  //     '/api': {
-  //       target: "/src",
-  //       changeOrigin: true,
-  //       //rewrite: (path) => path.replace(/^\/api/, '')
-  //     }
-  //   }
-  // },
-  build: {
-    outDir: 'dist',
-    assetsDir: 'assets',
-    emptyOutDir: true,
-    sourcemap: false,
-    manifest: false,
-  },
-})
+    build: {
+        outDir: 'dist',
+        assetsDir: 'assets',
+        emptyOutDir: true,
+        sourcemap: false,
+        manifest: false,
+    },
+}))
