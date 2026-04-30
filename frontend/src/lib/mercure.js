@@ -1,4 +1,4 @@
-const DEFAULT_HUB_URL = import.meta.env.VITE_MERCURE_PUBLIC_URL;
+const DEFAULT_HUB_URL = import.meta.env.MERCURE_PUBLIC_URL;
 
 function normalizeTopics(topics) {
     const list = Array.isArray(topics) ? topics : [topics];
@@ -16,7 +16,7 @@ export function buildMercureUrl(
     { hubUrl = DEFAULT_HUB_URL, origin = window.location.origin } = {}
 ) {
     if (!hubUrl) {
-        throw new Error('Missing VITE_MERCURE_PUBLIC_URL');
+        throw new Error('Missing MERCURE_PUBLIC_URL');
     }
 
     const normalizedTopics = normalizeTopics(topics);

@@ -11,4 +11,9 @@ enum SessionPhase: string
     {
         return self::FOCUS;
     }
+
+    public static function values(): array
+    {
+        return array_map(static fn(self $phase) => $phase->value, self::cases());
+    }
 }

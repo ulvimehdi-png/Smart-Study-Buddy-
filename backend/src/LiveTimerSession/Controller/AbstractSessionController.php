@@ -24,6 +24,31 @@ abstract class AbstractSessionController extends AbstractController
         return (int)$user->getId();
     }
 
+    protected function currentUserIdOrNull(): ?int
+    {
+        $user = $this->getUser();
+
+        if (!$user || !method_exists($user, 'getId') || !$user->getId()) {
+            return null;
+        }
+
+        return (int)$user->getId();
+    }
+    
+    protected function requireState(
+        string $id,
+        Store $store
+    ): State
+    {
+        $state = $store->get($id);
+
+        if (!$state) {
+            throw $this->createNotFoundException('Live timer session not found');
+        }
+
+        return $state;
+    }
+
     protected function requireOwnedState(
         string $id,
         Store  $store
@@ -50,8 +75,13 @@ abstract class AbstractSessionController extends AbstractController
     ): JsonResponse
     {
         $projection = $projector->project($state);
+        $projection['isOwner'] = $state->ownerUserId === $this->currentUserIdOrNull();
 
-        $publisher?->publishProjection($projection);
+        if ($publisher) {
+            $publishedProjection = $projection;
+            unset($publishedProjection['isOwner']);
+            $publisher->publishProjection($publishedProjection);
+        }
 
         return $this->json($projection, $status);
     }

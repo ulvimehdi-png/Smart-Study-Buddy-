@@ -1,9 +1,31 @@
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
+import { subscribeMercureJson } from '@/lib/mercure';
+import {
+  buildLiveTimerJoinUrl,
+  changeConfigLiveTimerSession,
+  createLiveTimerSession,
+  durationPayload,
+  getLiveTimerSession,
+  pauseLiveTimerSession,
+  resetPhaseLiveTimerSession,
+  skipPhaseLiveTimerSession,
+  startLiveTimerSession,
+} from '@/lib/liveTimerSessionApi';
 
 export const TimerContext = createContext(null);
 
 function durationToMs({ minutes, seconds }) {
   return (Number(minutes) * 60 + Number(seconds)) * 1000;
+}
+
+function msToDuration(ms) {
+  const safeMs = Math.max(0, Number(ms) || 0);
+  const totalSeconds = Math.floor(safeMs / 1000);
+
+  return {
+    minutes: Math.floor(totalSeconds / 60),
+    seconds: totalSeconds % 60,
+  };
 }
 
 function normalizeDuration(duration, fallback) {
@@ -20,78 +42,338 @@ function normalizeDuration(duration, fallback) {
   };
 }
 
+function toNonNegativeInt(value, fallback = 0) {
+  const number = Number(value);
+  return Number.isFinite(number) ? Math.max(0, Math.trunc(number)) : fallback;
+}
+
+function parseIsoToMs(value) {
+  if (!value) {
+    return null;
+  }
+
+  const ms = new Date(value).getTime();
+  return Number.isFinite(ms) ? ms : null;
+}
+
+function getPhaseDurationMs(phase, workMs, breakMs) {
+  return phase === 'break' ? breakMs : workMs;
+}
+
+function deriveProjectionView(projection, nowMs = Date.now()) {
+  if (!projection?.state) {
+    return null;
+  }
+
+  const state = projection.state;
+  const status = typeof state.status === 'string' ? state.status : 'idle';
+  let phase = state.phase === 'break' ? 'break' : 'focus';
+
+  const workMs = toNonNegativeInt(state.workDurationMs);
+  const breakMs = toNonNegativeInt(state.breakDurationMs);
+
+  let remainingMs = toNonNegativeInt(
+    state.remainingMs ?? getPhaseDurationMs(phase, workMs, breakMs)
+  );
+
+  const phaseEndsAtMs = parseIsoToMs(state.phaseEndsAt);
+
+  if (status === 'running' && phaseEndsAtMs !== null) {
+    if (nowMs < phaseEndsAtMs) {
+      remainingMs = phaseEndsAtMs - nowMs;
+    } else {
+      let overflowMs = nowMs - phaseEndsAtMs;
+
+      while (true) {
+        phase = phase === 'focus' ? 'break' : 'focus';
+        const durationMs = getPhaseDurationMs(phase, workMs, breakMs);
+
+        if (durationMs <= 0) {
+          remainingMs = 0;
+          break;
+        }
+
+        if (overflowMs < durationMs) {
+          remainingMs = durationMs - overflowMs;
+          break;
+        }
+
+        overflowMs -= durationMs;
+      }
+    }
+  }
+
+  const phaseDurationMs = getPhaseDurationMs(phase, workMs, breakMs);
+  const elapsedMs = Math.max(0, phaseDurationMs - remainingMs);
+  const progress =
+    phaseDurationMs > 0
+      ? Math.min(1, Math.max(0, elapsedMs / phaseDurationMs))
+      : 0;
+
+  return {
+    id: projection.id ?? null,
+    topic: projection.topic ?? null,
+    status,
+    phase,
+    workMs,
+    breakMs,
+    remainingMs: Math.max(0, remainingMs),
+    phaseDurationMs,
+    elapsedMs,
+    progress,
+    phaseEndsAt: state.phaseEndsAt ?? null,
+    phaseEndsAtMs,
+    startedAt: state.startedAt ?? null,
+    updatedAt: state.updatedAt ?? null,
+    accumulatedFocusMs: toNonNegativeInt(state.accumulatedFocusMs),
+    accumulatedBreakMs: toNonNegativeInt(state.accumulatedBreakMs),
+    subjectId: state.subjectId ?? null,
+    taskId: state.taskId ?? null,
+    isIdle: status === 'idle',
+    isPaused: status === 'paused',
+    isRunning: status === 'running',
+    raw: projection,
+  };
+}
+
 export function TimerProvider({ children }) {
-  const [work, setWorkState] = useState({ minutes: 25, seconds: 0 });
-  const [rest, setRestState] = useState({ minutes: 5, seconds: 0 });
+  const [sessionId, setSessionId] = useState('');
+  const [projection, setProjection] = useState(null);
+  const [error, setError] = useState('');
+  const [isPending, setIsPending] = useState(false);
+  const [connectionStatus, setConnectionStatus] = useState('disconnected');
 
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [isResting, setIsResting] = useState(false);
-  const [msLeft, setMsLeft] = useState(durationToMs(work));
+  const [workDraft, setWorkDraft] = useState({ minutes: 25, seconds: 0 });
+  const [restDraft, setRestDraft] = useState({ minutes: 5, seconds: 0 });
+  const [localIsPlaying, setLocalIsPlaying] = useState(false);
+  const [localIsResting, setLocalIsResting] = useState(false);
+  const [localMsLeft, setLocalMsLeft] = useState(durationToMs({ minutes: 25, seconds: 0 }));
+  const [localDurationMs, setLocalDurationMs] = useState(durationToMs({ minutes: 25, seconds: 0 }));
   const [isShared, setIsShared] = useState(false);
+  const [hasCopiedShareLink, setHasCopiedShareLink] = useState(false);
+  const [isOwner, setIsOwner] = useState(true);
 
-  const wsRef = useRef(null);
+  const subscriptionRef = useRef(null);
+  const bootstrappedFromUrlRef = useRef(false);
 
-  const sendSharedMessage = useCallback((eventtype, snapshotOverrides = {}) => {
-    const socket = wsRef.current;
+  const isRemote = Boolean(projection?.state);
+  const display = useMemo(() => deriveProjectionView(projection, Date.now()), [projection]);
+  const joinUrl = useMemo(() => {
+    return sessionId ? buildLiveTimerJoinUrl(sessionId) : '';
+  }, [sessionId]);
 
-    if (!socket || socket.readyState !== WebSocket.OPEN) {
+  const clearSession = useCallback(({ preserveId = false } = {}) => {
+    setProjection(null);
+    setConnectionStatus('disconnected');
+    setIsShared(false);
+    setHasCopiedShareLink(false);
+
+    if (!preserveId) {
+      setSessionId('');
+    }
+  }, []);
+
+  const closeSubscription = useCallback(() => {
+    if (subscriptionRef.current) {
+      subscriptionRef.current.close();
+      subscriptionRef.current = null;
+    }
+
+    setConnectionStatus('disconnected');
+  }, []);
+
+  const applyProjection = useCallback((nextProjection) => {
+    setProjection(nextProjection ?? null);
+
+    if (nextProjection?.id) {
+      setSessionId(nextProjection.id);
+    }
+    if (typeof nextProjection?.isOwner === 'boolean') {
+      console.log(nextProjection);
+      
+      setIsOwner(nextProjection.isOwner);
+    }
+  }, []);
+
+  const subscribeToTopic = useCallback((topic) => {
+    closeSubscription();
+
+    if (!topic) {
       return;
     }
 
-    const snapshot = {
-      work,
-      rest,
-      isPlaying,
-      isResting,
-      msLeft,
-      ...snapshotOverrides,
-    };
+    setConnectionStatus('connecting');
 
-    socket.send(JSON.stringify({
-      type: 'timer-share',
-      eventtype,
-      snapshot,
-    }));
-  }, [isPlaying, isResting, msLeft, rest, work]);
+    subscriptionRef.current = subscribeMercureJson({
+      topics: topic,
+      onOpen: () => {
+        setConnectionStatus('open');
+      },
+      onMessage: (message) => {
+        if (message?.deleted) {
+          closeSubscription();
+          clearSession();
+          return;
+        }
 
-  const applySharedSnapshot = useCallback((snapshot) => {
-    if (!snapshot) {
-      return;
+        applyProjection(message);
+      },
+      onError: (event) => {
+        console.error('mercure error', event);
+        setConnectionStatus('error');
+      },
+      onParseError: (parseError, raw) => {
+        console.error('mercure parse error', parseError, raw);
+        setError(`Mercure parse error: ${String(parseError?.message || parseError)}`);
+      },
+    });
+  }, [applyProjection, clearSession, closeSubscription]);
+
+  const runRequest = useCallback(async (request, { afterSuccess } = {}) => {
+    setIsPending(true);
+    setError('');
+
+    try {
+      const result = await request();
+
+      if (result?.topic) {
+        applyProjection(result);
+      }
+
+      if (afterSuccess) {
+        await afterSuccess(result);
+      }
+
+      return result ?? null;
+    } catch (err) {
+      setError(String(err?.message || err));
+      return null;
+    } finally {
+      setIsPending(false);
+    }
+  }, [applyProjection]);
+
+  const createSession = useCallback(({
+    workMinutes,
+    workSeconds = 0,
+    breakMinutes,
+    breakSeconds = 0,
+    phase = 'focus',
+    status = 'idle',
+    remainingMs = null,
+  }) => {
+    return runRequest(
+      () => createLiveTimerSession({
+        work: durationPayload(workMinutes, workSeconds),
+        break: durationPayload(breakMinutes, breakSeconds),
+        phase,
+        status,
+        remainingMs,
+        subjectId: null,
+        taskId: null,
+      }),
+      {
+        afterSuccess: (result) => {
+          if (result?.topic) {
+            subscribeToTopic(result.topic);
+          }
+        },
+      }
+    );
+  }, [runRequest, subscribeToTopic]);
+
+  const loadSession = useCallback((id = sessionId) => {
+    if (!id) {
+      return Promise.resolve(null);
     }
 
-    if (snapshot.work) {
-      setWorkState(normalizeDuration(snapshot.work, work));
+    return runRequest(
+      () => getLiveTimerSession(id),
+      {
+        afterSuccess: (result) => {
+          setSessionId(id);
+          setIsShared(true);
+
+          if (result?.topic) {
+            subscribeToTopic(result.topic);
+          }
+        },
+      }
+    );
+  }, [runRequest, sessionId, subscribeToTopic]);
+
+  const runAction = useCallback((action, id = sessionId) => {
+    if (!id) {
+      return Promise.resolve(null);
     }
 
-    if (snapshot.rest) {
-      setRestState(normalizeDuration(snapshot.rest, rest));
+    return runRequest(() => action(id));
+  }, [runRequest, sessionId]);
+
+  const start = useCallback((id) => runAction(startLiveTimerSession, id), [runAction]);
+  const pause = useCallback((id) => runAction(pauseLiveTimerSession, id), [runAction]);
+  const skipPhase = useCallback((id) => runAction(skipPhaseLiveTimerSession, id), [runAction]);
+  const resetPhase = useCallback((id) => runAction(resetPhaseLiveTimerSession, id), [runAction]);
+
+  const changeConfig = useCallback(({ workMinutes, workSeconds = 0, breakMinutes, breakSeconds = 0 }) => {
+    if (!sessionId) {
+      return Promise.resolve(null);
     }
 
-    if (typeof snapshot.isResting === 'boolean') {
-      setIsResting(snapshot.isResting);
-    }
-
-    if (typeof snapshot.isPlaying === 'boolean') {
-      setIsPlaying(snapshot.isPlaying);
-    }
-
-    if (typeof snapshot.msLeft === 'number') {
-      setMsLeft(Math.max(0, snapshot.msLeft));
-    }
-  }, [rest, work]);
-
-  const applySharedMessage = useCallback((message) => {
-    if (!message) {
-      return;
-    }
-
-    if (message.snapshot) {
-      applySharedSnapshot(message.snapshot);
-    }
-  }, [applySharedSnapshot]);
+    return runRequest(() =>
+      changeConfigLiveTimerSession(sessionId, {
+        work: durationPayload(workMinutes, workSeconds),
+        break: durationPayload(breakMinutes, breakSeconds),
+      })
+    );
+  }, [runRequest, sessionId]);
 
   useEffect(() => {
-    if (!isPlaying) {
+    if (bootstrappedFromUrlRef.current) {
+      return;
+    }
+
+    bootstrappedFromUrlRef.current = true;
+
+    const params = new URLSearchParams(window.location.search);
+    const idFromUrl = params.get('session');
+
+    if (idFromUrl) {
+      void loadSession(idFromUrl);
+    }
+  }, [loadSession]);
+
+  useEffect(() => {
+    return () => {
+      closeSubscription();
+    };
+  }, [closeSubscription]);
+
+  useEffect(() => {
+    if (!display) {
+      return;
+    }
+
+    setWorkDraft(msToDuration(display.workMs));
+    setRestDraft(msToDuration(display.breakMs));
+    setLocalIsPlaying(Boolean(display.isRunning));
+    setLocalIsResting(display.phase === 'break');
+    setLocalMsLeft(display.remainingMs ?? 0);
+    setLocalDurationMs(display.phaseDurationMs ?? 0);
+  }, [display]);
+
+  useEffect(() => {
+    if (isRemote) {
+      return;
+    }
+
+    const nextDurationMs = durationToMs(localIsResting ? restDraft : workDraft);
+    setLocalDurationMs(nextDurationMs);
+    setLocalMsLeft(nextDurationMs);
+  }, [isRemote, localIsResting, restDraft, workDraft]);
+
+  useEffect(() => {
+    if (!isRemote || !localIsPlaying) {
       return undefined;
     }
 
@@ -102,25 +384,21 @@ export function TimerProvider({ children }) {
       if (previousTime !== undefined) {
         const deltaTime = time - previousTime;
 
-        setMsLeft((previousMsLeft) => {
+        setLocalMsLeft((previousMsLeft) => {
           const nextMsLeft = previousMsLeft - deltaTime;
 
           if (nextMsLeft > 0) {
             return nextMsLeft;
           }
 
-          // if (!isResetting) {
-          //   setIsResetting(true);
+          const nextIsResting = !localIsResting;
+          const nextPhase = nextIsResting ? restDraft : workDraft;
+          const nextDurationMs = durationToMs(nextPhase);
 
-          //   return durationToMs(reset);
-          // }
-          // setIsResetting(false);
+          setLocalIsResting(nextIsResting);
+          setLocalDurationMs(nextDurationMs);
 
-          const nextIsResting = !isResting;
-          const nextPhase = nextIsResting ? rest : work;
-
-          setIsResting(nextIsResting);
-          return Math.max(0, durationToMs(nextPhase) + nextMsLeft);
+          return Math.max(0, nextDurationMs + nextMsLeft);
         });
       }
 
@@ -133,215 +411,285 @@ export function TimerProvider({ children }) {
     return () => {
       cancelAnimationFrame(requestId);
     };
-  }, [isPlaying, isResting, rest, work]);
+  }, [isRemote, localIsPlaying, localIsResting, restDraft, workDraft]);
 
   useEffect(() => {
-    return () => {
-      if (wsRef.current) {
-        wsRef.current.close();
-        wsRef.current = null;
+    if (isRemote || !localIsPlaying) {
+      return undefined;
+    }
+
+    let previousTime;
+    let requestId;
+
+    const animate = (time) => {
+      if (previousTime !== undefined) {
+        const deltaTime = time - previousTime;
+
+        setLocalMsLeft((previousMsLeft) => {
+          const nextMsLeft = previousMsLeft - deltaTime;
+
+          if (nextMsLeft > 0) {
+            return nextMsLeft;
+          }
+
+          const nextIsResting = !localIsResting;
+          const nextPhase = nextIsResting ? restDraft : workDraft;
+          const nextDurationMs = durationToMs(nextPhase);
+
+          setLocalIsResting(nextIsResting);
+          setLocalDurationMs(nextDurationMs);
+
+          return Math.max(0, nextDurationMs + nextMsLeft);
+        });
       }
+
+      previousTime = time;
+      requestId = requestAnimationFrame(animate);
     };
-  }, []);
+
+    requestId = requestAnimationFrame(animate);
+
+    return () => {
+      cancelAnimationFrame(requestId);
+    };
+  }, [isRemote, localIsPlaying, localIsResting, restDraft, workDraft]);
+
+  const syncConfig = useCallback((nextWork, nextRest) => {
+    if (!sessionId) {
+      return Promise.resolve(null);
+    }
+
+    return changeConfig({
+      workMinutes: nextWork.minutes,
+      workSeconds: nextWork.seconds,
+      breakMinutes: nextRest.minutes,
+      breakSeconds: nextRest.seconds,
+    });
+  }, [changeConfig, sessionId]);
 
   const setTimerDuration = useCallback((minutes, seconds) => {
-    const totalMs = (minutes * 60 + seconds) * 1000;
-    setIsPlaying(false);
-    setMsLeft(totalMs);
-
-    if (isShared) {
-      sendSharedMessage('duration-change', {
-        isPlaying: false,
-        msLeft: totalMs,
-      });
+    if (sessionId) {
+      return;
     }
-  }, [isShared, sendSharedMessage]);
+
+    setLocalIsPlaying(false);
+
+    if (localIsResting) {
+      const nextDurationMs = durationToMs({ minutes, seconds });
+
+      setRestDraft((current) => ({
+        ...current,
+        minutes,
+        seconds,
+      }));
+      setLocalDurationMs(nextDurationMs);
+      setLocalMsLeft(nextDurationMs);
+      return;
+    }
+
+    const nextDurationMs = durationToMs({ minutes, seconds });
+
+    setWorkDraft((current) => ({
+      ...current,
+      minutes,
+      seconds,
+    }));
+    setLocalDurationMs(nextDurationMs);
+    setLocalMsLeft(nextDurationMs);
+  }, [localIsResting, sessionId]);
 
   const setWork = useCallback((nextWork) => {
-    setWorkState(nextWork);
+    const normalized = normalizeDuration(nextWork, workDraft);
+    setWorkDraft(normalized);
 
-    const nextMsLeft = !isResting ? durationToMs(nextWork) : msLeft;
+    if (!sessionId) {
+      setLocalIsPlaying(false);
 
-    if (!isResting) {
-      setMsLeft(nextMsLeft);
+      if (!localIsResting) {
+        const nextDurationMs = durationToMs(normalized);
+        setLocalDurationMs(nextDurationMs);
+        setLocalMsLeft(nextDurationMs);
+      }
+
+      return;
     }
 
-    if (isShared) {
-      sendSharedMessage('work-change', {
-        work: nextWork,
-        msLeft: nextMsLeft,
-      });
-    }
-  }, [isResting, isShared, msLeft, sendSharedMessage]);
+    void syncConfig(normalized, restDraft);
+  }, [localIsResting, restDraft, sessionId, syncConfig, workDraft]);
 
   const setRest = useCallback((nextRest) => {
-    setRestState(nextRest);
+    const normalized = normalizeDuration(nextRest, restDraft);
+    setRestDraft(normalized);
 
-    const nextMsLeft = isResting ? durationToMs(nextRest) : msLeft;
+    if (!sessionId) {
+      setLocalIsPlaying(false);
 
-    if (isResting) {
-      setMsLeft(nextMsLeft);
-    }
+      if (localIsResting) {
+        const nextDurationMs = durationToMs(normalized);
+        setLocalDurationMs(nextDurationMs);
+        setLocalMsLeft(nextDurationMs);
+      }
 
-    if (isShared) {
-      sendSharedMessage('rest-change', {
-        rest: nextRest,
-        msLeft: nextMsLeft,
-      });
-    }
-  }, [isResting, isShared, msLeft, sendSharedMessage]);
-
-  const resetTimer = useCallback(() => {
-    const currentDuration = durationToMs(isResting ? rest : work);
-
-    setIsPlaying(false);
-    setMsLeft(currentDuration);
-
-    if (isShared) {
-      sendSharedMessage('reset', {
-        isPlaying: false,
-        msLeft: currentDuration,
-      });
-    }
-  }, [isResting, isShared, rest, sendSharedMessage, work]);
-
-  const skipTimer = useCallback(() => {
-    const nextIsResting = !isResting;
-    const nextPhase = nextIsResting ? rest : work;
-    const nextMsLeft = durationToMs(nextPhase);
-
-    setIsPlaying(false);
-    setIsResting(nextIsResting);
-    setMsLeft(nextMsLeft);
-
-    if (isShared) {
-      sendSharedMessage('skip', {
-        isPlaying: false,
-        isResting: nextIsResting,
-        msLeft: nextMsLeft,
-      });
-    }
-  }, [isResting, isShared, rest, sendSharedMessage, work]);
-
-  const togglePlaying = useCallback(() => {
-    const nextPlaying = !isPlaying;
-    setIsPlaying(nextPlaying);
-
-    if (isShared) {
-      sendSharedMessage(nextPlaying ? 'start' : 'pause', {
-        isPlaying: nextPlaying,
-      });
-    }
-  }, [isPlaying, isShared, sendSharedMessage]);
-
-  const startSharing = useCallback(async () => {
-    if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
-      setIsShared(true);
       return;
     }
 
-    const response = await fetch('/api/timer/share', { credentials: 'include' });
+    void syncConfig(workDraft, normalized);
+  }, [localIsResting, restDraft, sessionId, syncConfig, workDraft]);
 
-    if (!response.ok) {
-      const errorText = await response.text();
-      alert(`Unable to start sharing: ${errorText}`);
-      return;
+  const togglePlaying = useCallback(async () => {
+    if (!sessionId) {
+      setLocalIsPlaying((current) => !current);
+      return null;
     }
 
-    const timerResponse = await response.json();
-
-    if (!timerResponse?.url) {
-      alert('Unable to start sharing: missing websocket url');
-      return;
+    if (display?.isRunning) {
+      return pause();
     }
 
-    const socket = new WebSocket(timerResponse.url);
-    wsRef.current = socket;
+    return start();
+  }, [display?.isRunning, pause, sessionId, start]);
 
-    socket.addEventListener('open', () => {
-      setIsShared(true);
-      sendSharedMessage('sync');
-    });
+  const resetTimer = useCallback(async () => {
+    if (!sessionId) {
+      setLocalIsPlaying(false);
+      const nextDurationMs = durationToMs(localIsResting ? restDraft : workDraft);
+      setLocalDurationMs(nextDurationMs);
+      setLocalMsLeft(nextDurationMs);
+      return null;
+    }
 
-    socket.addEventListener('message', (event) => {
-      let data;
+    return resetPhase();
+  }, [localIsResting, resetPhase, restDraft, sessionId, workDraft]);
 
+  const skipTimer = useCallback(async () => {
+    if (!sessionId) {
+      setLocalIsPlaying(false);
+      setLocalIsResting((current) => {
+        const nextIsResting = !current;
+        const nextDurationMs = durationToMs(nextIsResting ? restDraft : workDraft);
+
+        setLocalDurationMs(nextDurationMs);
+        setLocalMsLeft(nextDurationMs);
+
+        return nextIsResting;
+      });
+      return null;
+    }
+
+    return skipPhase();
+  }, [restDraft, sessionId, skipPhase, workDraft]);
+
+  const shareTimer = useCallback(async () => {
+    let ensuredSessionId = sessionId;
+
+    if (!ensuredSessionId) {
+      const created = await createSession({
+        workMinutes: workDraft.minutes,
+        workSeconds: workDraft.seconds,
+        breakMinutes: restDraft.minutes,
+        breakSeconds: restDraft.seconds,
+        phase: localIsResting ? 'break' : 'focus',
+        status: localIsPlaying ? 'running' : localMsLeft === durationToMs(localIsResting ? restDraft : workDraft)
+          ? 'idle'
+          : 'paused',
+        remainingMs: localMsLeft,
+      });
+
+      ensuredSessionId = created?.id ?? '';
+
+      if (!ensuredSessionId) {
+        return null;
+      }
+    }
+
+    if (!ensuredSessionId) {
+      return null;
+    }
+
+    setIsShared(true);
+    setHasCopiedShareLink(false);
+
+    const nextJoinUrl = joinUrl || buildLiveTimerJoinUrl(ensuredSessionId);
+
+    if (nextJoinUrl) {
+      window.history.replaceState(window.history.state, '', nextJoinUrl);
+    }
+
+    if (nextJoinUrl && navigator.clipboard?.writeText) {
       try {
-        data = JSON.parse(event.data);
+        await navigator.clipboard.writeText(nextJoinUrl);
+        setHasCopiedShareLink(true);
       } catch {
-        return;
+        setHasCopiedShareLink(false);
       }
-
-      applySharedMessage(data);
-    });
-
-    socket.addEventListener('close', () => {
-      if (wsRef.current === socket) {
-        wsRef.current = null;
-      }
-
-      setIsShared(false);
-    });
-
-    socket.addEventListener('error', () => {
-      setIsShared(false);
-    });
-  }, [applySharedMessage, sendSharedMessage]);
-
-  const stopSharing = useCallback(() => {
-    const socket = wsRef.current;
-
-    if (socket) {
-      wsRef.current = null;
-      socket.close();
     }
 
+    return ensuredSessionId;
+  }, [
+    createSession,
+    joinUrl,
+    localIsPlaying,
+    localIsResting,
+    localMsLeft,
+    restDraft,
+    sessionId,
+    workDraft,
+  ]);
+
+  const stopSharing = useCallback(async () => {
     setIsShared(false);
+    setHasCopiedShareLink(false);
+    return null;
   }, []);
 
-  const durationMs = useMemo(
-    () => durationToMs(isResting ? rest : work),
-    [isResting, rest, work]
-  );
-
-  const value = useMemo(
-    () => ({
-      isPlaying,
-      setIsPlaying,
-      togglePlaying,
-      isResting,
-      setIsResting,
-      work,
-      setWork,
-      rest,
-      setRest,
-      msLeft,
-      durationMs,
-      isShared,
-      startSharing,
-      stopSharing,
-      setTimerDuration,
-      resetTimer,
-      skipTimer,
-    }),
-    [
-      durationMs,
-      isPlaying,
-      isResting,
-      isShared,
-      msLeft,
-      resetTimer,
-      setRest,
-      setTimerDuration,
-      setWork,
-      skipTimer,
-      startSharing,
-      stopSharing,
-      togglePlaying,
-      work,
-      rest,
-    ]
-  );
+  const value = useMemo(() => ({
+    isPlaying: localIsPlaying,
+    setIsPlaying: setLocalIsPlaying,
+    togglePlaying,
+    isResting: localIsResting,
+    setIsResting: setLocalIsResting,
+    work: workDraft,
+    setWork,
+    rest: restDraft,
+    setRest,
+    msLeft: localMsLeft,
+    durationMs: localDurationMs,
+    isShared,
+    isOwner,
+    hasCopiedShareLink,
+    shareTimer,
+    startSharing: shareTimer,
+    stopSharing,
+    setTimerDuration,
+    resetTimer,
+    skipTimer,
+    connectionStatus,
+    error,
+    joinUrl,
+    isPending,
+  }), [
+    connectionStatus,
+    error,
+    hasCopiedShareLink,
+    isPending,
+    isOwner,
+    joinUrl,
+    localDurationMs,
+    localIsPlaying,
+    localIsResting,
+    localMsLeft,
+    resetTimer,
+    restDraft,
+    setRest,
+    setTimerDuration,
+    setWork,
+    isShared,
+    shareTimer,
+    skipTimer,
+    stopSharing,
+    togglePlaying,
+    workDraft,
+  ]);
 
   return React.createElement(TimerContext.Provider, { value }, children);
 }

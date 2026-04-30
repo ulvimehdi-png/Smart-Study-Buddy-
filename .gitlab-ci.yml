@@ -1,38 +1,68 @@
 image: composer:2.9.5
 
+stages:
+    - deploy
+
+variables:
+    APP_ENV: prod
+    BASE_URL: /public
+    BACKEND_DIR: "$CI_PROJECT_DIR/backend"
+    FRONTEND_DIR: "$CI_PROJECT_DIR/frontend"
+    DEPLOY_USER: "a25sewt301"
+    DEPLOY_HOST: "shell.studev.groept.be"
+    DEPLOY_PATH: "/var/www/html"
+
 before_script:
-    - echo $PWD
-    - export APP_ENV=prod
-    - export BASE_URL=/public
-    - export BACKEND_DIR=$PWD/backend
-    - export FRONTEND_DIR=$PWD/frontend
-    - echo $BACKEND_DIR && echo $FRONTEND_DIR
-    - ls -la $BACKEND_DIR $FRONTEND_DIR
-    - env
-    - apk add --update nodejs npm rsync
     - mkdir -p ~/.ssh -m 700
     - eval $(ssh-agent -s)
     - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
-    - ssh-keyscan shell.studev.groept.be > ~/.ssh/known_hosts
-    - ssh a25sewt301@shell.studev.groept.be 'pwd && ls -la ~ && ls -la /var/www'
+    - ssh-keyscan "$DEPLOY_HOST" > ~/.ssh/known_hosts
+    - apk add --no-cache nodejs npm rsync
 
 deploy:
+    stage: deploy
     only:
         - main
     script:
         # BACKEND
-        - cd $BACKEND_DIR
+        - cd "$BACKEND_DIR"
         - composer validate --no-check-publish
-        #- composer install -n --no-dev --no-scripts --optimize-autoloader
-        - composer install -n --no-dev --no-scripts
+        - composer install --no-interaction --no-dev --no-scripts --no-ansi --optimize-autoloader --no-progress
         - php bin/console lint:yaml config
-        - php bin/console lint:container
-        - cd ..
+        - php bin/console lint:container --env=prod
+
         # FRONTEND
-        - cd $FRONTEND_DIR
-        - npm install
+        - cd "$FRONTEND_DIR"
+        - npm ci
         - npm run build
-        - cd ..
+
         # DEPLOY
-        - rsync -rv $FRONTEND_DIR/dist/ $BACKEND_DIR/public
-        - rsync -rv --exclude=".git/" --exclude=".env" --exclude="upload" --delete ./backend/ a25sewt301@shell.studev.groept.be:/var/www/html
+        - > 
+            rsync -av --delete
+            --exclude="index.php"
+            --exclude=".htaccess"
+            "$FRONTEND_DIR/dist/"
+            "$BACKEND_DIR/public/"
+
+        - >
+            rsync -avz --delete
+            --exclude=".git/"
+            --exclude=".editorconfig"
+            --exclude=".gitignore"
+            --exclude=".env.*"
+            --include=".env.prod"
+            --exclude="phpunit.dist.xml"
+            --exclude="README.md"
+            --exclude="tests/"
+            --exclude="upload/"
+            "$BACKEND_DIR/"
+            "$DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH/"
+
+        - >
+            ssh "$DEPLOY_USER@$DEPLOY_HOST"
+            "test -f $DEPLOY_PATH/public/index.php &&
+            test -f $DEPLOY_PATH/public/index.html &&
+            test -d $DEPLOY_PATH/vendor"
+
+    after_script:
+        - tree /var/www/html

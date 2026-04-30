@@ -177,6 +177,7 @@ final class DashboardController extends AbstractController
             'studyStreak' => $studyStreak,
             'progress' => $progress,
             'recentNotes' => $recent,
+            'points' => $user->getPoints()
         ]);
     }
 }
