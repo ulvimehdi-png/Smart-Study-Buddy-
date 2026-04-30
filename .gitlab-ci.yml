@@ -38,23 +38,23 @@ deploy:
 
         # DEPLOY
         - >
-            rsync -rv --delete \
-            --exclude="index.php" \
-            --exclude=".htaccess" \
-            "$FRONTEND_DIR/dist/" \
+            rsync -rv --delete 
+            --exclude="index.php"
+            --exclude=".htaccess"
+            "$FRONTEND_DIR/dist/"
             "$BACKEND_DIR/public/"
 
         - >
-            rsync -rvz --delete \
-            --exclude=".git/" \
-            --exclude=".editorconfig" \
-            --exclude=".gitignore" \
-            --exclude=".env" \
-            --exclude=".env.dev" \
-            --include=".env.test" \
-            --exclude="phpunit.dist.xml" \
-            --exclude="README.md" \
-            --exclude="tests/" \
-            --exclude="upload/" \
-            "$BACKEND_DIR/" \
+            rsync -rvz --delete
+            --exclude=".git/"
+            --exclude=".editorconfig"
+            --exclude=".gitignore"
+            --exclude=".env"
+            --exclude=".env.dev"
+            --include=".env.test"
+            --exclude="phpunit.dist.xml"
+            --exclude="README.md"
+            --exclude="tests/"
+            --exclude="upload/"
+            "$BACKEND_DIR/"
             "$DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH/"
