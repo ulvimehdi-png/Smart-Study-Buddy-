@@ -2,9 +2,9 @@ image: composer:2.9.5
 
 stages:
     - source
-    #- build
+    - build
     #- test
-    #- deploy
+    - deploy
 
 environment:
     stage: source
