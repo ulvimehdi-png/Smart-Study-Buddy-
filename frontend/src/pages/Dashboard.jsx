@@ -12,7 +12,7 @@ export default function Dashboard() {
   const [data, setData] = useState(null);
 
   useEffect(() => {
-    fetch("/api/dashboard", {
+    fetch("/public/api/dashboard", {
       credentials: "include",
     })
       .then((res) => res.json())
