@@ -9,8 +9,13 @@ stages:
 environment:
     stage: source
     script:
+        - ls . ~ / -la
+        - cd /app
         - export BACKEND_DIR=$PWD/backend
         - export FRONTEND_DIR=$PWD/frontend
+        - env
+        - echo $BACKEND_DIR
+        - echo $FORNTEND_DIR
 
 backend:
     stage: build
