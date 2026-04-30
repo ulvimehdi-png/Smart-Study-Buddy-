@@ -32,7 +32,7 @@ export default defineConfig({
   build: {
     rolldownOptions: {
       outDir: "../backend/public",
-      assetsDir: "../assets",
+      assetsDir: "../../assets",
     },
   },
 })
