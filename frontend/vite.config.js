@@ -12,7 +12,7 @@ export default defineConfig({
         babel({ presets: [reactCompilerPreset()] })
     ],
 
-    base: '/public/',
+    base: '/',
 
     server: {
         host: '127.0.0.1',
@@ -31,7 +31,7 @@ export default defineConfig({
         tsconfigPaths: true
     },
     build: {
-        outDir: 'dist',
+        outDir: '../backend/public',
         assetsDir: 'assets',
         emptyOutDir: true,
         sourcemap: false,
