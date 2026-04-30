@@ -3,6 +3,7 @@ image: composer:2.9.5
 before_script:
     - echo $PWD
     - export APP_ENV=prod
+    - export BASE_URL=/public
     - export BACKEND_DIR=$PWD/backend
     - export FRONTEND_DIR=$PWD/frontend
     - echo $BACKEND_DIR && echo $FRONTEND_DIR
