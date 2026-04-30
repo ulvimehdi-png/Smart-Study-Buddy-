@@ -14,7 +14,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\CurrentUser;
 
-#[Route('/public/api/dashboard')]
+#[Route('/api/dashboard')]
 final class DashboardController extends AbstractController
 {
     #[Route('', methods: ['GET'])]

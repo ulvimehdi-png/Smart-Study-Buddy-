@@ -13,7 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\CurrentUser;
 
-#[Route('/public/api/notes')]
+#[Route('/api/notes')]
 final class NotesController extends AbstractController
 {
     #[Route('', methods: ['GET'])]
