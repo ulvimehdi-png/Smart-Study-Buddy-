@@ -2,20 +2,20 @@ image: composer:2.9.5
 
 stages:
     - source
-    - build
+    #- build
     #- test
-    - deploy
+    #- deploy
 
 environment:
     stage: source
     script:
-        - ls . ~ / -la
-        - cd /app
+        - echo $PWD
         - export BACKEND_DIR=$PWD/backend
         - export FRONTEND_DIR=$PWD/frontend
+        - echo $BACKEND_DIR && echo $FRONTEND_DIR
+        - ls -la $BACKEND_DIR $FRONTEND_DIR
         - env
-        - echo $BACKEND_DIR
-        - echo $FORNTEND_DIR
+
 
 backend:
     stage: build
