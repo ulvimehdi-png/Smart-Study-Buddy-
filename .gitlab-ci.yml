@@ -17,6 +17,8 @@ before_script:
     - ssh a25sewt301@shell.studev.groept.be 'pwd && ls -la ~ && ls -la /var/www'
 
 deploy:
+    only:
+        - main
     script:
         # BACKEND
         - cd $BACKEND_DIR
