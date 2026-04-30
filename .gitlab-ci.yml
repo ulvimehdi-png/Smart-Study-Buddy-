@@ -31,4 +31,4 @@ deploy:
         - npm run build
         - cd ..
         # DEPLOY
-        - rsync -rv --exclude=".git/" --exclude=".env" --exclude="upload" --delete ./ a25sewtxxx@shell.studev.groept.be:/var/www/html
+        - rsync -rv --exclude=".git/" --exclude=".env" --exclude="upload" --delete ./ a25sewt301@shell.studev.groept.be:/var/www/html
