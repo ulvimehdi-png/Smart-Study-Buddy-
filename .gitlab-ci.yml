@@ -1,10 +1,16 @@
 image: composer:2.9.5
 
 stages:
-    #- source
+    - source
     - build
     #- test
     - deploy
+
+environment:
+    stage: source
+    script:
+        - export BACKEND_DIR=$PWD/backend
+        - export FRONTEND_DIR=$PWD/frontend
 
 backend:
     stage: build
@@ -12,7 +18,7 @@ backend:
         - export APP_ENV=prod
         #- git config --global --add safe.directory /app
     script:
-        - cd /app/backend
+        - cd $BACKEND_DIR
         - composer validate --no-check-publish
         - composer install -n --no-dev --no-scripts --no-cache
         - php bin/console lint:yaml config
@@ -25,7 +31,7 @@ frontend:
     before_script:
         - apk add --update nodejs npm
     script:
-        - cd /app/frontend
+        - cd $FRONTEND_DIR
         - npm install
         - npm run build
     after_script:
