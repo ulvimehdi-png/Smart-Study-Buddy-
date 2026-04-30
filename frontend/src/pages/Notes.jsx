@@ -1,8 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { BookText, CalendarDays, NotebookPen, Tags, Trash2 } from "lucide-react";
+import {
+  deleteSubjectOption,
+  fetchSubjectOptions,
+  NEW_SUBJECT_VALUE,
+} from "@/lib/subjectOptions";
 import PageBackdrop from "../components/shared/PageBackdrop";
 import SmallStats from "../components/shared/SmallStats";
 import SubjectBadge from "../components/shared/SubjectBadge";
+import SubjectSelect from "../components/shared/SubjectSelect";
 
 const formatDate = (value) =>
   new Intl.DateTimeFormat(undefined, { dateStyle: "medium" }).format(
@@ -17,7 +23,9 @@ export default function Notes() {
   const [notes, setNotes] = useState([]);
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
-  const [subject, setSubject] = useState("");
+  const [selectedSubject, setSelectedSubject] = useState("");
+  const [customSubject, setCustomSubject] = useState("");
+  const [subjectOptions, setSubjectOptions] = useState([]);
 
   const fetchNotes = () => {
     fetch("/api/notes", {
@@ -28,9 +36,21 @@ export default function Notes() {
       .catch((err) => console.error("Error fetching notes:", err));
   };
 
+  const fetchSubjects = () => {
+    fetchSubjectOptions()
+      .then((data) => setSubjectOptions(data))
+      .catch((err) => console.error("Error fetching subjects:", err));
+  };
+
   useEffect(() => {
     fetchNotes();
+    fetchSubjects();
   }, []);
+
+  const refreshData = () => {
+    fetchNotes();
+    fetchSubjects();
+  };
 
   const handleDelete = (noteId) => {
     fetch(`/api/notes/${noteId}`, {
@@ -46,6 +66,11 @@ export default function Notes() {
     e.preventDefault();
     if (!title || !content) return;
 
+    const subject =
+      selectedSubject === NEW_SUBJECT_VALUE
+        ? customSubject.trim()
+        : selectedSubject;
+
     fetch("/api/notes", {
       method: "POST",
       credentials: "include",
@@ -56,10 +81,21 @@ export default function Notes() {
       .then(() => {
         setTitle("");
         setContent("");
-        setSubject("");
-        fetchNotes();
+        setSelectedSubject("");
+        setCustomSubject("");
+        refreshData();
       })
       .catch((err) => console.error("Error creating note:", err));
+  };
+
+  const handleRemoveSubject = async (option) => {
+    await deleteSubjectOption(option.id);
+
+    if (selectedSubject === option.name) {
+      setSelectedSubject("");
+    }
+
+    refreshData();
   };
 
   const uniqueSubjects = new Set(
@@ -147,12 +183,13 @@ export default function Notes() {
                   <label className="mb-2 block text-sm font-medium text-text-secondary">
                     Subject
                   </label>
-                  <input
-                    type="text"
-                    value={subject}
-                    onChange={(e) => setSubject(e.target.value)}
-                    className="w-full rounded-xl border border-border-base bg-bg-elevated px-4 py-3 text-text-main placeholder:text-text-muted outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/10"
-                    placeholder="e.g. Math"
+                  <SubjectSelect
+                    options={subjectOptions}
+                    value={selectedSubject}
+                    onChange={setSelectedSubject}
+                    customSubject={customSubject}
+                    onCustomSubjectChange={setCustomSubject}
+                    onRemoveOption={handleRemoveSubject}
                   />
                 </div>
 

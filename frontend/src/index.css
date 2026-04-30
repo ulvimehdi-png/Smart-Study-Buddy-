@@ -186,6 +186,41 @@
     animation: blob 7s infinite;
     opacity: var(--blob-opacity);
   }
+
+  .subject-select-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: color-mix(in srgb, var(--color-primary) 65%, transparent) transparent;
+  }
+
+  .subject-select-scrollbar::-webkit-scrollbar {
+    width: 10px;
+  }
+
+  .subject-select-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .subject-select-scrollbar::-webkit-scrollbar-thumb {
+    background: linear-gradient(
+      to bottom,
+      color-mix(in srgb, var(--color-primary-light) 85%, transparent),
+      color-mix(in srgb, var(--color-accent) 85%, transparent)
+    );
+    border-radius: 9999px;
+    border: 2px solid transparent;
+    background-clip: padding-box;
+  }
+
+  .subject-select-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(
+      to bottom,
+      color-mix(in srgb, var(--color-primary) 92%, transparent),
+      color-mix(in srgb, var(--color-accent-dark) 92%, transparent)
+    );
+    border-radius: 9999px;
+    border: 2px solid transparent;
+    background-clip: padding-box;
+  }
 }
 
 @keyframes blob {

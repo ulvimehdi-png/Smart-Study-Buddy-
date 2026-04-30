@@ -1,14 +1,22 @@
 import React, { useEffect, useState } from "react";
 import { Check, Clock, Flag, Plus, Sparkles, Trash2 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import {
+  deleteSubjectOption,
+  fetchSubjectOptions,
+  NEW_SUBJECT_VALUE,
+} from "@/lib/subjectOptions";
 import PageBackdrop from "../components/shared/PageBackdrop";
 import SmallStats from "../components/shared/SmallStats";
 import SubjectBadge from "../components/shared/SubjectBadge";
+import SubjectSelect from "../components/shared/SubjectSelect";
 
 export default function Tasks() {
   const [tasks, setTasks] = useState([]);
   const [title, setTitle] = useState("");
-  const [subject, setSubject] = useState("");
+  const [selectedSubject, setSelectedSubject] = useState("");
+  const [customSubject, setCustomSubject] = useState("");
+  const [subjectOptions, setSubjectOptions] = useState([]);
 
   const fetchTasks = () => {
     fetch("/api/tasks", {
@@ -19,9 +27,21 @@ export default function Tasks() {
       .catch((err) => console.error("Error fetching tasks:", err));
   };
 
+  const fetchSubjects = () => {
+    fetchSubjectOptions()
+      .then((data) => setSubjectOptions(data))
+      .catch((err) => console.error("Error fetching subjects:", err));
+  };
+
   useEffect(() => {
     fetchTasks();
+    fetchSubjects();
   }, []);
+
+  const refreshData = () => {
+    fetchTasks();
+    fetchSubjects();
+  };
 
   const handleToggle = (taskId) => {
     fetch(`/api/tasks/${taskId}/toggle`, {
@@ -41,6 +61,11 @@ export default function Tasks() {
     e.preventDefault();
     if (!title) return;
 
+    const subject =
+      selectedSubject === NEW_SUBJECT_VALUE
+        ? customSubject.trim()
+        : selectedSubject;
+
     fetch("/api/tasks", {
       method: "POST",
       credentials: "include",
@@ -48,9 +73,20 @@ export default function Tasks() {
       body: JSON.stringify({ title, subject }),
     }).then(() => {
       setTitle("");
-      setSubject("");
-      fetchTasks();
+      setSelectedSubject("");
+      setCustomSubject("");
+      refreshData();
     });
+  };
+
+  const handleRemoveSubject = async (option) => {
+    await deleteSubjectOption(option.id);
+
+    if (selectedSubject === option.name) {
+      setSelectedSubject("");
+    }
+
+    refreshData();
   };
 
   const completedTasks = tasks.filter((task) => task.isCompleted).length;
@@ -124,12 +160,13 @@ export default function Tasks() {
             onSubmit={handleSubmit}
             className="mt-6 grid gap-4 lg:grid-cols-[220px_minmax(0,1fr)_auto]"
           >
-            <input
-              type="text"
-              placeholder="Subject"
-              value={subject}
-              onChange={(e) => setSubject(e.target.value)}
-              className="rounded-xl border border-border-base bg-bg-elevated px-4 py-3 text-text-main placeholder:text-text-muted outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/10"
+            <SubjectSelect
+              options={subjectOptions}
+              value={selectedSubject}
+              onChange={setSelectedSubject}
+              customSubject={customSubject}
+              onCustomSubjectChange={setCustomSubject}
+              onRemoveOption={handleRemoveSubject}
             />
             <input
               type="text"

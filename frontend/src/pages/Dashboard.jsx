@@ -209,7 +209,7 @@ export default function Dashboard() {
                     <div className="flex flex-wrap items-center justify-between gap-3">
                       <div>
                         <p className="font-semibold">
-                          {prog.subject || "General"}
+                          {prog.subject || "No Subject"}
                         </p>
                         <p className="text-sm text-text-secondary">
                           {prog.completedTasks} of {prog.totalTasks} tasks

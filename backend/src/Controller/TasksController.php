@@ -52,6 +52,7 @@ final class TasksController extends AbstractController
 
         foreach ($tasks as $task) {
             $isCompleted = $task->getStatus() === TaskStatus::DONE;
+            $subject = $task->getSubject();
 
             $data[] = [
                 'taskId' => $task->getId(),
@@ -63,7 +64,7 @@ final class TasksController extends AbstractController
                 'dueDate' => $task->getDueAt()?->format(DATE_ATOM),
                 'createdAt' => $task->getCreatedAt()?->format(DATE_ATOM),
                 'completedAt' => $task->getCompletedAt()?->format(DATE_ATOM),
-                'subject' => $task->getSubject()?->getName(),
+                'subject' => $subject && !$subject->isDeleted() ? $subject->getName() : null,
             ];
         }
 
@@ -117,7 +118,9 @@ final class TasksController extends AbstractController
                 'dueDate' => $task->getDueAt()?->format(DATE_ATOM),
                 'createdAt' => $task->getCreatedAt()?->format(DATE_ATOM),
                 'completedAt' => null,
-                'subject' => $task->getSubject()?->getName(),
+                'subject' => $task->getSubject() && !$task->getSubject()->isDeleted()
+                    ? $task->getSubject()->getName()
+                    : null,
             ],
         ], 201);
     }

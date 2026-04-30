@@ -6,7 +6,7 @@ export default function SubjectBadge({
   tone = "primary",
   className,
 }) {
-  const label = subject?.trim() || "General";
+  const label = subject?.trim() || "No Subject";
 
   return (
     <span

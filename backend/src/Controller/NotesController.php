@@ -1,4 +1,5 @@
 <?php
+<?php
 
 namespace App\Controller;
 
@@ -39,12 +40,14 @@ final class NotesController extends AbstractController
         $data = [];
 
         foreach ($notes as $note) {
+            $subject = $note->getSubject();
+
             $data[] = [
                 'noteId' => $note->getId(),
                 'id' => $note->getId(),
                 'title' => $note->getTitle(),
                 'content' => $note->getContent(),
-                'subject' => $note->getSubject()?->getName(),
+                'subject' => $subject && !$subject->isDeleted() ? $subject->getName() : null,
                 'createdAt' => $note->getCreatedAt()?->format(DATE_ATOM),
             ];
         }
@@ -91,7 +94,9 @@ final class NotesController extends AbstractController
                 'id' => $note->getId(),
                 'title' => $note->getTitle(),
                 'content' => $note->getContent(),
-                'subject' => $note->getSubject()?->getName(),
+                'subject' => $note->getSubject() && !$note->getSubject()->isDeleted()
+                    ? $note->getSubject()->getName()
+                    : null,
                 'createdAt' => $note->getCreatedAt()?->format(DATE_ATOM),
             ],
         ], 201);
