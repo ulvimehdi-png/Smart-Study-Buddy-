@@ -8,8 +8,7 @@ before_script:
     - echo $BACKEND_DIR && echo $FRONTEND_DIR
     - ls -la $BACKEND_DIR $FRONTEND_DIR
     - env
-    - apk add --update nodejs npm
-    - apk add rsync
+    - apk add --update nodejs npm rsync
     - mkdir -p ~/.ssh -m 700
     - eval $(ssh-agent -s)
     - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
@@ -21,7 +20,7 @@ deploy:
         # BACKEND
         - cd $BACKEND_DIR
         - composer validate --no-check-publish
-        - composer install -n --no-dev --no-scripts --no-cache
+        - composer install -n --no-dev
         - php bin/console lint:yaml config
         - php bin/console lint:container
         - cd ..
@@ -31,4 +30,5 @@ deploy:
         - npm run build
         - cd ..
         # DEPLOY
-        - rsync -rv --exclude=".git/" --exclude=".env" --exclude="upload" --delete ./ a25sewt301@shell.studev.groept.be:/var/www/html
+        - rsync -rv $FRONTEND_DIR/dist/ $BACKEND_DIR/public
+        - rsync -rv --exclude=".git/" --exclude=".env" --exclude="upload" --delete ./backend/ a25sewt301@shell.studev.groept.be:/var/www/html
