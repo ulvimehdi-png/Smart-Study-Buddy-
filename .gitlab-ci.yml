@@ -49,3 +49,9 @@ deploy:
             --exclude="upload/"
             "$BACKEND_DIR/"
             "$DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH/"
+            
+        - >
+            ssh "$DEPLOY_USER@$DEPLOY_HOST" "
+            cd $DEPLOY_PATH &&
+            composer clear-cache &&
+            php bin/console cache:clear"
