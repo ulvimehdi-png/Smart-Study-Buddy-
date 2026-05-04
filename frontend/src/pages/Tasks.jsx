@@ -21,6 +21,18 @@ export default function Tasks() {
   const fileRef = useRef(null);
   const toast = useToast();
 
+  const formatTaskDate = (dateStr) => {
+    if (!dateStr) return "";
+    const localStr = dateStr.replace(/(Z|[+-]\d{2}:\d{2})$/, '');
+    return new Date(localStr).toLocaleDateString();
+  };
+
+  const formatTaskTime = (dateStr) => {
+    if (!dateStr) return "";
+    const localStr = dateStr.replace(/(Z|[+-]\d{2}:\d{2})$/, '');
+    return new Date(localStr).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
+  };
+
   const fetchTasks = () => {
     fetch("/api/tasks", { credentials: "include" })
       .then(r => r.json()).then(d => setTasks(d))
@@ -33,11 +45,14 @@ export default function Tasks() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!title) return;
-    if (!dueDate) { setDateWarning(true); return; }
+    if (!title?.trim()) { toast.error("Title is required"); return; }
+    if (!subject?.trim()) { toast.error("Subject is required"); return; }
+    if (!dueDate) { setDateWarning(true); toast.error("Due Date is required"); return; }
+    if (!dueTime) { toast.error("Due Time is required"); return; }
+    
     setDateWarning(false);
 
-    const dueDateStr = dueDate + (dueTime ? `T${dueTime}:00` : "T23:59:00");
+    const dueDateStr = dueDate + `T${dueTime}:00`;
     const nowLocalString = new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 16);
     
     if (dueDateStr.slice(0, 16) < nowLocalString) {
@@ -299,7 +314,12 @@ export default function Tasks() {
                         task.priority === "high" ? "bg-red-500/15 text-red-400" :
                         task.priority === "medium" ? "bg-primary/15 text-primary" :
                         "bg-secondary/15 text-secondary")}>{task.priority}</span>
-                      {task.dueDate && <span className="text-xs text-text-muted">📅 {new Date(task.dueDate).toLocaleDateString()}</span>}
+                      {task.dueDate && (
+                        <span className="text-xs text-text-muted flex items-center gap-2">
+                          <span className="flex items-center gap-1">📅 {formatTaskDate(task.dueDate)}</span>
+                          <span className="flex items-center gap-1">⏰ {formatTaskTime(task.dueDate)}</span>
+                        </span>
+                      )}
                     </div>
                   </div>
                   <div className="mt-4 flex items-center justify-between gap-3 md:mt-0 md:justify-end">

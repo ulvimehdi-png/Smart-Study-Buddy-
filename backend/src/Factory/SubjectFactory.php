@@ -6,7 +6,7 @@ use App\Entity\Subject;
 use App\Repository\SubjectRepository;
 use phpDocumentor\Reflection\Types\Integer;
 use Zenstruck\Foundry\Persistence\PersistentObjectFactory;
-use Zenstruck\Foundry\Persistence\ProxyRepositoryDecorator;
+use Zenstruck\Foundry\Persistence\RepositoryDecorator;
 
 /**
  * @extends PersistentObjectFactory<Subject>
@@ -104,9 +104,9 @@ final class SubjectFactory extends PersistentObjectFactory
     }
 
     /**
-     * @return ProxyRepositoryDecorator<Subject, SubjectRepository>
+     * @return RepositoryDecorator<Subject, SubjectRepository>
      */
-    public static function repository(): ProxyRepositoryDecorator
+    public static function repository(): RepositoryDecorator
     {
         return parent::repository();
     }

@@ -8,7 +8,7 @@ use App\Enum\TaskStatus;
 use App\Repository\TaskRepository;
 use phpDocumentor\Reflection\Types\Integer;
 use Zenstruck\Foundry\Persistence\PersistentObjectFactory;
-use Zenstruck\Foundry\Persistence\ProxyRepositoryDecorator;
+use Zenstruck\Foundry\Persistence\RepositoryDecorator;
 
 /**
  * @extends PersistentObjectFactory<Task>
@@ -110,9 +110,9 @@ final class TaskFactory extends PersistentObjectFactory
     }
 
     /**
-     * @return ProxyRepositoryDecorator<Task, TaskRepository>
+     * @return RepositoryDecorator<Task, TaskRepository>
      */
-    public static function repository(): ProxyRepositoryDecorator
+    public static function repository(): RepositoryDecorator
     {
         return parent::repository();
     }

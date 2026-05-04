@@ -8,7 +8,7 @@ use App\Repository\SessionEntryRepository;
 use PhpParser\Node\Expr\Throw_;
 use Symfony\Component\Config\Definition\Exception\Exception;
 use Zenstruck\Foundry\Persistence\PersistentObjectFactory;
-use Zenstruck\Foundry\Persistence\ProxyRepositoryDecorator;
+use Zenstruck\Foundry\Persistence\RepositoryDecorator;
 
 /**
  * @extends PersistentObjectFactory<SessionEntry>
@@ -108,9 +108,9 @@ final class SessionEntryFactory extends PersistentObjectFactory
     }
 
     /**
-     * @return ProxyRepositoryDecorator<SessionEntry, SessionEntryRepository>
+     * @return RepositoryDecorator<SessionEntry, SessionEntryRepository>
      */
-    public static function repository(): ProxyRepositoryDecorator
+    public static function repository(): RepositoryDecorator
     {
         return parent::repository();
     }

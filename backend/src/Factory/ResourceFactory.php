@@ -6,7 +6,7 @@ use App\Entity\Resource;
 use App\Enum\ResourceType;
 use phpDocumentor\Reflection\Types\Integer;
 use Zenstruck\Foundry\Persistence\PersistentObjectFactory;
-use Zenstruck\Foundry\Persistence\ProxyRepositoryDecorator;
+use Zenstruck\Foundry\Persistence\RepositoryDecorator;
 
 /**
  * @extends PersistentObjectFactory<resource>
@@ -85,9 +85,9 @@ final class ResourceFactory extends PersistentObjectFactory
     }
 
     /**
-     * @return ProxyRepositoryDecorator<Resource, ResourceFactory>
+     * @return RepositoryDecorator<Resource, ResourceFactory>
      */
-    public static function repository(): ProxyRepositoryDecorator
+    public static function repository(): RepositoryDecorator
     {
         return parent::repository();
     }

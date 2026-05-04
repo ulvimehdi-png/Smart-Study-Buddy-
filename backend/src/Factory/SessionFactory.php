@@ -7,7 +7,7 @@ use App\LiveTimerSession\Enum\SessionStatus;
 use App\LiveTimerSession\Enum\SessionType;
 use App\Repository\SessionRepository;
 use Zenstruck\Foundry\Persistence\PersistentObjectFactory;
-use Zenstruck\Foundry\Persistence\ProxyRepositoryDecorator;
+use Zenstruck\Foundry\Persistence\RepositoryDecorator;
 
 /**
  * @extends PersistentObjectFactory<Session>
@@ -97,9 +97,9 @@ final class SessionFactory extends PersistentObjectFactory
     }
 
     /**
-     * @return ProxyRepositoryDecorator<Session, SessionRepository>
+     * @return RepositoryDecorator<Session, SessionRepository>
      */
-    public static function repository(): ProxyRepositoryDecorator
+    public static function repository(): RepositoryDecorator
     {
         return parent::repository();
     }

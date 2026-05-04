@@ -5,7 +5,7 @@ namespace App\Factory;
 use App\Entity\Tag;
 use App\Repository\TagRepository;
 use Zenstruck\Foundry\Persistence\PersistentObjectFactory;
-use Zenstruck\Foundry\Persistence\ProxyRepositoryDecorator;
+use Zenstruck\Foundry\Persistence\RepositoryDecorator;
 
 /**
  * @extends PersistentObjectFactory<Tag>
@@ -64,9 +64,9 @@ final class TagFactory extends PersistentObjectFactory
     }
 
     /**
-     * @return ProxyRepositoryDecorator<Tag, TagRepository>
+     * @return RepositoryDecorator<Tag, TagRepository>
      */
-    public static function repository(): ProxyRepositoryDecorator
+    public static function repository(): RepositoryDecorator
     {
         return parent::repository();
     }

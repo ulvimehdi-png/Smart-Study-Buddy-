@@ -6,7 +6,7 @@ use App\Entity\Note;
 use App\Enum\NoteSourceType;
 use App\Repository\NoteRepository;
 use Zenstruck\Foundry\Persistence\PersistentObjectFactory;
-use Zenstruck\Foundry\Persistence\ProxyRepositoryDecorator;
+use Zenstruck\Foundry\Persistence\RepositoryDecorator;
 
 /**
  * @extends PersistentObjectFactory<Note>
@@ -76,9 +76,9 @@ final class NoteFactory extends PersistentObjectFactory
     }
 
     /**
-     * @return ProxyRepositoryDecorator<Note, NoteRepository>
+     * @return RepositoryDecorator<Note, NoteRepository>
      */
-    public static function repository(): ProxyRepositoryDecorator
+    public static function repository(): RepositoryDecorator
     {
         return parent::repository();
     }
