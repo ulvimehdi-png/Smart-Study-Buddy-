@@ -44,31 +44,66 @@ export default function Dashboard() {
     reader.onload = (ev) => {
       try {
         const data = JSON.parse(ev.target.result);
-        if (!data.tasks && !data.notes) { toast.error("❌ Invalid file format. Please use a StudyBuddy export file."); return; }
-        const summary = { tasks: data.tasks?.length || 0, notes: data.notes?.length || 0 };
-        setImportSummary(summary); setImportPayload(data);
-      } catch { toast.error("❌ Invalid file format. Please use a StudyBuddy export file."); }
+        const tasks = Array.isArray(data.tasks) ? data.tasks : (data.tasks ? [data.tasks] : []);
+        const notes = Array.isArray(data.notes) ? data.notes : (data.notes ? [data.notes] : []);
+        if (!tasks.length && !notes.length) { toast.error("❌ Invalid file format. Please use a StudyBuddy export file."); return; }
+        const summary = { tasks: tasks.length, notes: notes.length };
+        setImportSummary(summary); setImportPayload({ tasks, notes });
+      } catch {
+        toast.error("❌ Invalid file format. Please use a StudyBuddy export file.");
+      }
     };
     reader.readAsText(file); e.target.value = "";
   };
 
   const confirmGlobalImport = async () => {
     let taskOk = 0, noteOk = 0;
-    if (importPayload.tasks) {
+
+    try {
+      if (importPayload.tasks?.length) {
+        const existingTasks = await fetch("/api/tasks", { credentials: "include" }).then(r => r.json());
+        await Promise.all(existingTasks.map(task => fetch(`/api/tasks/${task.taskId}`, { method: "DELETE", credentials: "include" })));
+      }
+      if (importPayload.notes?.length) {
+        const existingNotes = await fetch("/api/notes", { credentials: "include" }).then(r => r.json());
+        await Promise.all(existingNotes.map(note => fetch(`/api/notes/${note.noteId}`, { method: "DELETE", credentials: "include" })));
+      }
+    } catch (err) {
+      console.error("Error clearing existing backup data:", err);
+    }
+
+    if (importPayload.tasks?.length) {
       for (const t of importPayload.tasks) {
-        try { await fetch("/api/tasks", { method: "POST", credentials: "include", headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(mapTaskData(t)) }); taskOk++; } catch {}
+        try {
+          await fetch("/api/tasks", {
+            method: "POST", credentials: "include",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(mapTaskData(t)),
+          });
+          taskOk++;
+        } catch (err) {
+          console.error("Task import failed:", err);
+        }
       }
     }
-    if (importPayload.notes) {
+
+    if (importPayload.notes?.length) {
       for (const n of importPayload.notes) {
-        try { await fetch("/api/notes", { method: "POST", credentials: "include", headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(mapNoteData(n)) }); noteOk++; } catch {}
+        try {
+          await fetch("/api/notes", {
+            method: "POST", credentials: "include",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(mapNoteData(n)),
+          });
+          noteOk++;
+        } catch (err) {
+          console.error("Note import failed:", err);
+        }
       }
     }
-    toast.success(`✅ Imported ${taskOk} tasks, ${noteOk} notes successfully`);
+
+    toast.success(`✅ Restored ${taskOk} tasks, ${noteOk} notes successfully`);
     setImportSummary(null); setImportPayload(null);
-    // Refresh dashboard
     fetch("/api/dashboard", { credentials: "include" }).then(r => r.json()).then(d => setData(d));
   };
 

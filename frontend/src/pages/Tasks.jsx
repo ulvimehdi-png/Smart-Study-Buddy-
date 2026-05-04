@@ -38,6 +38,13 @@ export default function Tasks() {
     setDateWarning(false);
 
     const dueDateStr = dueDate + (dueTime ? `T${dueTime}:00` : "T23:59:00");
+    const nowLocalString = new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 16);
+    
+    if (dueDateStr.slice(0, 16) < nowLocalString) {
+      toast.error("Due date and time cannot be in the past!");
+      return;
+    }
+
     fetch("/api/tasks", {
       method: "POST", credentials: "include",
       headers: { "Content-Type": "application/json" },
@@ -77,25 +84,48 @@ export default function Tasks() {
     const reader = new FileReader();
     reader.onload = (ev) => {
       try {
+        if (!ev.target.result.trim()) {
+          toast.error("File is empty");
+          return;
+        }
         let data;
-        if (file.name.endsWith(".json")) {
+        const fileName = file.name.toLowerCase();
+        if (fileName.endsWith(".json")) {
           data = JSON.parse(ev.target.result);
-          if (!Array.isArray(data)) data = [data];
-        } else if (file.name.endsWith(".csv")) {
+          if (Object.keys(data).length === 0 && data.constructor === Object) {
+            toast.error("File contains no tasks");
+            return;
+          }
+          if (!Array.isArray(data)) {
+            if (Array.isArray(data.tasks)) {
+              data = data.tasks;
+            } else {
+              data = [data];
+            }
+          }
+        } else if (fileName.endsWith(".csv")) {
           data = parseCSV(ev.target.result);
         } else { toast.error("Only .json and .csv files supported"); return; }
-        if (!data.length) { toast.error("No records found"); return; }
+        if (!data || !data.length) { toast.error("No records found"); return; }
         const mapped = data.map(mapTaskData);
         setImportData(mapped); setImportPreview(mapped.slice(0, 20));
-      } catch (err) { toast.error("❌ Invalid file format. Please use a StudyBuddy export file."); }
+      } catch (err) { toast.error("❌ Invalid file format or empty content."); }
     };
     reader.readAsText(file);
     e.target.value = "";
   };
 
+  const handleImportEdit = (index, field, value) => {
+    const newData = [...importData];
+    newData[index] = { ...newData[index], [field]: value };
+    setImportData(newData);
+    setImportPreview(newData.slice(0, 20)); // update preview
+  };
+
   const confirmImport = async () => {
     let ok = 0;
     for (const item of importData) {
+      if (!item.title) continue; // skip if no title
       try {
         await fetch("/api/tasks", {
           method: "POST", credentials: "include",
@@ -121,6 +151,15 @@ export default function Tasks() {
     { label: "Completed", value: completedTasks, icon: <Check className="h-5 w-5" />, iconClass: "bg-green-500/10 text-green-400" },
     { label: "Subjects", value: activeSubjects, icon: <Sparkles className="h-5 w-5" />, iconClass: "bg-secondary/10 text-secondary" },
   ];
+
+  const nowLocalString = new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 16);
+  const minDateStr = nowLocalString.split("T")[0];
+  const minTimeStr = nowLocalString.split("T")[1];
+
+  const canImport = importData.length > 0 && importData.every(task => {
+    if (!task.title?.trim() || !task.subject?.trim() || !task.priority || !task.dueDate) return false;
+    return task.dueDate.slice(0, 16) >= nowLocalString;
+  });
 
   return (
     <div className="relative min-h-screen overflow-hidden text-text-main page-enter" style={{ background: 'transparent' }}>
@@ -197,13 +236,15 @@ export default function Tasks() {
 
             <div className="grid gap-4 sm:grid-cols-[1fr_1fr_auto]">
               <div>
-                <label className="mb-1.5 block text-xs font-medium text-text-secondary uppercase tracking-wide">Due Date & Time</label>
+                <label className="mb-1.5 block text-xs font-medium text-text-secondary uppercase tracking-wide">Due Date</label>
                 <input type="date" value={dueDate} onChange={e => { setDueDate(e.target.value); setDateWarning(false); }}
+                  min={minDateStr}
                   className="glass-input rounded-xl px-4 py-3 text-text-main w-full outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20" />
               </div>
               <div>
                 <label className="mb-1.5 block text-xs font-medium text-text-secondary uppercase tracking-wide">Time</label>
                 <input type="time" value={dueTime} onChange={e => setDueTime(e.target.value)}
+                  min={dueDate === minDateStr ? minTimeStr : undefined}
                   className="glass-input rounded-xl px-4 py-3 text-text-main w-full outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20" />
               </div>
               <div className="flex items-end">
@@ -287,20 +328,52 @@ export default function Tasks() {
               <h3 className="text-lg font-semibold">Import Preview — {importData.length} tasks</h3>
               <button onClick={() => { setImportPreview(null); setImportData([]); }} className="p-1 rounded-lg hover:bg-primary/10 transition"><X className="h-5 w-5" /></button>
             </div>
-            <div className="overflow-x-auto rounded-xl border border-border-base mb-4">
+            <div className="overflow-x-auto rounded-xl border border-border-base mb-4 max-h-[50vh] custom-scrollbar">
               <table className="w-full text-sm">
-                <thead><tr className="bg-primary/5">
-                  {Object.keys(importPreview[0] || {}).slice(0, 5).map(k => <th key={k} className="px-3 py-2 text-left text-text-secondary font-medium">{k}</th>)}
+                <thead className="sticky top-0 bg-[#0a0a0f] z-10 shadow-sm"><tr className="bg-primary/10">
+                  <th className="px-4 py-3 text-left text-text-secondary font-semibold">Task Title</th>
+                  <th className="px-4 py-3 text-left text-text-secondary font-semibold">Subject</th>
+                  <th className="px-4 py-3 text-left text-text-secondary font-semibold">Priority</th>
+                  <th className="px-4 py-3 text-left text-text-secondary font-semibold min-w-[200px]">Due Date & Time</th>
                 </tr></thead>
                 <tbody>{importPreview.map((row, i) => (
                   <tr key={i} className="border-t border-border-base hover:bg-primary/5 transition">
-                    {Object.values(row).slice(0, 5).map((v, j) => <td key={j} className="px-3 py-2 text-text-secondary truncate max-w-[200px]">{String(v ?? "")}</td>)}
+                    <td className="px-2 py-3">
+                      <input type="text" placeholder="Task title..." value={row.title || ""} onChange={e => handleImportEdit(i, 'title', e.target.value)} className={cn("glass-input rounded-lg px-3 py-2 w-full bg-transparent transition outline-none focus:ring-2 focus:ring-primary/30", !row.title?.trim() ? "border border-red-500/50 bg-red-500/5 placeholder:text-red-400/50" : "border border-transparent")} />
+                    </td>
+                    <td className="px-2 py-3">
+                      <input type="text" placeholder="Subject..." value={row.subject || ""} onChange={e => handleImportEdit(i, 'subject', e.target.value)} className={cn("glass-input rounded-lg px-3 py-2 w-full bg-transparent transition outline-none focus:ring-2 focus:ring-primary/30", !row.subject?.trim() ? "border border-red-500/50 bg-red-500/5 placeholder:text-red-400/50" : "border border-transparent")} />
+                    </td>
+                    <td className="px-2 py-3">
+                      <select value={row.priority || "medium"} onChange={e => handleImportEdit(i, 'priority', e.target.value)} className={cn("glass-input rounded-lg px-3 py-2 w-full bg-transparent outline-none transition focus:ring-2 focus:ring-primary/30", !row.priority ? "border border-red-500/50 bg-red-500/5" : "border border-transparent")}>
+                        <option value="low">Low</option>
+                        <option value="medium">Medium</option>
+                        <option value="high">High</option>
+                      </select>
+                    </td>
+                    <td className="px-2 py-3">
+                      <input type="datetime-local" 
+                        min={nowLocalString}
+                        value={row.dueDate ? row.dueDate.slice(0, 16) : ""} 
+                        onChange={e => handleImportEdit(i, 'dueDate', e.target.value ? e.target.value + ":00" : null)} 
+                        className={cn("glass-input rounded-lg px-3 py-2 w-full bg-transparent outline-none transition focus:ring-2 focus:ring-primary/30 [color-scheme:dark]", 
+                          (!row.dueDate || row.dueDate.slice(0, 16) < nowLocalString) ? "border border-red-500/50 bg-red-500/5" : "border border-transparent")} 
+                      />
+                    </td>
                   </tr>
                 ))}</tbody>
               </table>
             </div>
+            {!canImport && (
+              <div className="mb-4 flex items-center gap-2 rounded-xl bg-red-500/10 border border-red-500/20 px-4 py-2.5 text-sm text-red-400" style={{ animation: 'fadeIn 0.2s ease' }}>
+                <AlertCircle className="h-4 w-4 shrink-0" />
+                Please ensure all fields are filled and due dates are set to the future.
+              </div>
+            )}
             <div className="flex gap-3">
-              <button onClick={confirmImport} className="rounded-xl bg-green-500/20 text-green-400 border border-green-500/30 px-5 py-2.5 text-sm font-medium hover:bg-green-500/30 transition">✓ Confirm Import</button>
+              <button onClick={confirmImport} disabled={!canImport} className={cn("rounded-xl px-6 py-2.5 text-sm font-medium transition flex items-center justify-center min-w-[140px]", canImport ? "bg-green-500/20 text-green-400 border border-green-500/30 hover:bg-green-500/30" : "bg-gray-500/10 text-gray-500 border border-gray-500/20 cursor-not-allowed opacity-60")}>
+                {canImport ? "✓ Confirm Import" : "Incomplete..."}
+              </button>
               <button onClick={() => { setImportPreview(null); setImportData([]); }} className="rounded-xl glass-card px-5 py-2.5 text-sm font-medium hover:bg-primary/10 transition">Cancel</button>
             </div>
           </div>

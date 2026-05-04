@@ -13,7 +13,7 @@ const LINKS = [
 
 export default function Footer() {
   return (
-    <footer style={{ background: 'rgba(10,10,15,0.6)', borderTop: '1px solid rgba(255,255,255,0.04)' }}>
+    <footer className="bg-transparent border-t border-border-base mt-auto">
       <div className="max-w-7xl mx-auto px-4 py-14">
         <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-3">
           <div className="lg:col-span-2">

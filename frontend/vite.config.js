@@ -17,11 +17,13 @@ export default defineConfig({
     host: true,
     port: 5173,
     strictPort: true,
+    watch: {
+      usePolling: true
+    },
     proxy: {
       '/api': {
         target: 'http://php:8000',
         changeOrigin: true,
-        //rewrite: (path) => path.replace(/^\/api/, '')
       }
     }
   }

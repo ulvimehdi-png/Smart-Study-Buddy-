@@ -80,6 +80,14 @@ export default function Calendar() {
   const goToToday = () => { setCurrentDate(new Date()); setSelectedDate(new Date()); };
 
   const openAddModal = (date) => {
+    const y = date.getFullYear();
+    const m = String(date.getMonth() + 1).padStart(2, '0');
+    const d = String(date.getDate()).padStart(2, '0');
+    const dateStr = `${y}-${m}-${d}`;
+    if (dateStr < todayStr) {
+      toast.error("You cannot assign a task to a past date.");
+      return;
+    }
     setSelectedDate(date);
     setShowAddModal(true);
     setAddType("task"); setAddTitle(""); setAddSubject(""); setAddTime(""); setAddPriority("medium"); setAddContent(""); setAddMinutes(25);

@@ -94,9 +94,17 @@ export default function Notes() {
     reader.onload = (ev) => {
       try {
         let data;
-        if (file.name.endsWith(".json")) {
-          data = JSON.parse(ev.target.result); if (!Array.isArray(data)) data = [data];
-        } else if (file.name.endsWith(".csv")) {
+        const fileName = file.name.toLowerCase();
+        if (fileName.endsWith(".json")) {
+          data = JSON.parse(ev.target.result);
+          if (!Array.isArray(data)) {
+            if (Array.isArray(data.notes)) {
+              data = data.notes;
+            } else {
+              data = [data];
+            }
+          }
+        } else if (fileName.endsWith(".csv")) {
           data = parseCSV(ev.target.result);
         } else { toast.error("Only .json and .csv files supported"); return; }
         if (!data.length) { toast.error("No records found"); return; }
