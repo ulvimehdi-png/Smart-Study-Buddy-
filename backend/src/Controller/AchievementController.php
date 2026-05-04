@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Entity\UserAchievement;
+use App\Service\ProfileImageStorage;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -14,8 +15,10 @@ use Symfony\Component\Security\Http\Attribute\CurrentUser;
 final class AchievementController extends AbstractController
 {
     #[Route('/leaderboard', methods: ['GET'])]
-    public function getLeaderboard(EntityManagerInterface $em): JsonResponse
-    {
+    public function getLeaderboard(
+        EntityManagerInterface $em,
+        ProfileImageStorage $profileImageStorage
+    ): JsonResponse {
         // Get the top 10 students by points
         $users = $em->getRepository(User::class)
             ->createQueryBuilder('u')
@@ -29,6 +32,7 @@ final class AchievementController extends AbstractController
             $leaderboard[] = [
                 'username' => $u->getUsername(),
                 'points' => $u->getPoints(),
+                'profileImagePath' => $profileImageStorage->publicUrl($u->getProfileImagePath()),
             ];
         }
 

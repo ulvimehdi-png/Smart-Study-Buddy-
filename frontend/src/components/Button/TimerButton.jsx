@@ -6,7 +6,7 @@ export default function TimerButton({ isPiP, onClick, IconComp, children, enable
   return (
     <button
       className={cn("flex items-center gap-2 rounded-full",
-                    "px-5 py-3",
+                    isPiP ? "px-3 py-2" : "px-5 py-3",
                     "text-text-main bg-text-main/7 items-center justify-center backdrop-blur-sm",
                     enabled ? ["hover:bg-text-main/10",
                               "hover:-translate-y-0.5 active:translate-y-0.5",
@@ -24,7 +24,7 @@ export default function TimerButton({ isPiP, onClick, IconComp, children, enable
       disabled={!enabled}
       >
       <IconComp
-        size={20}
+        size={isPiP ? 17: 20}
       />
       {!isPiP && 
       <span>

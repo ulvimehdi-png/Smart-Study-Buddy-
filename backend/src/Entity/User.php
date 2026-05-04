@@ -59,6 +59,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Groups(['read', 'user:read', 'user:write'])]
     private ?string $displayName = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    #[Assert\Length(max: 255)]
+    #[Groups(['read', 'user:read'])]
+    private ?string $profileImagePath = null;
+
     #[ORM\Column(options: ['default' => true])]
     #[Groups(['read', 'user:read'])]
     private ?bool $isActive;
@@ -186,6 +191,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setDisplayName(?string $displayName): static
     {
         $this->displayName = null !== $displayName ? trim($displayName) : null;
+
+        return $this;
+    }
+
+    public function getProfileImagePath(): ?string
+    {
+        return $this->profileImagePath;
+    }
+
+    public function setProfileImagePath(?string $profileImagePath): static
+    {
+        $this->profileImagePath = null !== $profileImagePath ? trim($profileImagePath) : null;
 
         return $this;
     }

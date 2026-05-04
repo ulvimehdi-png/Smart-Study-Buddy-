@@ -17,8 +17,8 @@ export default function UserButtons() {
       {auth.user ? (
         <>
           {/* User Badge */}
-          <button
-            onClick={() => {}}
+          <Link
+            to="/user"
             className={cn(
               "flex items-center space-x-2 px-4 py-2 rounded-lg transition-all",
               "bg-primary/10 hover:bg-primary/20",
@@ -26,11 +26,19 @@ export default function UserButtons() {
               "cursor-pointer"
             )}
           >
-            <User className="w-4 h-4 text-primary" />
+            {auth.user.profileImageUrl ? (
+              <img
+                src={auth.user.profileImageUrl}
+                alt="Profile"
+                className="h-5 w-5 rounded-full object-cover"
+              />
+            ) : (
+              <User className="w-4 h-4 text-primary" />
+            )}
             <span className="text-sm font-medium text-primary">
               {auth.user.username}
             </span>
-          </button>
+          </Link>
 
           {/* Logout Button - Using Semantic Red (or custom vars) */}
           <button
