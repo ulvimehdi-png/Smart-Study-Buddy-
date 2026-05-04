@@ -87,7 +87,7 @@ function PodiumCard({ user, index }) {
           <Icon className="h-4 w-4" />
           #{index + 1}
         </div>
-        <div className="rounded-full bg-bg-card px-3 py-1 text-sm font-semibold text-text-main">
+        <div className="rounded-full px-3 py-1 text-sm font-semibold text-text-main bg-text-main/5 border border-text-main/10">
           {user.points} pts
         </div>
       </div>
@@ -111,18 +111,16 @@ function LeaderboardRow({ user, index }) {
   
   return (
     <article
-      className={`rounded-2xl border p-4 transition hover:-translate-y-1 hover:shadow-sm ${
-        topThree ? style.cardClass : "border-border-base bg-bg-base"
-      }`}
+      className={`rounded-2xl border p-4 transition hover:-translate-y-1 hover:shadow-sm ${topThree ? style.cardClass : "border-border-base bg-bg-base"
+        }`}
     >
       <div className="flex items-center justify-between gap-4">
         <div className="flex min-w-0 items-center gap-3">
           <div
-            className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-sm font-semibold ${
-              topThree
-                ? style.badgeClass
-                : "border border-border-base bg-bg-elevated text-text-secondary"
-            }`}
+            className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-sm font-semibold ${topThree
+              ? style.badgeClass
+              : "border border-border-base bg-bg-elevated text-text-secondary"
+              }`}
           >
             {index + 1}
           </div>
@@ -144,7 +142,7 @@ function LeaderboardRow({ user, index }) {
           </div>
         </div>
 
-        <div className="rounded-full bg-bg-card px-3 py-1 text-sm font-semibold text-text-main">
+        <div className="rounded-full px-3 py-1 text-sm font-semibold text-text-main bg-text-main/5 border border-text-main/10">
           {user.points} pts
         </div>
       </div>
