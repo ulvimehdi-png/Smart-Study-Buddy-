@@ -28,6 +28,7 @@ export default function Notes() {
   const [selectedSubject, setSelectedSubject] = useState("");
   const [customSubject, setCustomSubject] = useState("");
   const [subjectOptions, setSubjectOptions] = useState([]);
+  const [isSaving, setIsSaving] = useState(false);
 
   const fetchNotes = () => {
     fetch("/api/notes", {
@@ -48,6 +49,40 @@ export default function Notes() {
     fetchNotes();
     fetchSubjects();
   }, []);
+
+  // Auto-save effect for existing notes
+  useEffect(() => {
+    if (!editingNoteId) return;
+
+    const strippedContent = content.replace(/<[^>]*>/g, "").trim();
+    if (!title || !strippedContent) return;
+
+    const timeoutId = setTimeout(() => {
+      setIsSaving(true);
+      const subject =
+        selectedSubject === NEW_SUBJECT_VALUE
+          ? customSubject.trim()
+          : selectedSubject;
+
+      fetch(`/api/notes/${editingNoteId}`, {
+        method: "PUT",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ title, content, subject }),
+      })
+        .then((res) => res.json())
+        .then(() => {
+          setIsSaving(false);
+          refreshData(); // keep list in sync
+        })
+        .catch((err) => {
+          console.error("Error auto-saving note:", err);
+          setIsSaving(false);
+        });
+    }, 1000); // 1s debounce
+
+    return () => clearTimeout(timeoutId);
+  }, [title, content, selectedSubject, customSubject, editingNoteId]);
 
   const refreshData = () => {
     fetchNotes();
@@ -113,10 +148,14 @@ export default function Notes() {
     })
       .then((res) => res.json())
       .then(() => {
+        setIsSaving(false);
         cancelEdit();
         refreshData();
       })
-      .catch((err) => console.error("Error saving note:", err));
+      .catch((err) => {
+        console.error("Error saving note:", err);
+        setIsSaving(false);
+      });
   };
 
   const handleRemoveSubject = async (option) => {
@@ -266,9 +305,10 @@ export default function Notes() {
                 )}
                 <button
                   type="submit"
-                  className="rounded-xl bg-primary px-8 py-3 font-medium text-white transition hover:bg-primary-dark cursor-pointer"
+                  disabled={isSaving}
+                  className="rounded-xl bg-primary px-8 py-3 font-medium text-white transition hover:bg-primary-dark cursor-pointer disabled:opacity-70 disabled:cursor-wait"
                 >
-                  {editingNoteId ? "Update Note" : "Save Note"}
+                  {isSaving ? "Saving..." : editingNoteId ? "Update Note" : "Save Note"}
                 </button>
               </div>
             </form>
