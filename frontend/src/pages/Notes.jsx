@@ -24,6 +24,7 @@ export default function Notes() {
   const [notes, setNotes] = useState([]);
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
+  const [editingNoteId, setEditingNoteId] = useState(null);
   const [selectedSubject, setSelectedSubject] = useState("");
   const [customSubject, setCustomSubject] = useState("");
   const [subjectOptions, setSubjectOptions] = useState([]);
@@ -63,6 +64,33 @@ export default function Notes() {
       .catch((err) => console.error("Error deleting note:", err));
   };
 
+  const handleEdit = (note) => {
+    setEditingNoteId(note.noteId);
+    setTitle(note.title);
+    setContent(note.content);
+
+    // Check if the subject is in the list, otherwise it might be a custom subject
+    const subjectExists = subjectOptions.some(opt => opt.name === note.subject);
+    if (note.subject && !subjectExists) {
+      setSelectedSubject(NEW_SUBJECT_VALUE);
+      setCustomSubject(note.subject);
+    } else {
+      setSelectedSubject(note.subject || "");
+      setCustomSubject("");
+    }
+
+    // Scroll to top to see the editor
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const cancelEdit = () => {
+    setEditingNoteId(null);
+    setTitle("");
+    setContent("");
+    setSelectedSubject("");
+    setCustomSubject("");
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     // Strip HTML tags to check if content is actually empty
@@ -74,21 +102,21 @@ export default function Notes() {
         ? customSubject.trim()
         : selectedSubject;
 
-    fetch("/api/notes", {
-      method: "POST",
+    const url = editingNoteId ? `/api/notes/${editingNoteId}` : "/api/notes";
+    const method = editingNoteId ? "PUT" : "POST";
+
+    fetch(url, {
+      method,
       credentials: "include",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ title, content, subject }),
     })
       .then((res) => res.json())
       .then(() => {
-        setTitle("");
-        setContent("");
-        setSelectedSubject("");
-        setCustomSubject("");
+        cancelEdit();
         refreshData();
       })
-      .catch((err) => console.error("Error creating note:", err));
+      .catch((err) => console.error("Error saving note:", err));
   };
 
   const handleRemoveSubject = async (option) => {
@@ -175,9 +203,9 @@ export default function Notes() {
                 <NotebookPen className="h-5 w-5" />
               </div>
               <div>
-                <h2 className="text-lg font-semibold">New Note</h2>
+                <h2 className="text-lg font-semibold">{editingNoteId ? "Edit Note" : "New Note"}</h2>
                 <p className="mt-1 text-sm text-text-secondary">
-                  Write rich notes with formatting, lists, links, and more.
+                  {editingNoteId ? "Update your saved note." : "Write rich notes with formatting, lists, links, and more."}
                 </p>
               </div>
             </div>
@@ -218,7 +246,7 @@ export default function Notes() {
                   Content *
                 </label>
                 <TiptapEditor
-                  key={`editor-${notes.length}`}
+                  key={`editor-${editingNoteId || 'new'}-${notes.length}`}
                   content={content}
                   onUpdate={setContent}
                   placeholder="Start writing your notes here… Use the toolbar to format text, add lists, links, and more."
@@ -226,12 +254,21 @@ export default function Notes() {
                 />
               </div>
 
-              <div className="flex justify-end">
+              <div className="flex justify-end gap-3">
+                {editingNoteId && (
+                  <button
+                    type="button"
+                    onClick={cancelEdit}
+                    className="rounded-xl border border-border-base bg-bg-elevated px-6 py-3 font-medium text-text-main transition hover:bg-bg-hover cursor-pointer"
+                  >
+                    Cancel
+                  </button>
+                )}
                 <button
                   type="submit"
                   className="rounded-xl bg-primary px-8 py-3 font-medium text-white transition hover:bg-primary-dark cursor-pointer"
                 >
-                  Save Note
+                  {editingNoteId ? "Update Note" : "Save Note"}
                 </button>
               </div>
             </form>
@@ -265,15 +302,23 @@ export default function Notes() {
                       </h3>
                     </div>
 
-                    <button
-                      onClick={() => handleDelete(note.noteId)}
-                      className="inline-flex shrink-0 items-center gap-2 rounded-lg border border-danger/20 bg-danger/10 px-3 py-2 text-sm font-medium text-danger transition hover:bg-danger/15 cursor-pointer"
-                    >
-                      <Trash2 className="h-4 w-4" />
-                      Delete
-                    </button>
+                    <div className="flex gap-2">
+                      <button
+                        onClick={() => handleEdit(note)}
+                        className="inline-flex shrink-0 items-center gap-2 rounded-lg border border-border-base bg-bg-elevated px-3 py-2 text-sm font-medium text-text-main transition hover:bg-bg-hover cursor-pointer"
+                      >
+                        <NotebookPen className="h-4 w-4" />
+                        Edit
+                      </button>
+                      <button
+                        onClick={() => handleDelete(note.noteId)}
+                        className="inline-flex shrink-0 items-center gap-2 rounded-lg border border-danger/20 bg-danger/10 px-3 py-2 text-sm font-medium text-danger transition hover:bg-danger/15 cursor-pointer"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                        Delete
+                      </button>
+                    </div>
                   </div>
-
                   <div className="mt-4 flex items-center gap-2 text-sm text-text-muted">
                     <CalendarDays className="h-4 w-4" />
                     {formatDate(note.createdAt)}

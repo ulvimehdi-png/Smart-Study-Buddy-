@@ -130,4 +130,64 @@ final class NotesController extends AbstractController
 
         return $this->json(['success' => true]);
     }
+    #[Route('/{id}', methods: ['PUT'])]
+    public function updateNote(
+        int $id,
+        Request $request,
+        #[CurrentUser] ?User $user,
+        EntityManagerInterface $em,
+        SubjectService $subjectService
+    ): JsonResponse {
+        if (!$user) {
+            return $this->json(['error' => 'Not logged in'], 401);
+        }
+
+        $note = $em->getRepository(Note::class)
+            ->createQueryBuilder('n')
+            ->where('n.id = :id')
+            ->andWhere('n.user = :user')
+            ->andWhere('n.deletedAt IS NULL')
+            ->setParameter('id', $id)
+            ->setParameter('user', $user)
+            ->getQuery()
+            ->getOneOrNullResult();
+
+        if (!$note) {
+            return $this->json(['error' => 'Note not found'], 404);
+        }
+
+        $data = $request->toArray();
+        
+        $title = trim((string) ($data['title'] ?? ''));
+        $content = trim((string) ($data['content'] ?? ''));
+
+        if ('' !== $title) {
+            $note->setTitle($title);
+        }
+        
+        if ('' !== $content) {
+            $note->setContent($content);
+        }
+
+        if (array_key_exists('subject', $data)) {
+            $subject = $subjectService->getOrCreateSubject($user, $data['subject']);
+            $note->setSubject($subject);
+        }
+
+        $em->flush();
+
+        return $this->json([
+            'success' => true,
+            'note' => [
+                'noteId' => $note->getId(),
+                'id' => $note->getId(),
+                'title' => $note->getTitle(),
+                'content' => $note->getContent(),
+                'subject' => $note->getSubject() && !$note->getSubject()->isDeleted()
+                    ? $note->getSubject()->getName()
+                    : null,
+                'createdAt' => $note->getCreatedAt()?->format(DATE_ATOM),
+            ],
+        ]);
+    }
 }
