@@ -9,6 +9,7 @@ import PageBackdrop from "../components/shared/PageBackdrop";
 import SmallStats from "../components/shared/SmallStats";
 import SubjectBadge from "../components/shared/SubjectBadge";
 import SubjectSelect from "../components/shared/SubjectSelect";
+import TiptapEditor, { TiptapViewer } from "../components/TiptapEditor";
 
 const formatDate = (value) =>
   new Intl.DateTimeFormat(undefined, { dateStyle: "medium" }).format(
@@ -64,7 +65,9 @@ export default function Notes() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!title || !content) return;
+    // Strip HTML tags to check if content is actually empty
+    const strippedContent = content.replace(/<[^>]*>/g, "").trim();
+    if (!title || !strippedContent) return;
 
     const subject =
       selectedSubject === NEW_SUBJECT_VALUE
@@ -154,6 +157,7 @@ export default function Notes() {
           <div className="grid gap-3 sm:grid-cols-3 lg:min-w-90">
             {stats.map(({ label, value, icon, iconClass }) => (
               <SmallStats
+                key={label}
                 label={label}
                 value={value}
                 icon={icon}
@@ -163,36 +167,23 @@ export default function Notes() {
           </div>
         </div>
 
-        <div className="grid gap-6 lg:grid-cols-[340px_minmax(0,1fr)]">
-          <section className="lg:sticky lg:top-24 lg:self-start">
-            <div className="rounded-3xl border border-border-base bg-bg-card p-5 shadow-sm">
-              <div className="flex items-start gap-4">
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
-                  <NotebookPen className="h-5 w-5" />
-                </div>
-                <div>
-                  <h2 className="text-lg font-semibold">New Note</h2>
-                  <p className="mt-1 text-sm text-text-secondary">
-                    Add a note without leaving the page.
-                  </p>
-                </div>
+        {/* New Note Section — full-width editor */}
+        <section className="mb-8">
+          <div className="rounded-3xl border border-border-base bg-bg-card p-5 shadow-sm sm:p-6">
+            <div className="flex items-start gap-4 mb-5">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                <NotebookPen className="h-5 w-5" />
               </div>
+              <div>
+                <h2 className="text-lg font-semibold">New Note</h2>
+                <p className="mt-1 text-sm text-text-secondary">
+                  Write rich notes with formatting, lists, links, and more.
+                </p>
+              </div>
+            </div>
 
-              <form onSubmit={handleSubmit} className="mt-5 space-y-4">
-                <div>
-                  <label className="mb-2 block text-sm font-medium text-text-secondary">
-                    Subject
-                  </label>
-                  <SubjectSelect
-                    options={subjectOptions}
-                    value={selectedSubject}
-                    onChange={setSelectedSubject}
-                    customSubject={customSubject}
-                    onCustomSubjectChange={setCustomSubject}
-                    onRemoveOption={handleRemoveSubject}
-                  />
-                </div>
-
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div className="grid gap-4 sm:grid-cols-2">
                 <div>
                   <label className="mb-2 block text-sm font-medium text-text-secondary">
                     Title *
@@ -209,76 +200,93 @@ export default function Notes() {
 
                 <div>
                   <label className="mb-2 block text-sm font-medium text-text-secondary">
-                    Content *
+                    Subject
                   </label>
-                  <textarea
-                    value={content}
-                    onChange={(e) => setContent(e.target.value)}
-                    className="h-40 w-full resize-none rounded-xl border border-border-base bg-bg-elevated px-4 py-3 text-text-main placeholder:text-text-muted outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/10"
-                    placeholder="Write the key ideas, definitions, or examples here..."
-                    required
+                  <SubjectSelect
+                    options={subjectOptions}
+                    value={selectedSubject}
+                    onChange={setSelectedSubject}
+                    customSubject={customSubject}
+                    onCustomSubjectChange={setCustomSubject}
+                    onRemoveOption={handleRemoveSubject}
                   />
                 </div>
+              </div>
 
+              <div>
+                <label className="mb-2 block text-sm font-medium text-text-secondary">
+                  Content *
+                </label>
+                <TiptapEditor
+                  key={`editor-${notes.length}`}
+                  content={content}
+                  onUpdate={setContent}
+                  placeholder="Start writing your notes here… Use the toolbar to format text, add lists, links, and more."
+                  minHeight="280px"
+                />
+              </div>
+
+              <div className="flex justify-end">
                 <button
                   type="submit"
-                  className="w-full rounded-xl bg-primary px-4 py-3 font-medium text-white transition hover:bg-primary-dark"
+                  className="rounded-xl bg-primary px-8 py-3 font-medium text-white transition hover:bg-primary-dark cursor-pointer"
                 >
                   Save Note
                 </button>
-              </form>
+              </div>
+            </form>
+          </div>
+        </section>
+
+        {/* Notes list */}
+        <section>
+          {notes.length === 0 ? (
+            <div className="rounded-3xl border border-dashed border-border-base bg-bg-card px-6 py-14 text-center shadow-sm">
+              <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                <BookText className="h-6 w-6" />
+              </div>
+              <h2 className="mt-4 text-xl font-semibold">No notes yet</h2>
+              <p className="mx-auto mt-2 max-w-md text-sm text-text-secondary">
+                Create a note using the editor above.
+              </p>
             </div>
-          </section>
-
-          <section>
-            {notes.length === 0 ? (
-              <div className="rounded-3xl border border-dashed border-border-base bg-bg-card px-6 py-14 text-center shadow-sm">
-                <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 text-primary">
-                  <BookText className="h-6 w-6" />
-                </div>
-                <h2 className="mt-4 text-xl font-semibold">No notes yet</h2>
-                <p className="mx-auto mt-2 max-w-md text-sm text-text-secondary">
-                  Create a note from the panel on the left.
-                </p>
-              </div>
-            ) : (
-              <div className="grid gap-4 xl:grid-cols-2">
-                {notes.map((note) => (
-                  <article
-                    key={note.noteId}
-                    className="rounded-3xl border border-border-base bg-bg-card p-5 shadow-sm"
-                  >
-                    <div className="flex items-start justify-between gap-4">
-                      <div className="min-w-0">
-                        <SubjectBadge subject={note.subject} />
-                        <h3 className="mt-4 text-xl font-semibold wrap-break-word">
-                          {note.title}
-                        </h3>
-                      </div>
-
-                      <button
-                        onClick={() => handleDelete(note.noteId)}
-                        className="inline-flex shrink-0 items-center gap-2 rounded-lg border border-danger/20 bg-danger/10 px-3 py-2 text-sm font-medium text-danger transition hover:bg-danger/15"
-                      >
-                        <Trash2 className="h-4 w-4" />
-                        Delete
-                      </button>
+          ) : (
+            <div className="grid gap-4 xl:grid-cols-2">
+              {notes.map((note) => (
+                <article
+                  key={note.noteId}
+                  className="rounded-3xl border border-border-base bg-bg-card p-5 shadow-sm"
+                >
+                  <div className="flex items-start justify-between gap-4">
+                    <div className="min-w-0">
+                      <SubjectBadge subject={note.subject} />
+                      <h3 className="mt-4 text-xl font-semibold wrap-break-word">
+                        {note.title}
+                      </h3>
                     </div>
 
-                    <div className="mt-4 flex items-center gap-2 text-sm text-text-muted">
-                      <CalendarDays className="h-4 w-4" />
-                      {formatDate(note.createdAt)}
-                    </div>
+                    <button
+                      onClick={() => handleDelete(note.noteId)}
+                      className="inline-flex shrink-0 items-center gap-2 rounded-lg border border-danger/20 bg-danger/10 px-3 py-2 text-sm font-medium text-danger transition hover:bg-danger/15 cursor-pointer"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                      Delete
+                    </button>
+                  </div>
 
-                    <div className="mt-4 max-h-48 overflow-y-auto pr-1 text-sm leading-7 whitespace-pre-wrap text-text-secondary">
-                      {note.content}
-                    </div>
-                  </article>
-                ))}
-              </div>
-            )}
-          </section>
-        </div>
+                  <div className="mt-4 flex items-center gap-2 text-sm text-text-muted">
+                    <CalendarDays className="h-4 w-4" />
+                    {formatDate(note.createdAt)}
+                  </div>
+
+                  <div className="mt-4 max-h-64 overflow-y-auto pr-1">
+                    <TiptapViewer content={note.content} />
+                  </div>
+                </article>
+              ))}
+            </div>
+          )}
+        </section>
       </div>
     </div>
   );

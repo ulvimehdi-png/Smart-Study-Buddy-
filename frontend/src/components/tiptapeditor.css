@@ -1,0 +1,236 @@
+
+/* ============================================
+   TipTap Editor Styles
+   ============================================ */
+
+/* Editor content area */
+.tiptap-content .tiptap {
+  padding: 1rem 1.25rem;
+  outline: none;
+  color: var(--text-main);
+  font-size: 0.9375rem;
+  line-height: 1.75;
+}
+
+.tiptap-content .tiptap > * + * {
+  margin-top: 0.5em;
+}
+
+/* Placeholder */
+.tiptap-content .tiptap p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  float: left;
+  color: var(--text-muted);
+  pointer-events: none;
+  height: 0;
+  font-style: italic;
+}
+
+/* Headings */
+.tiptap-content .tiptap h1 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  line-height: 1.3;
+  margin-top: 1.25em;
+  margin-bottom: 0.5em;
+  color: var(--text-main);
+}
+
+.tiptap-content .tiptap h2 {
+  font-size: 1.375rem;
+  font-weight: 600;
+  line-height: 1.35;
+  margin-top: 1em;
+  margin-bottom: 0.4em;
+  color: var(--text-main);
+}
+
+.tiptap-content .tiptap h3 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  line-height: 1.4;
+  margin-top: 0.75em;
+  margin-bottom: 0.3em;
+  color: var(--text-main);
+}
+
+/* Inline code */
+.tiptap-content .tiptap code {
+  background: var(--bg-base);
+  border: 1px solid var(--border-base);
+  border-radius: 6px;
+  padding: 0.15em 0.4em;
+  font-size: 0.85em;
+  font-family: 'SF Mono', 'Fira Code', 'Fira Mono', monospace;
+  color: var(--color-primary);
+}
+
+/* Code block */
+.tiptap-content .tiptap pre {
+  background: var(--bg-base);
+  border: 1px solid var(--border-base);
+  border-radius: 12px;
+  padding: 1rem 1.25rem;
+  margin: 0.75em 0;
+  overflow-x: auto;
+  font-family: 'SF Mono', 'Fira Code', 'Fira Mono', monospace;
+  font-size: 0.85em;
+  line-height: 1.6;
+}
+
+.tiptap-content .tiptap pre code {
+  background: none;
+  border: none;
+  padding: 0;
+  color: var(--text-main);
+}
+
+/* Blockquote */
+.tiptap-content .tiptap blockquote {
+  border-left: 3px solid var(--color-primary);
+  padding-left: 1em;
+  margin: 0.75em 0;
+  color: var(--text-secondary);
+  font-style: italic;
+}
+
+/* Horizontal rule */
+.tiptap-content .tiptap hr {
+  border: none;
+  border-top: 2px solid var(--border-base);
+  margin: 1.5em 0;
+}
+
+/* Lists */
+.tiptap-content .tiptap ul {
+  list-style-type: disc;
+  padding-left: 1.5em;
+}
+
+.tiptap-content .tiptap ol {
+  list-style-type: decimal;
+  padding-left: 1.5em;
+}
+
+.tiptap-content .tiptap li {
+  margin: 0.25em 0;
+}
+
+.tiptap-content .tiptap li p {
+  margin: 0;
+}
+
+/* Task list */
+.tiptap-content .tiptap ul[data-type="taskList"] {
+  list-style: none;
+  padding-left: 0.25em;
+}
+
+.tiptap-content .tiptap ul[data-type="taskList"] li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5em;
+}
+
+.tiptap-content .tiptap ul[data-type="taskList"] li > label {
+  flex-shrink: 0;
+  margin-top: 0.25em;
+}
+
+.tiptap-content .tiptap ul[data-type="taskList"] li > label input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 1.125rem;
+  height: 1.125rem;
+  border: 2px solid var(--border-base);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  position: relative;
+  background: var(--bg-base);
+}
+
+.tiptap-content .tiptap ul[data-type="taskList"] li > label input[type="checkbox"]:checked {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+}
+
+.tiptap-content .tiptap ul[data-type="taskList"] li > label input[type="checkbox"]:checked::after {
+  content: '';
+  position: absolute;
+  left: 3px;
+  top: 0px;
+  width: 6px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+.tiptap-content .tiptap ul[data-type="taskList"] li > div {
+  flex: 1;
+  min-width: 0;
+}
+
+.tiptap-content .tiptap ul[data-type="taskList"] li[data-checked="true"] > div p {
+  text-decoration: line-through;
+  color: var(--text-muted);
+}
+
+/* Highlight */
+.tiptap-content .tiptap mark {
+  background-color: color-mix(in srgb, var(--color-primary) 25%, transparent);
+  border-radius: 5px;
+  padding: 0.1em 0.2em;
+  color: inherit;
+}
+
+/* Links */
+.tiptap-content .tiptap a {
+  color: var(--color-primary);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+
+.tiptap-content .tiptap a:hover {
+  opacity: 0.8;
+}
+
+/* Selection */
+.tiptap-content .tiptap ::selection {
+  background: color-mix(in srgb, var(--color-primary) 30%, transparent);
+}
+
+/* Strong / italic */
+.tiptap-content .tiptap strong {
+  font-weight: 700;
+}
+
+.tiptap-content .tiptap em {
+  font-style: italic;
+}
+
+/* Viewer mode (read-only in note cards) */
+.tiptap-viewer .tiptap {
+  padding: 0;
+  font-size: 0.875rem;
+  line-height: 1.65;
+  color: var(--text-secondary);
+}
+
+.tiptap-viewer .tiptap h1 {
+  font-size: 1.25rem;
+  margin-top: 0.75em;
+}
+
+.tiptap-viewer .tiptap h2 {
+  font-size: 1.1rem;
+  margin-top: 0.5em;
+}
+
+.tiptap-viewer .tiptap h3 {
+  font-size: 1rem;
+  margin-top: 0.4em;
+}
