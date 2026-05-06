@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { BarChart3, Clock, FileText, Flame, Sparkles, Target } from "lucide-react";
 import PageBackdrop from "../components/shared/PageBackdrop";
 import SubjectBadge from "../components/shared/SubjectBadge";
+import { TiptapViewer } from "../components/TiptapEditor";
 
 const formatDate = (value) =>
   new Intl.DateTimeFormat(undefined, { dateStyle: "medium" }).format(
@@ -272,9 +273,9 @@ export default function Dashboard() {
                       </span>
                     </div>
                     <h3 className="mt-3 text-lg font-semibold">{note.title}</h3>
-                    <p className="mt-2 text-sm leading-6 text-text-secondary line-clamp-3">
-                      {note.content}
-                    </p>
+                    <div className="mt-2 text-sm leading-6 text-text-secondary line-clamp-3">
+                      <TiptapViewer content={note.content} />
+                    </div>
                   </article>
                 ))}
               </div>
