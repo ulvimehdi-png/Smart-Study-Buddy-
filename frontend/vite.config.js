@@ -30,11 +30,18 @@ export default defineConfig({
     resolve: {
         tsconfigPaths: true
     },
+    // build: {
+    //     outDir: '../backend/public',
+    //     assetsDir: 'assets',
+    //     emptyOutDir: false,
+    //     sourcemap: false,
+    //     manifest: false,
+    // },
     build: {
-        outDir: '../backend/public',
+        outDir: 'dist',
         assetsDir: 'assets',
-        emptyOutDir: false,
-        sourcemap: false,
+        emptyOutDir: true,
+        sourceMap: false,
         manifest: false,
     },
 })

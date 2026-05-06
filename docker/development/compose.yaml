@@ -15,17 +15,6 @@ services:
       start_period: 60s
     volumes:
       - database_data:/var/lib/mysql:rw
-      # You may use a bind-mounted host directory instead, so that it is harder to accidentally remove the volume and lose all your data!
-      # - ./docker/db/data:/var/lib/mysql/data:rw
-
-#  mailer:
-#    image: axllent/mailpit
-#    ports:
-#      - "1025:1025"
-#      - "8025:8025"
-#    environment:
-#      MP_SMTP_AUTH_ACCEPT_ANY: 1
-#      MP_SMTP_AUTH_ALLOW_INSECURE: 1
 
   mercure:
     image: dunglas/mercure
@@ -60,12 +49,12 @@ services:
 
   php:
     build:
-      context: ..
-      dockerfile: ./docker/Dockerfile
+      context: .
+      dockerfile: php/php.dockerfile
     user: "${UID:-1000}:${GID:-1000}"
     volumes:
-      - ../backend:/app
-      - ./xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini
+      - ../../backend:/app
+      - php/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini
     working_dir: /app
     depends_on:
       - database
@@ -83,12 +72,21 @@ services:
     working_dir: /app
     user: "${UID:-1000}:${GID:-1000}"
     volumes:
-      - ../frontend:/app
+      - ../../frontend:/app
     ports:
       - "5173:5173"
     command: sh -c "npm install && npm run dev -- --host --port 5173"
     environment:
       VITE_MERCURE_PUBLIC_URL: "http://localhost:3000/.well-known/mercure"
+
+  #  mailer:
+  #    image: axllent/mailpit
+  #    ports:
+  #      - "1025:1025"
+  #      - "8025:8025"
+  #    environment:
+  #      MP_SMTP_AUTH_ACCEPT_ANY: 1
+  #      MP_SMTP_AUTH_ALLOW_INSECURE: 1
 
 volumes:
   database_data:

@@ -1,5 +1,19 @@
 RewriteEngine On
 
-RewriteRule ^api(/|$) public/api$1 [QSA,L]
+#
+# BLOCKING RULES (source dirs/(dot)files)
+#
+RewriteRule ^(bin|config|migrations|src|var|vendor)(/|$) - [F,L]
 
+<FilesMatch "^\.">
+    Require all denied
+</FilesMatch>
+
+<FilesMatch "(composer\.json|composer\.lock|symfony\.lock)">
+    Require all denied
+</FilesMatch>
+
+#
+# EVERYTHING ELSE -> public/
+#
 RewriteRule ^(.*)$ public/$1 [L]

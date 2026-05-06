@@ -2,38 +2,45 @@
 FROM node:20-alpine AS frontend-build
 WORKDIR /app/frontend
 COPY frontend/ .
-RUN npm ci
-RUN npm run build
+
+RUN npm ci \
+    && npm run build
 
 # --- BACKEND BUILD ---
 FROM composer:2.9 AS backend-build
 WORKDIR /app/backend
-COPY backend/ .
-RUN composer install \
-    --no-dev \
-    --prefer-dist \
-    --optimize-autoloader
 
-RUN php bin/console cache:clear --env=prod
+COPY backend/ .
+RUN rm -rf .env* .gitignore tests var vendor phpunit.dist.xml README.md
+
+COPY docker/testing/local-env /.env
+
+RUN composer validate --no-check-publish \
+    && composer install --no-dev --prefer-dist --optimize-autoloader --no-interaction \
+    && php bin/console lint:yaml config \
+    && php bin/console lint:container \
+    && php bin/console cache:clear --env=prod
 
 # --- FINAL IMAGE ---
 FROM php:8.4-apache
+WORKDIR /var/www/html
 
-RUN apt-get update && apt-get install -y \
-    libicu-dev libzip-dev \
+RUN apt-get update && apt-get install -y libicu-dev libzip-dev \
     && docker-php-ext-install intl pdo pdo_mysql zip \
     && rm -rf /var/lib/apt/lists/*
 
 COPY --from=backend-build /app/backend /var/www/html
 COPY --from=frontend-build /app/frontend/dist /var/www/html/public
 
-RUN a2enmod rewrite headers
-
 COPY docker/apache/servername.conf /etc/apache2/conf-available/servername.conf
-RUN a2enconf servername
-
 COPY docker/apache/000-default.conf /etc/apache2/sites-available/000-default.conf
+
+RUN a2enmod rewrite headers \
+    && a2enconf servername
 
 RUN chown -R www-data:www-data /var/www/html/var
 
-CMD ["apache2-foreground"]
+COPY docker/testing/entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
+CMD ["/entrypoint.sh"]

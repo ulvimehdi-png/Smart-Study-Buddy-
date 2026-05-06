@@ -2,17 +2,31 @@ services:
 
   webserver:
     build:
-      context: ci
-      dockerfile: Dockerfile
+      context: ./apache
+      dockerfile: apache.dockerfile
+    container_name: prod-webserver
     volumes:
-      - webserver_data:/var/www/html
+      - ./var-www-html:/var/www/html
     ports:
       - "127.0.0.1:8080:80"
+    environment:
+      APP_ENV: prod
+      APP_DEBUG: "0"
+      APP_SECRET: "change-this-for-real-prod"
+      DATABASE_URL: "mysql://app:app@database:3306/app?serverVersion=8.0.32&charset=utf8mb4"
     depends_on:
-      - database
+      database:
+        condition: service_healthy
+    command: >
+      sh -c "
+        mkdir -p /var/www/html/var/cache /var/www/html/var/log /var/www/html/public/upload &&
+        chown -R www-data:www-data /var/www/html/var /var/www/html/public/upload &&
+        apache2-foreground
+      "
+
 
   database:
-    image: mysql:9.6.0
+    image: mysql:8.0.32
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: app
@@ -22,7 +36,11 @@ services:
       - "127.0.0.1:3366:3306"
     volumes:
       - db_data:/var/lib/mysql
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-proot" ]
+      interval: 5s
+      timeout: 3s
+      retries: 20
 
 volumes:
-  webserver_data:
   db_data:

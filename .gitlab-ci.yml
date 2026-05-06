@@ -1,45 +1,85 @@
 image: composer:2.9.5
 
 stages:
+    - test
+    - build
     - deploy
 
 variables:
     APP_ENV: prod
-    BACKEND_DIR: "$CI_PROJECT_DIR/backend"
-    FRONTEND_DIR: "$CI_PROJECT_DIR/frontend"
-    DEPLOY_USER: "a25sewt301"
-    DEPLOY_HOST: "shell.studev.groept.be"
-    DEPLOY_PATH: "/var/www/html"
+    BACKEND_DIR: $CI_PROJECT_DIR/backend
+    FRONTEND_DIR: $CI_PROJECT_DIR/frontend
+    DEPLOY_USER: a25sewt301
+    DEPLOY_HOST: shell.studev.groept.be
+    DEPLOY_PATH: /var/www/html
+
+cache:
+    key: ${CI_COMMIT_REF_SLUG}
+    paths:
+        - backend/vendor/
+        - frontend/node_modules
 
 before_script:
     - mkdir -p ~/.ssh -m 700
     - eval $(ssh-agent -s)
-    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
-    - ssh-keyscan "$DEPLOY_HOST" > ~/.ssh/known_hosts
+    - echo $SSH_PRIVATE_KEY | tr -d '\r' | ssh-add -
+    - ssh-keyscan $DEPLOY_HOST > ~/.ssh/known_hosts
     - apk add --no-cache nodejs npm rsync
 
-deploy:
-    stage: deploy
-    only:
-        - main
+#
+# TEST STAGE
+#
+test_frontend:
+    stage: test
     script:
-        # BACKEND
-        - cd "$BACKEND_DIR"
-        - composer validate --no-check-publish
-        - composer install --no-interaction --no-dev --no-scripts --no-ansi --optimize-autoloader --no-progress
-        - php bin/console lint:yaml config
-        - php bin/console lint:container --env=prod
+        - cd $FRONTEND_DIR
+        - npm ci
+        # TODO: UNCOMMENT WHEN LINT/TESTING IS IMPLEMENTED
+        #- npm run lint
+        #- npm run test --if-present
 
-        # FRONTEND
-        - cd "$FRONTEND_DIR"
+test_backend:
+    stage: test
+    script:
+        - cd $BACKEND_DIR
+        - composer validate --no-check-publish
+        - composer install --no-interaction --no-progress
+        - php bin/console lint:yaml config
+        - php bin/console lint:container
+        # TODO: UNCOMMENT WHEN TESTING IS IMPLEMENTED
+        #- php bin/phpunit
+
+#
+# BUILD STAGE
+#
+build_frontend:
+    stage: build
+    script:
+        - cd $FRONTEND_DIR
         - npm ci
         - npm run build
+    artifacts:
+        paths:
+            - backend/public
+        expire_in: 1 hour
 
-        # DEPLOY
+#
+# DEPLOY STAGE
+#
+deploy:
+    stage: deploy
+    rules:
+        - if: $CI_COMMIT_BRANCH == "main"
+          when: manual
+    script:
+        # BACKEND
+        - cd $BACKEND_DIR
+        - composer install --no-interaction --no-dev --optimize-autoloader
+
+        # DEPLOY FILES
         - >
-            rsync -rvz --delete
+            rsync -rvz --delete-after
             --exclude=".git/"
-            --exclude=".editorconfig"
             --exclude=".gitignore"
             --exclude=".env.dev"
             --exclude=".env.test"
@@ -47,11 +87,22 @@ deploy:
             --exclude="README.md"
             --exclude="tests/"
             --exclude="upload/"
-            "$BACKEND_DIR/"
-            "$DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH/"
-            
-        - >
-            ssh "$DEPLOY_USER@$DEPLOY_HOST" "
-            cd $DEPLOY_PATH &&
+            $BACKEND_DIR/
+            $DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH/
+
+        # POST-DEPLOY COMMANDS
+        - ssh $DEPLOY_USER@$DEPLOY_HOST "
+            cd $DEPLOY_PATH/ &&
             composer clear-cache &&
-            php bin/console cache:clear"
+            php bin/console cache:clear --env=prod --no-debug &&
+            php bin/console cache:warmup --env=prod
+          "
+
+        # DATABASE MIGRATION AND POPULATION ~ ok since we're only working with fixtures here
+        - ssh $DEPLOY_USER@$DEPLOY_HOST "
+            cd $DEPLOY_PATH/ &&
+            php bin/console doctrine:migrations:migrate --no-interaction &&
+            php bin/console cache:warmup --env=prod
+          "
+    environment:
+        name: production

@@ -1,65 +1,80 @@
 #!/usr/bin/env bash
 set -euxo pipefail
 
-COMMIT=$(git rev-parse --short HEAD)
-BUILD_DIR="artifacts/$COMMIT"
+./cleanup.sh
 
-echo "Building commit: $COMMIT"
-
-rm -rf "$BUILD_DIR"
-mkdir -p "$BUILD_DIR"
-
-#
 # DOCKER CI
-#
 docker run -d --name ci-runner composer:2.9.5 sleep infinity
-docker cp -
 
-#
-# BACKEND BUILD
-#
-echo "Backend build..."
-cd backend
-composer install --no-dev --no-interaction --optimize-autoloader
+docker exec ci-runner sh -c "mkdir -p /app/backend /app/frontend"
+docker cp ../../backend/. ci-runner:/app/backend/
+docker cp ../../frontend/. ci-runner:/app/frontend/
 
-#
-# FRONTEND BUILD
-#
-echo "Frontend build..."
-cd ../frontend
-npm ci
-npm run build
+docker exec ci-runner sh -c "apk add --no-cache nodejs npm"
 
-#
-# DEPLOYING FILES LOCALLY
-#
+# BACKEND
+docker exec ci-runner sh -c '
+  set -eux
 
-rsync -r --delete-after . "../$BUILD_DIR/backend"
+  cd /app/backend
 
-rsync -rvz --delete-after
-            --exclude=".git/"
-            --exclude=".gitignore"
-            --exclude=".env.dev"
-            --exclude=".env.test"
-            --exclude="phpunit.dist.xml"
-            --exclude="README.md"
-            --exclude="tests/"
-            --exclude="upload/"
-            $BACKEND_DIR/
-            $DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH/
+  export APP_ENV=prod
+  export APP_DEBUG=0
+  export APP_SECRET=ci_dummy_secret
+  export DATABASE_URL="mysql://app:app@database:3306/app?serverVersion=8.0.32&charset=utf8mb4"
 
-#
+  composer validate --no-check-publish
+
+  composer install \
+    --no-dev \
+    --no-interaction \
+    --prefer-dist \
+    --optimize-autoloader \
+    --classmap-authoritative
+
+  php bin/console lint:yaml config
+  php bin/console lint:container
+
+  php bin/console cache:clear --env=prod --no-debug
+  php bin/console cache:warmup --env=prod
+'
+
 # FRONTEND
-#
+docker exec ci-runner sh -c '
+  set -eux
 
+  rm -rf /app/backend/public/assets
 
-echo "Build complete in $BUILD_DIR"
+  cd /app/frontend
 
-#
-# DEPLOY LOCALLY
-#
-echo "Deploying LOCAL build: $COMMIT"
+  npm ci
+  npm run build
+'
 
-docker compose up -d app database
+docker exec ci-runner sh -c '
+  set -eux
 
-docker cp "$BUILD_DIR/backend/." app:/var/www/html
+  cd /app/backend
+
+  rm -rf \
+    .git \
+    .gitignore \
+    .env.prod \
+    .env.dev \
+    .env.test \
+    phpunit.xml.dist \
+    phpunit.dist.xml \
+    README.md \
+    tests
+
+  mkdir -p var/cache var/log public/upload
+'
+
+mkdir -p ./var-www-html
+docker cp ci-runner:/app/backend/. ./var-www-html/
+
+docker rm -f ci-runner
+
+docker compose up -d --build webserver database
+docker compose exec -T webserver php bin/console doctrine:migrations:migrate --no-interaction --env=prod
+#docker compose exec -T

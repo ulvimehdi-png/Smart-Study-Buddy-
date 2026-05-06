@@ -1,9 +1,18 @@
 RewriteEngine On
 
-RewriteRule ^api(/|$) index.php [QSA,L]
-
+#
+# SERVE REAL FILES DIRECTLY
+#
 RewriteCond %{REQUEST_FILENAME} -f [OR]
 RewriteCond %{REQUEST_FILENAME} -d
 RewriteRule ^ - [L]
 
+#
+# Symfony Front Controller
+#
+RewriteRule ^api(/|$) index.php [QSA,L]
+
+#
+# React SPA fallback
+#
 RewriteRule ^ index.html [L]
