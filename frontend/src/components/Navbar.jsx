@@ -13,6 +13,8 @@ const NAV_LINKS = [
   { name: 'Tasks', path: '/tasks', needsAuth: true, isRoute: true },
   { name: 'Notes', path: '/notes', needsAuth: true, isRoute: true },
   { name: 'Timer', path: '/timer', needsAuth: true, isRoute: true },
+  { name: 'Leaderboard', path: '/leaderboard', needsAuth: true, isRoute: true },
+  { name: 'Reports', path: '/reports', needsAuth: true, isRoute: true },
 ];
 
 export default function Navbar() {

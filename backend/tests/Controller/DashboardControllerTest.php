@@ -3,14 +3,27 @@
 namespace App\Tests\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use App\Entity\User;
+use Doctrine\ORM\EntityManagerInterface;
 
-final class DashboardControllerTest extends WebTestCase
+class DashboardControllerTest extends WebTestCase
 {
-    public function testIndex(): void
+    public function testGetDashboardFailsWhenNotLoggedIn(): void
     {
         $client = static::createClient();
-        $client->request('GET', '/dashboard');
+        $client->request('GET', '/api/dashboard');
+        $this->assertResponseStatusCodeSame(401);
+    }
 
-        self::assertResponseIsSuccessful();
+    public function testGetDashboardSucceedsWhenLoggedIn(): void
+    {
+        $client = static::createClient();
+        $entityManager = static::getContainer()->get(EntityManagerInterface::class);
+        $testUser = $entityManager->getRepository(User::class)->findOneBy([]);
+
+        $client->loginUser($testUser);
+        $client->request('GET', '/api/dashboard');
+
+        $this->assertResponseIsSuccessful();
     }
 }

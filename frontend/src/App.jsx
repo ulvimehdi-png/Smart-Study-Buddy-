@@ -12,6 +12,7 @@ import Test from "./pages/Test";
 import Layout from "./components/Layout";
 import Leaderboard from './pages/Leaderboard';
 import UserPage from "./pages/UserPage";
+import Reports from './pages/Reports';
 
 function App() {
     return (
@@ -27,6 +28,7 @@ function App() {
                     <Route path="/notes" element={<ProtectedRoute><Notes /></ProtectedRoute>} />
                     <Route path="/leaderboard" element={<ProtectedRoute><Leaderboard /></ProtectedRoute>} />
                     <Route path="/user" element={<ProtectedRoute><UserPage /></ProtectedRoute>} />
+                    <Route path="/reports" element={<ProtectedRoute><Reports /></ProtectedRoute>} />
 
                     <Route path="/test" element={<Test />} />
                 </Route>
