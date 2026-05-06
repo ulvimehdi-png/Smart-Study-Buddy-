@@ -1,0 +1,28 @@
+services:
+
+  webserver:
+    build:
+      context: ci
+      dockerfile: Dockerfile
+    volumes:
+      - webserver_data:/var/www/html
+    ports:
+      - "127.0.0.1:8080:80"
+    depends_on:
+      - database
+
+  database:
+    image: mysql:9.6.0
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: app
+      MYSQL_USER: app
+      MYSQL_PASSWORD: app
+    ports:
+      - "127.0.0.1:3366:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+
+volumes:
+  webserver_data:
+  db_data:
