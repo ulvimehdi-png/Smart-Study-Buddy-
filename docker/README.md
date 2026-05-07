@@ -1,4 +1,4 @@
-# Development Setup
+# Docker Automation Setup
 
 ## Requirements
 
@@ -9,60 +9,54 @@
 
 ## Usage
 
-All commands are run from the project root using:
+Commands can be run from the directories listed below without 
+requiring the old ```make -C docker ...``` syntax. Instead,
+use ```make help``` to see all available commands.
 
-```bash
-make -C docker <command>
+- in 
+
 ```
-
-### Available commands
-
-```bash
-make -C docker dev       # Start full dev environment
-make -C docker down      # Stop containers
-make -C docker reset     # Stop and remove volumes
-
-make -C docker logs      # Follow logs
-make -C docker bash      # Open shell in PHP container
-make -C docker console   # Run Symfony console
-
-make -C docker install   # Install dependencies
-make -C docker migrate   # Run database migrations
+- project root
+- docker/
+- docker/development
+- docker/production
+- docker/testing
 ```
 
 ---
 
-## Environment variables (optional)
+## Available commands
 
-You can create a local `.env` file in `./docker/`
+In either of the above mentioned directories, you can
+run ```make help``` to get the available commands.
 
-```bash
-UID=1000
-GID=1000
-```
-
-Adjust these values if needed to match your system user/group IDs:
+In either of these directories, all available information will be displayed
+when executing the following (simple and exact-same) commands:
 
 ```bash
-id -u   # your UID
-id -g   # your GID
-```
+# when in project root
+make help
 
-This helps prevent permission issues with mounted volumes.
+# when in docker/ directory
+make help
+
+# when in docker/ subdirectories
+make help
+
+# in case of confusion, read the Makefiles in all directories
+# and also send me a message
+```
 
 ---
 
-## Services
+## Note on data persistence
 
-After running `dev`, services are available at:
+When using the provided ```make ...-up``` commands, 
+all data is loaded from fixtures or foundry stories, 
+changes made in the database (MEANING NOT IN CODE) 
+will not persist and will be removed the next time
+```make ...-up``` or ```make ...-down``` is ran.
 
-* Frontend: http://localhost:5173
-* Backend: http://localhost:8000
-
----
-
-## Notes
-
-* The Makefile lives in `./docker/`
-* Always run commands from the project root
-* Uses Docker Compose under the hood
+* development → BaseStory (mainly deterministic)
+* production → DemoStory (TODO later)
+* testing → uses it's own fixtures inside the phpunit tests
