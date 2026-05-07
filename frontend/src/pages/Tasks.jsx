@@ -1,16 +1,24 @@
 import React, { useEffect, useState, useRef } from "react";
 import { Check, Clock, Flag, Plus, Sparkles, Trash2, Upload, Download, X, ChevronDown, AlertCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
+import {
+  deleteSubjectOption,
+  fetchSubjectOptions,
+  NEW_SUBJECT_VALUE,
+} from "@/lib/subjectOptions";
 import PageBackdrop from "../components/shared/PageBackdrop";
 import SmallStats from "../components/shared/SmallStats";
 import SubjectBadge from "../components/shared/SubjectBadge";
+import SubjectSelect from "../components/shared/SubjectSelect";
 import { useToast } from "../lib/useToast";
 import { parseCSV, mapTaskData } from "../lib/dataUtils";
 
 export default function Tasks() {
   const [tasks, setTasks] = useState([]);
   const [title, setTitle] = useState("");
-  const [subject, setSubject] = useState("");
+  const [selectedSubject, setSelectedSubject] = useState("");
+  const [customSubject, setCustomSubject] = useState("");
+  const [subjectOptions, setSubjectOptions] = useState([]);
   const [priority, setPriority] = useState("medium");
   const [dueDate, setDueDate] = useState("");
   const [dueTime, setDueTime] = useState("");
@@ -38,7 +46,27 @@ export default function Tasks() {
       .then(r => r.json()).then(d => setTasks(d))
       .catch(e => console.error("Error fetching tasks:", e));
   };
-  useEffect(() => { fetchTasks(); }, []);
+  const fetchSubjects = () => {
+    fetchSubjectOptions()
+      .then((data) => setSubjectOptions(data))
+      .catch((err) => console.error("Error fetching subjects:", err));
+  };
+
+  useEffect(() => {
+    fetchTasks();
+    fetchSubjects();
+  }, []);
+
+  const refreshData = () => {
+    fetchTasks();
+    fetchSubjects();
+  };
+
+  const handleRemoveSubject = async (option) => {
+    await deleteSubjectOption(option.id);
+    if (selectedSubject === option.name) setSelectedSubject("");
+    refreshData();
+  };
 
   const handleToggle = (id) => fetch(`/api/tasks/${id}/toggle`, { method: "PUT", credentials: "include" }).then(() => fetchTasks());
   const handleDelete = (id) => fetch(`/api/tasks/${id}`, { method: "DELETE", credentials: "include" }).then(() => { fetchTasks(); toast.success("Task deleted"); });
@@ -46,7 +74,8 @@ export default function Tasks() {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!title?.trim()) { toast.error("Title is required"); return; }
-    if (!subject?.trim()) { toast.error("Subject is required"); return; }
+    const finalSubject = selectedSubject === NEW_SUBJECT_VALUE ? customSubject.trim() : selectedSubject;
+    if (!finalSubject) { toast.error("Subject is required"); return; }
     if (!dueDate) { setDateWarning(true); toast.error("Due Date is required"); return; }
     if (!dueTime) { toast.error("Due Time is required"); return; }
     
@@ -63,10 +92,10 @@ export default function Tasks() {
     fetch("/api/tasks", {
       method: "POST", credentials: "include",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ title, subject, priority, dueDate: dueDateStr }),
+      body: JSON.stringify({ title, subject: finalSubject, priority, dueDate: dueDateStr }),
     }).then(() => {
-      setTitle(""); setSubject(""); setPriority("medium"); setDueDate(""); setDueTime("");
-      fetchTasks(); toast.success("Task created!");
+      setTitle(""); setSelectedSubject(""); setCustomSubject(""); setPriority("medium"); setDueDate(""); setDueTime("");
+      refreshData(); toast.success("Task created!");
     });
   };
 
@@ -237,8 +266,14 @@ export default function Tasks() {
 
           <form onSubmit={handleSubmit} className="mt-6 space-y-4">
             <div className="grid gap-4 lg:grid-cols-[200px_1fr_160px]">
-              <input type="text" placeholder="Subject" value={subject} onChange={e => setSubject(e.target.value)}
-                className="glass-input rounded-xl px-4 py-3 text-text-main placeholder:text-text-muted outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20" />
+              <SubjectSelect
+                options={subjectOptions}
+                value={selectedSubject}
+                onChange={setSelectedSubject}
+                customSubject={customSubject}
+                onCustomSubjectChange={setCustomSubject}
+                onRemoveOption={handleRemoveSubject}
+              />
               <input type="text" placeholder="What needs to be done?" value={title} onChange={e => setTitle(e.target.value)} required
                 className="glass-input rounded-xl px-4 py-3 text-text-main placeholder:text-text-muted outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20" />
               <select value={priority} onChange={e => setPriority(e.target.value)}
