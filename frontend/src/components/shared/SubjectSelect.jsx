@@ -282,8 +282,8 @@ export default function SubjectSelect({
         </button>
 
         {isOpen ? (
-          <div className="absolute left-0 right-0 z-30 mt-3 max-w-100 lg:w-100 overflow-hidden rounded-3xl border border-border-base bg-bg-card p-3 pr-0 shadow-xl">
-            <div className="subject-select-scrollbar max-h-72 overflow-y-auto pr-1" role="listbox">
+          <div className="absolute left-0 right-0 z-30 mt-3 max-w-100 lg:w-100 rounded-3xl border border-border-base bg-bg-card p-2 shadow-xl">
+            <div className="max-h-60 overflow-y-auto pr-2" role="listbox" style={{ overscrollBehavior: 'contain' }}>
               <div className="space-y-1.5">
                 <SubjectOptionRow
                   label={emptyLabel}
