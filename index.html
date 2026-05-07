@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Study Dashboard</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<div class="ambient-bg">
+  <div class="blob"></div>
+  <div class="blob"></div>
+</div>
+
+<header class="topbar">
+  <h1>Study Dashboard</h1>
+  <nav>
+    <button class="tab-btn active" data-tab="dashboardTab">Dashboard</button>
+    <button class="tab-btn" data-tab="notesTab">Notes</button>
+    <button class="tab-btn" data-tab="tasksTab">Tasks</button>
+  </nav>
+</header>
+
+<main class="container">
+  <section id="dashboardTab" class="tab-content active">
+    <h2>Dashboard</h2>
+
+    <div class="cards">
+      <div class="card">
+        <h3>Total Notes</h3>
+        <p id="totalNotes">0</p>
+      </div>
+
+      <div class="card">
+        <h3>Total Study Hours</h3>
+        <p id="totalHours">0.0</p>
+      </div>
+
+      <div class="card">
+        <h3>Today's Hours</h3>
+        <p id="todayHours">0.0</p>
+      </div>
+
+      <div class="card">
+        <h3>Study Streak</h3>
+        <p id="studyStreak">🔥 0 days</p>
+        <p id="longestStreak">🏆 0 days</p>
+      </div>
+    </div>
+
+    <div class="dashboard-grid">
+      <div class="panel">
+        <h3>Add Study Session</h3>
+
+        <label>Subject</label>
+        <input type="text" id="studySubject" placeholder="e.g. Math" />
+
+        <label>Minutes Studied</label>
+        <input type="number" id="studyMinutes" placeholder="e.g. 90" />
+
+        <label>Note</label>
+        <input type="text" id="studySessionNote" placeholder="Optional session note" />
+
+        <button id="saveStudyBtn">Save Study Session</button>
+      </div>
+
+      <div class="panel">
+        <h3>Quick Add Task</h3>
+
+        <label>Subject</label>
+        <input type="text" id="taskSubject" placeholder="e.g. Physics" />
+
+        <label>Task Title</label>
+        <input type="text" id="taskTitle" placeholder="e.g. Solve chapter 2 exercises" />
+
+        <label>Description</label>
+        <textarea id="taskDescription" placeholder="Optional description"></textarea>
+
+        <label>Due Date</label>
+        <input type="date" id="taskDueDate" />
+
+        <label>Priority</label>
+        <select id="taskPriority">
+          <option value="low">Low</option>
+          <option value="medium" selected>Medium</option>
+          <option value="high">High</option>
+        </select>
+
+        <button id="saveTaskBtn">Save Task</button>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h3>Progress by Subject</h3>
+      <div id="progressList"></div>
+    </div>
+
+    <div class="panel">
+      <h3>Recent Notes</h3>
+      <div id="recentNotes"></div>
+    </div>
+  </section>
+
+  <section id="notesTab" class="tab-content">
+    <h2>Notes</h2>
+
+    <div class="notes-layout">
+      <div class="panel">
+        <h3>Create / Save Note</h3>
+
+        <label>Subject</label>
+        <input type="text" id="noteSubject" placeholder="e.g. Programming" />
+
+        <label>Title</label>
+        <input type="text" id="noteTitle" placeholder="Enter note title" />
+
+        <label>Content</label>
+        <textarea id="noteContent" placeholder="Write your study note here..."></textarea>
+
+        <div class="button-row">
+          <button id="saveNoteBtn">Save Note</button>
+          <button id="clearNoteBtn" class="secondary">Clear</button>
+        </div>
+
+        <hr />
+
+        <h3>Import Existing Data</h3>
+        <input type="file" id="fileInput" accept=".txt,text/plain,.json,application/json" />
+        <div class="button-row">
+          <button id="importFileBtn">Import File</button>
+        </div>
+        <p class="hint">Supported: .txt and .json</p>
+      </div>
+
+      <div class="panel">
+        <h3>Organise Notes</h3>
+
+        <label>Search</label>
+        <input type="text" id="searchInput" placeholder="Search title/content..." />
+
+        <label>Filter by Subject</label>
+        <input type="text" id="filterSubject" placeholder="e.g. Math" />
+
+        <div id="notesList"></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="tasksTab" class="tab-content">
+    <h2>Task Board</h2>
+
+    <div class="panel">
+      <h3>Your Tasks</h3>
+
+      <label>Search Tasks</label>
+      <input type="text" id="taskSearchInput" placeholder="Search tasks..." />
+
+      <label>Filter by Subject</label>
+      <input type="text" id="taskFilterSubject" placeholder="e.g. Math" />
+
+      <div id="tasksList"></div>
+    </div>
+  </section>
+</main>
+
+<script src="script.js"></script>
+</body>
+</html>

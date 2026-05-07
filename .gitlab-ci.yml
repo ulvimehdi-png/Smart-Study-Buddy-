@@ -1,19 +1,108 @@
 image: composer:2.9.5
 
 stages:
-    - check
+    - test
+    - build
+    - deploy
 
-.ssh_setup:
-    before_script:
-        - mkdir -p ~/.ssh -m 700
-        - eval $(ssh-agent -s)
-        - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
-        - ssh-keyscan shell.studev.groept.be > ~/.ssh/known_hosts
+variables:
+    APP_ENV: prod
+    BACKEND_DIR: $CI_PROJECT_DIR/backend
+    FRONTEND_DIR: $CI_PROJECT_DIR/frontend
+    DEPLOY_USER: a25sewt301
+    DEPLOY_HOST: shell.studev.groept.be
+    DEPLOY_PATH: /var/www/html
 
-ssh-check:
-    stage: check
-    only:
-        - main
-    extends: .ssh_setup
+cache:
+    key: ${CI_COMMIT_REF_SLUG}
+    paths:
+        - backend/vendor/
+        - frontend/node_modules
+
+before_script:
+    - mkdir -p ~/.ssh -m 700
+    - eval $(ssh-agent -s)
+    - echo $SSH_PRIVATE_KEY | tr -d '\r' | ssh-add -
+    - ssh-keyscan $DEPLOY_HOST > ~/.ssh/known_hosts
+    - apk add --no-cache nodejs npm rsync
+
+#
+# TEST STAGE
+#
+test_frontend:
+    stage: test
     script:
-        - ssh a25sewt301@shell.studev.groept.be 'pwd && ls -la ~ && ls -la /var/www'
+        - cd $FRONTEND_DIR
+        - npm ci
+        # TODO: UNCOMMENT WHEN LINT/TESTING IS IMPLEMENTED
+        #- npm run lint
+        #- npm run test --if-present
+
+test_backend:
+    stage: test
+    script:
+        - cd $BACKEND_DIR
+        - composer validate --no-check-publish
+        - composer install --no-interaction --no-progress
+        - php bin/console lint:yaml config
+        - php bin/console lint:container
+        # TODO: UNCOMMENT WHEN TESTING IS IMPLEMENTED
+        #- php bin/phpunit
+
+#
+# BUILD STAGE
+#
+build_frontend:
+    stage: build
+    script:
+        - cd $FRONTEND_DIR
+        - npm ci
+        - npm run build
+    artifacts:
+        paths:
+            - backend/public
+        expire_in: 1 hour
+
+#
+# DEPLOY STAGE
+#
+deploy:
+    stage: deploy
+    rules:
+        - if: $CI_COMMIT_BRANCH == "main"
+          when: manual
+    script:
+        # BACKEND
+        - cd $BACKEND_DIR
+        - composer install --no-interaction --no-dev --optimize-autoloader
+
+        # DEPLOY FILES
+        - >
+            rsync -rvz --delete-after
+            --exclude=".git/"
+            --exclude=".gitignore"
+            --exclude=".env.dev"
+            --exclude=".env.test"
+            --exclude="phpunit.dist.xml"
+            --exclude="README.md"
+            --exclude="tests/"
+            --exclude="upload/"
+            $BACKEND_DIR/
+            $DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH/
+
+        # POST-DEPLOY COMMANDS
+        - ssh $DEPLOY_USER@$DEPLOY_HOST "
+            cd $DEPLOY_PATH/ &&
+            composer clear-cache &&
+            php bin/console cache:clear --env=prod --no-debug &&
+            php bin/console cache:warmup --env=prod
+          "
+
+        # DATABASE MIGRATION AND POPULATION ~ ok since we're only working with fixtures here
+        - ssh $DEPLOY_USER@$DEPLOY_HOST "
+            cd $DEPLOY_PATH/ &&
+            php bin/console doctrine:migrations:migrate --no-interaction &&
+            php bin/console cache:warmup --env=prod
+          "
+    environment:
+        name: production

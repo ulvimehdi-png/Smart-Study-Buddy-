@@ -1,4 +1,4 @@
-.PHONY: dev install migrate wait-db down reset logs bash console
+.PHONY: dev install migrate wait-db down reset logs bash console gitlab-ci
 
 dev:
 	@echo "Starting full dev environment..."

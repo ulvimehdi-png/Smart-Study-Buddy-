@@ -12,9 +12,9 @@ createRoot(document.getElementById('root')).render(
     <AuthProvider>
       <TimerProvider>
         <ThemeProvider>
-          <BrowserRouter>
-            <App />
-          </BrowserRouter>
+            <BrowserRouter>
+                <App />
+            </BrowserRouter>
         </ThemeProvider>
       </TimerProvider>
     </AuthProvider>
