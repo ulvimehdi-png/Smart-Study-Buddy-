@@ -10,7 +10,14 @@ help:
 	@echo "	--> make test-down"
 
 test-up:
-	@echo "TODO: implement 'make test-up'"
+	$(MAKE) test-down
+
+	@echo "Starting testing environment"
+	docker compose up --build --abort-on-container-exit --exit-code-from php
+
+#	@echo "Running frontend tests"
+#	docker compose run --rm php sh -c "cd /app/frontend && npm install && npm run test"
 
 test-down:
-	@echo "TODO: implement 'make test-down'"
+	@echo "Stopping testing environment"
+	docker compose down -v --remove-orphans
