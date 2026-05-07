@@ -63,6 +63,10 @@ export default function Tasks() {
   };
 
   const handleRemoveSubject = async (option) => {
+    if (String(option.id).startsWith("derived-")) {
+      toast.error("This subject is assigned to a task. Remove it from the task first.");
+      return;
+    }
     await deleteSubjectOption(option.id);
     if (selectedSubject === option.name) setSelectedSubject("");
     refreshData();
@@ -205,6 +209,20 @@ export default function Tasks() {
     return task.dueDate.slice(0, 16) >= nowLocalString;
   });
 
+  const combinedSubjectOptions = React.useMemo(() => {
+    const combined = [...subjectOptions];
+    const taskSubjects = tasks.map(t => t.subject).filter(Boolean);
+    
+    taskSubjects.forEach(name => {
+      // Case-insensitive check to see if it's already in the API subjects
+      if (!combined.some(s => s.name.toLowerCase() === name.toLowerCase())) {
+        combined.push({ id: `derived-${name}`, name });
+      }
+    });
+    
+    return combined.sort((a, b) => a.name.localeCompare(b.name));
+  }, [tasks, subjectOptions]);
+
   return (
     <div className="relative min-h-screen overflow-hidden text-text-main page-enter" style={{ background: 'transparent' }}>
       <PageBackdrop />
@@ -267,7 +285,7 @@ export default function Tasks() {
           <form onSubmit={handleSubmit} className="mt-6 space-y-4">
             <div className="grid gap-4 lg:grid-cols-[200px_1fr_160px]">
               <SubjectSelect
-                options={subjectOptions}
+                options={combinedSubjectOptions}
                 value={selectedSubject}
                 onChange={setSelectedSubject}
                 customSubject={customSubject}
