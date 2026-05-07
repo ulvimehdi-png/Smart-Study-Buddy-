@@ -210,17 +210,14 @@ export default function Tasks() {
   });
 
   const combinedSubjectOptions = React.useMemo(() => {
-    const combined = [...subjectOptions];
-    const taskSubjects = tasks.map(t => t.subject).filter(Boolean);
+    // Collect all subject names currently used in any task
+    const activeNames = new Set(tasks.map(t => t.subject?.trim()).filter(Boolean));
     
-    taskSubjects.forEach(name => {
-      // Case-insensitive check to see if it's already in the API subjects
-      if (!combined.some(s => s.name.toLowerCase() === name.toLowerCase())) {
-        combined.push({ id: `derived-${name}`, name });
-      }
-    });
-    
-    return combined.sort((a, b) => a.name.localeCompare(b.name));
+    return Array.from(activeNames).map((name, i) => {
+      // Find matching subject from API, if any (case-insensitive)
+      const existing = subjectOptions.find(s => s.name.toLowerCase() === name.toLowerCase());
+      return existing ? existing : { id: `derived-${i}`, name };
+    }).sort((a, b) => a.name.localeCompare(b.name));
   }, [tasks, subjectOptions]);
 
   return (
