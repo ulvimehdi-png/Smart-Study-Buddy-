@@ -283,7 +283,7 @@ export default function SubjectSelect({
 
         {isOpen ? (
           <div className="absolute left-0 right-0 z-30 mt-3 max-w-100 lg:w-100 rounded-3xl border border-border-base bg-bg-card p-2 shadow-xl">
-            <div className="max-h-60 overflow-y-scroll pr-2 custom-scrollbar" role="listbox">
+            <div className="max-h-[120px] overflow-y-scroll pr-2 custom-scrollbar" role="listbox">
               <div className="space-y-1.5">
                 <SubjectOptionRow
                   icon={<PlusCircle className="h-4 w-4" />}
