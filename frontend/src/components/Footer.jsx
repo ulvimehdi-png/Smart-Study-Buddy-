@@ -4,11 +4,13 @@ import { GradientButton, Logo } from './shared';
 
 const LINKS = [
   { name: 'Home', path: '/' },
-  { name: 'Get Started', path: '/login' },
+  { name: 'Login', path: '/login' },
   { name: 'Dashboard', path: '/dashboard' },
   { name: 'Tasks', path: '/tasks' },
   { name: 'Notes', path: '/notes' },
   { name: 'Timer', path: '/timer' },
+  { name: 'Leaderboard', path: '/leaderboard' },
+  { name: 'Reports', path: '/reports' },
 ];
 
 export default function Footer() {
@@ -26,10 +28,10 @@ export default function Footer() {
 
           <div>
             <h4 className="text-sm font-semibold uppercase tracking-widest text-text-secondary mb-4">Product</h4>
-            <ul className="space-y-3 text-text-secondary columns-3">
+            <ul className="grid grid-cols-3 gap-y-3 gap-x-4 text-text-secondary">
               { LINKS.map(link => (
                 <li key={link.name}>
-                  <Link to={link.path} className="hover:text-primary transition-colors">{link.name}</Link>
+                  <Link to={link.path} className="hover:text-primary transition-colors whitespace-nowrap">{link.name}</Link>
                 </li>
               )) }
             </ul>
