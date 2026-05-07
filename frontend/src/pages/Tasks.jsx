@@ -205,6 +205,15 @@ export default function Tasks() {
     return task.dueDate.slice(0, 16) >= nowLocalString;
   });
 
+  const activeSubjectOptions = React.useMemo(() => {
+    const taskSubjects = tasks.map(t => t.subject).filter(Boolean);
+    const activeNames = new Set(taskSubjects);
+    return Array.from(activeNames).map((name, i) => {
+      const existing = subjectOptions.find(s => s.name === name);
+      return existing ? existing : { id: `derived-${i}`, name };
+    });
+  }, [tasks, subjectOptions]);
+
   return (
     <div className="relative min-h-screen overflow-hidden text-text-main page-enter" style={{ background: 'transparent' }}>
       <PageBackdrop />
@@ -267,7 +276,7 @@ export default function Tasks() {
           <form onSubmit={handleSubmit} className="mt-6 space-y-4">
             <div className="grid gap-4 lg:grid-cols-[200px_1fr_160px]">
               <SubjectSelect
-                options={subjectOptions.filter(opt => tasks.some(t => t.subject === opt.name))}
+                options={activeSubjectOptions}
                 value={selectedSubject}
                 onChange={setSelectedSubject}
                 customSubject={customSubject}
