@@ -4,24 +4,19 @@ namespace App\Factory;
 
 use App\Entity\Note;
 use App\Enum\NoteSourceType;
-use App\Repository\NoteRepository;
+use App\Factory\Traits\SubjectFactoryTrait;
+use App\Factory\Traits\TaskFactoryTrait;
+use App\Factory\Traits\UserFactoryTrait;
 use Zenstruck\Foundry\Persistence\PersistentObjectFactory;
-use Zenstruck\Foundry\Persistence\ProxyRepositoryDecorator;
 
 /**
  * @extends PersistentObjectFactory<Note>
  */
 final class NoteFactory extends PersistentObjectFactory
 {
-    /**
-     * @see https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#factories-as-services
-     *
-     * @todo inject services if required
-     */
-    public function __construct()
-    {
-        parent::__construct();
-    }
+    use UserFactoryTrait;
+    use SubjectFactoryTrait;
+    use TaskFactoryTrait;
 
     #[\Override]
     public static function class(): string
@@ -29,11 +24,6 @@ final class NoteFactory extends PersistentObjectFactory
         return Note::class;
     }
 
-    /**
-     * @see https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#model-factories
-     *
-     * @todo add your default values here
-     */
     #[\Override]
     protected function defaults(): array|callable
     {
@@ -44,20 +34,13 @@ final class NoteFactory extends PersistentObjectFactory
         ];
     }
 
-    /**
-     * @see https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#initialization
-     */
-    #[\Override]
-    protected function initialize(): static
+    public function basic(int $number): static
     {
-        return $this;
+        return $this->with([
+            'title' => "note{$number}",
+            'content' => self::faker()->paragraphs(5, true),
+        ]);
     }
-
-    /*
-     *
-     * FACTORY STATES
-     *
-     */
 
     public function link(?string $url = null): static
     {
@@ -75,11 +58,4 @@ final class NoteFactory extends PersistentObjectFactory
         ]);
     }
 
-    /**
-     * @return ProxyRepositoryDecorator<Note, NoteRepository>
-     */
-    public static function repository(): ProxyRepositoryDecorator
-    {
-        return parent::repository();
-    }
 }

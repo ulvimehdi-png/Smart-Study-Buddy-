@@ -3,6 +3,7 @@
 namespace App\Factory;
 
 use App\Entity\Settings;
+use App\Entity\User;
 use App\Enum\WeekStartDay;
 use App\LiveTimerSession\Enum\SessionType;
 use Zenstruck\Foundry\Persistence\PersistentObjectFactory;
@@ -12,47 +13,46 @@ use Zenstruck\Foundry\Persistence\PersistentObjectFactory;
  */
 final class SettingsFactory extends PersistentObjectFactory
 {
-    /**
-     * @see https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#factories-as-services
-     *
-     * @todo inject services if required
-     */
-    public function __construct()
-    {
-        parent::__construct();
-    }
-
     #[\Override]
     public static function class(): string
     {
         return Settings::class;
     }
 
-    /**
-     * @see https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#model-factories
-     *
-     * @todo add your default values here
-     */
     #[\Override]
     protected function defaults(): array|callable
     {
         return [
+            // No User default here - UserFactory owns automatic Settings creation
             'timezone' => 'Europe/Brussels',
             'weekStartDay' => WeekStartDay::default(),
             'defaultSessionType' => SessionType::default(),
             'defaultSessionMinutes' => 50,
             'defaultBreakMinutes' => 10,
+            'createdAt' => new \DateTimeImmutable('-30 days'),
+            'updatedAt' => new \DateTimeImmutable('-1 day'),
         ];
     }
 
-    /**
-     * @see https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#initialization
-     */
-    #[\Override]
-    protected function initialize(): static
+    public function forUser(User $user): static
     {
-        return $this
-            // ->afterInstantiate(function(Settings $settings): void {})
-        ;
+        return $this->with([
+            'user' => $user,
+        ]);
+    }
+
+    public function withTimezone(string $timezone): static
+    {
+        return $this->with([
+            'timezone' => $timezone,
+        ]);
+    }
+
+    public function withDefaults(int $sessionMinutes, int $breakMinutes): static
+    {
+        return $this->with([
+            'defaultSessionMinutes' => $sessionMinutes,
+            'defaultBreakMinutes' => $breakMinutes,
+        ]);
     }
 }

@@ -229,6 +229,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+    public function addRole(string $role): static
+    {
+        $this->roles[] = $role;
+        $this->roles = array_unique($this->roles);
+
+        return $this;
+    }
+
     public function eraseCredentials(): void
     {
     }
@@ -290,7 +298,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function setSettings(Settings $settings): static
     {
-        // set the owning side of the relation if necessary
         if ($settings->getUser() !== $this) {
             $settings->setUser($this);
         }

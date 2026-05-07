@@ -3,25 +3,15 @@
 namespace App\Factory;
 
 use App\Entity\Subject;
-use App\Repository\SubjectRepository;
-use phpDocumentor\Reflection\Types\Integer;
+use App\Factory\Traits\UserFactoryTrait;
 use Zenstruck\Foundry\Persistence\PersistentObjectFactory;
-use Zenstruck\Foundry\Persistence\ProxyRepositoryDecorator;
 
 /**
  * @extends PersistentObjectFactory<Subject>
  */
 final class SubjectFactory extends PersistentObjectFactory
 {
-    /**
-     * @see https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#factories-as-services
-     *
-     * @todo inject services if required
-     */
-    public function __construct()
-    {
-        parent::__construct();
-    }
+    use UserFactoryTrait;
 
     #[\Override]
     public static function class(): string
@@ -29,85 +19,19 @@ final class SubjectFactory extends PersistentObjectFactory
         return Subject::class;
     }
 
-    /**
-     * @see https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#model-factories
-     *
-     * @todo add your default values here
-     */
     #[\Override]
     protected function defaults(): array|callable
     {
         return [
-            'name' => self::faker()->words(2,true),
+            'name' => self::faker()->words(2, true),
         ];
     }
 
-    /**
-     * @see https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#initialization
-     */
-    #[\Override]
-    protected function initialize(): static
-    {
-        return $this;
-    }
-
-    /*
-     *
-     * FACTORY STATES
-     *
-     */
-
-    public function withCode(?string $code = null): static
+    public function basic(int $number): static
     {
         return $this->with([
-            'code' => $code ?? self::faker()->word,
+            'code' => sprintf('SUB%02d', $number),
+            'name' => "subject{$number}",
         ]);
-    }
-
-    public function withDescription(?string $description = null,): static
-    {
-        return $this->with([
-            'description' => $description ?? self::faker()->paragraphs(),
-        ]);
-    }
-
-    public function withColorHex(): static
-    {
-        return $this->with([
-            'colorHex' => $colorHex ?? self::faker()->hexColor(),
-        ]);
-    }
-
-    public function withTargetMinutes(
-        ?Integer $targetTotalMinutes = null,
-        ?Integer $targetWeeklyMinutes = null,
-    ): static
-    {
-        $minutesPerCredit = self::faker()->numberBetween(20,40) * 60;
-        $subjectCredit = self::faker()->numberBetween(3,7);
-        $subjectWeeks = self::faker()->numberBetween(4,52);
-
-        $targetTotalMinutes = $minutesPerCredit*$subjectCredit;
-        $targetWeeklyMinutes = intdiv($targetTotalMinutes, $subjectWeeks);
-
-        return $this->with([
-            'targetTotalMinutes' => $targetTotalMinutes,
-            'targetWeeklyMinutes' => $targetWeeklyMinutes,
-        ]);
-    }
-
-    public function archived(?\DateTimeImmutable $archivedDate = null): static
-    {
-        return $this->with([
-            'archivedAt' => $archivedDate ?? new \DateTimeImmutable(),
-        ]);
-    }
-
-    /**
-     * @return ProxyRepositoryDecorator<Subject, SubjectRepository>
-     */
-    public static function repository(): ProxyRepositoryDecorator
-    {
-        return parent::repository();
     }
 }
