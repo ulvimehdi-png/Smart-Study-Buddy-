@@ -9,6 +9,7 @@ done
 echo "Running migrations..."
 php bin/console doctrine:migrations:migrate --no-interaction
 
+# CANT RUN STORIES HERE -- DEV PACKAGE
 #echo "Loading foundry stories"
 #php bin/console foundry:load-story -n demoStory
 

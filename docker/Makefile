@@ -1,4 +1,17 @@
-.PHONY: dev-up dev-down prod-up prod-down
+.DEFAULT_GOAL := help
+
+.PHONY: help dev-up dev-down test-up test-down prod-up prod-down
+
+help:
+	@echo ""
+	@echo "Available commands in current directory { "$(PWD)" }"
+	@echo ""
+	@echo "	--> make dev-up"
+	@echo "	--> make dev-down"
+	@echo "	--> make test-up"
+	@echo "	--> make test-down"
+	@echo "	--> make prod-up"
+	@echo "	--> make prod-down"
 
 dev-up:
 	make -C development dev-up

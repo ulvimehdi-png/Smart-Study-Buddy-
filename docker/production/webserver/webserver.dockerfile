@@ -13,8 +13,8 @@ WORKDIR /app/backend
 COPY backend/ .
 RUN rm -rf .env* .gitignore tests var vendor phpunit.dist.xml README.md
 
-COPY docker/production/prod-env/local-env .env
-COPY docker/production/prod-env/local-env-prod .env.local
+COPY docker/production/prod-env/.env .env
+COPY docker/production/prod-env/.env.prod .env.local
 
 RUN composer validate --no-check-publish \
     && composer install --no-dev --prefer-dist --optimize-autoloader --no-interaction \
@@ -23,7 +23,7 @@ RUN composer validate --no-check-publish \
     && php bin/console cache:clear --env=prod
 
 # --- FINAL IMAGE ---
-FROM php:8.4-apache
+FROM php:8.4.18-apache
 WORKDIR /var/www/html
 
 RUN apt-get update && apt-get install -y libicu-dev libzip-dev \

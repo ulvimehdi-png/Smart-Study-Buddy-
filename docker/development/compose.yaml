@@ -1,6 +1,6 @@
 services:
   database:
-    image: mysql:9.6.0
+    image: mysql:8.0.32
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: app
@@ -62,15 +62,18 @@ services:
       - mercure_config:/config
     environment:
       SERVER_NAME: ":80"
-      MERCURE_PUBLISHER_JWT_KEY: "24207d430335d87559f64ed568966be1b21022fc51d544ba336e8a7b70964478"
-      MERCURE_SUBSCRIBER_JWT_KEY: "24207d430335d87559f64ed568966be1b21022fc51d544ba336e8a7b70964478"
+      MERCURE_PUBLISHER_JWT_KEY: "!"
+      MERCURE_SUBSCRIBER_JWT_KEY: "!"
+      #MERCURE_EXTRA_DIRECTIVES: |
+      #  "anonymous
+      #  cors_origins http://localhost:5173 http://localhost:8000
+      #  publish_origins http://localhost:5173 http://localhost:8000
+      #  demo"
       MERCURE_EXTRA_DIRECTIVES: |
-        "anonymous
-        cors_origins http://localhost:5173 http://localhost:8000
-        publish_origins http://localhost:5173 http://localhost:8000
-        demo"
-
-
+        demo
+        anonymous
+        cors_origins *
+        publish_origins *
 
 volumes:
   database_data:
