@@ -6,6 +6,12 @@ dev-up:
 dev-down:
 	make -C development dev-down
 
+test-up:
+	make -C testing test-up
+
+test-down:
+	make -C testing test-down
+
 prod-up:
 	make -C production prod-up
 

@@ -6,6 +6,12 @@ dev-up:
 dev-down:
 	make -C docker dev-down
 
+test-up:
+	make -C docker test-up
+
+test-down:
+	make -C docker test-down
+
 prod-up:
 	make -C docker prod-up
 
