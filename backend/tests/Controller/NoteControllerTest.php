@@ -64,4 +64,31 @@ class NoteControllerTest extends WebTestCase
 
         $this->assertResponseIsSuccessful();
     }
+
+    public function testUpdateNote(): void
+    {
+        $client = static::createClient();
+        $entityManager = static::getContainer()->get(EntityManagerInterface::class);
+        $testUser = $entityManager->getRepository(User::class)->findOneBy([]);
+
+        $note = new Note();
+        $note->setTitle('Update Note');
+        $note->setContent('Old Content');
+        $note->setSourceType(NoteSourceType::MANUAL);
+        $note->setUser($testUser);
+        $entityManager->persist($note);
+        $entityManager->flush();
+
+        $client->loginUser($testUser);
+        $client->request('PUT', '/api/notes/' . $note->getId(), [], [], ['CONTENT_TYPE' => 'application/json'], json_encode([
+            'title' => 'Updated Note Title',
+            'content' => 'New Content'
+        ]));
+
+        $this->assertResponseIsSuccessful();
+        $responseData = json_decode($client->getResponse()->getContent(), true);
+        $this->assertTrue($responseData['success']);
+        $this->assertEquals('Updated Note Title', $responseData['note']['title']);
+        $this->assertEquals('New Content', $responseData['note']['content']);
+    }
 }
