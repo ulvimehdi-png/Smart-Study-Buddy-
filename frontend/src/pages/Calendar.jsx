@@ -84,13 +84,11 @@ export default function Calendar() {
     const m = String(date.getMonth() + 1).padStart(2, '0');
     const d = String(date.getDate()).padStart(2, '0');
     const dateStr = `${y}-${m}-${d}`;
-    if (dateStr < todayStr) {
-      toast.error("You cannot assign a task to a past date.");
-      return;
-    }
+    
     setSelectedDate(date);
     setShowAddModal(true);
-    setAddType("task"); setAddTitle(""); setAddSubject(""); setAddTime(""); setAddPriority("medium"); setAddContent(""); setAddMinutes(25);
+    setAddType(dateStr < todayStr ? "note" : "task");
+    setAddTitle(""); setAddSubject(""); setAddTime(""); setAddPriority("medium"); setAddContent(""); setAddMinutes(25);
   };
 
   const handleAddEntry = async (e) => {
@@ -293,13 +291,22 @@ export default function Calendar() {
               {[{ val: "task", icon: <Flag className="h-4 w-4" />, label: "Task" },
                 { val: "note", icon: <NotebookPen className="h-4 w-4" />, label: "Note" },
                 { val: "session", icon: <Clock className="h-4 w-4" />, label: "Session" }
-              ].map(t => (
-                <button key={t.val} onClick={() => setAddType(t.val)}
-                  className={`flex-1 flex items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-medium transition-all
-                    ${addType === t.val ? 'bg-primary/15 text-primary border border-primary/30' : 'surface-subtle text-text-secondary hover:bg-primary/5'}`}>
-                  {t.icon} {t.label}
-                </button>
-              ))}
+              ].map(t => {
+                const y = selectedDate.getFullYear();
+                const m = String(selectedDate.getMonth() + 1).padStart(2, '0');
+                const d = String(selectedDate.getDate()).padStart(2, '0');
+                const isPast = `${y}-${m}-${d}` < todayStr;
+                
+                if (isPast && t.val !== "note") return null;
+
+                return (
+                  <button key={t.val} onClick={() => setAddType(t.val)}
+                    className={`flex-1 flex items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-medium transition-all
+                      ${addType === t.val ? 'bg-primary/15 text-primary border border-primary/30' : 'surface-subtle text-text-secondary hover:bg-primary/5'}`}>
+                    {t.icon} {t.label}
+                  </button>
+                );
+              })}
             </div>
 
             <form onSubmit={handleAddEntry} className="space-y-4">
