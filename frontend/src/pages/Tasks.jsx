@@ -267,7 +267,7 @@ export default function Tasks() {
           <form onSubmit={handleSubmit} className="mt-6 space-y-4">
             <div className="grid gap-4 lg:grid-cols-[200px_1fr_160px]">
               <SubjectSelect
-                options={subjectOptions.filter(opt => tasks.some(t => t.subject === opt.name))}
+                options={subjectOptions}
                 value={selectedSubject}
                 onChange={setSelectedSubject}
                 customSubject={customSubject}
