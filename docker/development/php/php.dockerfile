@@ -19,7 +19,6 @@ COPY --link \
 # Git safety for mounted volumes
 RUN git config --global --add safe.directory /app
 
-
 RUN adduser --disabled-password --gecos "" appuser
 USER appuser
 

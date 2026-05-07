@@ -1,43 +1,13 @@
-.PHONY: dev install migrate wait-db down reset logs bash console gitlab-ci
+.PHONY: dev-up dev-down prod-up prod-down
 
-dev:
-	@echo "Starting full dev environment..."
-	docker compose up -d --build
-	$(MAKE) wait-db
-	$(MAKE) migrate
-	@echo "Ready:"
-	@echo "Frontend: http://localhost:8025"
-	@echo "Backend: http://localhost:8000"
-	@echo "Backend: http://localhost:5173"
+dev-up:
+	make -C development dev-up
 
-wait-db:
-	@echo "Waiting for database..."
-	until docker compose exec database sh -c "mysql -uapp -papp -h127.0.0.1 app -e 'SELECT 1' >/dev/null 2>&1"; do \
-  		sleep 2; \
-  	done
+dev-down:
+	make -C development dev-down
 
-migrate:
-	@echo "Running migrations..."
-	docker compose exec php php bin/console doctrine:migrations:migrate --no-interaction
+prod-up:
+	make -C production prod-up
 
-install:
-	@echo "Installing PHP dependencies..."
-	docker compose exec php composer install
-
-	@echo "Installing JS dependencies..."
-	docker compose run --rm node npm install
-
-down:
-	docker compose down
-
-reset:
-	docker compose down -v
-
-bash:
-	docker compose exec php bash
-
-console:
-	docker compose exec php php bin/console
-
-logs:
-	docker compose logs -f
+prod-down:
+	make -C production prod-down

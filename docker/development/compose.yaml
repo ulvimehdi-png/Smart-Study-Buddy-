@@ -9,12 +9,43 @@ services:
     ports:
       - "3307:3306"
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
       timeout: 5s
       retries: 5
       start_period: 60s
     volumes:
       - database_data:/var/lib/mysql:rw
+
+  php:
+    build:
+      context: .
+      dockerfile: ./php/php.dockerfile
+    user: "${UID:-1000}:${GID:-1000}"
+    volumes:
+      - ../../backend:/app
+      - ./php/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini
+    working_dir: /app
+    depends_on:
+      - database
+      - mercure
+    ports:
+      - "8000:8000"
+    environment:
+      APP_ENV: dev
+      APP_DEBUG: "1"
+    env_file: "../../backend/.env.dev"
+    command: php -S 0.0.0.0:8000 -t public
+
+  node:
+    image: node:25.9.0
+    working_dir: /app
+    user: "${UID:-1000}:${GID:-1000}"
+    volumes:
+      - ../../frontend:/app
+    ports:
+      - "5173:5173"
+    env_file: "../../backend/.env.dev"
+    command: npm run dev -- --host --port 5173
 
   mercure:
     image: dunglas/mercure
@@ -39,53 +70,7 @@ services:
         publish_origins http://localhost:5173 http://localhost:8000
         demo"
 
-  php:
-    build:
-      context: .
-      dockerfile: php/php.dockerfile
-    user: "${UID:-1000}:${GID:-1000}"
-    volumes:
-      - ../../backend:/app
-      - php/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini
-    working_dir: /app
-    depends_on:
-      - database
-      - mercure
-    ports:
-      - "8000:8000"
-    environment:
-      APP_ENV: dev
-      APP_DEBUG: "1"
-    env_file: "../backend/.env.dev"
-    command:
-      - sh
-      - -lc
-      - |
-        set -e
-        
-        composer install
-        
-        echo "Waiting for database through Doctrine..."
-        until php bin/console doctrine:migrations:status >/dev/null 2>&1; do
-          sleep 1
-        done
-        
-        echo "Running pending Doctrine migrations..."
-        php bin/console doctrine:migrations:migrate --no-interaction --allow-no-migration
-        
-        echo "Starting Symfony dev server..."
-        exec php -S 0.0.0.0:8000 -t public
 
-  node:
-    image: node:25.9.0
-    working_dir: /app
-    user: "${UID:-1000}:${GID:-1000}"
-    volumes:
-      - ../../frontend:/app
-    ports:
-      - "5173:5173"
-    command: sh -c "npm install && npm run dev -- --host --port 5173"
-    env_file: "../backend/.env.dev"
 
 volumes:
   database_data:
