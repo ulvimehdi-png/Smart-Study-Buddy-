@@ -29,25 +29,39 @@ before_script:
 #
 # TEST STAGE
 #
-test_frontend:
-    stage: test
-    script:
-        - cd $FRONTEND_DIR
-        - npm ci
-        # TODO: UNCOMMENT WHEN LINT/TESTING IS IMPLEMENTED
-        #- npm run lint
-        #- npm run test --if-present
+#test_frontend:
+#    stage: test
+#    script:
+#        - cd $FRONTEND_DIR
+#        - npm ci
+#        # TODO: UNCOMMENT WHEN LINT/TESTING IS IMPLEMENTED
+#        - npm run lint
+#        - npm run test --if-present
+#
+#test_backend:
+#    stage: test
+#    script:
+#        - cd $BACKEND_DIR
+#        - composer validate --no-check-publish
+#        - composer install --no-interaction --no-progress
+#        - php bin/console lint:yaml config
+#        - php bin/console lint:container
+#        # TODO: UNCOMMENT WHEN TESTING IS IMPLEMENTED
+#        - php bin/phpunit
 
 test_backend:
     stage: test
+    image: docker:28
+    services:
+        - docker:28-dind
+    variables:
+        DOCKER_TLS_CERTDIR: ""
+    before_script:
+        - apk add --no-cache make
     script:
-        - cd $BACKEND_DIR
-        - composer validate --no-check-publish
-        - composer install --no-interaction --no-progress
-        - php bin/console lint:yaml config
-        - php bin/console lint:container
-        # TODO: UNCOMMENT WHEN TESTING IS IMPLEMENTED
-        #- php bin/phpunit
+        - docker version
+        - docker compose version
+        - make -C docker/testing test-up
 
 #
 # BUILD STAGE
