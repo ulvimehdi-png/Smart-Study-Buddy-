@@ -19,33 +19,25 @@ services:
   mercure:
     image: dunglas/mercure
     restart: unless-stopped
-    environment:
-      # Uncomment the following line to disable HTTPS
-      SERVER_NAME: ':80'
-      MERCURE_PUBLISHER_JWT_KEY: ${MERCURE_JWT_SECRET}
-      MERCURE_SUBSCRIBER_JWT_KEY: ${MERCURE_JWT_SECRET}
-      #CADDY_EXTRA_CONFIG: 'auto_https off'
-      MERCURE_EXTRA_DIRECTIVES: |
-        anonymous
-        cors_origins http://localhost:5173 http://localhost:8000
-        publish_origins http://localhost:5173 http://localhost:8000
-        demo
-      # Uncomment the following line to enable the development mode
-      # command: /usr/bin/caddy run --config /etc/caddy/dev.Caddyfile
     healthcheck:
-#      test: [ "CMD", "wget", "-q", "--spider", "https://localhost/healthz" ]
       test: [ "CMD", "wget", "-q", "--spider", "http://localhost/healthz" ]
       timeout: 5s
       retries: 5
       start_period: 60s
     ports:
-      #- "80:80"
-      #- "443:443"
       - "3000:80"
     volumes:
-      #- ./Caddyfile:/etc/caddy/Caddyfile:ro
       - mercure_data:/data
       - mercure_config:/config
+    environment:
+      SERVER_NAME: ":80"
+      MERCURE_PUBLISHER_JWT_KEY: "24207d430335d87559f64ed568966be1b21022fc51d544ba336e8a7b70964478"
+      MERCURE_SUBSCRIBER_JWT_KEY: "24207d430335d87559f64ed568966be1b21022fc51d544ba336e8a7b70964478"
+      MERCURE_EXTRA_DIRECTIVES: |
+        "anonymous
+        cors_origins http://localhost:5173 http://localhost:8000
+        publish_origins http://localhost:5173 http://localhost:8000
+        demo"
 
   php:
     build:
@@ -61,12 +53,28 @@ services:
       - mercure
     ports:
       - "8000:8000"
-    command: php -S 0.0.0.0:8000 -t public
     environment:
-      APP_SECRET: "a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6"
-      MERCURE_JWT_SECRET: ${MERCURE_JWT_SECRET}
-      MERCURE_URL: "http://mercure/.well-known/mercure"
-      MERCURE_PUBLIC_URL: "http://localhost:3000/.well-known/mercure"
+      APP_ENV: dev
+      APP_DEBUG: "1"
+    env_file: "../backend/.env.dev"
+    command:
+      - sh
+      - -lc
+      - |
+        set -e
+        
+        composer install
+        
+        echo "Waiting for database through Doctrine..."
+        until php bin/console doctrine:migrations:status >/dev/null 2>&1; do
+          sleep 1
+        done
+        
+        echo "Running pending Doctrine migrations..."
+        php bin/console doctrine:migrations:migrate --no-interaction --allow-no-migration
+        
+        echo "Starting Symfony dev server..."
+        exec php -S 0.0.0.0:8000 -t public
 
   node:
     image: node:25.9.0
@@ -77,17 +85,7 @@ services:
     ports:
       - "5173:5173"
     command: sh -c "npm install && npm run dev -- --host --port 5173"
-    environment:
-      VITE_MERCURE_PUBLIC_URL: "http://localhost:3000/.well-known/mercure"
-
-  #  mailer:
-  #    image: axllent/mailpit
-  #    ports:
-  #      - "1025:1025"
-  #      - "8025:8025"
-  #    environment:
-  #      MP_SMTP_AUTH_ACCEPT_ANY: 1
-  #      MP_SMTP_AUTH_ALLOW_INSECURE: 1
+    env_file: "../backend/.env.dev"
 
 volumes:
   database_data:
