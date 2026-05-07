@@ -122,10 +122,10 @@ body {
   }
 
   /* Custom scrollbar */
-  ::-webkit-scrollbar { width: 6px; height: 6px; }
-  ::-webkit-scrollbar-track { background: transparent; }
-  ::-webkit-scrollbar-thumb { background: var(--border-base); border-radius: 3px; }
-  ::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+  ::-webkit-scrollbar { width: 8px; height: 8px; }
+  ::-webkit-scrollbar-track { background: var(--bg-elevated); border-radius: 4px; }
+  ::-webkit-scrollbar-thumb { background: var(--text-muted); border-radius: 4px; border: 2px solid var(--bg-elevated); }
+  ::-webkit-scrollbar-thumb:hover { background: var(--text-secondary); }
 }
 
 /* Custom Utilities */
