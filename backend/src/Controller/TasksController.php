@@ -165,6 +165,68 @@ final class TasksController extends AbstractController
         return $this->json(['success' => true]);
     }
 
+    #[Route('/{id}', methods: ['PUT'])]
+    public function updateTask(
+        int $id,
+        Request $request,
+        #[CurrentUser] ?User $user,
+        EntityManagerInterface $em,
+        SubjectService $subjectService
+    ): JsonResponse {
+        if (!$user) {
+            return $this->json(['error' => 'Not logged in'], 401);
+        }
+
+        $task = $em->getRepository(Task::class)
+            ->createQueryBuilder('t')
+            ->where('t.id = :id')
+            ->andWhere('t.user = :user')
+            ->andWhere('t.deletedAt IS NULL')
+            ->setParameter('id', $id)
+            ->setParameter('user', $user)
+            ->getQuery()
+            ->getOneOrNullResult();
+
+        if (!$task) {
+            return $this->json(['error' => 'Task not found'], 404);
+        }
+
+        $data = $request->toArray();
+
+        if (isset($data['title'])) {
+            $title = trim((string) $data['title']);
+            if ('' === $title) {
+                return $this->json(['error' => 'Title is required.'], 400);
+            }
+            $task->setTitle($title);
+        }
+
+        if (array_key_exists('description', $data)) {
+            $task->setDescription($data['description'] !== null ? trim((string) $data['description']) : null);
+        }
+
+        if (array_key_exists('subject', $data)) {
+            $subject = $subjectService->getOrCreateSubject($user, $data['subject']);
+            $task->setSubject($subject);
+        }
+
+        if (isset($data['priority'])) {
+            $task->setPriority(TaskPriority::from((string) $data['priority']));
+        }
+
+        if (array_key_exists('dueDate', $data)) {
+            if ($data['dueDate']) {
+                $task->setDueAt(new \DateTimeImmutable((string) $data['dueDate']));
+            } else {
+                $task->setDueAt(null);
+            }
+        }
+
+        $em->flush();
+
+        return $this->json(['success' => true]);
+    }
+
     #[Route('/{id}', methods: ['DELETE'])]
     public function deleteTask(
         int $id,

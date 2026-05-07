@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import { Check, Clock, Flag, Plus, Sparkles, Trash2, Upload, Download, X, ChevronDown, AlertCircle } from "lucide-react";
+import { Check, Clock, Flag, Plus, Sparkles, Trash2, Upload, Download, X, ChevronDown, AlertCircle, Pencil } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
   deleteSubjectOption,
@@ -26,6 +26,13 @@ export default function Tasks() {
   const [showExportMenu, setShowExportMenu] = useState(false);
   const [importPreview, setImportPreview] = useState(null);
   const [importData, setImportData] = useState([]);
+  const [editingTask, setEditingTask] = useState(null);
+  const [editTitle, setEditTitle] = useState("");
+  const [editSubject, setEditSubject] = useState("");
+  const [editCustomSubject, setEditCustomSubject] = useState("");
+  const [editPriority, setEditPriority] = useState("medium");
+  const [editDueDate, setEditDueDate] = useState("");
+  const [editDueTime, setEditDueTime] = useState("");
   const fileRef = useRef(null);
   const toast = useToast();
 
@@ -101,6 +108,54 @@ export default function Tasks() {
       setTitle(""); setSelectedSubject(""); setCustomSubject(""); setPriority("medium"); setDueDate(""); setDueTime("");
       refreshData(); toast.success("Task created!");
     });
+  };
+
+  const handleEditClick = (task) => {
+    setEditingTask(task);
+    setEditTitle(task.title || "");
+    setEditSubject(task.subject?.name || task.subject || "");
+    setEditCustomSubject("");
+    setEditPriority(task.priority || "medium");
+    
+    if (task.dueDate) {
+      const localStr = task.dueDate.replace(/(Z|[+-]\d{2}:\d{2})$/, '');
+      const dateObj = new Date(localStr);
+      setEditDueDate(dateObj.toISOString().slice(0, 10));
+      setEditDueTime(dateObj.toTimeString().slice(0, 5));
+    } else {
+      setEditDueDate("");
+      setEditDueTime("");
+    }
+  };
+
+  const handleEditSubmit = async (e) => {
+    e.preventDefault();
+    if (!editTitle?.trim()) { toast.error("Title is required"); return; }
+    const finalSubject = editSubject === NEW_SUBJECT_VALUE ? editCustomSubject.trim() : editSubject;
+    if (!finalSubject) { toast.error("Subject is required"); return; }
+    if (!editDueDate || !editDueTime) { toast.error("Due Date and Time are required"); return; }
+    
+    const dueDateStr = editDueDate + `T${editDueTime}:00`;
+    const nowLocalString = new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 16);
+    
+    if (dueDateStr.slice(0, 16) < nowLocalString) {
+      toast.error("Due date and time cannot be in the past!");
+      return;
+    }
+
+    try {
+      const res = await fetch(`/api/tasks/${editingTask.id}`, {
+        method: "PUT", credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ title: editTitle, subject: finalSubject, priority: editPriority, dueDate: dueDateStr }),
+      });
+      if (!res.ok) throw new Error("Failed");
+      setEditingTask(null);
+      refreshData();
+      toast.success("Task updated!");
+    } catch (e) {
+      toast.error("Failed to update task");
+    }
   };
 
   // Export
@@ -378,6 +433,12 @@ export default function Tasks() {
                       <span className={cn("h-2 w-2 rounded-full", task.isCompleted ? "bg-green-400" : "bg-primary")} />
                       {task.isCompleted ? "Done" : "In Progress"}
                     </span>
+                    {!task.isCompleted && (
+                      <button onClick={() => handleEditClick(task)}
+                        className="inline-flex items-center gap-2 rounded-lg border border-primary/20 bg-primary/10 px-3 py-2 text-sm font-medium text-primary transition hover:bg-primary/20">
+                        <Pencil className="h-4 w-4" /> Edit
+                      </button>
+                    )}
                     <button onClick={() => handleDelete(task.taskId)}
                       className="inline-flex items-center gap-2 rounded-lg border border-red-500/20 bg-red-500/10 px-3 py-2 text-sm font-medium text-red-400 transition hover:bg-red-500/20">
                       <Trash2 className="h-4 w-4" /> Delete
@@ -446,6 +507,74 @@ export default function Tasks() {
               </button>
               <button onClick={() => { setImportPreview(null); setImportData([]); }} className="rounded-xl glass-card px-5 py-2.5 text-sm font-medium hover:bg-primary/10 transition">Cancel</button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Edit Task Modal */}
+      {editingTask && (
+        <div className="fixed inset-0 z-[500] flex items-center justify-center" style={{ background: 'rgba(10,10,15,0.8)', backdropFilter: 'blur(8px)', animation: 'fadeIn 0.2s ease' }}
+          onClick={(e) => { if (e.target === e.currentTarget) setEditingTask(null); }}
+          onKeyDown={(e) => { if (e.key === 'Escape') setEditingTask(null); }}>
+          <div className="glass-card rounded-3xl p-6 w-[90%] max-w-lg" style={{ animation: 'modalIn 0.35s cubic-bezier(0.22,1,0.36,1)' }}>
+            <div className="flex items-center justify-between mb-5">
+              <h3 className="text-lg font-semibold flex items-center gap-2">
+                <Pencil className="h-5 w-5 text-primary" /> Edit Task
+              </h3>
+              <button onClick={() => setEditingTask(null)} className="p-1 rounded-lg hover:bg-primary/10 transition"><X className="h-5 w-5" /></button>
+            </div>
+
+            <form onSubmit={handleEditSubmit} className="space-y-4">
+              <div className="grid gap-4">
+                <div>
+                  <label className="mb-1.5 block text-xs font-medium text-text-secondary uppercase tracking-wide">Title</label>
+                  <input type="text" value={editTitle} onChange={e => setEditTitle(e.target.value)} required
+                    className="w-full glass-input rounded-xl px-4 py-3 text-text-main placeholder:text-text-muted outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20" />
+                </div>
+                <div>
+                  <label className="mb-1.5 block text-xs font-medium text-text-secondary uppercase tracking-wide">Subject</label>
+                  <SubjectSelect
+                    options={combinedSubjectOptions}
+                    value={editSubject}
+                    onChange={setEditSubject}
+                    customSubject={editCustomSubject}
+                    onCustomSubjectChange={setEditCustomSubject}
+                    onRemoveOption={handleRemoveSubject}
+                  />
+                </div>
+                <div>
+                  <label className="mb-1.5 block text-xs font-medium text-text-secondary uppercase tracking-wide">Priority</label>
+                  <select value={editPriority} onChange={e => setEditPriority(e.target.value)}
+                    className="w-full glass-input rounded-xl px-4 py-3 text-text-main outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20">
+                    <option value="low">Low Priority</option>
+                    <option value="medium">Medium Priority</option>
+                    <option value="high">High Priority</option>
+                  </select>
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="mb-1.5 block text-xs font-medium text-text-secondary uppercase tracking-wide">Due Date</label>
+                    <input type="date" value={editDueDate} onChange={e => setEditDueDate(e.target.value)} min={minDateStr}
+                      className="w-full glass-input rounded-xl px-4 py-3 text-text-main outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20" />
+                  </div>
+                  <div>
+                    <label className="mb-1.5 block text-xs font-medium text-text-secondary uppercase tracking-wide">Time</label>
+                    <input type="time" value={editDueTime} onChange={e => setEditDueTime(e.target.value)} min={editDueDate === minDateStr ? minTimeStr : undefined}
+                      className="w-full glass-input rounded-xl px-4 py-3 text-text-main outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20" />
+                  </div>
+                </div>
+              </div>
+              <div className="mt-6 flex justify-end gap-3 pt-2 border-t border-border-base">
+                <button type="button" onClick={() => setEditingTask(null)}
+                  className="rounded-xl glass-card px-5 py-2.5 text-sm font-medium hover:bg-primary/10 transition">
+                  Cancel
+                </button>
+                <button type="submit"
+                  className="rounded-xl bg-gradient-primary-accent px-6 py-2.5 font-medium text-white transition-all hover:scale-[1.02] hover:shadow-lg hover:shadow-primary/20 active:scale-[0.98]">
+                  Save Changes
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       )}
