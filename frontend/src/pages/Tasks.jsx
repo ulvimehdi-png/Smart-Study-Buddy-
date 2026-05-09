@@ -10,8 +10,6 @@ import PageBackdrop from "../components/shared/PageBackdrop";
 import SmallStats from "../components/shared/SmallStats";
 import SubjectBadge from "../components/shared/SubjectBadge";
 import SubjectSelect from "../components/shared/SubjectSelect";
-import { useToast } from "../lib/useToast";
-import { parseCSV, mapTaskData } from "../lib/dataUtils";
 
 export default function Tasks() {
   const [tasks, setTasks] = useState([]);
@@ -19,40 +17,16 @@ export default function Tasks() {
   const [selectedSubject, setSelectedSubject] = useState("");
   const [customSubject, setCustomSubject] = useState("");
   const [subjectOptions, setSubjectOptions] = useState([]);
-  const [priority, setPriority] = useState("medium");
-  const [dueDate, setDueDate] = useState("");
-  const [dueTime, setDueTime] = useState("");
-  const [dateWarning, setDateWarning] = useState(false);
-  const [showExportMenu, setShowExportMenu] = useState(false);
-  const [importPreview, setImportPreview] = useState(null);
-  const [importData, setImportData] = useState([]);
-  const [editingTask, setEditingTask] = useState(null);
-  const [editTitle, setEditTitle] = useState("");
-  const [editSubject, setEditSubject] = useState("");
-  const [editCustomSubject, setEditCustomSubject] = useState("");
-  const [editPriority, setEditPriority] = useState("medium");
-  const [editDueDate, setEditDueDate] = useState("");
-  const [editDueTime, setEditDueTime] = useState("");
-  const fileRef = useRef(null);
-  const toast = useToast();
-
-  const formatTaskDate = (dateStr) => {
-    if (!dateStr) return "";
-    const localStr = dateStr.replace(/(Z|[+-]\d{2}:\d{2})$/, '');
-    return new Date(localStr).toLocaleDateString();
-  };
-
-  const formatTaskTime = (dateStr) => {
-    if (!dateStr) return "";
-    const localStr = dateStr.replace(/(Z|[+-]\d{2}:\d{2})$/, '');
-    return new Date(localStr).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
-  };
 
   const fetchTasks = () => {
-    fetch("/api/tasks", { credentials: "include" })
-      .then(r => r.json()).then(d => setTasks(d))
-      .catch(e => console.error("Error fetching tasks:", e));
+    fetch("/api/tasks", {
+      credentials: "include",
+    })
+      .then((res) => res.json())
+      .then((data) => setTasks(data))
+      .catch((err) => console.error("Error fetching tasks:", err));
   };
+
   const fetchSubjects = () => {
     fetchSubjectOptions()
       .then((data) => setSubjectOptions(data))
@@ -69,46 +43,78 @@ export default function Tasks() {
     fetchSubjects();
   };
 
-  const handleRemoveSubject = async (option) => {
-    if (String(option.id).startsWith("derived-")) {
-      toast.error("This subject is assigned to a task. Remove it from the task first.");
-      return;
-    }
-    await deleteSubjectOption(option.id);
-    if (selectedSubject === option.name) setSelectedSubject("");
-    refreshData();
+  const handleToggle = (taskId) => {
+    fetch(`/api/tasks/${taskId}/toggle`, {
+      method: "PUT",
+      credentials: "include",
+    }).then(() => fetchTasks());
   };
 
-  const handleToggle = (id) => fetch(`/api/tasks/${id}/toggle`, { method: "PUT", credentials: "include" }).then(() => fetchTasks());
-  const handleDelete = (id) => fetch(`/api/tasks/${id}`, { method: "DELETE", credentials: "include" }).then(() => { fetchTasks(); toast.success("Task deleted"); });
+  const handleDelete = (taskId) => {
+    fetch(`/api/tasks/${taskId}`, {
+      method: "DELETE",
+      credentials: "include",
+    }).then(() => fetchTasks());
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!title?.trim()) { toast.error("Title is required"); return; }
-    const finalSubject = selectedSubject === NEW_SUBJECT_VALUE ? customSubject.trim() : selectedSubject;
-    if (!finalSubject) { toast.error("Subject is required"); return; }
+    if (!title?.trim()) {
+      toast.error("Title is required");
+      return;
+    }
+
+    const subject =
+      selectedSubject === NEW_SUBJECT_VALUE
+        ? customSubject.trim()
+        : selectedSubject;
+
+    if (!subject) { toast.error("Subject is required"); return; }
     if (!dueDate) { setDateWarning(true); toast.error("Due Date is required"); return; }
     if (!dueTime) { toast.error("Due Time is required"); return; }
-    
+
     setDateWarning(false);
 
     const dueDateStr = dueDate + `T${dueTime}:00`;
     const nowLocalString = new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 16);
-    
+
     if (dueDateStr.slice(0, 16) < nowLocalString) {
       toast.error("Due date and time cannot be in the past!");
       return;
     }
 
     fetch("/api/tasks", {
-      method: "POST", credentials: "include",
+      method: "POST",
+      credentials: "include",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ title, subject: finalSubject, priority, dueDate: dueDateStr }),
+      body: JSON.stringify({ title, subject, priority, dueDate: dueDateStr }),
     }).then(() => {
-      setTitle(""); setSelectedSubject(""); setCustomSubject(""); setPriority("medium"); setDueDate(""); setDueTime("");
-      refreshData(); toast.success("Task created!");
+      setTitle("");
+      setSelectedSubject("");
+      setCustomSubject("");
+      setPriority("medium");
+      setDueDate("");
+      setDueTime("");
+      refreshData();
+      toast.success("Task created!");
     });
   };
+
+  const handleRemoveSubject = async (option) => {
+    await deleteSubjectOption(option.id);
+
+    if (selectedSubject === option.name) {
+      setSelectedSubject("");
+    }
+
+    refreshData();
+  };
+
+  const completedTasks = tasks.filter((task) => task.isCompleted).length;
+  const pendingTasks = tasks.length - completedTasks;
+  const activeSubjects = new Set(
+    tasks.map((task) => task.subject?.trim()).filter(Boolean),
+  ).size;
 
   const handleEditClick = (task) => {
     setEditingTask(task);
@@ -131,8 +137,8 @@ export default function Tasks() {
   const handleEditSubmit = async (e) => {
     e.preventDefault();
     if (!editTitle?.trim()) { toast.error("Title is required"); return; }
-    const finalSubject = editSubject === NEW_SUBJECT_VALUE ? editCustomSubject.trim() : editSubject;
-    if (!finalSubject) { toast.error("Subject is required"); return; }
+    const subject = editSubject === NEW_SUBJECT_VALUE ? editCustomSubject.trim() : editSubject;
+    if (!subject) { toast.error("Subject is required"); return; }
     if (!editDueDate || !editDueTime) { toast.error("Due Date and Time are required"); return; }
     
     const dueDateStr = editDueDate + `T${editDueTime}:00`;
@@ -147,7 +153,7 @@ export default function Tasks() {
       const res = await fetch(`/api/tasks/${editingTask.id}`, {
         method: "PUT", credentials: "include",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ title: editTitle, subject: finalSubject, priority: editPriority, dueDate: dueDateStr }),
+        body: JSON.stringify({ title: editTitle, subject: subject, priority: editPriority, dueDate: dueDateStr }),
       });
       if (!res.ok) throw new Error("Failed");
       setEditingTask(null);
@@ -243,44 +249,36 @@ export default function Tasks() {
     fetchTasks();
   };
 
-  const completedTasks = tasks.filter(t => t.isCompleted).length;
-  const pendingTasks = tasks.length - completedTasks;
-  const activeSubjects = new Set(tasks.map(t => t.subject?.trim()).filter(Boolean)).size;
+
 
   const priorityGlow = { high: "border-l-4 border-l-red-500/60", medium: "border-l-4 border-l-primary/60", low: "border-l-4 border-l-secondary/60" };
 
   const stats = [
-    { label: "Pending", value: pendingTasks, icon: <Clock className="h-5 w-5" />, iconClass: "bg-primary/10 text-primary" },
-    { label: "Completed", value: completedTasks, icon: <Check className="h-5 w-5" />, iconClass: "bg-green-500/10 text-green-400" },
-    { label: "Subjects", value: activeSubjects, icon: <Sparkles className="h-5 w-5" />, iconClass: "bg-secondary/10 text-secondary" },
+    {
+      label: "Pending",
+      value: pendingTasks,
+      icon: <Clock className="h-5 w-5" />,
+      iconClass: "bg-primary/10 text-primary",
+    },
+    {
+      label: "Completed",
+      value: completedTasks,
+      icon: <Check className="h-5 w-5" />,
+      iconClass: "bg-accent-light/10 text-accent-light",
+    },
+    {
+      label: "Subjects",
+      value: activeSubjects,
+      icon: <Sparkles className="h-5 w-5" />,
+      iconClass: "bg-accent/10 text-accent",
+    },
   ];
 
-  const nowLocalString = new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 16);
-  const minDateStr = nowLocalString.split("T")[0];
-  const minTimeStr = nowLocalString.split("T")[1];
-
-  const canImport = importData.length > 0 && importData.every(task => {
-    if (!task.title?.trim() || !task.subject?.trim() || !task.priority || !task.dueDate) return false;
-    return task.dueDate.slice(0, 16) >= nowLocalString;
-  });
-
-  const combinedSubjectOptions = React.useMemo(() => {
-    // Collect all subject names currently used in any task
-    const activeNames = new Set(tasks.map(t => t.subject?.trim()).filter(Boolean));
-    
-    return Array.from(activeNames).map((name, i) => {
-      // Find matching subject from API, if any (case-insensitive)
-      const existing = subjectOptions.find(s => s.name.toLowerCase() === name.toLowerCase());
-      return existing ? existing : { id: `derived-${i}`, name };
-    }).sort((a, b) => a.name.localeCompare(b.name));
-  }, [tasks, subjectOptions]);
-
   return (
-    <div className="relative min-h-screen overflow-hidden text-text-main page-enter" style={{ background: 'transparent' }}>
+    <div className="relative min-h-screen overflow-hidden bg-bg-base text-text-main page-enter">
       <PageBackdrop />
 
       <div className="relative mx-auto max-w-6xl px-4 pb-12 pt-22 sm:px-6 lg:px-8">
-        {/* Header */}
         <div className="mb-8 flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
           <div className="flex items-center gap-3">
             <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
@@ -313,13 +311,6 @@ export default function Tasks() {
               )}
             </div>
           </div>
-        </div>
-
-        {/* Stats */}
-        <div className="grid gap-3 sm:grid-cols-3 mb-6">
-          {stats.map(({ label, value, icon, iconClass }) => (
-            <SmallStats key={label} label={label} value={value} icon={icon} iconClass={iconClass} />
-          ))}
         </div>
 
         {/* Add Task Form */}
@@ -391,7 +382,6 @@ export default function Tasks() {
               <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-accent/10 text-accent"><Flag className="h-5 w-5" /></div>
               <div><h2 className="text-lg font-semibold">Current Tasks</h2><p className="mt-1 text-sm text-text-secondary">Open and completed tasks.</p></div>
             </div>
-            <div className="rounded-full bg-primary/10 px-3 py-1 text-sm font-semibold text-primary">{tasks.length} total</div>
           </div>
 
           {tasks.length === 0 ? (
@@ -450,134 +440,6 @@ export default function Tasks() {
           )}
         </section>
       </div>
-
-      {/* Import Preview Modal */}
-      {importPreview && (
-        <div className="fixed inset-0 z-[500] flex items-center justify-center" style={{ background: 'rgba(10,10,15,0.8)', backdropFilter: 'blur(8px)', animation: 'fadeIn 0.2s ease' }}>
-          <div className="glass-card rounded-3xl p-6 w-[90%] max-w-2xl max-h-[80vh] overflow-y-auto" style={{ animation: 'modalIn 0.35s cubic-bezier(0.22,1,0.36,1)' }}>
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold">Import Preview — {importData.length} tasks</h3>
-              <button onClick={() => { setImportPreview(null); setImportData([]); }} className="p-1 rounded-lg hover:bg-primary/10 transition"><X className="h-5 w-5" /></button>
-            </div>
-            <div className="overflow-x-auto rounded-xl border border-border-base mb-4 max-h-[50vh] custom-scrollbar">
-              <table className="w-full text-sm">
-                <thead className="sticky top-0 bg-[#0a0a0f] z-10 shadow-sm"><tr className="bg-primary/10">
-                  <th className="px-4 py-3 text-left text-text-secondary font-semibold">Task Title</th>
-                  <th className="px-4 py-3 text-left text-text-secondary font-semibold">Subject</th>
-                  <th className="px-4 py-3 text-left text-text-secondary font-semibold">Priority</th>
-                  <th className="px-4 py-3 text-left text-text-secondary font-semibold min-w-[200px]">Due Date & Time</th>
-                </tr></thead>
-                <tbody>{importPreview.map((row, i) => (
-                  <tr key={i} className="border-t border-border-base hover:bg-primary/5 transition">
-                    <td className="px-2 py-3">
-                      <input type="text" placeholder="Task title..." value={row.title || ""} onChange={e => handleImportEdit(i, 'title', e.target.value)} className={cn("glass-input rounded-lg px-3 py-2 w-full bg-transparent transition outline-none focus:ring-2 focus:ring-primary/30", !row.title?.trim() ? "border border-red-500/50 bg-red-500/5 placeholder:text-red-400/50" : "border border-transparent")} />
-                    </td>
-                    <td className="px-2 py-3">
-                      <input type="text" placeholder="Subject..." value={row.subject || ""} onChange={e => handleImportEdit(i, 'subject', e.target.value)} className={cn("glass-input rounded-lg px-3 py-2 w-full bg-transparent transition outline-none focus:ring-2 focus:ring-primary/30", !row.subject?.trim() ? "border border-red-500/50 bg-red-500/5 placeholder:text-red-400/50" : "border border-transparent")} />
-                    </td>
-                    <td className="px-2 py-3">
-                      <select value={row.priority || "medium"} onChange={e => handleImportEdit(i, 'priority', e.target.value)} className={cn("glass-input rounded-lg px-3 py-2 w-full bg-transparent outline-none transition focus:ring-2 focus:ring-primary/30", !row.priority ? "border border-red-500/50 bg-red-500/5" : "border border-transparent")}>
-                        <option value="low">Low</option>
-                        <option value="medium">Medium</option>
-                        <option value="high">High</option>
-                      </select>
-                    </td>
-                    <td className="px-2 py-3">
-                      <input type="datetime-local" 
-                        min={nowLocalString}
-                        value={row.dueDate ? row.dueDate.slice(0, 16) : ""} 
-                        onChange={e => handleImportEdit(i, 'dueDate', e.target.value ? e.target.value + ":00" : null)} 
-                        className={cn("glass-input rounded-lg px-3 py-2 w-full bg-transparent outline-none transition focus:ring-2 focus:ring-primary/30 [color-scheme:dark]", 
-                          (!row.dueDate || row.dueDate.slice(0, 16) < nowLocalString) ? "border border-red-500/50 bg-red-500/5" : "border border-transparent")} 
-                      />
-                    </td>
-                  </tr>
-                ))}</tbody>
-              </table>
-            </div>
-            {!canImport && (
-              <div className="mb-4 flex items-center gap-2 rounded-xl bg-red-500/10 border border-red-500/20 px-4 py-2.5 text-sm text-red-400" style={{ animation: 'fadeIn 0.2s ease' }}>
-                <AlertCircle className="h-4 w-4 shrink-0" />
-                Please ensure all fields are filled and due dates are set to the future.
-              </div>
-            )}
-            <div className="flex gap-3">
-              <button onClick={confirmImport} disabled={!canImport} className={cn("rounded-xl px-6 py-2.5 text-sm font-medium transition flex items-center justify-center min-w-[140px]", canImport ? "bg-green-500/20 text-green-400 border border-green-500/30 hover:bg-green-500/30" : "bg-gray-500/10 text-gray-500 border border-gray-500/20 cursor-not-allowed opacity-60")}>
-                {canImport ? "✓ Confirm Import" : "Incomplete..."}
-              </button>
-              <button onClick={() => { setImportPreview(null); setImportData([]); }} className="rounded-xl glass-card px-5 py-2.5 text-sm font-medium hover:bg-primary/10 transition">Cancel</button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Edit Task Modal */}
-      {editingTask && (
-        <div className="fixed inset-0 z-[500] flex items-center justify-center" style={{ background: 'rgba(10,10,15,0.8)', backdropFilter: 'blur(8px)', animation: 'fadeIn 0.2s ease' }}
-          onClick={(e) => { if (e.target === e.currentTarget) setEditingTask(null); }}
-          onKeyDown={(e) => { if (e.key === 'Escape') setEditingTask(null); }}>
-          <div className="glass-card rounded-3xl p-6 w-[90%] max-w-lg" style={{ animation: 'modalIn 0.35s cubic-bezier(0.22,1,0.36,1)' }}>
-            <div className="flex items-center justify-between mb-5">
-              <h3 className="text-lg font-semibold flex items-center gap-2">
-                <Pencil className="h-5 w-5 text-primary" /> Edit Task
-              </h3>
-              <button onClick={() => setEditingTask(null)} className="p-1 rounded-lg hover:bg-primary/10 transition"><X className="h-5 w-5" /></button>
-            </div>
-
-            <form onSubmit={handleEditSubmit} className="space-y-4">
-              <div className="grid gap-4">
-                <div>
-                  <label className="mb-1.5 block text-xs font-medium text-text-secondary uppercase tracking-wide">Title</label>
-                  <input type="text" value={editTitle} onChange={e => setEditTitle(e.target.value)} required
-                    className="w-full glass-input rounded-xl px-4 py-3 text-text-main placeholder:text-text-muted outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20" />
-                </div>
-                <div>
-                  <label className="mb-1.5 block text-xs font-medium text-text-secondary uppercase tracking-wide">Subject</label>
-                  <SubjectSelect
-                    options={combinedSubjectOptions}
-                    value={editSubject}
-                    onChange={setEditSubject}
-                    customSubject={editCustomSubject}
-                    onCustomSubjectChange={setEditCustomSubject}
-                    onRemoveOption={handleRemoveSubject}
-                  />
-                </div>
-                <div>
-                  <label className="mb-1.5 block text-xs font-medium text-text-secondary uppercase tracking-wide">Priority</label>
-                  <select value={editPriority} onChange={e => setEditPriority(e.target.value)}
-                    className="w-full glass-input rounded-xl px-4 py-3 text-text-main outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20">
-                    <option value="low">Low Priority</option>
-                    <option value="medium">Medium Priority</option>
-                    <option value="high">High Priority</option>
-                  </select>
-                </div>
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className="mb-1.5 block text-xs font-medium text-text-secondary uppercase tracking-wide">Due Date</label>
-                    <input type="date" value={editDueDate} onChange={e => setEditDueDate(e.target.value)} min={minDateStr}
-                      className="w-full glass-input rounded-xl px-4 py-3 text-text-main outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20" />
-                  </div>
-                  <div>
-                    <label className="mb-1.5 block text-xs font-medium text-text-secondary uppercase tracking-wide">Time</label>
-                    <input type="time" value={editDueTime} onChange={e => setEditDueTime(e.target.value)} min={editDueDate === minDateStr ? minTimeStr : undefined}
-                      className="w-full glass-input rounded-xl px-4 py-3 text-text-main outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20" />
-                  </div>
-                </div>
-              </div>
-              <div className="mt-6 flex justify-end gap-3 pt-2 border-t border-border-base">
-                <button type="button" onClick={() => setEditingTask(null)}
-                  className="rounded-xl glass-card px-5 py-2.5 text-sm font-medium hover:bg-primary/10 transition">
-                  Cancel
-                </button>
-                <button type="submit"
-                  className="rounded-xl bg-gradient-primary-accent px-6 py-2.5 font-medium text-white transition-all hover:scale-[1.02] hover:shadow-lg hover:shadow-primary/20 active:scale-[0.98]">
-                  Save Changes
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
