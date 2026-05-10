@@ -2,17 +2,16 @@ import React from "react";
 import { Routes, Route } from "react-router-dom";
 import Home from "@/pages/Home";
 import Login from "@/pages/Login";
-import Timer from "@/components/Timer";
 import Tasks from "@/pages/Tasks";
 import Notes from "@/pages/Notes";
-import Dashboard from "@/pages/Dashboard"; // Make sure this points to your new dashboard file
+import Dashboard from "@/pages/Dashboard";
 import ProtectedRoute from "./pages/ProtectedRoute";
 import TimerPage from "./pages/TimerPage";
-import Test from "./pages/Test";
 import Layout from "./components/Layout";
 import Leaderboard from './pages/Leaderboard';
 import UserPage from "./pages/UserPage";
 import Reports from './pages/Reports';
+import NotFound from "./pages/NotFound";
 
 function App() {
     return (
@@ -30,7 +29,7 @@ function App() {
                     <Route path="/user" element={<ProtectedRoute><UserPage /></ProtectedRoute>} />
                     <Route path="/reports" element={<ProtectedRoute><Reports /></ProtectedRoute>} />
 
-                    <Route path="/test" element={<Test />} />
+                    <Route path="*" element={<NotFound />} />
                 </Route>
             </Routes>
         </>
