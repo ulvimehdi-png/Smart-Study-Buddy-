@@ -141,22 +141,18 @@ export default function Home() {
 
             {/* Stats */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mt-20 max-w-4xl mx-auto text-gradient-primary-accent">
-              <div className="text-center">
-                <div className="text-4xl font-bold">10k+</div>
-                <div className="text-sm text-text-secondary mt-1">Active Students</div>
-              </div>
-              <div className="text-center">
-                <div className="text-4xl font-bold">1M+</div>
-                <div className="text-sm text-text-secondary mt-1">Study Sessions</div>
-              </div>
-              <div className="text-center">
-                <div className="text-4xl font-bold">95%</div>
-                <div className="text-sm text-text-secondary mt-1">Success Rate</div>
-              </div>
-              <div className="text-center">
-                <div className="text-4xl font-bold">24/7</div>
-                <div className="text-sm text-text-secondary mt-1">Available</div>
-              </div>
+              {[{ val: "10k+", label: "Active Students" },
+                { val: "1M+", label: "Study Sessions" },
+                { val: "95%", label: "Success Rate" },
+                { val: "24/7", label: "Available" }
+              ].map(s => (
+                  <div key={s.label} className="text-center">
+                    <div className="text-4xl font-bold">10k+</div>
+                    <div className="text-sm text-text-secondary mt-1">
+                      {s.label}
+                    </div>
+                  </div>
+              ))}
             </div>
           </div>
         </div>
@@ -281,9 +277,9 @@ export default function Home() {
           <p className="text-xl text-text-secondary max-w-2xl mx-auto mb-12">
             Join thousands of students achieving their academic goals with StudyBuddy
           </p>
-          <GradientButton 
-            to="/login" 
-            variant="secondary" 
+          <GradientButton
+            to="/login"
+            variant="secondary"
             size="lg"
             icon={ArrowRight}
           >

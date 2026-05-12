@@ -43,5 +43,8 @@ test-up:
 test-down:
 	make -C docker/testing test-down
 
+test-build:
+	make -C docker/testing test-build
+
 test-help:
 	make -C docker/testing help

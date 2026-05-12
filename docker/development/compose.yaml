@@ -24,6 +24,7 @@ services:
     volumes:
       - ../../backend:/app
       - ./php/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini
+      - ./php-performance.ini:/usr/local/etc/php/conf.d/php-performance.ini
     working_dir: /app
     depends_on:
       - database

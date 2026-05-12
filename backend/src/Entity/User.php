@@ -74,6 +74,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(options: ['default' => 0])]
     #[Groups(['read', 'user:read'])]
+    private ?int $currentStreak = 0;
+
+    #[ORM\Column(options: ['default' => 0])]
+    #[Groups(['read', 'user:read'])]
+    private ?int $longestStreak = 0;
+
+    #[ORM\Column(options: ['default' => 0])]
+    #[Groups(['read', 'user:read'])]
     private ?int $points = 0;
 
     public function getPoints(): ?int
@@ -288,6 +296,31 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $this->lastLoginAt = $lastLoginAt;
 
+        return $this;
+    }
+
+    public function getCurrentStreak(): ?int
+    {
+        return $this->currentStreak;
+    }
+
+    public function setCurrentStreak(int $currentStreak): static
+    {
+        $this->currentStreak = $currentStreak;
+        if ($this->currentStreak > $this->longestStreak) {
+            $this->longestStreak = $this->currentStreak;
+        }
+        return $this;
+    }
+
+    public function getLongestStreak(): ?int
+    {
+        return $this->longestStreak;
+    }
+
+    public function setLongestStreak(int $longestStreak): static
+    {
+        $this->longestStreak = $longestStreak;
         return $this;
     }
 

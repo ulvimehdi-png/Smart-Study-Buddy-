@@ -43,5 +43,8 @@ test-up:
 test-down:
 	make -C testing test-down
 
+test-build:
+	make -C testing test-build
+
 test-help:
 	make -C testing help

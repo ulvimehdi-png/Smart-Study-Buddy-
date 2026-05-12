@@ -2,8 +2,8 @@
 
 namespace App\DataFixtures;
 
-use App\Entity\User;
 use App\Entity\Settings;
+use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
 use Doctrine\Persistence\ObjectManager;
@@ -13,14 +13,16 @@ class UserFixtures extends Fixture implements FixtureGroupInterface
 {
     private UserPasswordHasherInterface $hasher;
 
-    public function __construct(UserPasswordHasherInterface $hasher)
+    public function __construct(
+        UserPasswordHasherInterface $hasher
+    )
     {
         $this->hasher = $hasher;
     }
 
     public static function getGroups(): array
     {
-        return ['minimal','base','dev','demo'];
+        return ['minimal', 'base', 'dev', 'demo'];
     }
 
     public function getDependencies(): array
@@ -41,5 +43,19 @@ class UserFixtures extends Fixture implements FixtureGroupInterface
         $manager->persist($user);
         $manager->persist($settings);
         $manager->flush();
+
+        /*
+        $user = new User();
+        $user->setUsername('admin');
+        $user->setPassword($this->hasher->hashPassword($user, 'admin'));
+        $user->setRoles(['ROLE_USER', 'ROLE_ADMIN']);
+        $user->setIsActive(true);
+        $user->setPoints(100);
+        $user->setCurrentStreak(5);
+        $user->setLongestStreak(10);
+
+        $manager->persist($user);
+        $manager->flush();
+        */
     }
 }

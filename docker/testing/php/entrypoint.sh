@@ -9,5 +9,8 @@ done
 echo "Running migrations"
 php bin/console doctrine:migrations:migrate --env=test --no-interaction
 
+echo "Loading fixtures"
+php bin/console doctrine:fixtures:load --env=test --no-interaction
+
 echo "Running PHPUnit tests"
 php bin/phpunit

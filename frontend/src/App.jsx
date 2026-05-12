@@ -12,6 +12,7 @@ import Leaderboard from './pages/Leaderboard';
 import UserPage from "./pages/UserPage";
 import Reports from './pages/Reports';
 import NotFound from "./pages/NotFound";
+import Calendar from './pages/Calendar';
 
 function App() {
     return (
@@ -28,6 +29,7 @@ function App() {
                     <Route path="/leaderboard" element={<ProtectedRoute><Leaderboard /></ProtectedRoute>} />
                     <Route path="/user" element={<ProtectedRoute><UserPage /></ProtectedRoute>} />
                     <Route path="/reports" element={<ProtectedRoute><Reports /></ProtectedRoute>} />
+                    <Route path="/calendar" element={<ProtectedRoute><Calendar /></ProtectedRoute>} />
 
                     <Route path="*" element={<NotFound />} />
                 </Route>

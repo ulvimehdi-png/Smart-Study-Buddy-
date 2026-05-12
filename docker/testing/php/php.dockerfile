@@ -4,6 +4,7 @@ WORKDIR /app/backend
 
 ENV APP_ENV=test
 ENV APP_DEBUG=0
+# -- during test run, symfony will change 'app' to 'app_test' --
 ENV DATABASE_URL="mysql://app_test:app_test@database:3306/app?serverVersion=8.0.32&charset=utf8mb4"
 
 RUN apt-get update && apt-get install -y \
@@ -13,11 +14,14 @@ RUN apt-get update && apt-get install -y \
 
 COPY --from=composer:2.9.5 /usr/bin/composer /usr/bin/composer
 
+#COPY backend/ ./
+#RUN rm -rf var vendor
+
+COPY backend/composer.json backend/composer.lock ./
+
+RUN composer install --prefer-dist --no-interaction --no-scripts
+
 COPY backend/ ./
-
-RUN rm -rf var vendor
-
-RUN composer install --prefer-dist --no-interaction
 
 RUN php bin/console lint:yaml config \
     && php bin/console lint:container \
