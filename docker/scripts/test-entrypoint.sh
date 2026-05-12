@@ -1,10 +1,10 @@
 #!/bin/sh
-set -euo
+set -eu
 
 echo "Installing composer dependencies..."
 composer install --no-interaction --prefer-dist
 
-/docker/scripts/wait-for-db.sh
+/scripts/wait-for-db.sh
 
 echo "Running migrations..."
 php bin/console doctrine:migrations:migrate \

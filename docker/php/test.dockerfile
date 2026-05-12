@@ -17,11 +17,6 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # COMPOSER
-COPY --from=composer:2.9.5 /usr/bin/composer /usr/bin/composer
-
-# SYMFONY CLI
-COPY --link \
-    --from=ghcr.io/symfony-cli/symfony-cli:latest \
-    /usr/local/bin/symfony /usr/local/bin/symfony
+COPY --from=composer:2.9 /usr/bin/composer /usr/bin/composer
 
 WORKDIR /app/backend

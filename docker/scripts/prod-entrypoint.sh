@@ -1,7 +1,7 @@
 #!/bin/sh
-set -euo
+set -eu
 
-/docker/scripts/wait-for-db.sh
+/scripts/wait-for-db.sh
 
 # Normally we'd never run migrations in a production environment,
 # but this one is only for local testing/mimicking purposes

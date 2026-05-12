@@ -1,5 +1,5 @@
 #!/bin/sh
-set -euo
+set -eu
 
 echo "Installing composer dependencies..."
 composer install --no-interaction --prefer-dist
@@ -12,7 +12,7 @@ echo "Clearing caches..."
 composer clear-cache --profile
 php bin/console cache:clear --env=dev
 
-/docker/scripts/wait-for-db.sh
+/scripts/wait-for-db.sh
 
 echo "Checking migration status..."
 

@@ -1,22 +1,15 @@
 services:
 
   db:
-    image: mysql:8.0.32
-    environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: app
-      MYSQL_USER: app
-      MYSQL_PASSWORD: app
+    image: ${DATABASE_VERSION}
+    env_file: ./docker/environment/${APP_ENV}/${APP_ENV}.db.env
     healthcheck:
       test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-proot" ]
       interval: 5s
       timeout: 3s
       retries: 20
+    networks:
+      - app_net
 
-  php:
-    build:
-      dockerfile: ./docker/php/base.dockerfile
-    working_dir: /app/backend
-    depends_on:
-      db:
-        condition: service_healthy
+networks:
+  app_net:

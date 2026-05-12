@@ -1,57 +1,46 @@
-name: sewt_dev_compose
 services:
 
   db:
     ports:
-      - "3307:3306"
+      - 127.0.0.1:${EXT_PORT_DB_DEV}:3306
     volumes:
-      - sewt_dev_db_data:/var/lib/mysql
+      - sewt_dev_db:/var/lib/mysql
 
   php:
+    build:
+      dockerfile: ./docker/php/${APP_ENV}.dockerfile
     working_dir: /app/backend
-    user: "${UID:-1000}:${GID:-1000}"
-    environment:
-      APP_ENV: dev
-      APP_DEBUG: 1
-    env_file: "./backend/.env.dev"
+    env_file: ./docker/environment/${APP_ENV}/${APP_ENV}.php.env
     ports:
-      - "8000:8000"
+      - 127.0.0.1:${EXT_PORT_PHP_DEV}:80
     volumes:
       - ./backend:/app/backend
-      - ./docker/php/dev.ini:/usr/local/etc/php/conf.d/dev.ini
-      - ./docker/scripts:/docker/scripts
-    command: ["/docker/scripts/dev-entrypoint.sh"]
+      - ./docker/php/${APP_ENV}.ini:/usr/local/etc/php/conf.d/${APP_ENV}.ini
+      - ./docker/scripts:/scripts
+    command: /scripts/${APP_ENV}-entrypoint.sh
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - app_net
 
   node:
-    image: node:25.9.0
-    working_dir: /app
-    user: "${UID:-1000}:${GID:-1000}"
-    environment:
-      VITE_MERCURE_PUBLIC_URL: 'http://mercure:3000/.well-known/mercure'
+    image: ${NODE_VERSION}
+    working_dir: /app/frontend
+    env_file: ./docker/environment/${APP_ENV}/${APP_ENV}.node.env
     ports:
-      - "5173:5173"
+      - 127.0.0.1:${EXT_PORT_NODE_DEV}:5173
     volumes:
-      - ./frontend:/app
+      - ./frontend:/app/frontend
     command: sh -c "npm install && npm run dev -- --host --port 5173"
+    networks:
+      - app_net
 
   mercure:
-    image: dunglas/mercure
-    environment:
-      SERVER_NAME: ":80"
-      MERCURE_PUBLISHER_JWT_KEY: "!"
-      MERCURE_SUBSCRIBER_JWT_KEY: "!"
-      #MERCURE_EXTRA_DIRECTIVES: |
-      #  "anonymous
-      #  cors_origins http://localhost:5173 http://localhost:8000
-      #  publish_origins http://localhost:5173 http://localhost:8000
-      #  demo"
-      MERCURE_EXTRA_DIRECTIVES: |
-        demo
-        anonymous
-        cors_origins *
-        publish_origins *
+    image: ${MERCURE_VERSION}
+    env_file: ./docker/environment/${APP_ENV}/${APP_ENV}.mercure.env
     ports:
-      - "3000:80"
+      - 127.0.0.1:${EXT_PORT_MERCURE_DEV}:80
     volumes:
       - sewt_dev_mercure_data:/data
       - sewt_dev_mercure_config:/config
@@ -60,9 +49,11 @@ services:
       timeout: 5s
       retries: 5
       start_period: 60s
+    networks:
+      - app_net
 
 
 volumes:
-  sewt_dev_db_data:
+  sewt_dev_db:
   sewt_dev_mercure_data:
   sewt_dev_mercure_config:
