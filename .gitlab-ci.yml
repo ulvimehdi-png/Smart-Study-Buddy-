@@ -22,12 +22,12 @@ workflow:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
     - if: '$CI_COMMIT_BRANCH'
 
-cache:
-  key: ${CI_COMMIT_REF_SLUG}
-  paths:
-    - backend/vendor/
-    - frontend/node_modules
-  policy: pull-push
+#cache:
+#  key: ${CI_COMMIT_REF_SLUG}
+#  paths:
+#    - backend/vendor/
+#    - frontend/node_modules
+#  policy: pull-push
 
 #
 # VALIDATE
