@@ -1,0 +1,25 @@
+name: sewt_prod_compose
+services:
+
+  webserver:
+    image: studybuddy:prod
+    container_name: sewt_prod_webserver_container
+    build:
+      dockerfile: ./docker/php/prod.dockerfile
+      no_cache: true
+      pull: true
+    ports:
+      - "127.0.0.1:8080:80"
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    container_name: sewt_prod_db_container
+    ports:
+      - "127.0.0.1:3308:3306"
+    volumes:
+      - sewt_prod_db_data:/var/lib/mysql
+
+volumes:
+  sewt_prod_db_data:
