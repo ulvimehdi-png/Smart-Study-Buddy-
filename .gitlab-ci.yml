@@ -1,21 +1,21 @@
-stages:
-    - test
-    - build
-    - deploy
-
-variables:
-    APP_ENV: prod
-    BACKEND_DIR: $CI_PROJECT_DIR/backend
-    FRONTEND_DIR: $CI_PROJECT_DIR/frontend
-    DEPLOY_USER: a25sewt301
-    DEPLOY_HOST: shell.studev.groept.be
-    DEPLOY_PATH: /var/www/html
-
-cache:
-    key: ${CI_COMMIT_REF_SLUG}
-    paths:
-        - backend/vendor/
-        - frontend/node_modules
+#stages:
+#    - test
+#    - build
+#    - deploy
+#
+#variables:
+#    APP_ENV: prod
+#    BACKEND_DIR: $CI_PROJECT_DIR/backend
+#    FRONTEND_DIR: $CI_PROJECT_DIR/frontend
+#    DEPLOY_USER: a25sewt301
+#    DEPLOY_HOST: shell.studev.groept.be
+#    DEPLOY_PATH: /var/www/html
+#
+#cache:
+#    key: ${CI_COMMIT_REF_SLUG}
+#    paths:
+#        - backend/vendor/
+#        - frontend/node_modules
 
 #
 # TEST STAGE
@@ -40,85 +40,85 @@ cache:
 #        # TODO: UNCOMMENT WHEN TESTING IS IMPLEMENTED
 #        - php bin/phpunit
 
-test_backend:
-    stage: test
-    image: docker:29-cli
-    services:
-        - name: docker:29-dind
-          command: ["--tls=false"]
-    variables:
-        DOCKER_HOST: tcp://docker:2375
-        DOCKER_TLS_CERTDIR: ""
-    before_script:
-        - apk add --no-cache make
-    script:
-        - docker version
-        - docker info
-        - docker compose version
-        - make -C docker/testing test-up
+#test_backend:
+#    stage: test
+#    image: docker:29-cli
+#    services:
+#        - name: docker:29-dind
+#          command: ["--tls=false"]
+#    variables:
+#        DOCKER_HOST: tcp://docker:2375
+#        DOCKER_TLS_CERTDIR: ""
+#    before_script:
+#        - apk add --no-cache make
+#    script:
+#        - docker version
+#        - docker info
+#        - docker compose version
+#        - make -C docker/testing test-up
 
 #
 # BUILD STAGE
 #
-build_frontend:
-    stage: build
-    image: node:20-alpine
-    script:
-        - cd $FRONTEND_DIR
-        - npm ci
-        - npm run build
-    artifacts:
-        paths:
-            - backend/public
-        expire_in: 1 hour
+#build_frontend:
+#    stage: build
+#    image: node:20-alpine
+#    script:
+#        - cd $FRONTEND_DIR
+#        - npm ci
+#        - npm run build
+#    artifacts:
+#        paths:
+#            - backend/public
+#        expire_in: 1 hour
 
 #
 # DEPLOY STAGE
 #
-deploy:
-    stage: deploy
-    image: composer:2.9.5
-    rules:
-        - if: $CI_COMMIT_BRANCH == "main"
-          when: manual
-    before_script:
-        - mkdir -p ~/.ssh -m 700
-        - eval $(ssh-agent -s)
-        - echo $SSH_PRIVATE_KEY | tr -d '\r' | ssh-add -
-        - ssh-keyscan $DEPLOY_HOST > ~/.ssh/known_hosts
-        - apk add --no-cache nodejs npm rsync
-    script:
-        # BACKEND
-        - cd $BACKEND_DIR
-        - composer install --no-interaction --no-dev --optimize-autoloader
-
-        # DEPLOY FILES
-        - >
-            rsync -rvz --delete-after
-            --exclude=".git/"
-            --exclude=".gitignore"
-            --exclude=".env.dev"
-            --exclude=".env.test"
-            --exclude="phpunit.dist.xml"
-            --exclude="README.md"
-            --exclude="tests/"
-            --exclude="upload/"
-            $BACKEND_DIR/
-            $DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH/
-
-        # POST-DEPLOY COMMANDS
-        - ssh $DEPLOY_USER@$DEPLOY_HOST "
-            cd $DEPLOY_PATH/ &&
-            composer clear-cache &&
-            php bin/console cache:clear --env=prod --no-debug &&
-            php bin/console cache:warmup --env=prod
-          "
-
-        # DATABASE MIGRATION AND POPULATION ~ ok since we're only working with fixtures here
-        - ssh $DEPLOY_USER@$DEPLOY_HOST "
-            cd $DEPLOY_PATH/ &&
-            php bin/console doctrine:migrations:migrate --no-interaction &&
-            php bin/console cache:warmup --env=prod
-          "
-    environment:
-        name: production
+#deploy:
+#    stage: deploy
+#    image: composer:2.9.5
+#    rules:
+#        - if: $CI_COMMIT_BRANCH == "main"
+#          when: manual
+#    before_script:
+#        - mkdir -p ~/.ssh -m 700
+#        - eval $(ssh-agent -s)
+#        - echo $SSH_PRIVATE_KEY | tr -d '\r' | ssh-add -
+#        - ssh-keyscan $DEPLOY_HOST > ~/.ssh/known_hosts
+#        - apk add --no-cache nodejs npm rsync
+#    script:
+#        # BACKEND
+#        - cd $BACKEND_DIR
+#        - composer install --no-interaction --no-dev --optimize-autoloader
+#
+#        # DEPLOY FILES
+#        - >
+#            rsync -rvz --delete-after
+#            --exclude=".git/"
+#            --exclude=".gitignore"
+#            --exclude=".env.dev"
+#            --exclude=".env.test"
+#            --exclude="phpunit.dist.xml"
+#            --exclude="README.md"
+#            --exclude="tests/"
+#            --exclude="upload/"
+#            $BACKEND_DIR/
+#            $DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH/
+#
+#        # POST-DEPLOY COMMANDS
+#        - ssh $DEPLOY_USER@$DEPLOY_HOST "
+#            cd $DEPLOY_PATH/ &&
+#            composer clear-cache &&
+#            php bin/console cache:clear --env=prod --no-debug &&
+#            php bin/console cache:warmup --env=prod
+#          "
+#
+#        # DATABASE MIGRATION AND POPULATION ~ ok since we're only working with fixtures here
+#        - ssh $DEPLOY_USER@$DEPLOY_HOST "
+#            cd $DEPLOY_PATH/ &&
+#            php bin/console doctrine:migrations:migrate --no-interaction &&
+#            php bin/console cache:warmup --env=prod
+#          "
+#    environment:
+#        name: production
