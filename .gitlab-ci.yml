@@ -14,7 +14,6 @@ variables:
   BACKEND_DIR: "$CI_PROJECT_DIR/backend"
   FRONTEND_DIR: "$CI_PROJECT_DIR/frontend"
   DEPLOY_USER: "a25sewt301"
-  #DEPLOY_HOST: "shell.studev.groept.be"
   DEPLOY_HOST: "sewt-shell"
   DEPLOY_PATH: "/var/www/html"
 
@@ -22,13 +21,6 @@ workflow:
   rules:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
     - if: '$CI_COMMIT_BRANCH'
-
-#cache:
-#  key: ${CI_COMMIT_REF_SLUG}
-#  paths:
-#    - backend/vendor/
-#    - frontend/node_modules
-#  policy: pull-push
 
 #
 # VALIDATE
@@ -123,12 +115,6 @@ deploy:
       when: manual
     - when: never
   before_script:
-    #- test -n "$SSH_PRIVATE_KEY"
-    #- mkdir -p ~/.ssh -m 700
-    #- eval $(ssh-agent -s)
-    #- printf '%s\n' "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
-    #- ssh-keyscan $DEPLOY_HOST > ~/.ssh/known_hosts
-    #- chmod 644 ~/.ssh/known_hosts
     - ssh -o BatchMode=yes -o ConnectTimeout=15 "$DEPLOY_HOST" "echo remote-ok"
   script:
     - test -f .deploy/public/index.html
@@ -150,10 +136,8 @@ deploy:
       --exclude="var/cache/"
       --exclude="var/log/"
       ".deploy/"
-      #$DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH/
       $DEPLOY_HOST:$DEPLOY_PATH/
 
-    #- ssh $DEPLOY_USER@$DEPLOY_HOST "
     - ssh $DEPLOY_HOST "
       cd $DEPLOY_PATH/ &&
       composer clear-cache &&
@@ -161,7 +145,6 @@ deploy:
       php bin/console cache:warmup --env=prod
       "
 
-    #- ssh $DEPLOY_USER@$DEPLOY_HOST "
     - ssh $DEPLOY_HOST "
       cd $DEPLOY_PATH/ &&
       php bin/console doctrine:migrations:migrate --no-interaction &&

@@ -16,6 +16,7 @@ DEV := HOST_UID=$(HOST_UID) HOST_GID=$(HOST_GID) COMPOSE_PROJECT_NAME=$${COMPOSE
 TEST := HOST_UID=$(HOST_UID) HOST_GID=$(HOST_GID) COMPOSE_PROJECT_NAME=$${COMPOSE_PROJECT_NAME:-sewt_test_$${CI_PIPELINE_ID:-local}} $(BASE) -f ./docker/compose.test.yaml $(APP_ENV_TEST)
 PROD := HOST_UID=$(HOST_UID) HOST_GID=$(HOST_GID) COMPOSE_PROJECT_NAME=$${COMPOSE_PROJECT_NAME:-sewt_prod} $(BASE) -f ./docker/compose.prod.yaml $(APP_ENV_PROD)
 
+PROD_IMAGE ?= studybuddy:prod
 DEPLOY_ARTIFACT_DIR ?= .deploy
 
 .PHONY: \
@@ -126,15 +127,15 @@ prod-smoke:
 prod-export:
 	rm -rf "$(DEPLOY_ARTIFACT_DIR)"
 	mkdir -p "$(DEPLOY_ARTIFACT_DIR)"
-	image_id="$$( $(PROD) images -q webserver )"; \
-	if [ -z "$$image_id" ]; then \
-		echo "No built webserver image found. Run make prod-build first."; \
+	docker image inspect "$(PROD_IMAGE)" >/dev/null 2>&1 || { \
+		echo "Production image not found: $(PROD_IMAGE)"; \
+		echo "Run make prod-build first."; \
 		exit 1; \
-	fi; \
-	cid="$$(docker create "$$image_id")"; \
+	}
+	cid="$$(docker create "$(PROD_IMAGE)")"; \
 	docker cp "$$cid:/var/www/html/." "$(DEPLOY_ARTIFACT_DIR)/"; \
 	docker rm "$$cid"
-	@echo "Exported production filesystem to $(DEPLOY_ARTIFACT_DIR)"
+	@echo "Exported production filesystem from $(PROD_IMAGE) to $(DEPLOY_ARTIFACT_DIR)"
 
 prod-up-detached-no-build:
 	$(PROD) up -d
