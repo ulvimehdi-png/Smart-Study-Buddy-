@@ -116,14 +116,13 @@ deploy:
     - if: $CI_COMMIT_BRANCH == "main"
       when: manual
     - when: never
-  before_script:
+  #before_script:
     #- test -n "$SSH_PRIVATE_KEY"
     #- mkdir -p ~/.ssh -m 700
     #- eval $(ssh-agent -s)
     #- printf '%s\n' "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
     #- ssh-keyscan $DEPLOY_HOST > ~/.ssh/known_hosts
     #- chmod 644 ~/.ssh/known_hosts
-    # Have own script to connect to
   script:
     - test -f .deploy/public/index.html
     - test -f .deploy/public/index.php

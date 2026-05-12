@@ -1,5 +1,7 @@
 .DEFAULT_GOAL := help
 
+HOST_UID := $(shell id -u)
+HOST_GID := $(shell id -g)
 
 SHARED_ENV := --env-file ./docker/environment/shared.env
 
@@ -10,9 +12,9 @@ APP_ENV_TEST := $(SHARED_ENV) --env-file ./docker/environment/test/test.app.env
 COMPOSE := docker compose --project-directory .
 BASE := $(COMPOSE) -f ./docker/compose.yaml
 
-DEV := COMPOSE_PROJECT_NAME=$${COMPOSE_PROJECT_NAME:-sewt_dev} $(BASE) -f ./docker/compose.dev.yaml $(APP_ENV_DEV)
-TEST := COMPOSE_PROJECT_NAME=$${COMPOSE_PROJECT_NAME:-sewt_test_$${CI_PIPELINE_ID:-local}} $(BASE) -f ./docker/compose.test.yaml $(APP_ENV_TEST)
-PROD := COMPOSE_PROJECT_NAME=$${COMPOSE_PROJECT_NAME:-sewt_prod} $(BASE) -f ./docker/compose.prod.yaml $(APP_ENV_PROD)
+DEV := HOST_UID=$(HOST_UID) HOST_GID=$(HOST_GID) COMPOSE_PROJECT_NAME=$${COMPOSE_PROJECT_NAME:-sewt_dev} $(BASE) -f ./docker/compose.dev.yaml $(APP_ENV_DEV)
+TEST := HOST_UID=$(HOST_UID) HOST_GID=$(HOST_GID) COMPOSE_PROJECT_NAME=$${COMPOSE_PROJECT_NAME:-sewt_test_$${CI_PIPELINE_ID:-local}} $(BASE) -f ./docker/compose.test.yaml $(APP_ENV_TEST)
+PROD := HOST_UID=$(HOST_UID) HOST_GID=$(HOST_GID) COMPOSE_PROJECT_NAME=$${COMPOSE_PROJECT_NAME:-sewt_prod} $(BASE) -f ./docker/compose.prod.yaml $(APP_ENV_PROD)
 
 DEPLOY_ARTIFACT_DIR ?= .deploy
 

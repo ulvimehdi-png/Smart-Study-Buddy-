@@ -1,0 +1,10 @@
+[init]
+	defaultBranch = none
+[fetch]
+	recurseSubmodules = false
+[credential]
+	interactive = never
+[gc]
+	autoDetach = false
+[include]
+	path = /home/mk-wheel/Dev/sewt_project/2526-team-301-integration/builds/Wn1A_229k/0/groep-t/courses/web-technology/students/thursday/2526-team-301.tmp/.gitlab-runner.ext.conf
