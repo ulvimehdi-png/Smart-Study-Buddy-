@@ -152,3 +152,54 @@ deploy:
       "
   environment:
     name: production
+
+deploy_test_from_ci_branch:
+  stage: deploy
+  needs:
+    - job: build_prod_artifact
+      artifacts: true
+    - job: smoke_prod_stack
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "ci-cd-all"'
+      when: manual
+    - when: never
+  before_script:
+    - ssh -o BatchMode=yes -o ConnectTimeout=15 "$DEPLOY_HOST" "echo remote-ok"
+  script:
+    - test -f .deploy/public/index.html
+    - test -f .deploy/public/index.php
+    - test -f .deploy/bin/console
+    - test -d .deploy/vendor
+
+    - >
+      rsync -rvz --delete-after
+      --exclude=".git/"
+      --exclude=".gitignore"
+      --exclude=".env.local*"
+      --exclude=".env.dev"
+      --exclude=".env.test"
+      --exclude="phpunit.dist.xml"
+      --exclude="README.md"
+      --exclude="tests/"
+      --exclude="upload/"
+      --exclude="var/cache/"
+      --exclude="var/log/"
+      ".deploy/"
+      "$DEPLOY_HOST:$DEPLOY_PATH/"
+
+    - >
+      ssh "$DEPLOY_HOST" "
+      cd '$DEPLOY_PATH' &&
+      composer clear-cache &&
+      php bin/console cache:clear --env=prod --no-debug &&
+      php bin/console cache:warmup --env=prod
+      "
+
+    - >
+      ssh "$DEPLOY_HOST" "
+      cd '$DEPLOY_PATH' &&
+      php bin/console doctrine:migrations:migrate --no-interaction --env=prod &&
+      php bin/console cache:warmup --env=prod
+      "
+  environment:
+    name: production-test
