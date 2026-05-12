@@ -16,7 +16,7 @@ services:
       COMPOSER_CACHE_DIR: /tmp/composer-cache
     env_file: ./docker/environment/${APP_ENV}/${APP_ENV}.php.env
     ports:
-      - 127.0.0.1:${EXT_PORT_PHP_DEV}:80
+      - 127.0.0.1:${EXT_PORT_PHP_DEV}:8000
     volumes:
       - ./backend:/app/backend
       - ./docker/php/${APP_ENV}.ini:/usr/local/etc/php/conf.d/${APP_ENV}.ini

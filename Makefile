@@ -22,7 +22,7 @@ DEPLOY_ARTIFACT_DIR ?= .deploy
 	dev-up dev-down dev-reset dev-smoke \
 	test test-down \
 	prod-up prod-up-detached prod-up-detached-no-build prod-down prod-build prod-build-clean prod-smoke prod-export \
-	config-check
+	config-check fix-perms
 
 help:
 	@echo ""
@@ -138,3 +138,9 @@ prod-export:
 
 prod-up-detached-no-build:
 	$(PROD) up -d
+
+fix-perms:
+	docker run --rm \
+		-v "$$(pwd):/work" \
+		alpine:3.20 \
+		sh -lc 'chown -R $(HOST_UID):$(HOST_GID) /work/backend/vendor /work/frontend/node_modules /work/.deploy 2>/dev/null || true'
