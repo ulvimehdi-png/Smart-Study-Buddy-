@@ -160,7 +160,7 @@ deploy_test_from_ci_branch:
       artifacts: true
     - job: smoke_prod_stack
   rules:
-    - if: '$CI_COMMIT_BRANCH == "ci-cd-all"'
+    - if: '$CI_COMMIT_BRANCH == "integration/ci-cd-all"'
       when: manual
     - when: never
   before_script:
