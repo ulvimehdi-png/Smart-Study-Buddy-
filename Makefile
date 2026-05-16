@@ -83,9 +83,10 @@ help:
 
 define wait_http
 	@url="$(1)"; \
+	tries="$(if $(2),$(2),60)"; \
 	echo "Checking $$url"; \
 	ok=0; \
-	for i in $$(seq 1 20); do \
+	for i in $$(seq "$$tries"); do \
 		code=$$(curl -sS -o /dev/null -w "%{http_code}" "$$url" || true); \
 		case "$$code" in \
 			2*|3*|4*) ok=1; break ;; \
@@ -102,11 +103,10 @@ dev-up:
 	$(DEV) up -d --build
 	@echo ""
 	@echo "Development endpoints:"
-	@echo "  Frontend:  http://127.0.0.1:5173"
-	@echo "  Backend:   http://127.0.0.1:8000"
-	@echo "  Mercure:   http://127.0.0.1:3000/.well-known/mercure"
-	@echo "  DB local:  mysql://app:app@127.0.0.1:3307/app?serverVersion=8.0.32&charset=utf8mb4"
-
+	@echo "  Frontend:  $(DEV_FRONTEND_URL)"
+	@echo "  Backend:   $(DEV_BACKEND_URL)"
+	@echo "  Mercure:   $(DEV_MERCURE_URL)"
+	@echo "  DB local:  mysql://app:app@127.0.0.1:$(EXT_PORT_DB_DEV)/app?serverVersion=8.0.32&charset=utf8mb4"
 dev-down:
 	$(DEV) down --remove-orphans
 
@@ -115,9 +115,9 @@ dev-reset:
 	$(DEV) up -d --build
 
 dev-smoke:
-	$(call wait_http,http://127.0.0.1:5173)
-	$(call wait_http,http://127.0.0.1:8000)
-	$(call wait_http,http://127.0.0.1:3000/.well-known/mercure)
+	$(call wait_http,$(DEV_FRONTEND_URL),180)
+	$(call wait_http,$(DEV_BACKEND_URL),60)
+	$(call wait_http,$(DEV_MERCURE_URL),60)
 
 test:
 	$(TEST) up --build --abort-on-container-exit --exit-code-from php
