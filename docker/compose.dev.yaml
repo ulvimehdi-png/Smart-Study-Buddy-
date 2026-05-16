@@ -2,7 +2,7 @@ services:
 
   db:
     ports:
-      - 127.0.0.1:${EXT_PORT_DB_DEV}:3306
+      - "127.0.0.1:${EXT_PORT_DB_DEV:-3307}:3306"
     volumes:
       - sewt_dev_db:/var/lib/mysql
 
@@ -16,7 +16,7 @@ services:
       COMPOSER_CACHE_DIR: /tmp/composer-cache
     env_file: ./docker/environment/${APP_ENV}/${APP_ENV}.php.env
     ports:
-      - 127.0.0.1:${EXT_PORT_PHP_DEV}:8000
+      - "127.0.0.1:${EXT_PORT_PHP_DEV:-8000}:80"
     volumes:
       - ./backend:/app/backend
       - ./docker/php/${APP_ENV}.ini:/usr/local/etc/php/conf.d/${APP_ENV}.ini
@@ -34,7 +34,7 @@ services:
     user: "${HOST_UID:-1000}:${HOST_GID:-1000}"
     env_file: ./docker/environment/${APP_ENV}/${APP_ENV}.node.env
     ports:
-      - 127.0.0.1:${EXT_PORT_NODE_DEV}:5173
+      - "127.0.0.1:${EXT_PORT_NODE_DEV:-5173}:5173"
     volumes:
       - ./frontend:/app/frontend
     command: sh -c "npm install && npm run dev -- --host --port 5173"
@@ -45,7 +45,7 @@ services:
     image: ${MERCURE_VERSION}
     env_file: ./docker/environment/${APP_ENV}/${APP_ENV}.mercure.env
     ports:
-      - 127.0.0.1:${EXT_PORT_MERCURE_DEV}:80
+      - "127.0.0.1:${EXT_PORT_MERCURE_DEV:-3000}:80"
     volumes:
       - sewt_dev_mercure_data:/data
       - sewt_dev_mercure_config:/config

@@ -1,8 +1,33 @@
+#
+# PORT DEFINITIONS
+#
+.set_ci_ports: &set_ci_ports
+  - |
+    port_base=$((20000 + (${CI_PIPELINE_ID:-0} % 1000) * 10))
+
+    export EXT_PORT_NODE_DEV=$((port_base + 0))
+    export EXT_PORT_PHP_DEV=$((port_base + 1))
+    export EXT_PORT_MERCURE_DEV=$((port_base + 2))
+    export EXT_PORT_DB_DEV=$((port_base + 3))
+
+    export EXT_PORT_HTTP_PROD=$((port_base + 4))
+    export EXT_PORT_DB_PROD=$((port_base + 5))
+
+    echo "Using CI port base: $port_base"
+    echo "EXT_PORT_NODE_DEV=$EXT_PORT_NODE_DEV"
+    echo "EXT_PORT_PHP_DEV=$EXT_PORT_PHP_DEV"
+    echo "EXT_PORT_MERCURE_DEV=$EXT_PORT_MERCURE_DEV"
+    echo "EXT_PORT_DB_DEV=$EXT_PORT_DB_DEV"
+    echo "EXT_PORT_HTTP_PROD=$EXT_PORT_HTTP_PROD"
+    echo "EXT_PORT_DB_PROD=$EXT_PORT_DB_PROD"
+
+#
+# GENERAL SETUP
+#
 stages:
   - validate
   - test
   - build
-  - smoke
   - deploy
 
 default:
@@ -11,19 +36,21 @@ default:
   interruptible: true
 
 variables:
-  BACKEND_DIR: "$CI_PROJECT_DIR/backend"
-  FRONTEND_DIR: "$CI_PROJECT_DIR/frontend"
   DEPLOY_USER: "a25sewt301"
+  # DEPLOY_HOST ==> see .ssh/config
   DEPLOY_HOST: "sewt-shell"
-  DEPLOY_PATH: "/var/www/html"
+  DEPLOY_PATH_PROD: "/var/www/html"
+  PROD_IMAGE: "studybuddy:prod"
 
 workflow:
   rules:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+    - if: '$CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS'
+      when: never
     - if: '$CI_COMMIT_BRANCH'
 
 #
-# VALIDATE
+# STAGE - VALIDATE
 #
 validate_compose:
   stage: validate
@@ -37,7 +64,7 @@ validate_compose:
     - make config-check
 
 #
-# TEST STAGE
+# STAGE - TEST
 #
 test_stack:
   stage: test
@@ -51,9 +78,11 @@ test_stack:
 
 smoke_dev_stack:
   stage: test
+  resource_group: local-docker-host-ports
   variables:
     COMPOSE_PROJECT_NAME: "sewt_dev_${CI_PIPELINE_ID}"
   script:
+    - *set_ci_ports
     - make dev-down || true
     - make dev-up
     - make dev-smoke
@@ -62,57 +91,57 @@ smoke_dev_stack:
     - make fix-perms || true
 
 #
-# BUILD STAGE
+# STAGE - BUILD
 #
 build_prod_artifact:
   stage: build
+  resource_group: local-docker-host-ports
   variables:
     COMPOSE_PROJECT_NAME: "sewt_prod_build_${CI_PIPELINE_ID}"
     DEPLOY_ARTIFACT_DIR: ".deploy"
+    PROD_IMAGE: "studybuddy:ci-${CI_PIPELINE_ID}"
   script:
+    - *set_ci_ports
+    - make prod-reset || true
     - make prod-build
+    - make prod-up-detached-no-build
+    - make prod-smoke
     - make prod-export
+
     - test -f .deploy/public/index.html
     - test -f .deploy/public/index.php
     - test -f .deploy/bin/console
     - test -d .deploy/vendor
   after_script:
+    - *set_ci_ports
+    - make prod-reset || true
+    - docker image rm "studybuddy:ci-${CI_PIPELINE_ID}" || true
     - make fix-perms || true
   artifacts:
     paths:
       - .deploy/
     expire_in: 1 hour
 
-
 #
-# SMOKE
-#
-smoke_prod_stack:
-  stage: smoke
-  variables:
-    COMPOSE_PROJECT_NAME: "sewt_prod_smoke_${CI_PIPELINE_ID}"
-  script:
-    - make prod-down || true
-    - make prod-build
-    - make prod-up-detached-no-build
-    - make prod-smoke
-  after_script:
-    - make prod-down || true
-    - make fix-perms || true
-
-
-#
-# DEPLOY STAGE
+# STAGE - DEPLOY
 #
 deploy:
   stage: deploy
   needs:
     - job: build_prod_artifact
       artifacts: true
-    - job: smoke_prod_stack
+  resource_group: studev-deploy
   rules:
-    - if: $CI_COMMIT_BRANCH == "main"
+    - if: '$CI_COMMIT_BRANCH == "main"'
       when: manual
+      variables:
+        DEPLOY_ENVIRONMENT: "production"
+
+    - if: '$CI_COMMIT_BRANCH == "integration/ci-cd-all"'
+      when: manual
+      variables:
+        DEPLOY_ENVIRONMENT: "production-deploy-test"
+
     - when: never
   before_script:
     - ssh -o BatchMode=yes -o ConnectTimeout=15 "$DEPLOY_HOST" "echo remote-ok"
@@ -126,9 +155,7 @@ deploy:
       rsync -rvz --delete-after
       --exclude=".git/"
       --exclude=".gitignore"
-      --exclude=".env.local*"
-      --exclude=".env.dev"
-      --exclude=".env.test"
+      --exclude=".env*"
       --exclude="phpunit.dist.xml"
       --exclude="README.md"
       --exclude="tests/"
@@ -138,68 +165,22 @@ deploy:
       ".deploy/"
       $DEPLOY_HOST:$DEPLOY_PATH/
 
-    - ssh $DEPLOY_HOST "
-      cd $DEPLOY_PATH/ &&
-      composer clear-cache &&
-      php bin/console cache:clear --env=prod --no-debug &&
-      php bin/console cache:warmup --env=prod
-      "
-
-    - ssh $DEPLOY_HOST "
-      cd $DEPLOY_PATH/ &&
-      php bin/console doctrine:migrations:migrate --no-interaction &&
-      php bin/console cache:warmup --env=prod
-      "
-  environment:
-    name: production
-
-deploy_test_from_ci_branch:
-  stage: deploy
-  needs:
-    - job: build_prod_artifact
-      artifacts: true
-    - job: smoke_prod_stack
-  rules:
-    - if: '$CI_COMMIT_BRANCH == "integration/ci-cd-all"'
-      when: manual
-    - when: never
-  before_script:
-    - ssh -o BatchMode=yes -o ConnectTimeout=15 "$DEPLOY_HOST" "echo remote-ok"
-  script:
-    - test -f .deploy/public/index.html
-    - test -f .deploy/public/index.php
-    - test -f .deploy/bin/console
-    - test -d .deploy/vendor
-
-    - >
-      rsync -rvz --delete-after
-      --exclude=".git/"
-      --exclude=".gitignore"
-      --exclude=".env.local*"
-      --exclude=".env.dev"
-      --exclude=".env.test"
-      --exclude="phpunit.dist.xml"
-      --exclude="README.md"
-      --exclude="tests/"
-      --exclude="upload/"
-      --exclude="var/cache/"
-      --exclude="var/log/"
-      ".deploy/"
-      "$DEPLOY_HOST:$DEPLOY_PATH/"
-
     - >
       ssh "$DEPLOY_HOST" "
-      cd '$DEPLOY_PATH' &&
-      composer clear-cache &&
-      php bin/console cache:clear --env=prod --no-debug &&
-      php bin/console cache:warmup --env=prod
+      set -e;
+      cat > '$DEPLOY_PATH/.env.local' < "$PROD_ENV_LOCAL_FILE"
+      chmod 600 '$DEPLOY_PATH.env.local';
+      test -f '$DEPLOY_PATH/.env.local';
       "
 
     - >
       ssh "$DEPLOY_HOST" "
-      cd '$DEPLOY_PATH' &&
-      php bin/console doctrine:migrations:migrate --no-interaction --env=prod &&
+      set -e;
+      cd '$DEPLOY_PATH';
+      php bin/console doctrine:migrations:migrate --no-interaction --env=prod;
+      php bin/console cache:clear --env=prod --no-debug;
       php bin/console cache:warmup --env=prod
       "
+
   environment:
-    name: production-test
+    name: $DEPLOY_ENVIRONMENT

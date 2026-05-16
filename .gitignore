@@ -38,3 +38,7 @@ docker/.env
 
 # Misc
 *.bak
+
+# Build related stuff
+.deploy/
+cache/
