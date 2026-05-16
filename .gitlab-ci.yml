@@ -1,25 +1,28 @@
 #
 # PORT DEFINITIONS
 #
-.set_ci_ports: &set_ci_ports
-  - |
-    port_base=$((20000 + (${CI_PIPELINE_ID:-0} % 1000) * 10))
+.setup_ci_ports: &setup_ci_ports |
+  set -e
 
-    export EXT_PORT_NODE_DEV=$((port_base + 0))
-    export EXT_PORT_PHP_DEV=$((port_base + 1))
-    export EXT_PORT_MERCURE_DEV=$((port_base + 2))
-    export EXT_PORT_DB_DEV=$((port_base + 3))
+  port_base=$((20000 + (${CI_PIPELINE_ID:-0} % 1000) * 10))
 
-    export EXT_PORT_HTTP_PROD=$((port_base + 4))
-    export EXT_PORT_DB_PROD=$((port_base + 5))
+  cat > .ci.ports.env <<EOF
+  EXT_PORT_NODE_DEV=$((port_base + 0))
+  EXT_PORT_PHP_DEV=$((port_base + 1))
+  EXT_PORT_MERCURE_DEV=$((port_base + 2))
+  EXT_PORT_DB_DEV=$((port_base + 3))
+  EXT_PORT_HTTP_PROD=$((port_base + 4))
+  EXT_PORT_DB_PROD=$((port_base + 5))
+  EOF
 
-    echo "Using CI port base: $port_base"
-    echo "EXT_PORT_NODE_DEV=$EXT_PORT_NODE_DEV"
-    echo "EXT_PORT_PHP_DEV=$EXT_PORT_PHP_DEV"
-    echo "EXT_PORT_MERCURE_DEV=$EXT_PORT_MERCURE_DEV"
-    echo "EXT_PORT_DB_DEV=$EXT_PORT_DB_DEV"
-    echo "EXT_PORT_HTTP_PROD=$EXT_PORT_HTTP_PROD"
-    echo "EXT_PORT_DB_PROD=$EXT_PORT_DB_PROD"
+  echo "Generated CI port file:"
+  cat .ci.ports.env
+
+.with_ci_ports: &with_ci_ports |
+  set -e
+  set -a
+  . ./.ci.ports.env
+  set +a
 
 #
 # GENERAL SETUP
@@ -82,11 +85,20 @@ smoke_dev_stack:
   variables:
     COMPOSE_PROJECT_NAME: "sewt_dev_${CI_PIPELINE_ID}"
   script:
-    - *set_ci_ports
+    - *setup_ci_ports
+    - *with_ci_ports
+    - make print-ports
     - make dev-down || true
     - make dev-up
+    - docker ps --format 'table {{.Names}}\t{{.Status}}\t{{.Ports}}'
     - make dev-smoke
   after_script:
+    - |
+      if [ -f .ci.ports.env ]; then
+        set -a
+        . ./.ci.ports.env
+        set +a
+      fi
     - make dev-down || true
     - make fix-perms || true
 
@@ -101,10 +113,13 @@ build_prod_artifact:
     DEPLOY_ARTIFACT_DIR: ".deploy"
     PROD_IMAGE: "studybuddy:ci-${CI_PIPELINE_ID}"
   script:
-    - *set_ci_ports
+    - *setup_ci_ports
+    - *with_ci_ports
+    - make print-ports
     - make prod-reset || true
     - make prod-build
     - make prod-up-detached-no-build
+    - docker ps --format 'table {{.Names}}\t{{.Status}}\t{{.Ports}}'
     - make prod-smoke
     - make prod-export
 
@@ -113,10 +128,15 @@ build_prod_artifact:
     - test -f .deploy/bin/console
     - test -d .deploy/vendor
   after_script:
-    - *set_ci_ports
-    - make prod-reset || true
-    - docker image rm "studybuddy:ci-${CI_PIPELINE_ID}" || true
-    - make fix-perms || true
+    - |
+      if [ -f .ci.ports.env ]; then
+        set -a
+        . ./.ci.ports.env
+        set +a
+      fi
+      make prod-reset || true
+      docker image rm "studybuddy:ci-${CI_PIPELINE_ID}" || true
+      make fix-perms || true
   artifacts:
     paths:
       - .deploy/

@@ -49,7 +49,7 @@ DEPLOY_ARTIFACT_DIR ?= .deploy
 	dev-up dev-down dev-reset dev-smoke \
 	test test-down \
 	prod-build prod-build-clean prod-up prod-up-detached prod-down prod-reset prod-smoke prod-export prod-artifact \
-	config-check fix-perms
+	config-check fix-perms print-ports
 
 help:
 	@echo ""
@@ -174,3 +174,15 @@ fix-perms:
 		-v "$$(pwd):/work" \
 		alpine:3.20 \
 		sh -lc 'chown -R $(HOST_UID):$(HOST_GID) /work/backend/vendor /work/frontend/node_modules /work/backend/var /work/.deploy 2>/dev/null || true'
+
+print-ports:
+	@echo "EXT_PORT_NODE_DEV=$(EXT_PORT_NODE_DEV)"
+	@echo "EXT_PORT_PHP_DEV=$(EXT_PORT_PHP_DEV)"
+	@echo "EXT_PORT_MERCURE_DEV=$(EXT_PORT_MERCURE_DEV)"
+	@echo "EXT_PORT_DB_DEV=$(EXT_PORT_DB_DEV)"
+	@echo "EXT_PORT_HTTP_PROD=$(EXT_PORT_HTTP_PROD)"
+	@echo "EXT_PORT_DB_PROD=$(EXT_PORT_DB_PROD)"
+	@echo "DEV_FRONTEND_URL=$(DEV_FRONTEND_URL)"
+	@echo "DEV_BACKEND_URL=$(DEV_BACKEND_URL)"
+	@echo "DEV_MERCURE_URL=$(DEV_MERCURE_URL)"
+	@echo "PROD_HTTP_URL=$(PROD_HTTP_URL)"
