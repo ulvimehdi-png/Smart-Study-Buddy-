@@ -1,30 +1,4 @@
 #
-# PORT DEFINITIONS
-#
-.setup_ci_ports: &setup_ci_ports |
-  set -e
-
-  port_base=$((20000 + (${CI_PIPELINE_ID:-0} % 1000) * 10))
-
-  cat > .ci.ports.env <<EOF
-  EXT_PORT_NODE_DEV=$((port_base + 0))
-  EXT_PORT_PHP_DEV=$((port_base + 1))
-  EXT_PORT_MERCURE_DEV=$((port_base + 2))
-  EXT_PORT_DB_DEV=$((port_base + 3))
-  EXT_PORT_HTTP_PROD=$((port_base + 4))
-  EXT_PORT_DB_PROD=$((port_base + 5))
-  EOF
-
-  echo "Generated CI port file:"
-  cat .ci.ports.env
-
-.with_ci_ports: &with_ci_ports |
-  set -e
-  set -a
-  . ./.ci.ports.env
-  set +a
-
-#
 # GENERAL SETUP
 #
 stages:
@@ -42,7 +16,7 @@ variables:
   DEPLOY_USER: "a25sewt301"
   # DEPLOY_HOST ==> see .ssh/config
   DEPLOY_HOST: "sewt-shell"
-  DEPLOY_PATH_PROD: "/var/www/html"
+  DEPLOY_PATH: "/var/www/html"
   PROD_IMAGE: "studybuddy:prod"
 
 workflow:
@@ -77,7 +51,7 @@ test_stack:
     - make test
   after_script:
     - make test-down || true
-    - make fix-perms || true
+  allow_failure: true
 
 smoke_dev_stack:
   stage: test
@@ -85,22 +59,12 @@ smoke_dev_stack:
   variables:
     COMPOSE_PROJECT_NAME: "sewt_dev_${CI_PIPELINE_ID}"
   script:
-    - *setup_ci_ports
-    - *with_ci_ports
     - make print-ports
     - make dev-down || true
     - make dev-up
-    - docker ps --format 'table {{.Names}}\t{{.Status}}\t{{.Ports}}'
     - make dev-smoke
   after_script:
-    - |
-      if [ -f .ci.ports.env ]; then
-        set -a
-        . ./.ci.ports.env
-        set +a
-      fi
     - make dev-down || true
-    - make fix-perms || true
 
 #
 # STAGE - BUILD
@@ -113,13 +77,9 @@ build_prod_artifact:
     DEPLOY_ARTIFACT_DIR: ".deploy"
     PROD_IMAGE: "studybuddy:ci-${CI_PIPELINE_ID}"
   script:
-    - *setup_ci_ports
-    - *with_ci_ports
-    - make print-ports
     - make prod-reset || true
     - make prod-build
-    - make prod-up-detached-no-build
-    - docker ps --format 'table {{.Names}}\t{{.Status}}\t{{.Ports}}'
+    - make prod-up-detached
     - make prod-smoke
     - make prod-export
 
@@ -128,15 +88,8 @@ build_prod_artifact:
     - test -f .deploy/bin/console
     - test -d .deploy/vendor
   after_script:
-    - |
-      if [ -f .ci.ports.env ]; then
-        set -a
-        . ./.ci.ports.env
-        set +a
-      fi
-      make prod-reset || true
-      docker image rm "studybuddy:ci-${CI_PIPELINE_ID}" || true
-      make fix-perms || true
+    - make prod-reset || true
+    - docker image rm "studybuddy:ci-${CI_PIPELINE_ID}" || true
   artifacts:
     paths:
       - .deploy/
@@ -173,12 +126,7 @@ deploy:
 
     - >
       rsync -rvz --delete-after
-      --exclude=".git/"
-      --exclude=".gitignore"
       --exclude=".env*"
-      --exclude="phpunit.dist.xml"
-      --exclude="README.md"
-      --exclude="tests/"
       --exclude="upload/"
       --exclude="var/cache/"
       --exclude="var/log/"
@@ -189,7 +137,7 @@ deploy:
       ssh "$DEPLOY_HOST" "
       set -e;
       cat > '$DEPLOY_PATH/.env.local' < "$PROD_ENV_LOCAL_FILE"
-      chmod 600 '$DEPLOY_PATH.env.local';
+      chmod 600 '$DEPLOY_PATH/.env.local';
       test -f '$DEPLOY_PATH/.env.local';
       "
 

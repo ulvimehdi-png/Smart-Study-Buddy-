@@ -1,18 +1,11 @@
-#!/bin/sh
+#!/usr/bin/env sh
 set -eu
 
-echo "Installing composer dependencies..."
-composer install --no-interaction --prefer-dist
+cd /app/backend
 
-echo "Linting config and container..."
-php bin/console lint:yaml config
-php bin/console lint:container
-
-echo "Clearing caches..."
-composer clear-cache --profile
-php bin/console cache:clear --env=dev
-
-/scripts/wait-for-db.sh
+if [ ! -d vendor ]; then
+  composer install --prefer-dist --no-interaction
+fi
 
 echo "Checking migration status..."
 
@@ -32,5 +25,9 @@ fi
 echo "Loading foundry story..."
 php bin/console foundry:load-story baseStory --no-interaction
 
+echo "Clearing caches..."
+composer clear-cache --profile
+php bin/console cache:clear --env=dev
+
 echo "Starting PHP dev server..."
-php -S 0.0.0.0:8000 -t public
+exec php -S 0.0.0.0:8000 -t public

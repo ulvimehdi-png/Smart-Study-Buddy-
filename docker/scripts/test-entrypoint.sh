@@ -4,8 +4,6 @@ set -eu
 echo "Installing composer dependencies..."
 composer install --no-interaction --prefer-dist
 
-/scripts/wait-for-db.sh
-
 echo "Running migrations..."
 php bin/console doctrine:migrations:migrate \
   --env=test \

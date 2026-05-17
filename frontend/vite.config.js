@@ -3,7 +3,7 @@ import react, {reactCompilerPreset} from '@vitejs/plugin-react'
 import babel from '@rolldown/plugin-babel'
 import tailwindcss from '@tailwindcss/vite'
 
-const usePolling = process.env.VITE_USE_POLLING === 'true'
+const usePolling = process.env.VITE_USE_POLLING === 'false'
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -25,7 +25,7 @@ export default defineConfig({
         },
         proxy: {
             '/api': {
-                target: 'http://php:8000',
+                target: 'http://php-dev:8000',
                 changeOrigin: true,
                 //rewrite: (path) => path.replace(/^\/api/, '')
             },

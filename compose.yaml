@@ -1,0 +1,330 @@
+name: ${COMPOSE_PROJECT_NAME:-studybuddy}
+
+#####################
+# SHARED EXTENSIONS #
+#####################
+
+x-user: &user
+  user: "${HOST_UID:-1000}:${HOST_GID:-1000}"
+
+x-net: &net
+  networks:
+    - app_net
+
+x-local-http-port: &local-http-port
+  host_ip: 127.0.0.1
+  protocol: tcp
+  app_protocol: http
+
+x-health-defaults: &health-defaults
+  interval: 5s
+  timeout: 3s
+  retries: 20
+  start_period: 20s
+
+x-mysql-env: &mysql-env
+  MYSQL_ROOT_PASSWORD: "${MYSQL_ROOT_PASSWORD:-root}"
+  MYSQL_USER: "${MYSQL_USER:-app}"
+  MYSQL_PASSWORD: "${MYSQL_PASSWORD:-app}"
+
+x-db-base: &db-base
+  image: mysql:${MYSQL_VERSION:-8.0.32}
+  command:
+    - --default-authentication-plugin=mysql_native_password
+    - --character-set-server=utf8mb4
+    - --collation-server=utf8mb4_unicode_ci
+  healthcheck:
+    <<: *health-defaults
+    test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -uroot -p$${MYSQL_ROOT_PASSWORD} --silent"]
+  <<: *net
+
+x-php-build-dev: &php-build-dev
+  context: .
+  dockerfile: ./docker/php/Dockerfile
+  target: php-dev
+  args:
+    PHP_VERSION: "${PHP_VERSION:-8.4.18}"
+
+x-php-build-test: &php-build-test
+  context: .
+  dockerfile: ./docker/php/Dockerfile
+  target: php-test
+  args:
+    PHP_VERSION: "${PHP_VERSION:-8.4.18}"
+
+x-php-build-prod: &php-build-prod
+  context: .
+  dockerfile: ./docker/php/Dockerfile
+  target: php-prod
+  args:
+    PHP_VERSION: "${PHP_VERSION:-8.4.18}"
+    NODE_VERSION: "${NODE_VERSION:-22-alpine}"
+    COMPOSER_VERSION: "${COMPOSER_VERSION:-2.9}"
+
+x-php-common: &php-common
+  working_dir: /app/backend
+  init: true
+  <<: [*user, *net]
+  environment:
+    COMPOSER_HOME: /tmp/composer
+    COMPOSER_CACHE_DIR: /app/.composer-cache
+  volumes:
+    - ./backend:/app/backend
+    - ./docker/scripts:/scripts:ro
+    - composer_cache:/app/.composer-cache
+
+x-node-common: &node-common
+  image: node:${NODE_VERSION:-22-alpine}
+  working_dir: /app/frontend
+  init: true
+  <<: [*user, *net]
+  environment:
+    VITE_DEV_SERVER_HOST: "0.0.0.0"
+    VITE_DEV_SERVER_PORT: "5173"
+    HOME: "/tmp"
+    NPM_CONFIG_CACHE: "/tmp/.npm"
+    MERCURE_URL: "http://mercure/.well-known/mercure"
+    VITE_MERCURE_PUBLIC_URL: "http://localhost:3000/.well-known/mercure"
+  volumes:
+    - ./frontend:/app/frontend
+    - node_modules_dev:/app/frontend/node_modules
+
+x-node-runtime: &node-runtime
+  ports:
+    - <<: *local-http-port
+      name: node-dev-http
+      target: 5173
+      published: "${EXT_PORT_NODE_DEV:-5173}"
+
+services:
+
+  #################
+  # PROFILE - DEV #
+  #################
+  db-dev:
+    profiles: [ "dev" ]
+    <<: *db-base
+    environment:
+      <<: *mysql-env
+      MYSQL_DATABASE: "${MYSQL_DATABASE_DEV:-app_dev}"
+    ports:
+      - <<: *local-http-port
+        name: db-dev
+        target: 3306
+        published: "${EXT_PORT_DB_DEV:-33061}"
+        app_protocol: mysql
+    volumes:
+      - db_dev_data:/var/lib/mysql
+    restart: unless-stopped
+
+  php-dev:
+    profiles: [ "dev" ]
+    <<: *php-common
+    build: *php-build-dev
+    env_file:
+      - ./docker/environment/.env.local.dev
+    ports:
+      - <<: *local-http-port
+        name: php-dev-http
+        target: 8000
+        published: "${EXT_PORT_PHP_DEV:-8001}"
+    volumes:
+      - ./backend:/app/backend
+      - ./docker/php/dev.ini:/usr/local/etc/php/conf.d/zz-dev.ini:ro
+      - ./docker/scripts:/scripts:ro
+      - composer_cache:/app/.composer-cache
+    command: [ "/scripts/dev-entrypoint.sh" ]
+    depends_on:
+      db-dev:
+        condition: service_healthy
+    restart: unless-stopped
+
+  node-deps:
+    profiles: ["dev"]
+    <<: *node-common
+    user: root
+    command: >
+      sh -lc ' 
+        chown -R ${HOST_UID:-1000}:${HOST_GID:-1000} /app/frontend/node_modules;
+        npm ci;
+      '
+    restart: "no"
+
+  node-dev:
+    profiles: [ "dev" ]
+    <<: [*node-common, *node-runtime]
+    depends_on:
+      node-deps:
+        condition: service_completed_successfully
+    command: npm run dev -- --host 0.0.0.0 --port 5173
+    healthcheck:
+      <<: *health-defaults
+      test: [ "CMD-SHELL", "wget -q --spider http://127.0.0.1:5173 || exit 1" ]
+    restart: unless-stopped
+
+  mercure-dev:
+    profiles: [ "dev" ]
+    image: dunglas/mercure:${MERCURE_VERSION:-v0.24.0}
+    <<: *net
+    environment:
+      SERVER_NAME: ":80"
+      MERCURE_PUBLISHER_JWT_KEY: "!"
+      MERCURE_SUBSCRIBER_JWT_KEY: "!"
+      MERCURE_EXTRA_DIRECTIVES: "demo \n anonymous \n cors_origins * \n publish_origins *"
+      #MERCURE_EXTRA_DIRECTIVES: |
+      #  "anonymous
+      #  cors_origins http://localhost:5173 http://localhost:8000
+      #  publish_origins http://localhost:5173 http://localhost:8000
+      #  demo"
+    ports:
+      - <<: *local-http-port
+        name: mercure-dev-http
+        target: 80
+        published: "${EXT_PORT_MERCURE_DEV:-3000}"
+    volumes:
+      - mercure_dev_data:/data
+      - mercure_dev_config:/config
+    healthcheck:
+      <<: *health-defaults
+      test: [ "CMD", "wget", "-q", "--spider", "http://localhost/healthz" ]
+    restart: unless-stopped
+
+  ##################
+  # PROFILE - TEST #
+  ##################
+  db-test:
+    profiles: [ "test" ]
+    <<: *db-base
+    environment:
+      <<: *mysql-env
+      MYSQL_DATABASE: "app_test"
+    tmpfs:
+      - /var/lib/mysql
+    restart: "no"
+
+  vendor-test:
+    profiles: [ "test" ]
+    <<: *php-common
+    user: root
+    build: *php-build-test
+    volumes:
+      - ./backend:/app/backend
+      - composer_vendor:/app/backend/vendor
+      - composer_cache:/app/.composer-cache
+    command: >
+      sh -lc '
+        composer install --prefer-dist --no-interaction &&
+        chown -R ${HOST_UID:-1000}:${HOST_GID:-1000} /app/backend/var /app/backend/vendor
+      '
+    restart: "no"
+
+  migrate-test:
+    profiles: [ "test" ]
+    depends_on:
+      vendor-test:
+        condition: service_completed_successfully
+      db-test:
+        condition: service_healthy
+    <<: *php-common
+    build: *php-build-test
+    env_file:
+      - ./docker/environment/.env.local.test
+#    environment:
+#      APP_ENV: test
+#      APP_DEBUG: "1"
+#      DATABASE_URL: "mysql://app:app@db-test:3306/app?serverVersion=8.0.32&charset=utf8mb4"
+    volumes:
+      - ./backend:/app/backend
+      - composer_vendor:/app/backend/vendor
+      - composer_cache:/app/.composer-cache
+      - ./docker/php/test.ini:/usr/local/etc/php/conf.d/zz-test.ini:ro
+    command: >
+      sh -lc '
+        php bin/console doctrine:database:create --if-not-exists --env=test;
+        php bin/console doctrine:migrations:migrate --no-interaction --env=test
+      '
+    restart: "no"
+
+  tests:
+    profiles: [ "test" ]
+    <<: *php-common
+    build: *php-build-test
+    depends_on:
+      migrate-test:
+        condition: service_completed_successfully
+    env_file:
+      - ./docker/environment/.env.local.test
+    volumes:
+      - ./backend:/app/backend
+      - composer_vendor:/app/backend/vendor
+      - composer_cache:/app/.composer-cache
+      - ./docker/php/test.ini:/usr/local/etc/php/conf.d/zz-test.ini:ro
+    command: php bin/phpunit
+    restart: "no"
+
+  ###########################
+  # PROFILE: PROD-EMULATION #
+  ###########################
+
+  db-prod:
+    profiles: [ "prod" ]
+    <<: *db-base
+    environment:
+      <<: *mysql-env
+      MYSQL_DATABASE: "app_prod"
+    ports:
+      - <<: *local-http-port
+        name: db-prod
+        target: 3306
+        published: "${EXT_PORT_DB_PROD:-33062}"
+        app_protocol: mysql
+    volumes:
+      - db_prod_data:/var/lib/mysql
+    restart: unless-stopped
+
+  web:
+    profiles: [ "prod" ]
+    image: "${PROD_IMAGE:-studybuddy:prod-emulation}"
+    build: *php-build-prod
+    <<: *net
+    env_file:
+      - ./docker/environment/.env.local.prod
+    post_start:
+      - command: php bin/console doctrine:migrations:migrate --no-interaction --env=prod
+    ports:
+      - <<: *local-http-port
+        name: web-http
+        target: 80
+        published: "${EXT_PORT_HTTP_PROD:-8080}"
+    depends_on:
+      db-prod:
+        condition: service_healthy
+    tmpfs:
+      - /tmp
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    cap_add:
+      - CHOWN
+      - DAC_OVERRIDE
+      - SETGID
+      - SETUID
+      - NET_BIND_SERVICE
+    restart: unless-stopped
+    healthcheck:
+      <<: *health-defaults
+      test: [ "CMD-SHELL", "curl -fsS http://127.0.0.1/ || exit 1" ]
+
+volumes:
+  db_dev_data:
+  db_prod_data:
+  composer_cache:
+  composer_vendor:
+  node_modules_dev:
+  mercure_dev_data:
+  mercure_dev_config:
+
+networks:
+  app_net:
+    driver: bridge
