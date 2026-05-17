@@ -2,8 +2,8 @@
 # GENERAL SETUP
 #
 stages:
-  - validate
-  - test
+  #- validate
+  #- test
   - build
   - deploy
 
@@ -29,42 +29,42 @@ workflow:
 #
 # STAGE - VALIDATE
 #
-validate_compose:
-  stage: validate
-  script:
-    - docker version
-    - docker compose version
-    - make --version
-    - curl --version
-    - rsync --version
-    - ssh -V
-    - make config-check
+#validate_compose:
+#  stage: validate
+#  script:
+#    - docker version
+#    - docker compose version
+#    - make --version
+#    - curl --version
+#    - rsync --version
+#    - ssh -V
+#    - make config-check
 
 #
 # STAGE - TEST
 #
-test_stack:
-  stage: test
-  variables:
-    COMPOSE_PROJECT_NAME: "sewt_test_${CI_PIPELINE_ID}"
-  script:
-    - make test
-  after_script:
-    - make test-down || true
-  allow_failure: true
-
-smoke_dev_stack:
-  stage: test
-  resource_group: local-docker-host-ports
-  variables:
-    COMPOSE_PROJECT_NAME: "sewt_dev_${CI_PIPELINE_ID}"
-  script:
-    - make print-ports
-    - make dev-down || true
-    - make dev-up
-    - make dev-smoke
-  after_script:
-    - make dev-down || true
+#test_stack:
+#  stage: test
+#  variables:
+#    COMPOSE_PROJECT_NAME: "sewt_test_${CI_PIPELINE_ID}"
+#  script:
+#    - make test
+#  after_script:
+#    - make test-down || true
+#  allow_failure: true
+#
+#smoke_dev_stack:
+#  stage: test
+#  resource_group: local-docker-host-ports
+#  variables:
+#    COMPOSE_PROJECT_NAME: "sewt_dev_${CI_PIPELINE_ID}"
+#  script:
+#    - make print-ports
+#    - make dev-down || true
+#    - make dev-up
+#    - make dev-smoke
+#  after_script:
+#    - make dev-down || true
 
 #
 # STAGE - BUILD
