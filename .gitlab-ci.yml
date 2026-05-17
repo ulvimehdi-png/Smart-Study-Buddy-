@@ -2,8 +2,8 @@
 # GENERAL SETUP
 #
 stages:
-  #- validate
-  #- test
+  - validate
+  - test
   - build
   - deploy
 
@@ -29,60 +29,57 @@ workflow:
 #
 # STAGE - VALIDATE
 #
-#validate_compose:
-#  stage: validate
-#  script:
-#    - docker version
-#    - docker compose version
-#    - make --version
-#    - curl --version
-#    - rsync --version
-#    - ssh -V
-#    - make config-check
+validate_compose:
+  stage: validate
+  script:
+    - docker version
+    - docker compose version
+    - make --version
+    - curl --version
+    - rsync --version
+    - ssh -V
+    - make config-check
 
 #
 # STAGE - TEST
 #
-#test_stack:
-#  stage: test
-#  variables:
-#    COMPOSE_PROJECT_NAME: "sewt_test_${CI_PIPELINE_ID}"
-#  script:
-#    - make test
-#  after_script:
-#    - make test-down || true
-#  allow_failure: true
-#
-#smoke_dev_stack:
-#  stage: test
-#  resource_group: local-docker-host-ports
-#  variables:
-#    COMPOSE_PROJECT_NAME: "sewt_dev_${CI_PIPELINE_ID}"
-#  script:
-#    - make print-ports
-#    - make dev-down || true
-#    - make dev-up
-#    - make dev-smoke
-#  after_script:
-#    - make dev-down || true
+test_stack:
+  stage: test
+  variables:
+    TEST_PROJECT: "studybuddy_test_${CI_PIPELINE_ID}"
+  script:
+    - make test
+  after_script:
+    - make test-down || true
+  allow_failure: true
+
+smoke_dev_stack:
+  stage: test
+  variables:
+    COMPOSE_PROJECT_NAME: "sewt_dev_${CI_PIPELINE_ID}"
+  script:
+    - make dev-reset || true
+    - make dev-up
+    - make dev-smoke
+  after_script:
+    - make dev-down || true
 
 #
 # STAGE - BUILD
 #
 build_prod_artifact:
   stage: build
-  resource_group: local-docker-host-ports
   variables:
-    COMPOSE_PROJECT_NAME: "sewt_prod_build_${CI_PIPELINE_ID}"
+    PROD_PROJECT: "studybuddy_prod_${CI_PIPELINE_ID}"
     DEPLOY_ARTIFACT_DIR: ".deploy"
     PROD_IMAGE: "studybuddy:ci-${CI_PIPELINE_ID}"
   script:
     - make prod-reset || true
     - make prod-build
     - make prod-up-detached
+    - make prod-migrate
     - make prod-smoke
     - make prod-export
-
     - test -f .deploy/public/index.html
     - test -f .deploy/public/index.php
     - test -f .deploy/bin/console
@@ -133,13 +130,8 @@ deploy:
       ".deploy/"
       $DEPLOY_HOST:$DEPLOY_PATH/
 
-    - >
-      ssh "$DEPLOY_HOST" "
-      set -e;
-      cat > '$DEPLOY_PATH/.env.local' < "$PROD_ENV_LOCAL_FILE"
-      chmod 600 '$DEPLOY_PATH/.env.local';
-      test -f '$DEPLOY_PATH/.env.local';
-      "
+    - ssh "$DEPLOY_HOST" "cat > '$DEPLOY_PATH/.env.local'" < "$PROD_ENV_LOCAL_FILE"
+    - ssh "$DEPLOY_HOST" "chmod 600 '$DEPLOY_PATH/.env.local' && test -f '$DEPLOY_PATH/.env.local'"
 
     - >
       ssh "$DEPLOY_HOST" "

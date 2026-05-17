@@ -1,6 +1,8 @@
 ARG PHP_VERSION=8.4.18
 ARG NODE_VERSION=22-alpine
 ARG COMPOSER_VERSION=2.9
+ARG MYSQL_VERSION=8.0.32
+ARG MERCURE_VERSION=v0.24.0
 
 #################
 # COMPOSER BASE #
@@ -22,6 +24,7 @@ RUN apt-get update \
         default-mysql-client \
     && docker-php-ext-install -j"$(nproc)" \
         intl \
+        pdo \
         pdo_mysql \
         zip \
         opcache \
@@ -80,11 +83,18 @@ RUN npm run build
 ###############
 FROM php-base AS backend-vendor
 
+ENV APP_ENV=prod \
+    APP_DEBUG=0 \
+    COMPOSER_HOME=/tmp/composer \
+    COMPOSER_CACHE_DIR=/tmp/composer-cache
+
 WORKDIR /app/backend
 
+# Rather avoid this but symfony complains without and env-file and it's just prod-emulation
 COPY docker/environment/.env.local.prod ./.env
 
-COPY backend/composer.json backend/composer.lock ./
+COPY backend/composer.json ./
+COPY backend/composer.lock ./
 
 RUN composer install \
     --no-dev \
@@ -142,8 +152,6 @@ COPY --from=frontend-build --chown=www-data:www-data /app/frontend/dist/ /var/ww
 
 RUN mkdir -p var/cache var/log public/upload \
     && chown -R www-data:www-data var public/upload
-
-USER www-data
 
 EXPOSE 80
 

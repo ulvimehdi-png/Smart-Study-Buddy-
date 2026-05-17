@@ -11,11 +11,6 @@ x-net: &net
   networks:
     - app_net
 
-x-local-http-port: &local-http-port
-  host_ip: 127.0.0.1
-  protocol: tcp
-  app_protocol: http
-
 x-health-defaults: &health-defaults
   interval: 5s
   timeout: 3s
@@ -44,6 +39,7 @@ x-php-build-dev: &php-build-dev
   target: php-dev
   args:
     PHP_VERSION: "${PHP_VERSION:-8.4.18}"
+    COMPOSER_VERSION: "${COMPOSER_VERSION:-2.9}"
 
 x-php-build-test: &php-build-test
   context: .
@@ -51,6 +47,7 @@ x-php-build-test: &php-build-test
   target: php-test
   args:
     PHP_VERSION: "${PHP_VERSION:-8.4.18}"
+    COMPOSER_VERSION: "${COMPOSER_VERSION:-2.9}"
 
 x-php-build-prod: &php-build-prod
   context: .
@@ -80,21 +77,14 @@ x-node-common: &node-common
   <<: [*user, *net]
   environment:
     VITE_DEV_SERVER_HOST: "0.0.0.0"
-    VITE_DEV_SERVER_PORT: "5173"
+    VITE_DEV_SERVER_PORT: "${EXT_PORT_NODE_DEV:-5173}"
     HOME: "/tmp"
     NPM_CONFIG_CACHE: "/tmp/.npm"
     MERCURE_URL: "http://mercure/.well-known/mercure"
-    VITE_MERCURE_PUBLIC_URL: "http://localhost:3000/.well-known/mercure"
+    VITE_MERCURE_PUBLIC_URL: "http://127.0.0.1:${EXT_PORT_MERCURE_DEV:-3000}/.well-known/mercure"
   volumes:
     - ./frontend:/app/frontend
-    - node_modules_dev:/app/frontend/node_modules
-
-x-node-runtime: &node-runtime
-  ports:
-    - <<: *local-http-port
-      name: node-dev-http
-      target: 5173
-      published: "${EXT_PORT_NODE_DEV:-5173}"
+    - ./frontend/node_modules:/app/frontend/node_modules
 
 services:
 
@@ -106,13 +96,7 @@ services:
     <<: *db-base
     environment:
       <<: *mysql-env
-      MYSQL_DATABASE: "${MYSQL_DATABASE_DEV:-app_dev}"
-    ports:
-      - <<: *local-http-port
-        name: db-dev
-        target: 3306
-        published: "${EXT_PORT_DB_DEV:-33061}"
-        app_protocol: mysql
+      MYSQL_DATABASE: app_dev
     volumes:
       - db_dev_data:/var/lib/mysql
     restart: unless-stopped
@@ -123,11 +107,6 @@ services:
     build: *php-build-dev
     env_file:
       - ./docker/environment/.env.local.dev
-    ports:
-      - <<: *local-http-port
-        name: php-dev-http
-        target: 8000
-        published: "${EXT_PORT_PHP_DEV:-8001}"
     volumes:
       - ./backend:/app/backend
       - ./docker/php/dev.ini:/usr/local/etc/php/conf.d/zz-dev.ini:ro
@@ -141,25 +120,44 @@ services:
 
   node-deps:
     profiles: ["dev"]
-    <<: *node-common
+    image: node:${NODE_VERSION:-22-alpine}
+    working_dir: /app/frontend
     user: root
+    <<: *net
+    volumes:
+      - ./frontend:/app/frontend
+      - ./frontend/node_modules:/app/frontend/node_modules
     command: >
-      sh -lc ' 
-        chown -R ${HOST_UID:-1000}:${HOST_GID:-1000} /app/frontend/node_modules;
+      sh -lc '
+        mkdir /app/frontend/node_modules;        
         npm ci;
+        chown -R ${HOST_UID:-1000}:${HOST_GID:-1000} /app/frontend/node_modules;
       '
     restart: "no"
 
   node-dev:
     profiles: [ "dev" ]
-    <<: [*node-common, *node-runtime]
+    image: node:${NODE_VERSION:-22-alpine}
+    working_dir: /app/frontend
+    init: true
+    <<: [ *user, *net ]
+    environment:
+      VITE_DEV_SERVER_HOST: "0.0.0.0"
+      VITE_DEV_SERVER_PORT: "5173"
+      HOME: "/tmp"
+      NPM_CONFIG_CACHE: "/tmp/.npm"
+      MERCURE_URL: "http://mercure-dev/.well-known/mercure"
+      VITE_MERCURE_PUBLIC_URL: "http://127.0.0.1:3000/.well-known/mercure"
+    volumes:
+      - ./frontend:/app/frontend
+      - ./frontend/node_modules:/app/frontend/node_modules
     depends_on:
       node-deps:
         condition: service_completed_successfully
     command: npm run dev -- --host 0.0.0.0 --port 5173
     healthcheck:
       <<: *health-defaults
-      test: [ "CMD-SHELL", "wget -q --spider http://127.0.0.1:5173 || exit 1" ]
+      test: ["CMD-SHELL", "wget -q --spider http://127.0.0.1:5173 || exit 1"]
     restart: unless-stopped
 
   mercure-dev:
@@ -170,17 +168,16 @@ services:
       SERVER_NAME: ":80"
       MERCURE_PUBLISHER_JWT_KEY: "!"
       MERCURE_SUBSCRIBER_JWT_KEY: "!"
-      MERCURE_EXTRA_DIRECTIVES: "demo \n anonymous \n cors_origins * \n publish_origins *"
-      #MERCURE_EXTRA_DIRECTIVES: |
-      #  "anonymous
-      #  cors_origins http://localhost:5173 http://localhost:8000
-      #  publish_origins http://localhost:5173 http://localhost:8000
-      #  demo"
-    ports:
-      - <<: *local-http-port
-        name: mercure-dev-http
-        target: 80
-        published: "${EXT_PORT_MERCURE_DEV:-3000}"
+      MERCURE_EXTRA_DIRECTIVES: |
+        demo
+        anonymous
+        cors_origins *
+        publish_origins *
+#      MERCURE_EXTRA_DIRECTIVES: |
+#        "anonymous
+#        cors_origins http://localhost:5173 http://localhost:8000
+#        publish_origins http://localhost:5173 http://localhost:8000
+#        demo"
     volumes:
       - mercure_dev_data:/data
       - mercure_dev_config:/config
@@ -197,7 +194,7 @@ services:
     <<: *db-base
     environment:
       <<: *mysql-env
-      MYSQL_DATABASE: "app_test"
+      MYSQL_DATABASE: app_test
     tmpfs:
       - /var/lib/mysql
     restart: "no"
@@ -220,19 +217,15 @@ services:
 
   migrate-test:
     profiles: [ "test" ]
+    <<: *php-common
+    build: *php-build-test
+    env_file:
+      - ./docker/environment/.env.local.test
     depends_on:
       vendor-test:
         condition: service_completed_successfully
       db-test:
         condition: service_healthy
-    <<: *php-common
-    build: *php-build-test
-    env_file:
-      - ./docker/environment/.env.local.test
-#    environment:
-#      APP_ENV: test
-#      APP_DEBUG: "1"
-#      DATABASE_URL: "mysql://app:app@db-test:3306/app?serverVersion=8.0.32&charset=utf8mb4"
     volumes:
       - ./backend:/app/backend
       - composer_vendor:/app/backend/vendor
@@ -249,11 +242,11 @@ services:
     profiles: [ "test" ]
     <<: *php-common
     build: *php-build-test
+    env_file:
+      - ./docker/environment/.env.local.test
     depends_on:
       migrate-test:
         condition: service_completed_successfully
-    env_file:
-      - ./docker/environment/.env.local.test
     volumes:
       - ./backend:/app/backend
       - composer_vendor:/app/backend/vendor
@@ -271,16 +264,23 @@ services:
     <<: *db-base
     environment:
       <<: *mysql-env
-      MYSQL_DATABASE: "app_prod"
-    ports:
-      - <<: *local-http-port
-        name: db-prod
-        target: 3306
-        published: "${EXT_PORT_DB_PROD:-33062}"
-        app_protocol: mysql
+      MYSQL_DATABASE: app_prod
     volumes:
       - db_prod_data:/var/lib/mysql
     restart: unless-stopped
+
+  migrate-prod:
+    profiles: [ "prod" ]
+    image: "${PROD_IMAGE:-studybuddy:prod-emulation}"
+    build: *php-build-prod
+    <<: *net
+    env_file:
+      - ./docker/environment/.env.local.prod
+    depends_on:
+      db-prod:
+        condition: service_healthy
+    command: php bin/console doctrine:migrations:migrate --no-interaction --env=prod
+    restart: "no"
 
   web:
     profiles: [ "prod" ]
@@ -289,16 +289,9 @@ services:
     <<: *net
     env_file:
       - ./docker/environment/.env.local.prod
-    post_start:
-      - command: php bin/console doctrine:migrations:migrate --no-interaction --env=prod
-    ports:
-      - <<: *local-http-port
-        name: web-http
-        target: 80
-        published: "${EXT_PORT_HTTP_PROD:-8080}"
     depends_on:
-      db-prod:
-        condition: service_healthy
+      migrate-prod:
+        condition: service_completed_successfully
     tmpfs:
       - /tmp
     security_opt:
@@ -321,7 +314,6 @@ volumes:
   db_prod_data:
   composer_cache:
   composer_vendor:
-  node_modules_dev:
   mercure_dev_data:
   mercure_dev_config:
 

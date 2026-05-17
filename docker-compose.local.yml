@@ -1,0 +1,52 @@
+x-local-http-port: &local-http-port
+  host_ip: 127.0.0.1
+  protocol: tcp
+  app_protocol: http
+
+x-local-mysql-port: &local-mysql-port
+  host_ip: 127.0.0.1
+  protocol: tcp
+  app_protocol: mysql
+
+services:
+  db-dev:
+    ports:
+      - <<: *local-mysql-port
+        name: db-dev
+        target: 3306
+        published: "${EXT_PORT_DB_DEV:-33061}"
+
+  php-dev:
+    ports:
+      - <<: *local-http-port
+        name: php-dev-http
+        target: 8000
+        published: "${EXT_PORT_PHP_DEV:-8001}"
+
+  node-dev:
+    ports:
+      - <<: *local-http-port
+        name: node-dev-http
+        target: 5173
+        published: "${EXT_PORT_NODE_DEV:-5173}"
+
+  mercure-dev:
+    ports:
+      - <<: *local-http-port
+        name: mercure-dev-http
+        target: 80
+        published: "${EXT_PORT_MERCURE_DEV:-3000}"
+
+  db-prod:
+    ports:
+      - <<: *local-mysql-port
+        name: db-prod
+        target: 3306
+        published: "${EXT_PORT_DB_PROD:-33062}"
+
+  web:
+    ports:
+      - <<: *local-http-port
+        name: web-http
+        target: 80
+        published: "${EXT_PORT_HTTP_PROD:-8080}"
