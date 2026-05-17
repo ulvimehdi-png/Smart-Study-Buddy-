@@ -130,8 +130,9 @@ deploy:
       ".deploy/"
       $DEPLOY_HOST:$DEPLOY_PATH/
 
+    - ssh "$DEPLOY_HOST" "APP_ENV=prod" > '$DEPLOY_PATH/.env'"
     - ssh "$DEPLOY_HOST" "cat > '$DEPLOY_PATH/.env.local'" < "$PROD_ENV_LOCAL_FILE"
-    - ssh "$DEPLOY_HOST" "chmod 600 '$DEPLOY_PATH/.env.local' && test -f '$DEPLOY_PATH/.env.local'"
+    - ssh "$DEPLOY_HOST" "chmod 644 '$DEPLOY_PATH/.env' '$DEPLOY_PATH/.env.local' && test -f '$DEPLOY_PATH/.env.local'"
 
     - >
       ssh "$DEPLOY_HOST" "
