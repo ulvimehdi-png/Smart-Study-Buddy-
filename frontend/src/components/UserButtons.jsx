@@ -13,7 +13,7 @@ export default function UserButtons() {
   };
 
   return (
-    <div className="flex items-center gap-3">
+    <div className="grid grid-cols-2 gap-3">
       {auth.user ? (
         <>
           {/* User Badge */}

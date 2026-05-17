@@ -243,7 +243,7 @@ export default function UserPage() {
                     type="text"
                     value={username}
                     onChange={(event) => setUsername(event.target.value)}
-                    className="w-full rounded-2xl border border-border-base bg-bg-elevated px-4 py-3 text-text-main outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/10"
+                    className="w-full rounded-2xl border border-border-base bg-bg-elevated px-4 py-3 text-text-main outline-none transition focus:border-primary"
                     required
                   />
                 </div>
@@ -288,7 +288,7 @@ export default function UserPage() {
                       ...current,
                       currentPassword: event.target.value,
                     }))}
-                    className="w-full rounded-2xl border border-border-base bg-bg-elevated px-4 py-3 text-text-main outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/10"
+                    className="w-full rounded-2xl border border-border-base bg-bg-elevated px-4 py-3 text-text-main outline-none transition focus:border-primary"
                     required
                   />
                 </div>
@@ -304,7 +304,7 @@ export default function UserPage() {
                       ...current,
                       newPassword: event.target.value,
                     }))}
-                    className="w-full rounded-2xl border border-border-base bg-bg-elevated px-4 py-3 text-text-main outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/10"
+                    className="w-full rounded-2xl border border-border-base bg-bg-elevated px-4 py-3 text-text-main outline-none transition focus:border-primary"
                     required
                   />
                 </div>
@@ -320,7 +320,7 @@ export default function UserPage() {
                       ...current,
                       confirmPassword: event.target.value,
                     }))}
-                    className="w-full rounded-2xl border border-border-base bg-bg-elevated px-4 py-3 text-text-main outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/10"
+                    className="w-full rounded-2xl border border-border-base bg-bg-elevated px-4 py-3 text-text-main outline-none transition focus:border-primary"
                     required
                   />
                 </div>

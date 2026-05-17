@@ -111,7 +111,7 @@ export default function Home() {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <section className="relative pt-20 pb-20 px-4 min-h-dvh flex items-center">
+      <section className="relative z-0 pt-20 pb-20 px-4 min-h-dvh flex items-center">
         {/* Animated Background */}
         <AnimatedBlobs />
 
@@ -267,7 +267,7 @@ export default function Home() {
 
       {/* CTA Section */}
       {/* todo */}
-      <section className="relative px-4 overflow-hidden py-40 flex items-center">
+      <section className="relative z-0 px-4 overflow-hidden py-40 flex items-center">
         {/* Animated Background */}
         <AnimatedBlobs />
         <div className="max-w-4xl mx-auto text-center">

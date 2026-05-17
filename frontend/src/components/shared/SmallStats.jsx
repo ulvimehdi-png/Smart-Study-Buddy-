@@ -2,8 +2,8 @@ import React from "react";
 
 export default function SmallStats({ icon, iconClass, label, value }) {
   return (
-    <div className="flex items-start gap-3 rounded-2xl border border-border-base bg-bg-card p-4 shadow-sm">
-      <div className={`flex h-10 w-10 items-center justify-center rounded-xl ${iconClass}`}>
+    <div className="flex items-start gap-3 rounded-2xl border border-border-base bg-bg-card p-2 sm:p-4 shadow-sm">
+      <div className={`flex h-8 w-8 sm:h-10 sm:w-10 items-center justify-center rounded-xl ${iconClass}`}>
         {icon}
       </div>
       <div>

@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { ChevronLeft, ChevronRight, Clock, BookText, CheckCircle, Circle, Plus, X, Flag, NotebookPen } from "lucide-react";
 import PageBackdrop from "../components/shared/PageBackdrop";
+import SubjectSelect from "../components/shared/SubjectSelect";
+import { deleteSubjectOption, fetchSubjectOptions, NEW_SUBJECT_VALUE } from "../lib/subjectOptions";
 import { useToast } from "../lib/useToast.jsx";
+import { cn } from "../lib/utils";
 
 const DAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 const MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
@@ -17,6 +20,8 @@ export default function Calendar() {
     const [addType, setAddType] = useState("task");
     const [addTitle, setAddTitle] = useState("");
     const [addSubject, setAddSubject] = useState("");
+    const [customSubject, setCustomSubject] = useState("");
+    const [subjectOptions, setSubjectOptions] = useState([]);
     const [addTime, setAddTime] = useState("");
     const [addPriority, setAddPriority] = useState("medium");
     const [addContent, setAddContent] = useState("");
@@ -49,7 +54,26 @@ export default function Calendar() {
         }).finally(() => setLoading(false));
     };
 
-    useEffect(() => { fetchCalendarData(); }, [year, month]);
+    const fetchSubjects = () => {
+        fetchSubjectOptions()
+            .then((data) => setSubjectOptions(data))
+            .catch((err) => console.error("Error fetching subjects:", err));
+    };
+
+    useEffect(() => {
+        fetchCalendarData();
+        fetchSubjects();
+    }, [year, month]);
+
+    const handleRemoveSubject = async (option) => {
+        if (String(option.id).startsWith("derived-")) {
+            toast.error("This subject is assigned to an item. Remove it from the item first.");
+            return;
+        }
+        await deleteSubjectOption(option.id);
+        if (addSubject === option.name) setAddSubject("");
+        fetchSubjects();
+    };
 
     const getDaysInMonth = () => {
         const firstDay = new Date(year, month, 1).getDay();
@@ -88,12 +112,14 @@ export default function Calendar() {
         setSelectedDate(date);
         setShowAddModal(true);
         setAddType(dateStr < todayStr ? "note" : "task");
-        setAddTitle(""); setAddSubject(""); setAddTime(""); setAddPriority("medium"); setAddContent(""); setAddMinutes(25);
+        setAddTitle(""); setAddSubject(""); setCustomSubject(""); setAddTime(""); setAddPriority("medium"); setAddContent(""); setAddMinutes(25);
     };
 
     const handleAddEntry = async (e) => {
         e.preventDefault();
         if (!addTitle) return;
+
+        const finalSubject = addSubject === NEW_SUBJECT_VALUE ? customSubject.trim() : addSubject;
 
         const y = selectedDate.getFullYear();
         const m = String(selectedDate.getMonth() + 1).padStart(2, '0');
@@ -101,16 +127,22 @@ export default function Calendar() {
         const dateStr = `${y}-${m}-${d}`;
         try {
             if (addType === "task") {
-                await fetch("/api/tasks", { method: "POST", credentials: "include", headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ title: addTitle, subject: addSubject, priority: addPriority, dueDate: dateStr + (addTime ? `T${addTime}:00` : "T23:59:00") }) });
+                await fetch("/api/tasks", {
+                    method: "POST", credentials: "include", headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ title: addTitle, subject: finalSubject, priority: addPriority, dueDate: dateStr + (addTime ? `T${addTime}:00` : "T23:59:00") })
+                });
                 toast.success("Task added to calendar!");
             } else if (addType === "note") {
-                await fetch("/api/notes", { method: "POST", credentials: "include", headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ title: addTitle, content: addContent || addTitle, subject: addSubject, createdAt: dateStr + (addTime ? `T${addTime}:00` : `T${new Date().toTimeString().slice(0, 5)}:00`) }) });
+                await fetch("/api/notes", {
+                    method: "POST", credentials: "include", headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ title: addTitle, content: addContent || addTitle, subject: finalSubject, createdAt: dateStr + (addTime ? `T${addTime}:00` : `T${new Date().toTimeString().slice(0, 5)}:00`) })
+                });
                 toast.success("Note added to calendar!");
             } else {
-                await fetch("/api/sessions", { method: "POST", credentials: "include", headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ subject: addSubject || addTitle, minutes: addMinutes, date: dateStr }) });
+                await fetch("/api/sessions", {
+                    method: "POST", credentials: "include", headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ subject: finalSubject || addTitle, minutes: addMinutes, date: dateStr })
+                });
                 toast.success("Study session logged!");
             }
             setShowAddModal(false); fetchCalendarData();
@@ -127,7 +159,7 @@ export default function Calendar() {
     })();
 
     return (
-        <div className="relative min-h-screen overflow-hidden text-text-main page-enter" style={{ background: 'transparent' }}>
+        <div className="relative min-h-screen overflow-hidden text-text-main" style={{ background: 'transparent' }}>
             <PageBackdrop />
 
             <div className="relative mx-auto max-w-7xl px-4 pb-12 pt-22 sm:px-6 lg:px-8">
@@ -141,7 +173,7 @@ export default function Calendar() {
 
                 <div className="grid gap-6 lg:grid-cols-[1fr_340px]">
                     {/* Calendar Grid */}
-                    <div className="glass-card rounded-3xl p-6">
+                    <div className="border border-border-base bg-bg-card rounded-3xl p-6">
                         <div className="mb-6 flex items-center justify-between">
                             <h2 className="text-xl font-semibold">{MONTHS[month]} {year}</h2>
                             <div className="flex items-center gap-2">
@@ -155,7 +187,7 @@ export default function Calendar() {
                             {DAYS.map(d => <div key={d} className="py-2 text-center text-xs font-medium text-text-muted uppercase tracking-wider">{d}</div>)}
                         </div>
 
-                        <div className="grid grid-cols-7 gap-1">
+                        <div className="grid grid-cols-7 gap-2">
                             {days.map((dayInfo, index) => {
                                 const y = dayInfo.date.getFullYear();
                                 const m = String(dayInfo.date.getMonth() + 1).padStart(2, '0');
@@ -174,17 +206,16 @@ export default function Calendar() {
 
                                 return (
                                     <button key={index} onClick={() => setSelectedDate(dayInfo.date)} onDoubleClick={() => openAddModal(dayInfo.date)}
-                                            className={`relative min-h-[80px] rounded-xl p-2 text-left transition-all duration-200
-                      ${!dayInfo.isCurrentMonth ? "text-text-muted/40" : "text-text-main"}
-                      ${isToday ? "ring-1 ring-primary/60 bg-primary/[0.06]" : ""}
-                      ${isSelected ? "ring-2 ring-primary bg-primary/10" : "hover:bg-primary/5"}
-                    `}
-                                            style={isToday ? { boxShadow: '0 0 15px rgba(255,159,10,0.15)' } : {}}>
+                                        className={cn("relative min-h-20 rounded-2xl p-5 text-center transition duration-200 border",
+                                            dayInfo.isCurrentMonth ? "text-text-main" : "text-text-muted/40",
+                                            isSelected ? "ring-2 ring-primary/80 bg-primary/20 border-none" : "hover:shadow-lg hover:bg-primary/10 hover:border-primary/50 dark:hover:shadow-black/50",
+                                            isToday ? "bg-primary/20 hover:bg-primary/20 border-none" : "",
+                                        )}>
                                         <span className={`text-sm font-medium ${isToday ? "text-primary" : ""}`}>{dayInfo.day}</span>
                                         {hasEvents && dayInfo.isCurrentMonth && (
                                             <div className="mt-1.5 flex gap-1">
-                                                {tasks.length > 0 && <span className="h-1.5 w-1.5 rounded-full bg-primary" />}
-                                                {notes.length > 0 && <span className="h-1.5 w-1.5 rounded-full bg-secondary" />}
+                                                {tasks.length > 0 && <span className="h-1.5 w-1.5 rounded-full bg-accent" />}
+                                                {notes.length > 0 && <span className="h-1.5 w-1.5 rounded-full bg-primary" />}
                                                 {sessions.length > 0 && <span className="h-1.5 w-1.5 rounded-full bg-green-400" />}
                                             </div>
                                         )}
@@ -195,20 +226,20 @@ export default function Calendar() {
 
                         {/* Legend */}
                         <div className="mt-4 flex items-center gap-6 text-xs text-text-muted">
-                            <span className="flex items-center gap-1.5"><span className="h-2 w-2 rounded-full bg-primary" /> Tasks</span>
-                            <span className="flex items-center gap-1.5"><span className="h-2 w-2 rounded-full bg-secondary" /> Notes</span>
+                            <span className="flex items-center gap-1.5"><span className="h-2 w-2 rounded-full bg-accent" /> Tasks</span>
+                            <span className="flex items-center gap-1.5"><span className="h-2 w-2 rounded-full bg-primary" /> Notes</span>
                             <span className="flex items-center gap-1.5"><span className="h-2 w-2 rounded-full bg-green-400" /> Sessions</span>
                             <span className="ml-auto text-text-muted/60">Double-click to add entry</span>
                         </div>
                     </div>
 
                     {/* Selected Date Details */}
-                    <div className="glass-card rounded-3xl p-5 lg:sticky lg:top-24 lg:self-start">
+                    <div className="border border-border-base bg-bg-card rounded-3xl p-5 lg:sticky lg:top-24 lg:self-start">
                         <div className="flex items-center justify-between mb-4">
                             <h3 className="text-lg font-semibold">{selectedDate ? formatDate(selectedDate) : "Select a date"}</h3>
                             {selectedDate && (
                                 <button onClick={() => openAddModal(selectedDate)}
-                                        className="rounded-xl bg-primary/10 text-primary px-3 py-1.5 text-sm font-medium hover:bg-primary/20 transition">
+                                    className="rounded-xl bg-primary/10 text-primary px-3 py-1.5 text-sm font-medium hover:bg-primary/20 transition">
                                     <Plus className="h-4 w-4 inline mr-1" />Add
                                 </button>
                             )}
@@ -236,7 +267,7 @@ export default function Calendar() {
                                     {/* Tasks */}
                                     <div>
                                         <h4 className="mb-2 flex items-center gap-2 text-sm font-medium text-text-secondary">
-                                            <Flag className="h-4 w-4 text-primary" /> Tasks
+                                            <Flag className="h-4 w-4 text-accent" /> Tasks
                                         </h4>
                                         {tasks.length === 0 ? <p className="text-sm italic text-text-muted">No tasks due</p> : (
                                             <ul className="space-y-2">{tasks.map(t => (
@@ -245,8 +276,8 @@ export default function Calendar() {
                                                     <span className={`text-sm ${t.status === "done" ? "line-through text-text-muted" : ""}`}>{t.title}</span>
                                                     {t.priority && <span className={`ml-auto text-xs rounded-full px-2 py-0.5 font-medium
                             ${t.priority === 'high' ? 'bg-red-500/15 text-red-400' : t.priority === 'medium' ? 'bg-primary/15 text-primary' : 'bg-secondary/15 text-secondary'}`}>
-                            {t.priority}
-                          </span>}
+                                                        {t.priority}
+                                                    </span>}
                                                 </li>
                                             ))}</ul>
                                         )}
@@ -255,7 +286,7 @@ export default function Calendar() {
                                     {/* Notes */}
                                     <div>
                                         <h4 className="mb-2 flex items-center gap-2 text-sm font-medium text-text-secondary">
-                                            <BookText className="h-4 w-4 text-secondary" /> Notes
+                                            <BookText className="h-4 w-4 text-primary" /> Notes
                                         </h4>
                                         {notes.length === 0 ? <p className="text-sm italic text-text-muted">No notes</p> : (
                                             <ul className="space-y-2">{notes.map(n => (
@@ -278,9 +309,9 @@ export default function Calendar() {
             {/* Add Entry Modal */}
             {showAddModal && selectedDate && (
                 <div className="fixed inset-0 z-[500] flex items-center justify-center" style={{ background: 'rgba(10,10,15,0.4)', backdropFilter: 'blur(8px)', animation: 'fadeIn 0.2s ease' }}
-                     onClick={(e) => { if (e.target === e.currentTarget) setShowAddModal(false); }}
-                     onKeyDown={(e) => { if (e.key === 'Escape') setShowAddModal(false); }}>
-                    <div className="glass-card rounded-3xl p-6 w-[90%] max-w-lg" style={{ animation: 'modalIn 0.35s cubic-bezier(0.22,1,0.36,1)' }}>
+                    onClick={(e) => { if (e.target === e.currentTarget) setShowAddModal(false); }}
+                    onKeyDown={(e) => { if (e.key === 'Escape') setShowAddModal(false); }}>
+                    <div className="border border-border-base bg-bg-card rounded-3xl p-6 w-[90%] max-w-lg" style={{ animation: 'modalIn 0.35s cubic-bezier(0.22,1,0.36,1)' }}>
                         <div className="flex items-center justify-between mb-5">
                             <h3 className="text-lg font-semibold">Add Entry — {formatDate(selectedDate)}</h3>
                             <button onClick={() => setShowAddModal(false)} className="p-1 rounded-lg hover:bg-primary/10 transition"><X className="h-5 w-5" /></button>
@@ -289,8 +320,8 @@ export default function Calendar() {
                         {/* Type selector */}
                         <div className="flex gap-2 mb-5">
                             {[{ val: "task", icon: <Flag className="h-4 w-4" />, label: "Task" },
-                                { val: "note", icon: <NotebookPen className="h-4 w-4" />, label: "Note" },
-                                { val: "session", icon: <Clock className="h-4 w-4" />, label: "Session" }
+                            { val: "note", icon: <NotebookPen className="h-4 w-4" />, label: "Note" },
+                            { val: "session", icon: <Clock className="h-4 w-4" />, label: "Session" }
                             ].map(t => {
                                 const y = selectedDate.getFullYear();
                                 const m = String(selectedDate.getMonth() + 1).padStart(2, '0');
@@ -301,7 +332,7 @@ export default function Calendar() {
 
                                 return (
                                     <button key={t.val} onClick={() => setAddType(t.val)}
-                                            className={`flex-1 flex items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-medium transition-all
+                                        className={`flex-1 flex items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-medium transition-all
                       ${addType === t.val ? 'bg-primary/15 text-primary border border-primary/30' : 'surface-subtle text-text-secondary hover:bg-primary/5'}`}>
                                         {t.icon} {t.label}
                                     </button>
@@ -311,37 +342,45 @@ export default function Calendar() {
 
                         <form onSubmit={handleAddEntry} className="space-y-4">
                             <input type="text" value={addTitle} onChange={e => setAddTitle(e.target.value)} required
-                                   placeholder={addType === "session" ? "Subject" : "Title"} className="w-full glass-input rounded-xl px-4 py-3 text-text-main placeholder:text-text-muted outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20" />
+                                placeholder={addType === "session" ? "Subject" : "Title"} className="w-full border bg-bg-elevated rounded-xl px-4 py-3 text-text-main placeholder:text-text-muted outline-none transition focus:border-primary" />
 
                             {addType !== "session" && (
-                                <input type="text" value={addSubject} onChange={e => setAddSubject(e.target.value)} placeholder="Subject (optional)"
-                                       className="w-full glass-input rounded-xl px-4 py-3 text-text-main placeholder:text-text-muted outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20" />
+                                <div className="relative">
+                                    <SubjectSelect
+                                        options={subjectOptions}
+                                        value={addSubject}
+                                        onChange={setAddSubject}
+                                        customSubject={customSubject}
+                                        onCustomSubjectChange={setCustomSubject}
+                                        onRemoveOption={handleRemoveSubject}
+                                    />
+                                </div>
                             )}
 
                             {addType === "note" && (
                                 <textarea value={addContent} onChange={e => setAddContent(e.target.value)} placeholder="Content"
-                                          className="w-full h-24 resize-none glass-input rounded-xl px-4 py-3 text-text-main placeholder:text-text-muted outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20" />
+                                    className="w-full h-24 resize-none border bg-bg-elevated rounded-xl px-4 py-3 text-text-main placeholder:text-text-muted outline-none transition focus:border-primary" />
                             )}
 
                             {addType === "task" && (
                                 <select value={addPriority} onChange={e => setAddPriority(e.target.value)}
-                                        className="w-full glass-input rounded-xl px-4 py-3 text-text-main outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20">
+                                    className="w-full border bg-bg-elevated rounded-xl px-4 py-3 text-text-main outline-none transition focus:border-primary">
                                     <option value="low">Low Priority</option><option value="medium">Medium Priority</option><option value="high">High Priority</option>
                                 </select>
                             )}
 
                             {addType === "session" && (
                                 <input type="number" value={addMinutes} onChange={e => setAddMinutes(parseInt(e.target.value) || 0)} min="1"
-                                       placeholder="Minutes studied" className="w-full glass-input rounded-xl px-4 py-3 text-text-main placeholder:text-text-muted outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20" />
+                                    placeholder="Minutes studied" className="w-full border bg-bg-elevated rounded-xl px-4 py-3 text-text-main placeholder:text-text-muted outline-none transition focus:border-primary" />
                             )}
 
                             {addType !== "session" && (
                                 <input type="time" value={addTime} onChange={e => setAddTime(e.target.value)}
-                                       className="w-full glass-input rounded-xl px-4 py-3 text-text-main outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20" />
+                                    className="w-full border bg-bg-elevated rounded-xl px-4 py-3 text-text-main outline-none transition focus:border-primary" />
                             )}
 
                             <button type="submit"
-                                    className="w-full rounded-xl bg-gradient-primary-accent px-4 py-3 font-medium text-white transition-all hover:scale-[1.02] hover:shadow-lg hover:shadow-primary/20 active:scale-[0.98]">
+                                className="w-full rounded-xl bg-gradient-primary-accent px-4 py-3 font-medium text-white transition-all hover:scale-[1.02] hover:shadow-lg hover:shadow-primary/20 active:scale-[0.98]">
                                 Add {addType === "task" ? "Task" : addType === "note" ? "Note" : "Session"}
                             </button>
                         </form>

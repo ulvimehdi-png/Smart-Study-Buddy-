@@ -3,6 +3,7 @@ import { BarChart3, Clock, FileText, Flame, Sparkles, Target, CheckSquare } from
 import PageBackdrop from "../components/shared/PageBackdrop";
 import SubjectBadge from "../components/shared/SubjectBadge";
 import { TiptapViewer } from "../components/TiptapEditor";
+import SmallStats from "../components/shared/SmallStats";
 
 const formatDate = (value) =>
   new Intl.DateTimeFormat(undefined, { dateStyle: "medium" }).format(
@@ -156,25 +157,9 @@ export default function Dashboard() {
           </div>
         </div>
 
-        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        <div className="grid gap-4 sm:grid-cols-3 xl:grid-cols-5">
           {stats.map(({ label, value, detail, icon, iconClass }) => (
-            <div
-              key={label}
-              className="rounded-2xl border border-border-base bg-bg-card p-4 shadow-sm"
-            >
-              <div className="flex flex-wrap items-center gap-2">
-                <div
-                  className={`flex h-10 w-10 items-center justify-center rounded-xl ${iconClass}`}
-                >
-                  {icon}
-                </div>
-                <div>
-                  <p className="font-medium">{label}</p>
-                  <p className="text-sm text-text-secondary">{detail}</p>
-                </div>
-              </div>
-              <div className="mt-3 text-3xl font-semibold">{value}</div>
-            </div>
+            <SmallStats key={label} label={label} value={value} detail={detail} icon={icon} iconClass={iconClass} />
           ))}
         </div>
 
