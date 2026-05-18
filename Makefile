@@ -15,125 +15,186 @@
 SHELL 			:= bash
 .SHELLFLAGS 	:= -eu -o pipefail -c
 
-PROJECT_BASE	?= studybuddy
-PROD_IMAGE 		?= studybuddy:prod-emulation
+EXPORT_DIR 		?= .deploy
 
-CI_SUFFIX		:= $(if $(CI_PIPELINE_ID),$(CI_PIPELINE_ID),local)
+#################
+# PROJECT NAMES #
+#################
+APP_NAME	:= studybuddy
+CI_SUFFIX	:= $(if $(CI_PIPELINE_ID),$(CI_PIPELINE_ID),local)
+PROD_IMAGE	?= $(APP_NAME):prod-$(CI_SUFFIX)
+
+PROJECT_NAME = $(APP_NAME)_$(1)_$(CI_SUFFIX)
+
+PROJECT_DEV  := $(call PROJECT_NAME,dev)
+PROJECT_TEST := $(call PROJECT_NAME,test)
+PROJECT_PROD := $(call PROJECT_NAME,prod)
 
 ####################
 # COMPOSE DEFAULTS #
 ####################
-COMPOSE_ENV		?= ./compose.env
-COMPOSE_BASE	:= docker compose --project-directory . --env-file $(COMPOSE_ENV) -f ./docker-compose.yml
-COMPOSE_LOCAL	:= $(COMPOSE_BASE) -f ./docker-compose.local.yml
+COMPOSE_BASE		= docker compose --project-directory . --env-file ./compose.env -f docker-compose.yml
+COMPOSE_BASE_LOCAL	= $(COMPOSE_BASE) -f docker-compose.local.yml
 
-DEV_PROJECT		?= $(PROJECT_BASE)_dev
-TEST_PROJECT	?= $(PROJECT_BASE)_test_$(CI_SUFFIX)
-PROD_PROJECT	?= $(PROJECT_BASE)_prod_$(CI_SUFFIX)
+COMPOSE_RUN			= APP_ENV=$(1) COMPOSE_PROJECT_NAME=$(2) $(3) --profile $(1)
 
-PROD_IMAGE		?= $(PROJECT_BASE):prod-$(CI_SUFFIX)
+DEV_CMD				:= $(call COMPOSE_RUN,dev,$(PROJECT_DEV),$(COMPOSE_BASE_LOCAL))
+TEST_CMD			:= $(call COMPOSE_RUN,test,$(PROJECT_TEST),$(COMPOSE_BASE))
+PROD_CMD			:= $(call COMPOSE_RUN,prod,$(PROJECT_PROD),$(COMPOSE_BASE))
+PROD_CMD_LOCAL		:= $(PROD_CMD) -f ./docker-compose.local.yml
 
-DEV				:= APP_ENV=dev	COMPOSE_PROJECT_NAME=$(DEV_PROJECT) $(COMPOSE_LOCAL) --profile dev
-TEST			:= APP_ENV=test	COMPOSE_PROJECT_NAME=$(TEST_PROJECT) $(COMPOSE_BASE) --profile test
-PROD			:= APP_ENV=prod	COMPOSE_PROJECT_NAME=$(PROD_PROJECT) $(COMPOSE_BASE) --profile prod
+EXEC_CMD = $(1) exec -T $(2) $(3)
 
 #####################
 # ENVIRONMENT = DEV #
 #####################
-dev-up:
-	$(DEV) run --rm php-dev composer install
-	$(DEV) up -d --build
+dev-endpoints:
 	@echo ""
 	@echo "Development endpoints:"
 	@echo "  Frontend:  http://127.0.0.1:$${EXT_PORT_NODE_DEV:-5173}"
 	@echo "  Backend:   http://127.0.0.1:$${EXT_PORT_PHP_DEV:-8001}"
 	@echo "  Mercure:   http://127.0.0.1:$${EXT_PORT_MERCURE_DEV:-3000}/.well-known/mercure"
 	@echo ""
+
+dev-up:
+	$(DEV_CMD) up -d
+	$(MAKE) dev-endpoints
 
 dev-down:
-	$(DEV) down
+	$(DEV_CMD) down
 
-dev-reset:
-	$(DEV) down -v
-	$(DEV) run --rm php-dev composer install
-	$(DEV) up -d --build
-	@echo ""
-	@echo "Development endpoints:"
-	@echo "  Frontend:  http://127.0.0.1:$${EXT_PORT_NODE_DEV:-5173}"
-	@echo "  Backend:   http://127.0.0.1:$${EXT_PORT_PHP_DEV:-8001}"
-	@echo "  Mercure:   http://127.0.0.1:$${EXT_PORT_MERCURE_DEV:-3000}/.well-known/mercure"
-	@echo ""
+dev-build:
+	$(DEV_CMD) build
+
+dev-build-clean:
+	$(DEV_CMD) build --no-cache --pull
+
+dev-down-clean:
+	$(DEV_CMD) down -v --remove-orphans
+
+dev-deps:
+	$(call EXEC_CMD,$(DEV_CMD),php-dev,composer install)
+
+dev-shell-php:
+	$(call EXEC_CMD,$(DEV_CMD),php-dev,bash)
+
+dev-shell-node:
+	$(call EXEC_CMD,$(DEV_CMD),node-dev,sh)
 
 dev-smoke:
 	#$(DEV) exec -T php-dev curl -fsS http://127.0.0.1:8000
-	$(DEV) exec -T node-dev wget -qO- http://127.0.0.1:5173 >/dev/null
-	$(DEV) exec -T mercure-dev wget -qO- http://127.0.0.1/healthz >/dev/null
+	$(call EXEC_CMD,$(DEV_CMD),node-dev,wget -qO- http://127.0.0.1:5173 >/dev/null )
+	$(call EXEC_CMD,$(DEV_CMD),mercure-dev,wget -qO- http://127.0.0.1/healthz >/dev/null )
 
-dev-shell-php:
-	$(DEV) exec php-dev bash
+dev-reset: dev-down-clean dev-build-clean dev-up dev-deps dev-endpoints
 
-dev-shell-node:
-	$(DEV) exec node-dev sh
+dev-ci-setup: dev-down-clean dev-build-clean dev-up dev-deps
+
+dev-ci-test: dev-smoke
+
+dev-ci-teardown: dev-down-clean
+
+dev-ci: dev-ci-setup dev-ci-test dev-ci-teardown
 
 ######################
 # ENVIRONMENT = TEST #
 ######################
 test:
-	#$(TEST) up --build --abort-on-container-exit --exit-code-from php-unit
-	$(TEST) up --build --abort-on-container-exit --exit-code-from php-test-runner
+	$(TEST_CMD) up --build --abort-on-container-exit --exit-code-from php-test-runner
+	$(TEST_CMD) down -v
 
-test-down:
-	$(TEST) down -v
+test-ci: test
 
 ######################
 # ENVIRONMENT = PROD #
 ######################
-prod-build:
-	$(PROD) build
-
-prod-build-clean:
-	$(PROD) build --no-cache --pull
-
 prod-up:
-	$(PROD) -f ./docker-compose.local.yml up --build
+	@echo WARNING: this is just the local emulation of the production environment
+	$(PROD_CMD_LOCAL) up -d
+	@echo WARNING: this is just the local emulation of the production environment
 
 prod-down:
-	$(PROD) down
+	$(PROD_CMD_LOCAL) down
 
-prod-up-detached:
-	$(PROD) up -d --build
+prod-down-clean:
+	$(PROD_CMD_LOCAL) down -v --remove-orphans
 
-prod-up-detached-local:
-	COMPOSE_PROJECT_NAME=$(PROD_PROJECT) $(COMPOSE_LOCAL) --profile prod up -d --build
+prod-build:
+	$(PROD_CMD_LOCAL) build
 
-prod-reset:
-	$(PROD) down -v --remove-orphans
+prod-build-clean:
+	$(PROD_CMD_LOCAL) build --no-cache --pull
 
-prod-smoke:
-	$(PROD) exec -T web curl -fsS http://127.0.0.1/
+prod-reset: prod-down-clean prod-build-clean prod-up
 
-prod-smoke-local:
-	COMPOSE_PROJECT_NAME=$(PROD_PROJECT) $(COMPOSE_LOCAL) --profile prod exec -T web curl -fsS http://127.0.0.1/
+#
+# -- prod ci -- just to be sure down also includes local
+#
+prod-ci-setup:
+	$(PROD_CMD) down -v --remove-orphans
+	$(PROD_CMD) build --no-cache --pull
 
-prod-export:
-	rm -rf .deploy
-	mkdir -p .deploy
+prod-ci-export:
+	rm -rf $(EXPORT_DIR)
+	mkdir -p $(EXPORT_DIR)
 	@test -n "$(PROD_IMAGE)"
 	cid="$$(docker create "$(PROD_IMAGE)")"; \
 	trap 'docker rm -f "$$cid" >/dev/null 2>&1 || true' EXIT; \
-	docker cp "$$cid:/var/www/html/." .deploy/
+	docker cp "$$cid:/var/www/html/." $(EXPORT_DIR)/
+	docker image rm $(PROD_IMAGE)
 
-prod-artifact: prod-build prod-export
+prod-ci: prod-ci-setup prod-ci-export
+
+##############
+# DEPLOYMENT #
+##############
+deploy-ci-setup:
+	ssh -o BatchMode=yes -o ConnectTimeout=15 "$DEPLOY_HOST" "echo remote-ok"
+	@test -f $(EXPORT_DIR)/public/index.html
+	@test -f $(EXPORT_DIR)/public/index.php
+	@test -f $(EXPORT_DIR)/bin/console
+	@test -d $(EXPORT_DIR)/vendor
+
+deploy-ci-rsync:
+	rsync -rvz --delete-after \
+				--exclude=".env*" \
+				--exclude="upload/" \
+				--exclude="var/cache/" \
+				--exclude="var/log/" \
+				"$(EXPORT_DIR)/" $(DEPLOY_HOST):$(DEPLOY_PATH)
+
+# For "real" deployment the env-files should be handled differently,
+# but this is the best quick fix i could come up with when a lot is still changing
+# and i don't want to manually go check the contents out each time, cheers
+deploy-ci-env:
+	echo "APP_ENV=prod" | ssh "$DEPLOY_HOST" "cat > '$DEPLOY_PATH/.env'"
+	ssh "$DEPLOY_HOST" "cat > '$DEPLOY_PATH/.env.local'" < "$PROD_ENV_LOCAL_FILE"
+	ssh "$DEPLOY_HOST" "chmod 644 '$DEPLOY_PATH/.env' '$DEPLOY_PATH/.env.local' && test -f '$DEPLOY_PATH/.env.local'"
+
+# Same thing here, no auto-migrate deployment, but atm it's okay
+# because we dont even have real users :'O
+deploy-ci-migrate:
+	ssh "$DEPLOY_HOST" "\
+		set -e; \
+		cd '$DEPLOY_PATH'; \
+ 		php bin/console doctrine:migrations:migrate --no-interaction --env=prod;"
+
+deploy-ci-warm-cache:
+	ssh "$DEPLOY_HOST" "\
+    		set -e; \
+    		cd '$DEPLOY_PATH'; \
+    		php bin/console cache:clear --env=prod --no-debug; \
+    		php bin/console cache:warmup --env=prod;"
+
+deploy-ci: deploy-ci-setup deploy-ci-rsync deploy-ci-env deploy-ci-migrate deploy-ci-warm-cache
 
 #############
 # UTILITIES #
 #############
 config-check:
-	$(DEV) config -q
-	$(TEST) config -q
-	$(PROD) config -q
-	COMPOSE_PROJECT_NAME=$(PROJECT_BASE)_localcheck $(COMPOSE_LOCAL) --profile dev config -q
-	COMPOSE_PROJECT_NAME=$(PROJECT_BASE)_localcheck $(COMPOSE_LOCAL) --profile prod config -q
+	$(DEV_CMD) config -q
+	$(TEST_CMD) config -q
+	$(PROD_CMD) config -q
 
 print-ports:
 	@grep '^EXT_PORT_' $(COMPOSE_ENV) || true
@@ -141,35 +202,26 @@ print-ports:
 ################
 # LOGS TARGETS #
 ################
-define tail-logs
-	@project_name=$$(COMPOSE_PROJECT_NAME=$1 $(COMPOSE_BASE) ps --services); \
-	if [ -n "$$2" ]; then \
-		$(COMPOSE_BASE) --project-name $$1 logs -f $$2; \
-	else \
-		$(COMPOSE_BASE) --project-name $$1 logs -f $$${project_name}; \
-	fi
-endef
-
 dev-logs:
 	$(eval DEV_SERVICES := php-dev node-dev mercure-dev db-dev)
-	$(DEV) logs -f $(DEV_SERVICES)
+	$(DEV_CMD) logs -f $(DEV_SERVICES)
 
 dev-logs-single:
-	$(DEV) logs -f $(service)
+	$(DEV_CMD) logs -f $(service)
 
 test-logs-single:
-	$(TEST) logs -f $(service)
+	$(TEST_CMD) logs -f $(service)
 
 test-logs:
-	$(eval TEST_SERVICES := php-unit db-test)
-	$(TEST) logs -f $(TEST_SERVICES)
+	$(eval TEST_SERVICES := php-test-runner db-test)
+	$(TEST_CMD) logs -f $(TEST_SERVICES)
 
 prod-logs:
 	$(eval PROD_SERVICES := web db-prod)
-	$(PROD) logs -f $(PROD_SERVICES)
+	$(PROD_CMD) logs -f $(PROD_SERVICES)
 
 prod-logs-single:
-	$(PROD) logs -f $(service)
+	$(PROD_CMD) logs -f $(service)
 
 #########################
 # HELP - DEFAULT TARGET #
@@ -202,4 +254,4 @@ help:
 	@echo "  make prod-artifact"
 	@echo "  make prod-logs"
 	@echo "  make prod-logs-single"
-	@echo ""
+	@echo "TODO"

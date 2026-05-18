@@ -47,7 +47,7 @@ x-php-common: &php-common
   environment:
     COMPOSER_HOME: /tmp/.config
     XDG_CONFIG_HOME: /tmp/.config
-    COMPOSER_CACHE_DIR: /app/.composer-cache
+    COMPOSER_CACHE_DIR: /app/backend/.composer-cache
 
 x-build-dev: &build-dev
   build:
@@ -134,7 +134,6 @@ services:
     profiles: [ "dev" ]
     volumes:
       - ./backend:/app/backend
-      - composer_cache:/app/.composer-cache
     command: >
       sh -lc '
         php bin/console doctrine:database:drop --force --if-exists --env=dev &&

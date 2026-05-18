@@ -19,6 +19,8 @@ variables:
   DEPLOY_PATH: "/var/www/html"
   HOST_UID: "1001"
   HOST_GID: "1001"
+  ARTIFACTS_DIR: ".deploy"
+  #PROD_ENV_LOCAL_FILE must be set in GL cicd
 
 workflow:
   rules:
@@ -29,6 +31,8 @@ workflow:
 
 #
 # STAGE - VALIDATE
+# Just a quick check to see if all tools
+# are available
 #
 validate_compose:
   stage: validate
@@ -43,51 +47,27 @@ validate_compose:
 
 #
 # STAGE - TEST
+# -- also dev smoke for overall sanity of dev setup
 #
-test_stack:
-  stage: test
-  variables:
-    TEST_PROJECT: "studybuddy_test_${CI_PIPELINE_ID}"
-  script:
-    - make test
-  after_script:
-    - make test-down || true
-  allow_failure: true
-  # NEEDS TO BE DELETED AFTER TESTS ARE FIXED !!!
-
 smoke_dev_stack:
   stage: test
-  variables:
-    COMPOSE_PROJECT_NAME: "sewt_dev_${CI_PIPELINE_ID}"
   script:
-    - make dev-reset || true
-    - make dev-up
-    - make dev-smoke
-  after_script:
-    - make dev-down || true
+    - make dev-ci
+
+test_stack:
+  stage: test
+  script:
+    - make test-ci
+  allow_failure: true
+  # NEEDS TO BE DELETED AFTER TESTS ARE FIXED !!!
 
 #
 # STAGE - BUILD
 #
 build_prod_artifact:
   stage: build
-  variables:
-    PROD_PROJECT: "studybuddy_prod_${CI_PIPELINE_ID}"
-    PROD_IMAGE: "studybuddy:prod-${CI_PIPELINE_ID}"
-    ARTIFACTS_DIR: ".deploy"
   script:
-    - make prod-reset || true
-    - make prod-build
-    - make prod-up-detached
-    #- make prod-smoke
-    - make prod-export
-    - test -f ${ARTIFACTS_DIR}/public/index.html
-    - test -f ${ARTIFACTS_DIR}/public/index.php
-    - test -f ${ARTIFACTS_DIR}/bin/console
-    - test -d ${ARTIFACTS_DIR}/vendor
-  after_script:
-    - make prod-reset || true
-    - docker image rm ${PROD_IMAGE} || true
+    - make prod-ci
   artifacts:
     paths:
       - ${ARTIFACTS_DIR}/
@@ -107,42 +87,12 @@ deploy:
       when: manual
       variables:
         DEPLOY_ENVIRONMENT: "production"
-
     - if: '$CI_COMMIT_BRANCH == "integration/ci-cd-all"'
       when: manual
       variables:
         DEPLOY_ENVIRONMENT: "production-deploy-test"
-
     - when: never
-  before_script:
-    - ssh -o BatchMode=yes -o ConnectTimeout=15 "$DEPLOY_HOST" "echo remote-ok"
   script:
-    - test -f .deploy/public/index.html
-    - test -f .deploy/public/index.php
-    - test -f .deploy/bin/console
-    - test -d .deploy/vendor
-
-    - >
-      rsync -rvz --delete-after
-      --exclude=".env*"
-      --exclude="upload/"
-      --exclude="var/cache/"
-      --exclude="var/log/"
-      ".deploy/"
-      $DEPLOY_HOST:$DEPLOY_PATH/
-
-    - echo "APP_ENV=prod" | ssh "$DEPLOY_HOST" "cat > '$DEPLOY_PATH/.env'"
-    - ssh "$DEPLOY_HOST" "cat > '$DEPLOY_PATH/.env.local'" < "$PROD_ENV_LOCAL_FILE"
-    - ssh "$DEPLOY_HOST" "chmod 644 '$DEPLOY_PATH/.env' '$DEPLOY_PATH/.env.local' && test -f '$DEPLOY_PATH/.env.local'"
-
-    - >
-      ssh "$DEPLOY_HOST" "
-      set -e;
-      cd '$DEPLOY_PATH';
-      php bin/console doctrine:migrations:migrate --no-interaction --env=prod;
-      php bin/console cache:clear --env=prod --no-debug;
-      php bin/console cache:warmup --env=prod
-      "
-
+    - make deploy-ci
   environment:
     name: $DEPLOY_ENVIRONMENT

@@ -14,8 +14,7 @@ FROM composer:${COMPOSER_VERSION} AS composer-bin
 ################
 FROM php:${PHP_VERSION}-cli AS php-base
 
-RUN apt-get update \
-    && apt-get install -y --no-install-recommends \
+RUN apt-get update && apt-get install -y --no-install-recommends \
         libicu-dev \
         libzip-dev \
         libxml2-dev \
@@ -23,11 +22,12 @@ RUN apt-get update \
         libpng-dev \
         libjpeg62-turbo-dev \
         libfreetype6-dev \
-        libonig-dev \
-    && docker-php-ext-configure gd \
+        libonig-dev
+
+RUN docker-php-ext-configure gd \
         --with-freetype \
-        --with-jpeg \
-    && docker-php-ext-install -j"$(nproc)" \
+        --with-jpeg
+RUN docker-php-ext-install -j"$(nproc)" \
         exif \
         ftp \
         gd \
@@ -43,8 +43,9 @@ RUN apt-get update \
         sysvsem \
         sysvshm \
         xsl \
-        zip \
-    && rm -rf /var/lib/apt/lists/*
+        zip
+
+RUN rm -rf /var/lib/apt/lists/*
 
 COPY --from=composer-bin /usr/bin/composer /usr/bin/composer
 
@@ -55,8 +56,7 @@ WORKDIR /app/backend
 ###############
 FROM php-base AS php-dev
 
-RUN pecl install xdebug \
-    && docker-php-ext-enable xdebug
+RUN pecl install xdebug && docker-php-ext-enable xdebug
 
 # SYMFONY CLI
 COPY --link --from=ghcr.io/symfony-cli/symfony-cli:5.17.1 \

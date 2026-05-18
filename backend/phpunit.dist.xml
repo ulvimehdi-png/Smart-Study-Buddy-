@@ -44,6 +44,9 @@
         </deprecationTrigger>
     </source>
 
+    <coverage>
+    </coverage>
+
     <extensions>
         <bootstrap class="Zenstruck\Foundry\PHPUnit\FoundryExtension" />
     </extensions>
