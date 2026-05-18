@@ -10,6 +10,7 @@
 ####################
 # GENERAL DEFAULTS #
 ####################
+export
 .DEFAULT_GOAL	:= help
 
 SHELL 			:= bash
@@ -41,10 +42,13 @@ COMPOSE_RUN			= APP_ENV=$(1) COMPOSE_PROJECT_NAME=$(2) $(3) --profile $(1)
 DEV_CMD				:= $(call COMPOSE_RUN,dev,$(PROJECT_DEV),$(COMPOSE_BASE_LOCAL))
 TEST_CMD			:= $(call COMPOSE_RUN,test,$(PROJECT_TEST),$(COMPOSE_BASE))
 PROD_CMD			:= $(call COMPOSE_RUN,prod,$(PROJECT_PROD),$(COMPOSE_BASE))
-PROD_CMD_LOCAL		:= $(PROD_CMD) -f ./docker-compose.local.yml
 
 EXEC_CMD = $(1) exec -T $(2) $(3)
 
+
+PROD_LOCAL := APP_ENV=prod COMPOSE_PROJECT_NAME=$(PROJECT_PROD) \
+docker compose --project-directory . --env-file ./compose.env \
+-f docker-compose.yml -f docker-compose.local.yml --profile prod
 #####################
 # ENVIRONMENT = DEV #
 #####################
@@ -110,20 +114,20 @@ test-ci: test
 ######################
 prod-up:
 	@echo WARNING: this is just the local emulation of the production environment
-	$(PROD_CMD_LOCAL) up -d
+	$(PROD_LOCAL) up -d
 	@echo WARNING: this is just the local emulation of the production environment
 
 prod-down:
-	$(PROD_CMD_LOCAL) down
+	$(PROD_LOCAL) down
 
 prod-down-clean:
-	$(PROD_CMD_LOCAL) down -v --remove-orphans
+	$(PROD_LOCAL) down -v --remove-orphans
 
 prod-build:
-	$(PROD_CMD_LOCAL) build
+	$(PROD_LOCAL) build
 
 prod-build-clean:
-	$(PROD_CMD_LOCAL) build --no-cache --pull
+	$(PROD_LOCAL) build --no-cache --pull
 
 prod-reset: prod-down-clean prod-build-clean prod-up
 
