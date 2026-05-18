@@ -297,19 +297,19 @@ export default function Tasks() {
     {
       label: "Pending",
       value: pendingTasks,
-      icon: <Clock className="h-4 w-4 sm:h-5 sm:w-5" />,
+      icon: Clock,
       iconClass: "bg-primary/10 text-primary",
     },
     {
       label: "Completed",
       value: completedTasks,
-      icon: <Check className="h-4 w-4 sm:h-5 sm:w-5" />,
+      icon: Check,
       iconClass: "bg-accent-light/10 text-accent-light",
     },
     {
       label: "Subjects",
       value: activeSubjects,
-      icon: <Sparkles className="h-4 w-4 sm:h-5 sm:w-5" />,
+      icon: Sparkles,
       iconClass: "bg-accent/10 text-accent",
     },
   ];
@@ -339,7 +339,7 @@ export default function Tasks() {
     <div className="relative min-h-screen overflow-hidden bg-bg-base text-text-main">
       <PageBackdrop />
 
-      <div className="relative mx-auto max-w-6xl px-4 pb-12 pt-22 sm:px-6 lg:px-8">
+      <div className="relative mx-auto max-w-7xl px-4 pb-12 pt-22 sm:px-6 lg:px-8">
         <div className="mb-8 flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
           <div className="flex items-center gap-3">
             <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary">

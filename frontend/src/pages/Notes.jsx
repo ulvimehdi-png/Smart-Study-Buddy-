@@ -184,19 +184,19 @@ export default function Notes() {
     {
       label: "Saved Notes",
       value: notes.length,
-      icon: <BookText className="h-4 w-4 sm:h-5 sm:w-5" />,
+      icon: BookText,
       iconClass: "bg-primary/10 text-primary",
     },
     {
       label: "Subjects",
       value: uniqueSubjects,
-      icon: <Tags className="h-4 w-4 sm:h-5 sm:w-5" />,
+      icon: Tags,
       iconClass: "bg-accent-light/10 text-accent-light",
     },
     {
       label: "Latest Entry",
       value: latestNote ? formatCompactDate(latestNote.createdAt) : "--",
-      icon: <CalendarDays className="h-4 w-4 sm:h-5 sm:w-5" />,
+      icon: CalendarDays,
       iconClass: "bg-accent/10 text-accent",
     },
   ];

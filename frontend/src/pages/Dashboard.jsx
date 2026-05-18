@@ -70,36 +70,31 @@ export default function Dashboard() {
     {
       label: "Total Notes",
       value: data.totalNotes,
-      detail: "Saved across your workspace",
-      icon: <FileText className="h-5 w-5" />,
+      icon: FileText,
       iconClass: "bg-primary-light/10 text-primary-light",
     },
     {
       label: "Total Hours",
       value: data.totalHours,
-      detail: "Focus sessions logged",
-      icon: <Clock className="h-5 w-5" />,
+      icon: Clock,
       iconClass: "bg-primary/10 text-primary",
     },
     {
       label: "Today's Hours",
       value: data.todayHours,
-      detail: "Time invested today",
-      icon: <Target className="h-5 w-5" />,
+      icon: Target,
       iconClass: "bg-accent-light/10 text-accent-light",
     },
     {
       label: "Study Streak",
       value: `${data.studyStreak} Days`,
-      detail: "Consistency is building",
-      icon: <Flame className="h-5 w-5" />,
+      icon: Flame,
       iconClass: "bg-accent/10 text-accent",
     },
     {
       label: "My Points",
       value: data.points || 0,
-      detail: "Academic rewards",
-      icon: <Sparkles className="h-5 w-5" />,
+      icon: Sparkles,
       iconClass: "bg-accent/10 text-accent",
     },
   ];
@@ -158,8 +153,8 @@ export default function Dashboard() {
         </div>
 
         <div className="grid gap-4 sm:grid-cols-3 xl:grid-cols-5">
-          {stats.map(({ label, value, detail, icon, iconClass }) => (
-            <SmallStats key={label} label={label} value={value} detail={detail} icon={icon} iconClass={iconClass} />
+          {stats.map(({ label, value, icon, iconClass }) => (
+            <SmallStats key={label} label={label} value={value} icon={icon} iconClass={iconClass} />
           ))}
         </div>
 

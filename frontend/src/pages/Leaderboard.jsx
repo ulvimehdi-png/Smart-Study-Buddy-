@@ -199,19 +199,19 @@ export default function Leaderboard() {
     {
       label: "My Points",
       value: myPoints,
-      icon: <TrendingUp className="h-5 w-5" />,
+      icon: TrendingUp,
       iconClass: "bg-primary/10 text-primary",
     },
     {
       label: "Badges",
       value: myBadges.length,
-      icon: <Award className="h-5 w-5" />,
+      icon: Award,
       iconClass: "bg-accent-light/10 text-accent-light",
     },
     {
       label: "Top Score",
       value: topScore,
-      icon: <Users className="h-5 w-5" />,
+      icon: Users,
       iconClass: "bg-accent/10 text-accent",
     },
   ];
@@ -220,7 +220,7 @@ export default function Leaderboard() {
     <div className="relative min-h-screen overflow-hidden bg-bg-base text-text-main">
       <PageBackdrop />
 
-      <div className="relative mx-auto max-w-6xl px-4 pb-12 pt-22 sm:px-6 lg:px-8">
+      <div className="relative mx-auto max-w-7xl px-4 pb-12 pt-22 sm:px-6 lg:px-8">
         <div className="mb-8 flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
           <div>
             <div className="flex items-center gap-3">
@@ -236,7 +236,7 @@ export default function Leaderboard() {
             </div>
           </div>
 
-          <div className="grid gap-3 sm:grid-cols-3 lg:min-w-90">
+          <div className="grid gap-3 grid-cols-2 sm:grid-cols-3 lg:min-w-90">
             {stats.map(({ label, value, icon, iconClass }) => (
               <SmallStats
                 key={label}
