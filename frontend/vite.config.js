@@ -25,7 +25,7 @@ export default defineConfig({
         },
         proxy: {
             '/api': {
-                target: 'http://php-dev:8000',
+                target: 'http://php-dev:8001',
                 changeOrigin: true,
                 //rewrite: (path) => path.replace(/^\/api/, '')
             },

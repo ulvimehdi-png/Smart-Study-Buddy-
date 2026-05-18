@@ -1,9 +1,11 @@
 .PHONY: \
 	help \
+	config-check print-ports \
 	dev-up dev-down dev-reset dev-smoke \
 	test test-down \
-	prod-build prod-build-clean prod-up prod-up-detached prod-down prod-reset prod-smoke prod-export prod-artifact prod-migrate \
-	config-check print-ports
+	prod-build prod-build-clean prod-up prod-up-detached prod-down \
+	prod-reset prod-smoke prod-export prod-artifact prod-migrate \
+	dev-logs dev-logs-single test-logs test-logs-single prod-logs prod-logs-single
 
 ####################
 # GENERAL DEFAULTS #
@@ -29,14 +31,15 @@ DEV_PROJECT		?= $(PROJECT_BASE)_dev
 TEST_PROJECT	?= $(PROJECT_BASE)_test_$(CI_SUFFIX)
 PROD_PROJECT	?= $(PROJECT_BASE)_prod_$(CI_SUFFIX)
 
-DEV				:= COMPOSE_PROJECT_NAME=$(DEV_PROJECT)	$(COMPOSE_LOCAL) --profile dev
-TEST			:= COMPOSE_PROJECT_NAME=$(TEST_PROJECT) $(COMPOSE_BASE)  --profile test
-PROD			:= COMPOSE_PROJECT_NAME=$(PROD_PROJECT) $(COMPOSE_BASE)  --profile prod
+DEV				:= APP_ENV=dev	COMPOSE_PROJECT_NAME=$(DEV_PROJECT) $(COMPOSE_LOCAL) --profile dev
+TEST			:= APP_ENV=test	COMPOSE_PROJECT_NAME=$(TEST_PROJECT) $(COMPOSE_BASE) --profile test
+PROD			:= APP_ENV=prod	COMPOSE_PROJECT_NAME=$(PROD_PROJECT) $(COMPOSE_BASE) --profile prod
 
 #####################
 # ENVIRONMENT = DEV #
 #####################
 dev-up:
+	$(DEV) run --rm php-dev composer install
 	$(DEV) up -d --build
 	@echo ""
 	@echo "Development endpoints:"
@@ -50,6 +53,7 @@ dev-down:
 
 dev-reset:
 	$(DEV) down -v
+	$(DEV) run --rm php-dev composer install
 	$(DEV) up -d --build
 	@echo ""
 	@echo "Development endpoints:"
@@ -63,11 +67,18 @@ dev-smoke:
 	$(DEV) exec -T node-dev wget -qO- http://127.0.0.1:5173 >/dev/null
 	$(DEV) exec -T mercure-dev wget -qO- http://127.0.0.1/healthz >/dev/null
 
+dev-shell-php:
+	$(DEV) exec php-dev bash
+
+dev-shell-node:
+	$(DEV) exec node-dev sh
+
 ######################
 # ENVIRONMENT = TEST #
 ######################
 test:
-	$(TEST) up --build --abort-on-container-exit --exit-code-from tests
+	#$(TEST) up --build --abort-on-container-exit --exit-code-from php-unit
+	$(TEST) up --build --abort-on-container-exit --exit-code-from php-test-runner
 
 test-down:
 	$(TEST) down -v
@@ -84,14 +95,14 @@ prod-build-clean:
 prod-up:
 	$(PROD) -f ./docker-compose.local.yml up --build
 
+prod-down:
+	$(PROD) down
+
 prod-up-detached:
 	$(PROD) up -d --build
 
 prod-up-detached-local:
 	COMPOSE_PROJECT_NAME=$(PROD_PROJECT) $(COMPOSE_LOCAL) --profile prod up -d --build
-
-prod-down:
-	$(PROD) down
 
 prod-reset:
 	$(PROD) down -v --remove-orphans
@@ -128,6 +139,39 @@ config-check:
 print-ports:
 	@grep '^EXT_PORT_' $(COMPOSE_ENV) || true
 
+################
+# LOGS TARGETS #
+################
+define tail-logs
+	@project_name=$$(COMPOSE_PROJECT_NAME=$1 $(COMPOSE_BASE) ps --services); \
+	if [ -n "$$2" ]; then \
+		$(COMPOSE_BASE) --project-name $$1 logs -f $$2; \
+	else \
+		$(COMPOSE_BASE) --project-name $$1 logs -f $$${project_name}; \
+	fi
+endef
+
+dev-logs:
+	$(eval DEV_SERVICES := php-dev node-dev mercure-dev db-dev)
+	$(DEV) logs -f $(DEV_SERVICES)
+
+dev-logs-single:
+	$(DEV) logs -f $(service)
+
+test-logs-single:
+	$(TEST) logs -f $(service)
+
+test-logs:
+	$(eval TEST_SERVICES := php-unit db-test)
+	$(TEST) logs -f $(TEST_SERVICES)
+
+prod-logs:
+	$(eval PROD_SERVICES := web db-prod)
+	$(PROD) logs -f $(PROD_SERVICES)
+
+prod-logs-single:
+	$(PROD) logs -f $(service)
+
 #########################
 # HELP - DEFAULT TARGET #
 #########################
@@ -138,22 +182,26 @@ help:
 	@echo "  make dev-down"
 	@echo "  make dev-reset"
 	@echo "  make dev-smoke"
+	@echo "  make dev-logs"
+	@echo "  make dev-logs-single"
 	@echo ""
 	@echo "Testing:"
 	@echo "  make test"
 	@echo "  make test-down"
+	@echo "  make test-logs"
+	@echo "  make test-logs-single"
 	@echo ""
 	@echo "Production emulation / CI:"
 	@echo "  make prod-build"
 	@echo "  make prod-build-clean"
 	@echo "  make prod-up"
 	@echo "  make prod-up-detached"
-	@echo "  make prod-up-detached-local"
 	@echo "  make prod-migrate"
 	@echo "  make prod-down"
 	@echo "  make prod-reset"
 	@echo "  make prod-smoke"
-	@echo "  make prod-smoke-local"
-	@echo "  make prod-migrate"
 	@echo "  make prod-export"
+	@echo "  make prod-artifact"
+	@echo "  make prod-logs"
+	@echo "  make prod-logs-single"
 	@echo ""
