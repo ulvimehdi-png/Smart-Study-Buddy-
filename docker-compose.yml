@@ -3,7 +3,6 @@ name: ${COMPOSE_PROJECT_NAME:-studybuddy}
 #####################
 # SHARED EXTENSIONS #
 #####################
-
 x-user: &user
   user: "${HOST_UID:-1000}:${HOST_GID:-1000}"
 
@@ -17,13 +16,16 @@ x-health-defaults: &health-defaults
   retries: 20
   start_period: 20s
 
-x-mysql-env: &mysql-env
-  MYSQL_ROOT_PASSWORD: "${MYSQL_ROOT_PASSWORD:-root}"
-  MYSQL_USER: "${MYSQL_USER:-app}"
-  MYSQL_PASSWORD: "${MYSQL_PASSWORD:-app}"
-
+#################
+# DATABASE BASE #
+#################
 x-db-base: &db-base
-  image: mysql:${MYSQL_VERSION:-8.0.32}
+  image: "mysql:${MYSQL_VERSION:-8.0.32}"
+  environment:
+    MYSQL_ROOT_PASSWORD:  "${MYSQL_ROOT_PASSWORD:-root}"
+    MYSQL_USER:           "${MYSQL_USER:-app}"
+    MYSQL_PASSWORD:       "${MYSQL_PASSWORD:-app}"
+    MYSQL_DATABASE:       "app_${APP_ENV:-dev}"
   command:
     - --default-authentication-plugin=mysql_native_password
     - --character-set-server=utf8mb4
@@ -33,45 +35,54 @@ x-db-base: &db-base
     test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -uroot -p$${MYSQL_ROOT_PASSWORD} --silent"]
   <<: *net
 
-x-php-build-dev: &php-build-dev
-  context: .
-  dockerfile: ./docker/php/Dockerfile
-  target: php-dev
-  args:
-    PHP_VERSION: "${PHP_VERSION:-8.4.18}"
-    COMPOSER_VERSION: "${COMPOSER_VERSION:-2.9}"
-
-x-php-build-test: &php-build-test
-  context: .
-  dockerfile: ./docker/php/Dockerfile
-  target: php-test
-  args:
-    PHP_VERSION: "${PHP_VERSION:-8.4.18}"
-    COMPOSER_VERSION: "${COMPOSER_VERSION:-2.9}"
-
-x-php-build-prod: &php-build-prod
-  context: .
-  dockerfile: ./docker/php/Dockerfile
-  target: php-prod
-  args:
-    PHP_VERSION: "${PHP_VERSION:-8.4.18}"
-    NODE_VERSION: "${NODE_VERSION:-22-alpine}"
-    COMPOSER_VERSION: "${COMPOSER_VERSION:-2.9}"
-
+############
+# PHP BASE #
+############
 x-php-common: &php-common
   working_dir: /app/backend
   init: true
   <<: [*user, *net]
+  env_file:
+    - ./docker/environment/.env.local.${APP_ENV:-dev}
   environment:
-    COMPOSER_HOME: /tmp/composer
+    COMPOSER_HOME: /tmp/.config
+    XDG_CONFIG_HOME: /tmp/.config
     COMPOSER_CACHE_DIR: /app/.composer-cache
-  volumes:
-    - ./backend:/app/backend
-    - ./docker/scripts:/scripts:ro
-    - composer_cache:/app/.composer-cache
 
+x-build-dev: &build-dev
+  build:
+    context: .
+    dockerfile: ./docker/php/Dockerfile
+    target: php-dev
+    args:
+      PHP_VERSION: "${PHP_VERSION:-8.4.18}"
+      COMPOSER_VERSION: "${COMPOSER_VERSION:-2.9.5}"
+      NODE_VERSION: "${NODE_VERSION:-22-alpine}"
+
+x-build-test: &build-test
+  build:
+    context: .
+    dockerfile: ./docker/php/Dockerfile
+    target: php-test
+    args:
+      PHP_VERSION: "${PHP_VERSION:-8.4.18}"
+      COMPOSER_VERSION: "${COMPOSER_VERSION:-2.9.5}"
+      NODE_VERSION: "${NODE_VERSION:-22-alpine}"
+
+x-build-prod: &build-prod
+  build:
+    context: .
+    dockerfile: ./docker/php/Dockerfile
+    target: php-prod
+    args:
+      PHP_VERSION: "${PHP_VERSION:-8.4.18}"
+      COMPOSER_VERSION: "${COMPOSER_VERSION:-2.9.5}"
+      NODE_VERSION: "${NODE_VERSION:-22-alpine}"
+#############
+# NODE BASE #
+#############
 x-node-common: &node-common
-  image: node:${NODE_VERSION:-22-alpine}
+  image: "node:${NODE_VERSION:-22-alpine}"
   working_dir: /app/frontend
   init: true
   <<: [*user, *net]
@@ -86,71 +97,130 @@ x-node-common: &node-common
     - ./frontend:/app/frontend
     - ./frontend/node_modules:/app/frontend/node_modules
 
+############
+# SERVICES #
+############
 services:
 
-  #################
-  # PROFILE - DEV #
-  #################
+  #############
+  # DATABASES #
+  #############
   db-dev:
-    profiles: [ "dev" ]
     <<: *db-base
-    environment:
-      <<: *mysql-env
-      MYSQL_DATABASE: app_dev
+    profiles: [ "dev" ]
     volumes:
       - db_dev_data:/var/lib/mysql
     restart: unless-stopped
 
+  db-prod:
+    <<: *db-base
+    profiles: [ "prod" ]
+    volumes:
+      - db_prod_data:/var/lib/mysql
+    restart: unless-stopped
+
+  db-test:
+    <<: *db-base
+    profiles: [ "test" ]
+    tmpfs:
+      - /var/lib/mysql
+    restart: "no"
+
+  #################
+  # DEV - PHP SET #
+  #################
   php-dev:
+    <<: [ *php-common, *build-dev ]
     profiles: [ "dev" ]
-    <<: *php-common
-    build: *php-build-dev
-    env_file:
-      - ./docker/environment/.env.local.dev
     volumes:
       - ./backend:/app/backend
-      - ./docker/php/dev.ini:/usr/local/etc/php/conf.d/zz-dev.ini:ro
-      - ./docker/scripts:/scripts:ro
       - composer_cache:/app/.composer-cache
-    command: [ "/scripts/dev-entrypoint.sh" ]
+    command: >
+      sh -lc '
+        php bin/console doctrine:database:drop --force --if-exists --env=dev &&
+        php bin/console doctrine:database:create --if-not-exists --env=dev &&
+        php bin/console doctrine:migrations:migrate --no-interaction --env=dev &&
+        php bin/console foundry:load-story baseStory --no-interaction &&
+        symfony server:start --port=8001 --listen-ip=0.0.0.0
+      '
     depends_on:
       db-dev:
         condition: service_healthy
     restart: unless-stopped
 
-  node-deps:
-    profiles: ["dev"]
-    image: node:${NODE_VERSION:-22-alpine}
-    working_dir: /app/frontend
-    user: root
-    <<: *net
-    volumes:
-      - ./frontend:/app/frontend
-      - ./frontend/node_modules:/app/frontend/node_modules
+  ##################
+  # TEST - PHP SET #
+  ##################
+  php-test-runner:
+    <<: [ *php-common, *build-test ]
+    profiles: [ "test" ]
+    depends_on:
+      db-test:
+        condition: service_healthy
     command: >
       sh -lc '
-        mkdir /app/frontend/node_modules;        
+        php bin/console doctrine:database:drop --force --if-exists --env=test &&
+        php bin/console doctrine:database:create --if-not-exists --env=test &&
+        php bin/console doctrine:migrations:migrate --no-interaction --env=test &&
+        php bin/console doctrine:fixtures:load --no-interaction --env=test &&
+        php bin/phpunit
+      '
+    restart: "no"
+
+  ##################
+  # PROD - PHP SET #
+  ##################
+  web:
+    image: ${PROD_IMAGE:-studybuddy:prod-local}
+    <<: [ *php-common, *build-prod ]
+    profiles: [ "prod" ]
+    working_dir: /var/www/html
+    user: "www-data:${HOST_GID:-1000}"
+    depends_on:
+      db-prod:
+        condition: service_healthy
+    tmpfs:
+      - /tmp
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    cap_add:
+      - CHOWN
+      - DAC_OVERRIDE
+      - SETGID
+      - SETUID
+      - NET_BIND_SERVICE
+    restart: unless-stopped
+    healthcheck:
+      <<: *health-defaults
+      test: [ "CMD-SHELL", "curl -fsS http://127.0.0.1/ || exit 1" ]
+    command: >
+      sh -lc '
+        php bin/console doctrine:database:drop --force --if-exists --env=prod &&
+        php bin/console doctrine:database:create --if-not-exists --env=prod &&
+        php bin/console doctrine:migrations:migrate --no-interaction --env=prod &&
+        /usr/sbin/apache2ctl -D FOREGROUND
+      '
+
+  ##############
+  # NODE / DEV #
+  ##############
+  node-deps:
+    <<: *node-common
+    profiles: ["dev"]
+    user: root
+    command: >
+      sh -lc '
+        mkdir -p /app/frontend/node_modules;        
         npm ci;
         chown -R ${HOST_UID:-1000}:${HOST_GID:-1000} /app/frontend/node_modules;
       '
     restart: "no"
 
   node-dev:
+    <<: *node-common
     profiles: [ "dev" ]
-    image: node:${NODE_VERSION:-22-alpine}
-    working_dir: /app/frontend
-    init: true
-    <<: [ *user, *net ]
-    environment:
-      VITE_DEV_SERVER_HOST: "0.0.0.0"
-      VITE_DEV_SERVER_PORT: "5173"
-      HOME: "/tmp"
-      NPM_CONFIG_CACHE: "/tmp/.npm"
-      MERCURE_URL: "http://mercure-dev/.well-known/mercure"
-      VITE_MERCURE_PUBLIC_URL: "http://127.0.0.1:3000/.well-known/mercure"
-    volumes:
-      - ./frontend:/app/frontend
-      - ./frontend/node_modules:/app/frontend/node_modules
     depends_on:
       node-deps:
         condition: service_completed_successfully
@@ -160,6 +230,9 @@ services:
       test: ["CMD-SHELL", "wget -q --spider http://127.0.0.1:5173 || exit 1"]
     restart: unless-stopped
 
+  #################
+  # MERCURE / DEV #
+  #################
   mercure-dev:
     profiles: [ "dev" ]
     image: dunglas/mercure:${MERCURE_VERSION:-v0.24.0}
@@ -186,137 +259,19 @@ services:
       test: [ "CMD", "wget", "-q", "--spider", "http://localhost/healthz" ]
     restart: unless-stopped
 
-  ##################
-  # PROFILE - TEST #
-  ##################
-  db-test:
-    profiles: [ "test" ]
-    <<: *db-base
-    environment:
-      <<: *mysql-env
-      MYSQL_DATABASE: app_test
-    tmpfs:
-      - /var/lib/mysql
-    restart: "no"
-
-  vendor-test:
-    profiles: [ "test" ]
-    <<: *php-common
-    user: root
-    build: *php-build-test
-    volumes:
-      - ./backend:/app/backend
-      - composer_vendor:/app/backend/vendor
-      - composer_cache:/app/.composer-cache
-    command: >
-      sh -lc '
-        composer install --prefer-dist --no-interaction &&
-        chown -R ${HOST_UID:-1000}:${HOST_GID:-1000} /app/backend/var /app/backend/vendor
-      '
-    restart: "no"
-
-  migrate-test:
-    profiles: [ "test" ]
-    <<: *php-common
-    build: *php-build-test
-    env_file:
-      - ./docker/environment/.env.local.test
-    depends_on:
-      vendor-test:
-        condition: service_completed_successfully
-      db-test:
-        condition: service_healthy
-    volumes:
-      - ./backend:/app/backend
-      - composer_vendor:/app/backend/vendor
-      - composer_cache:/app/.composer-cache
-      - ./docker/php/test.ini:/usr/local/etc/php/conf.d/zz-test.ini:ro
-    command: >
-      sh -lc '
-        php bin/console doctrine:database:create --if-not-exists --env=test;
-        php bin/console doctrine:migrations:migrate --no-interaction --env=test
-      '
-    restart: "no"
-
-  tests:
-    profiles: [ "test" ]
-    <<: *php-common
-    build: *php-build-test
-    env_file:
-      - ./docker/environment/.env.local.test
-    depends_on:
-      migrate-test:
-        condition: service_completed_successfully
-    volumes:
-      - ./backend:/app/backend
-      - composer_vendor:/app/backend/vendor
-      - composer_cache:/app/.composer-cache
-      - ./docker/php/test.ini:/usr/local/etc/php/conf.d/zz-test.ini:ro
-    command: php bin/phpunit
-    restart: "no"
-
-  ###########################
-  # PROFILE: PROD-EMULATION #
-  ###########################
-
-  db-prod:
-    profiles: [ "prod" ]
-    <<: *db-base
-    environment:
-      <<: *mysql-env
-      MYSQL_DATABASE: app_prod
-    volumes:
-      - db_prod_data:/var/lib/mysql
-    restart: unless-stopped
-
-  migrate-prod:
-    profiles: [ "prod" ]
-    image: "${PROD_IMAGE:-studybuddy:prod-emulation}"
-    build: *php-build-prod
-    <<: *net
-    env_file:
-      - ./docker/environment/.env.local.prod
-    depends_on:
-      db-prod:
-        condition: service_healthy
-    command: php bin/console doctrine:migrations:migrate --no-interaction --env=prod
-    restart: "no"
-
-  web:
-    profiles: [ "prod" ]
-    image: "${PROD_IMAGE:-studybuddy:prod-emulation}"
-    build: *php-build-prod
-    <<: *net
-    env_file:
-      - ./docker/environment/.env.local.prod
-    depends_on:
-      migrate-prod:
-        condition: service_completed_successfully
-    tmpfs:
-      - /tmp
-    security_opt:
-      - no-new-privileges:true
-    cap_drop:
-      - ALL
-    cap_add:
-      - CHOWN
-      - DAC_OVERRIDE
-      - SETGID
-      - SETUID
-      - NET_BIND_SERVICE
-    restart: unless-stopped
-    healthcheck:
-      <<: *health-defaults
-      test: [ "CMD-SHELL", "curl -fsS http://127.0.0.1/ || exit 1" ]
-
+###########
+# VOLUMES #
+###########
 volumes:
   db_dev_data:
   db_prod_data:
   composer_cache:
-  composer_vendor:
   mercure_dev_data:
   mercure_dev_config:
 
+############
+# NETWORKS #
+############
 networks:
   app_net:
     driver: bridge

@@ -2,11 +2,13 @@
 
 namespace App\Controller;
 
-use App\Entity\User;
 use App\Entity\Settings;
+use App\Entity\User;
 use App\Service\ProfileImageStorage;
 use Doctrine\ORM\EntityManagerInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -16,8 +18,24 @@ use Symfony\Component\Security\Http\Attribute\CurrentUser;
 #[Route('/api')]
 final class SecurityController extends AbstractController
 {
-    private function serializeUser(User $user, ProfileImageStorage $profileImageStorage): array
+    public function __construct(
+        #[Autowire(service: 'monolog.logger.api')]
+        private LoggerInterface $logger
+    )
     {
+    }
+
+    private function serializeUser(
+        User                $user,
+        ProfileImageStorage $profileImageStorage
+    ): array
+    {
+        $this->logger->info('User serialized', [
+            'user_id' => $user->getId(),
+            'username' => $user->getUserIdentifier(),
+            'profileImageUrl' => $profileImageStorage->publicUrl($user->getProfileImagePath()),
+        ]);
+
         return [
             'id' => $user->getId(),
             'username' => $user->getUserIdentifier(),
@@ -27,17 +45,18 @@ final class SecurityController extends AbstractController
 
     #[Route('/register', methods: ['POST'])]
     public function register(
-        Request $request,
-        EntityManagerInterface $em,
+        Request                     $request,
+        EntityManagerInterface      $em,
         UserPasswordHasherInterface $hasher,
-        ProfileImageStorage $profileImageStorage,
-    ): JsonResponse {
+        ProfileImageStorage         $profileImageStorage,
+    ): JsonResponse
+    {
         $data = $request->toArray();
 
-        $username = trim((string) ($data['username'] ?? ''));
-        $password = (string) ($data['password'] ?? '');
+        $username = trim((string)($data['username'] ?? ''));
+        $password = (string)($data['password'] ?? '');
 
-        if ('' === $username || '' === $password){
+        if ('' === $username || '' === $password) {
             return $this->json(['error' => 'Username and password are required.'], 400);
         }
 
@@ -63,6 +82,12 @@ final class SecurityController extends AbstractController
         $em->persist($settings);
         $em->flush();
 
+        $this->logger->info('User registered', [
+            'user_id' => $user->getId(),
+            'username' => $user->getUsername(),
+            'ip' => $request->getClientIp(),
+        ]);
+
         return $this->json([
             'status' => 'user created',
             'user' => $this->serializeUser($user, $profileImageStorage),
@@ -72,9 +97,15 @@ final class SecurityController extends AbstractController
     #[Route('/user', methods: ['GET'])]
     public function getCurrentUser(
         #[CurrentUser] ?User $user,
-        ProfileImageStorage $profileImageStorage,
+        ProfileImageStorage  $profileImageStorage,
     ): JsonResponse
     {
+        $this->logger->info('Current user is active', [
+            'user_id' => $user->getId(),
+            'username' => $user->getUsername(),
+            'profile_image_path' => $user->getProfileImagePath(),
+        ]);
+
         return $this->json([
             'user' => $user ? $this->serializeUser($user, $profileImageStorage) : null,
         ]);
@@ -82,17 +113,18 @@ final class SecurityController extends AbstractController
 
     #[Route('/user/profile', methods: ['PATCH'])]
     public function updateProfile(
-        Request $request,
-        #[CurrentUser] ?User $user,
+        Request                $request,
+        #[CurrentUser] ?User   $user,
         EntityManagerInterface $em,
-        ProfileImageStorage $profileImageStorage,
-    ): JsonResponse {
+        ProfileImageStorage    $profileImageStorage,
+    ): JsonResponse
+    {
         if (!$user) {
             return $this->json(['error' => 'Not logged in'], 401);
         }
 
         $data = $request->toArray();
-        $username = trim((string) ($data['username'] ?? ''));
+        $username = trim((string)($data['username'] ?? ''));
 
         if ('' === $username) {
             return $this->json(['error' => 'Username is required.'], 400);
@@ -111,6 +143,12 @@ final class SecurityController extends AbstractController
         ]);
 
         if ($existing && $existing->getId() !== $user->getId()) {
+
+            $this->logger->warning('Registration attempt with existing username', [
+                'username' => $username,
+                'ip' => $request->getClientIp(),
+            ]);
+
             return $this->json(['error' => 'Username already exists.'], 409);
         }
 
@@ -125,11 +163,12 @@ final class SecurityController extends AbstractController
 
     #[Route('/user/profile-image', methods: ['POST'])]
     public function updateProfileImage(
-        Request $request,
-        #[CurrentUser] ?User $user,
+        Request                $request,
+        #[CurrentUser] ?User   $user,
         EntityManagerInterface $em,
-        ProfileImageStorage $profileImageStorage,
-    ): JsonResponse {
+        ProfileImageStorage    $profileImageStorage,
+    ): JsonResponse
+    {
         if (!$user) {
             return $this->json(['error' => 'Not logged in'], 401);
         }
@@ -144,7 +183,8 @@ final class SecurityController extends AbstractController
             return $this->json(['error' => 'Uploaded file is invalid.'], 400);
         }
 
-        if ($file->getSize() > 2 * 1024 * 1024) {
+        $fileSize = $file->getSize();
+        if ($fileSize > 2 * 1024 * 1024) {
             return $this->json(['error' => 'Profile image must be 2 MB or smaller.'], 400);
         }
 
@@ -159,6 +199,12 @@ final class SecurityController extends AbstractController
         $user->setProfileImagePath($path);
         $em->flush();
 
+        $this->logger->info('User updated profile image', [
+            'user_id' => $user->getId(),
+            'mime_type' => $mimeType,
+            'size' => $fileSize,
+        ]);
+
         return $this->json([
             'success' => true,
             'user' => $this->serializeUser($user, $profileImageStorage),
@@ -167,10 +213,11 @@ final class SecurityController extends AbstractController
 
     #[Route('/user/profile-image', methods: ['DELETE'])]
     public function deleteProfileImage(
-        #[CurrentUser] ?User $user,
+        #[CurrentUser] ?User   $user,
         EntityManagerInterface $em,
-        ProfileImageStorage $profileImageStorage,
-    ): JsonResponse {
+        ProfileImageStorage    $profileImageStorage,
+    ): JsonResponse
+    {
         if (!$user) {
             return $this->json(['error' => 'Not logged in'], 401);
         }
@@ -187,19 +234,20 @@ final class SecurityController extends AbstractController
 
     #[Route('/user/password', methods: ['PATCH'])]
     public function updatePassword(
-        Request $request,
-        #[CurrentUser] ?User $user,
-        EntityManagerInterface $em,
+        Request                     $request,
+        #[CurrentUser] ?User        $user,
+        EntityManagerInterface      $em,
         UserPasswordHasherInterface $hasher
-    ): JsonResponse {
+    ): JsonResponse
+    {
         if (!$user) {
             return $this->json(['error' => 'Not logged in'], 401);
         }
 
         $data = $request->toArray();
-        $currentPassword = (string) ($data['currentPassword'] ?? '');
-        $newPassword = (string) ($data['newPassword'] ?? '');
-        $confirmPassword = (string) ($data['confirmPassword'] ?? '');
+        $currentPassword = (string)($data['currentPassword'] ?? '');
+        $newPassword = (string)($data['newPassword'] ?? '');
+        $confirmPassword = (string)($data['confirmPassword'] ?? '');
 
         if ('' === $currentPassword || '' === $newPassword || '' === $confirmPassword) {
             return $this->json(['error' => 'All password fields are required.'], 400);

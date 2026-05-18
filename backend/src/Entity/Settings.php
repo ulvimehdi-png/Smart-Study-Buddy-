@@ -24,7 +24,7 @@ class Settings
 
     #[ORM\Id]
     #[ORM\OneToOne(targetEntity: User::class, inversedBy: 'settings')]
-    #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
+    #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
     #[Groups(['user:read'])]
     private User $user;
 

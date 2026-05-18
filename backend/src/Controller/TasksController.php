@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Task;
 use App\Entity\User;
 use App\Enum\TaskStatus;
+use App\Enum\TaskPriority;
 use App\Service\SubjectService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;

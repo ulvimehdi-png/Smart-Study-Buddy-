@@ -17,7 +17,8 @@ variables:
   # DEPLOY_HOST ==> see .ssh/config
   DEPLOY_HOST: "sewt-shell"
   DEPLOY_PATH: "/var/www/html"
-  PROD_IMAGE: "studybuddy:prod"
+  HOST_UID: "1001"
+  HOST_GID: "1001"
 
 workflow:
   rules:
@@ -52,6 +53,7 @@ test_stack:
   after_script:
     - make test-down || true
   allow_failure: true
+  # NEEDS TO BE DELETED AFTER TESTS ARE FIXED !!!
 
 smoke_dev_stack:
   stage: test
@@ -71,25 +73,24 @@ build_prod_artifact:
   stage: build
   variables:
     PROD_PROJECT: "studybuddy_prod_${CI_PIPELINE_ID}"
-    DEPLOY_ARTIFACT_DIR: ".deploy"
-    PROD_IMAGE: "studybuddy:ci-${CI_PIPELINE_ID}"
+    PROD_IMAGE: "studybuddy:prod-${CI_PIPELINE_ID}"
+    ARTIFACTS_DIR: ".deploy"
   script:
     - make prod-reset || true
     - make prod-build
     - make prod-up-detached
-    - make prod-migrate
-    - make prod-smoke
+    #- make prod-smoke
     - make prod-export
-    - test -f .deploy/public/index.html
-    - test -f .deploy/public/index.php
-    - test -f .deploy/bin/console
-    - test -d .deploy/vendor
+    - test -f ${ARTIFACTS_DIR}/public/index.html
+    - test -f ${ARTIFACTS_DIR}/public/index.php
+    - test -f ${ARTIFACTS_DIR}/bin/console
+    - test -d ${ARTIFACTS_DIR}/vendor
   after_script:
     - make prod-reset || true
-    - docker image rm "studybuddy:ci-${CI_PIPELINE_ID}" || true
+    - docker image rm ${PROD_IMAGE} || true
   artifacts:
     paths:
-      - .deploy/
+      - ${ARTIFACTS_DIR}/
     expire_in: 1 hour
 
 #

@@ -8,6 +8,7 @@ function initialsFromUsername(username) {
   return safe.slice(0, 2).toUpperCase();
 }
 
+
 export default function UserPage() {
   const auth = useAuth();
   const [username, setUsername] = useState("");
