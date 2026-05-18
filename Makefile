@@ -4,7 +4,7 @@
 	dev-up dev-down dev-reset dev-smoke \
 	test test-down \
 	prod-build prod-build-clean prod-up prod-up-detached prod-down \
-	prod-reset prod-smoke prod-export prod-artifact prod-migrate \
+	prod-reset prod-smoke prod-export prod-artifact \
 	dev-logs dev-logs-single test-logs test-logs-single prod-logs prod-logs-single
 
 ####################
@@ -115,9 +115,6 @@ prod-smoke:
 prod-smoke-local:
 	COMPOSE_PROJECT_NAME=$(PROD_PROJECT) $(COMPOSE_LOCAL) --profile prod exec -T web curl -fsS http://127.0.0.1/
 
-prod-migrate:
-	$(PROD) run --rm migrate-prod
-
 prod-export:
 	rm -rf .deploy
 	mkdir -p .deploy
@@ -198,7 +195,6 @@ help:
 	@echo "  make prod-build-clean"
 	@echo "  make prod-up"
 	@echo "  make prod-up-detached"
-	@echo "  make prod-migrate"
 	@echo "  make prod-down"
 	@echo "  make prod-reset"
 	@echo "  make prod-smoke"
