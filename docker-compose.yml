@@ -170,7 +170,7 @@ services:
   # PROD - PHP SET #
   ##################
   web:
-    image: ${PROD_IMAGE:-studybuddy:prod-local}
+    image: ${PROD_IMAGE}
     <<: [ *php-common, *build-prod ]
     profiles: [ "prod" ]
     working_dir: /var/www/html
