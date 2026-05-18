@@ -54,6 +54,7 @@ test_stack:
   after_script:
     - make test-down || true
   allow_failure: true
+  # NEEDS TO BE DELETED AFTER TESTS ARE FIXED !!!
 
 smoke_dev_stack:
   stage: test
@@ -73,8 +74,8 @@ build_prod_artifact:
   stage: build
   variables:
     PROD_PROJECT: "studybuddy_prod_${CI_PIPELINE_ID}"
-    DEPLOY_ARTIFACT_DIR: ".deploy"
-    PROD_IMAGE: "studybuddy:ci-${CI_PIPELINE_ID}"
+    PROD_IMAGE: "studybuddy:prod-${CI_PIPELINE_ID}"
+    ARTIFACT_DIR: ".deploy"
   script:
     - make prod-reset || true
     - make prod-build
@@ -82,13 +83,13 @@ build_prod_artifact:
     - make prod-migrate
     - make prod-smoke
     - make prod-export
-    - test -f .deploy/public/index.html
-    - test -f .deploy/public/index.php
-    - test -f .deploy/bin/console
-    - test -d .deploy/vendor
+    - test -f ${ARTIFACT_DIR}/public/index.html
+    - test -f ${ARTIFACT_DIR}/public/index.php
+    - test -f ${ARTIFACT_DIR}/bin/console
+    - test -d ${ARTIFACT_DIR}/vendor
   after_script:
     - make prod-reset || true
-    - docker image rm "studybuddy:ci-${CI_PIPELINE_ID}" || true
+    - docker image rm ${PROD_IMAGE} || true
   artifacts:
     paths:
       - .deploy/
