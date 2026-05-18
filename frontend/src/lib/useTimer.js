@@ -15,7 +15,7 @@ import {
 export const TimerContext = createContext(null);
 
 function durationToMs({ minutes, seconds }) {
-  return (Number(minutes) * 60 + Number(seconds)) * 1000;
+  return Math.round(Number(minutes) * 60 + Number(seconds)) * 1000;
 }
 
 function msToDuration(ms) {
