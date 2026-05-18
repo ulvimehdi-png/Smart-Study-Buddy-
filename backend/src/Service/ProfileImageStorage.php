@@ -9,16 +9,15 @@ use Symfony\Component\String\Slugger\SluggerInterface;
 
 final class ProfileImageStorage
 {
-    private string $uploadDir;
-    private string $publicPrefix = '/uploads/avatars/';
-    private string $projectDir;
     private SluggerInterface $slugger;
+    private string $uploadDir;
+    private string $publicPrefix;
 
     public function __construct(KernelInterface $kernel, SluggerInterface $slugger)
     {
-        $this->projectDir = $kernel->getProjectDir();
         $this->slugger = $slugger;
-        $this->uploadDir = $this->projectDir.'/public/uploads/avatars';
+        $this->publicPrefix = '/uploads/avatars';
+        $this->uploadDir = $kernel->getProjectDir() . '/public' . $this->publicPrefix;
     }
 
     public function publicUrl(?string $path): ?string
@@ -27,13 +26,20 @@ final class ProfileImageStorage
             return null;
         }
 
-        return $this->publicPrefix.ltrim($path, '/');
+        return $this->publicPrefix . ltrim($path, '/');
     }
 
     public function store(User $user, UploadedFile $file): string
     {
-        if (!is_dir($this->uploadDir)) {
-            mkdir($this->uploadDir, 0775, true);
+        //if (!is_dir($this->uploadDir)) {
+        //    mkdir($this->uploadDir, 0775, true);
+        //}
+
+        if (
+            !is_dir($this->uploadDir)
+            && !mkdir($concurrentDirectory = $this->uploadDir, 0775, true)
+            && !is_dir($concurrentDirectory)) {
+            throw new \RuntimeException(sprintf('Directory "%s" was not created', $concurrentDirectory));
         }
 
         $this->remove($user->getProfileImagePath());
@@ -41,7 +47,7 @@ final class ProfileImageStorage
         $baseName = $this->slugger->slug($user->getUsername() ?: 'user')->lower()->toString();
         $fileName = sprintf('%s-%s.webp', $baseName, bin2hex(random_bytes(8)));
 
-        if ($this->canResizeWithGd() && $this->storeResizedWebp($file, $this->uploadDir.'/'.$fileName)) {
+        if ($this->canResizeWithGd() && $this->storeResizedWebp($file, $this->uploadDir . '/' . $fileName)) {
             return $fileName;
         }
 
@@ -58,7 +64,7 @@ final class ProfileImageStorage
             return;
         }
 
-        $absolutePath = $this->uploadDir.'/'.basename($path);
+        $absolutePath = $this->uploadDir . '/' . basename($path);
 
         if (is_file($absolutePath)) {
             @unlink($absolutePath);
@@ -96,8 +102,8 @@ final class ProfileImageStorage
         }
 
         $size = min($width, $height);
-        $srcX = (int) floor(($width - $size) / 2);
-        $srcY = (int) floor(($height - $size) / 2);
+        $srcX = (int)floor(($width - $size) / 2);
+        $srcY = (int)floor(($height - $size) / 2);
         $targetSize = min(512, $size);
 
         $target = imagecreatetruecolor($targetSize, $targetSize);

@@ -1,9 +1,12 @@
 when@dev:
     web_profiler:
-        toolbar: true
+        toolbar: false
+        intercept_redirects: false
 
     framework:
         profiler:
+            collect: false
+            collect_parameter: 'api'
             collect_serializer_data: true
 
 when@test:

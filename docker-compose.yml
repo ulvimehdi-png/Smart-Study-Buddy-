@@ -175,7 +175,7 @@ services:
     <<: [ *php-common, *build-prod ]
     profiles: [ "prod" ]
     working_dir: /var/www/html
-    user: "www-data"
+    user: "www-data:${HOST_GID:-1000}"
     depends_on:
       db-prod:
         condition: service_healthy
