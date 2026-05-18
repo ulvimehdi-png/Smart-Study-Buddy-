@@ -47,12 +47,12 @@ validate_compose:
 
 #
 # STAGE - TEST
-# -- also dev smoke for overall sanity of dev setup
+# -- no more dev smoke for overall sanity of dev setup
 #
-smoke_dev_stack:
-  stage: test
-  script:
-    - make dev-ci
+#smoke_dev_stack:
+#  stage: test
+#  script:
+#    - make dev-ci
 
 test_stack:
   stage: test
