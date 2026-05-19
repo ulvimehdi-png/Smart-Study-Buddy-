@@ -45,3 +45,5 @@ cache/
 
 backend/.composer-cache
 backend/.phpunit.cache
+backend/public/uploads/avatars/*
+backend/public/uploads/coverage/*

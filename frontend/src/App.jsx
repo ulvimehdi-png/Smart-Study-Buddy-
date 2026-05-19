@@ -30,6 +30,7 @@ const UserPage = lazy(() => import("./pages/UserPage"));
 const Reports = lazy(() => import("./pages/Reports"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 const Calendar = lazy(() => import("./pages/Calendar"));
+const DeveloperDashboard = lazy(() => import("./pages/Developer.jsx"));
 
 function App() {
     return (
@@ -48,6 +49,8 @@ function App() {
                     <Route path="/user" element={<ProtectedRoute><UserPage /></ProtectedRoute>} />
                     <Route path="/reports" element={<ProtectedRoute><Reports /></ProtectedRoute>} />
                     <Route path="/calendar" element={<ProtectedRoute><Calendar /></ProtectedRoute>} />
+
+                    <Route path="/developer" element={<ProtectedRoute><DeveloperDashboard /></ProtectedRoute>} />
 
                     <Route path="*" element={<NotFound />} />
                 </Route>

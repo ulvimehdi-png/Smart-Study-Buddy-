@@ -92,6 +92,7 @@ x-node-common: &node-common
   <<: [*user, *net]
   volumes:
     - ./frontend:/app/frontend
+    - ./backend/public/uploads:/app/frontend/public/uploads:ro
 
 ############
 # SERVICES #
@@ -152,6 +153,7 @@ services:
       - ./backend:/app/backend
       - backend_vendor:/app/backend/vendor
       - backend_var:/app/backend/var
+#      - docker/php/debug.ini /usr/local/etc/php/conf.d/90-debug.ini
     command: >
       sh -lc '
         php bin/console doctrine:database:drop --force --if-exists --env=dev &&
