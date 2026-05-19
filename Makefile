@@ -76,9 +76,6 @@ dev-build-clean:
 dev-down-clean:
 	$(DEV_CMD) down -v --remove-orphans
 
-dev-deps:
-	$(call EXEC_CMD,$(DEV_CMD),php-dev,composer install)
-
 dev-shell-php:
 	$(call EXEC_CMD,$(DEV_CMD),php-dev,bash)
 
@@ -90,9 +87,9 @@ dev-smoke:
 	$(call EXEC_CMD,$(DEV_CMD),node-dev,wget -qO- http://127.0.0.1:5173 >/dev/null )
 	$(call EXEC_CMD,$(DEV_CMD),mercure-dev,wget -qO- http://127.0.0.1/healthz >/dev/null )
 
-dev-reset: dev-down-clean dev-build-clean dev-up dev-deps dev-endpoints
+dev-reset: dev-down-clean dev-build-clean dev-up dev-endpoints
 
-dev-ci-setup: dev-down-clean dev-build-clean dev-up dev-deps
+dev-ci-setup: dev-down-clean dev-build-clean dev-up
 
 dev-ci-test: dev-smoke
 
@@ -103,9 +100,12 @@ dev-ci: dev-ci-setup dev-ci-test dev-ci-teardown
 ######################
 # ENVIRONMENT = TEST #
 ######################
-test:
+test: test-down
 	$(TEST_CMD) up --build --abort-on-container-exit --exit-code-from php-test-runner
-	$(TEST_CMD) down -v
+	$(MAKE) test-down
+
+test-down:
+	$(TEST_CMD) down -v --remove-orphans
 
 test-ci: test
 

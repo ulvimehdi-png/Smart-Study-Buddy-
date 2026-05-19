@@ -1,22 +1,40 @@
-import React from "react";
+// import React from "react";
+// import { Routes, Route } from "react-router-dom";
+// import Home from "@/pages/Home";
+// import Login from "@/pages/Login";
+// import Tasks from "@/pages/Tasks";
+// import Notes from "@/pages/Notes";
+// import Dashboard from "@/pages/Dashboard";
+// import ProtectedRoute from "./pages/ProtectedRoute";
+// import TimerPage from "./pages/TimerPage";
+// import Layout from "./components/Layout";
+// import Leaderboard from './pages/Leaderboard';
+// import UserPage from "./pages/UserPage";
+// import Reports from './pages/Reports';
+// import NotFound from "./pages/NotFound";
+// import Calendar from './pages/Calendar';
+
+import React, { lazy, Suspense } from "react";
 import { Routes, Route } from "react-router-dom";
-import Home from "@/pages/Home";
-import Login from "@/pages/Login";
-import Tasks from "@/pages/Tasks";
-import Notes from "@/pages/Notes";
-import Dashboard from "@/pages/Dashboard";
-import ProtectedRoute from "./pages/ProtectedRoute";
-import TimerPage from "./pages/TimerPage";
-import Layout from "./components/Layout";
-import Leaderboard from './pages/Leaderboard';
-import UserPage from "./pages/UserPage";
-import Reports from './pages/Reports';
-import NotFound from "./pages/NotFound";
-import Calendar from './pages/Calendar';
+
+const Home = lazy(() => import("@/pages/Home"));
+const Login = lazy(() => import("@/pages/Login"));
+const Tasks = lazy(() => import("@/pages/Tasks"));
+const Notes = lazy(() => import("@/pages/Notes"));
+const Dashboard = lazy(() => import("@/pages/Dashboard"));
+const ProtectedRoute = lazy(() => import("./pages/ProtectedRoute"));
+const TimerPage = lazy(() => import("./pages/TimerPage"));
+const Layout = lazy(() => import("./components/Layout"));
+const Leaderboard = lazy(() => import("./pages/Leaderboard"));
+const UserPage = lazy(() => import("./pages/UserPage"));
+const Reports = lazy(() => import("./pages/Reports"));
+const NotFound = lazy(() => import("./pages/NotFound"));
+const Calendar = lazy(() => import("./pages/Calendar"));
 
 function App() {
     return (
         <>
+            <Suspense fallback={<div>Loading...</div>}>
             <Routes>
                 <Route element={<Layout />}>
                     <Route path="/" element={<Home />} />
@@ -34,6 +52,7 @@ function App() {
                     <Route path="*" element={<NotFound />} />
                 </Route>
             </Routes>
+            </Suspense>
         </>
     );
 }

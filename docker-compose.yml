@@ -42,12 +42,15 @@ x-php-common: &php-common
   working_dir: /app/backend
   init: true
   <<: [*user, *net]
+  environment:
+    HOME: /tmp
+    XDG_CONFIG_HOME: /tmp/.config
+    XDG_CACHE_HOME: /tmp/.cache
+    COMPOSER_HOME: /tmp/.composer
+    APP_CACHE_DIR: /tmp/.cache
+    APP_LOG_DIR: /tmp/.log
   env_file:
     - ./docker/environment/.env.local.${APP_ENV:-dev}
-  environment:
-    COMPOSER_HOME: /tmp/.config
-    XDG_CONFIG_HOME: /tmp/.config
-    COMPOSER_CACHE_DIR: /app/backend/.composer-cache
 
 x-build-dev: &build-dev
   build:
@@ -78,6 +81,7 @@ x-build-prod: &build-prod
       PHP_VERSION: "${PHP_VERSION:-8.4.18}"
       COMPOSER_VERSION: "${COMPOSER_VERSION:-2.9.5}"
       NODE_VERSION: "${NODE_VERSION:-22-alpine}"
+
 #############
 # NODE BASE #
 #############
@@ -86,16 +90,8 @@ x-node-common: &node-common
   working_dir: /app/frontend
   init: true
   <<: [*user, *net]
-  environment:
-    VITE_DEV_SERVER_HOST: "0.0.0.0"
-    VITE_DEV_SERVER_PORT: "${EXT_PORT_NODE_DEV:-5173}"
-    HOME: "/tmp"
-    NPM_CONFIG_CACHE: "/tmp/.npm"
-    MERCURE_URL: "http://mercure/.well-known/mercure"
-    VITE_MERCURE_PUBLIC_URL: "http://127.0.0.1:${EXT_PORT_MERCURE_DEV:-3000}/.well-known/mercure"
   volumes:
     - ./frontend:/app/frontend
-    - ./frontend/node_modules:/app/frontend/node_modules
 
 ############
 # SERVICES #
@@ -129,11 +125,33 @@ services:
   #################
   # DEV - PHP SET #
   #################
+  php-init:
+    <<: [ *php-common, *build-dev ]
+    profiles: [ "dev" ]
+    user: root
+    environment:
+      HOME: /tmp
+    command: >
+      sh -lc '
+        mkdir -p /tmp/.config /tmp/.cache /tmp/.composer &&
+        mkdir -p /app/backend/var /app/backend/vendor &&
+        chown -R ${HOST_UID:-1000}:${HOST_GID:-1000} /app/backend &&
+        composer install --no-interaction --optimize-autoloader
+      '
+    volumes:
+      - ./backend:/app/backend
+      - backend_vendor:/app/backend/vendor
+      - backend_var:/app/backend/var
+
   php-dev:
     <<: [ *php-common, *build-dev ]
     profiles: [ "dev" ]
+    environment:
+      HOME: /tmp
     volumes:
       - ./backend:/app/backend
+      - backend_vendor:/app/backend/vendor
+      - backend_var:/app/backend/var
     command: >
       sh -lc '
         php bin/console doctrine:database:drop --force --if-exists --env=dev &&
@@ -145,25 +163,39 @@ services:
     depends_on:
       db-dev:
         condition: service_healthy
+      php-init:
+        condition: service_completed_successfully
     restart: unless-stopped
 
   ##################
   # TEST - PHP SET #
   ##################
-  php-test-runner:
+  php-test-init:
     <<: [ *php-common, *build-test ]
     profiles: [ "test" ]
+    user: root
     depends_on:
       db-test:
         condition: service_healthy
     command: >
       sh -lc '
-        php bin/console doctrine:database:drop --force --if-exists --env=test &&
+        set -eux
+        mkdir -p /tmp/.config /tmp/.cache /tmp/.composer &&
+        mkdir -p /app/backend/var /app/backend/vendor &&
+        chown -R ${HOST_UID:-1000}:${HOST_GID:-1000} /app/backend &&
         php bin/console doctrine:database:create --if-not-exists --env=test &&
         php bin/console doctrine:migrations:migrate --no-interaction --env=test &&
-        php bin/console doctrine:fixtures:load --no-interaction --env=test &&
-        php bin/phpunit
+        php bin/console doctrine:fixtures:load --no-interaction --env=test
       '
+    restart: "no"
+
+  php-test-runner:
+    <<: [ *php-common, *build-test ]
+    profiles: [ "test" ]
+    depends_on:
+      php-test-init:
+        condition: service_completed_successfully
+    command: php bin/phpunit
     restart: "no"
 
   ##################
@@ -196,6 +228,8 @@ services:
       test: [ "CMD-SHELL", "curl -fsS http://127.0.0.1/ || exit 1" ]
     command: >
       sh -lc '
+        echo "APP_ENV=prod" > /var/www/html/.env &&
+        php bin/console cache:clear --env=prod &&
         php bin/console doctrine:database:drop --force --if-exists --env=prod &&
         php bin/console doctrine:database:create --if-not-exists --env=prod &&
         php bin/console doctrine:migrations:migrate --no-interaction --env=prod &&
@@ -267,6 +301,9 @@ volumes:
   composer_cache:
   mercure_dev_data:
   mercure_dev_config:
+  backend_vendor:
+  backend_var:
+
 
 ############
 # NETWORKS #
