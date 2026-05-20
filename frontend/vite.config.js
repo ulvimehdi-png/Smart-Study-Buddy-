@@ -1,6 +1,7 @@
 import {defineConfig} from 'vite'
-import react, {reactCompilerPreset} from '@vitejs/plugin-react'
-import babel from '@rolldown/plugin-babel'
+//import react, {reactCompilerPreset} from '@vitejs/plugin-react'
+//import babel from '@rolldown/plugin-babel'
+import react from '@vitejs/plugin-react-swc'
 import tailwindcss from '@tailwindcss/vite'
 
 const usePolling = process.env.VITE_USE_POLLING === 'false'
@@ -10,7 +11,7 @@ export default defineConfig({
     plugins: [
         tailwindcss(),
         react(),
-        babel({presets: [reactCompilerPreset()]})
+        // babel({presets: [reactCompilerPreset()]})
     ],
 
     base: '/',

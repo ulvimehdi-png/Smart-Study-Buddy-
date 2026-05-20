@@ -34,7 +34,7 @@ export default function UserPage() {
 
     try {
       const response = await fetch("/api/user/profile", {
-        method: "PATCH",
+        method: "POST",
         credentials: "include",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username }),
@@ -61,7 +61,7 @@ export default function UserPage() {
 
     try {
       const response = await fetch("/api/user/password", {
-        method: "PATCH",
+        method: "POST",
         credentials: "include",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(passwords),

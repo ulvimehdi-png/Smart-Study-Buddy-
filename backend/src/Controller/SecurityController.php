@@ -45,12 +45,20 @@ final class SecurityController extends AbstractController
 
     #[Route('/register', methods: ['POST'])]
     public function register(
+        #[CurrentUser] ?User        $user,
         Request                     $request,
         EntityManagerInterface      $em,
         UserPasswordHasherInterface $hasher,
         ProfileImageStorage         $profileImageStorage,
     ): JsonResponse
     {
+        if ($user !== null){
+            return $this->json([
+                'status' => 'user_already_logged_in',
+                'user' => $this->serializeUser($user, $profileImageStorage),
+            ], 409);
+        }
+
         $data = $request->toArray();
 
         $username = trim((string)($data['username'] ?? ''));
@@ -89,7 +97,7 @@ final class SecurityController extends AbstractController
         ]);
 
         return $this->json([
-            'status' => 'user created',
+            'status' => 'register_user_success',
             'user' => $this->serializeUser($user, $profileImageStorage),
         ], 201);
     }
@@ -100,10 +108,11 @@ final class SecurityController extends AbstractController
         ProfileImageStorage  $profileImageStorage,
     ): JsonResponse
     {
-        $this->logger->info('Current user is active', [
-            'user_id' => $user->getId(),
-            'username' => $user->getUsername(),
-            'profile_image_path' => $user->getProfileImagePath(),
+        $this->logger->info('Current user checked', [
+            'authenticated' => $user !== null,
+            'user_id' => $user?->getId(),
+            'username' => $user?->getUsername(),
+            'profile_image_path' => $user?->getProfileImagePath(),
         ]);
 
         return $this->json([
@@ -111,7 +120,7 @@ final class SecurityController extends AbstractController
         ]);
     }
 
-    #[Route('/user/profile', methods: ['PATCH'])]
+    #[Route('/user/profile', methods: ['POST'])]
     public function updateProfile(
         Request                $request,
         #[CurrentUser] ?User   $user,
@@ -232,7 +241,7 @@ final class SecurityController extends AbstractController
         ]);
     }
 
-    #[Route('/user/password', methods: ['PATCH'])]
+    #[Route('/user/password', methods: ['POST'])]
     public function updatePassword(
         Request                     $request,
         #[CurrentUser] ?User        $user,

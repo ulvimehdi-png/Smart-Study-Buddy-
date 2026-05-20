@@ -27,18 +27,15 @@ final class UserFactory extends PersistentObjectFactory
     #[\Override]
     protected function defaults(): array|callable
     {
-        $username = self::faker()->unique()->userName();
+        $username = uniqid('user_', true);
 
         return [
             'username' => $username,
-            'email' => self::faker()->unique()->safeEmail(),
+            'email' => "$username@studybuddy.test",
             'password' => 'secret',
-
             'displayName' => $username,
-
             'isActive' => true,
             'points' => 0,
-
             'settings' => SettingsFactory::new(),
         ];
     }
@@ -50,11 +47,11 @@ final class UserFactory extends PersistentObjectFactory
             ->afterInstantiate(function (User $user): void {
                 $user->addRole('ROLE_USER');
 
-                if (!str_starts_with($user->getPassword(), '$2y$')) {
+                if (!str_starts_with((string) $user->getPassword(), '$')) {
                     $user->setPassword(
                         $this->userPasswordHasher->hashPassword(
                             $user,
-                            (string)$user->getPassword()
+                            (string) $user->getPassword()
                         )
                     );
                 }
@@ -72,6 +69,13 @@ final class UserFactory extends PersistentObjectFactory
             'email' => "user{$number}@studybuddy.test",
             'displayName' => "User {$number}",
             'lastLoginAt' => null,
+        ]);
+    }
+
+    public function withPlainPassword(string $plainPassword): static
+    {
+        return $this->with([
+            'password' => $plainPassword,
         ]);
     }
 

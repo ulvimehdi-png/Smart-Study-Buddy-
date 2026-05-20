@@ -8,7 +8,7 @@ x-user: &user
 
 x-net: &net
   networks:
-    - app_net
+    - ${APP_ENV:-dev}_app_net
 
 x-health-defaults: &health-defaults
   interval: 5s
@@ -22,17 +22,17 @@ x-health-defaults: &health-defaults
 x-db-base: &db-base
   image: "mysql:${MYSQL_VERSION:-8.0.32}"
   environment:
-    MYSQL_ROOT_PASSWORD:  "${MYSQL_ROOT_PASSWORD:-root}"
-    MYSQL_USER:           "${MYSQL_USER:-app}"
-    MYSQL_PASSWORD:       "${MYSQL_PASSWORD:-app}"
-    MYSQL_DATABASE:       "app_${APP_ENV:-dev}"
+    MYSQL_ROOT_PASSWORD: "${MYSQL_ROOT_PASSWORD:-root}"
+    MYSQL_USER: "${MYSQL_USER:-app}"
+    MYSQL_PASSWORD: "${MYSQL_PASSWORD:-app}"
+    MYSQL_DATABASE: "app_${APP_ENV:-dev}"
   command:
     - --default-authentication-plugin=mysql_native_password
     - --character-set-server=utf8mb4
     - --collation-server=utf8mb4_unicode_ci
   healthcheck:
     <<: *health-defaults
-    test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -uroot -p$${MYSQL_ROOT_PASSWORD} --silent"]
+    test: [ "CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -uroot -p$${MYSQL_ROOT_PASSWORD} --silent" ]
   <<: *net
 
 ############
@@ -41,13 +41,16 @@ x-db-base: &db-base
 x-php-common: &php-common
   working_dir: /app/backend
   init: true
-  <<: [*user, *net]
+  <<: [ *user, *net ]
+  environment:
+    HOME: /tmp
+    XDG_CONFIG_HOME: /tmp/.config
+    XDG_CACHE_HOME: /tmp/.cache
+    COMPOSER_HOME: /tmp/.composer
+    APP_CACHE_DIR: /tmp/.cache
+    APP_LOG_DIR: /tmp/.log
   env_file:
     - ./docker/environment/.env.local.${APP_ENV:-dev}
-  environment:
-    COMPOSER_HOME: /tmp/.config
-    XDG_CONFIG_HOME: /tmp/.config
-    COMPOSER_CACHE_DIR: /app/.composer-cache
 
 x-build-dev: &build-dev
   build:
@@ -69,6 +72,16 @@ x-build-test: &build-test
       COMPOSER_VERSION: "${COMPOSER_VERSION:-2.9.5}"
       NODE_VERSION: "${NODE_VERSION:-22-alpine}"
 
+x-build-test-coverage: &build-test-coverage
+  build:
+    context: .
+    dockerfile: ./docker/php/Dockerfile
+    target: php-test-coverage
+    args:
+      PHP_VERSION: "${PHP_VERSION:-8.4.18}"
+      COMPOSER_VERSION: "${COMPOSER_VERSION:-2.9.5}"
+      NODE_VERSION: "${NODE_VERSION:-22-alpine}"
+
 x-build-prod: &build-prod
   build:
     context: .
@@ -78,6 +91,7 @@ x-build-prod: &build-prod
       PHP_VERSION: "${PHP_VERSION:-8.4.18}"
       COMPOSER_VERSION: "${COMPOSER_VERSION:-2.9.5}"
       NODE_VERSION: "${NODE_VERSION:-22-alpine}"
+
 #############
 # NODE BASE #
 #############
@@ -85,17 +99,10 @@ x-node-common: &node-common
   image: "node:${NODE_VERSION:-22-alpine}"
   working_dir: /app/frontend
   init: true
-  <<: [*user, *net]
-  environment:
-    VITE_DEV_SERVER_HOST: "0.0.0.0"
-    VITE_DEV_SERVER_PORT: "${EXT_PORT_NODE_DEV:-5173}"
-    HOME: "/tmp"
-    NPM_CONFIG_CACHE: "/tmp/.npm"
-    MERCURE_URL: "http://mercure/.well-known/mercure"
-    VITE_MERCURE_PUBLIC_URL: "http://127.0.0.1:${EXT_PORT_MERCURE_DEV:-3000}/.well-known/mercure"
+  <<: [ *user, *net ]
   volumes:
     - ./frontend:/app/frontend
-    - ./frontend/node_modules:/app/frontend/node_modules
+    - ./backend/public/uploads:/app/frontend/public/uploads:ro
 
 ############
 # SERVICES #
@@ -108,6 +115,7 @@ services:
   db-dev:
     <<: *db-base
     profiles: [ "dev" ]
+    container_name: db-dev
     volumes:
       - db_dev_data:/var/lib/mysql
     restart: unless-stopped
@@ -115,6 +123,7 @@ services:
   db-prod:
     <<: *db-base
     profiles: [ "prod" ]
+    container_name: db-prod
     volumes:
       - db_prod_data:/var/lib/mysql
     restart: unless-stopped
@@ -122,19 +131,50 @@ services:
   db-test:
     <<: *db-base
     profiles: [ "test" ]
+    container_name: db-test
     tmpfs:
       - /var/lib/mysql
     restart: "no"
 
+  db-test-coverage:
+    <<: *db-base
+    profiles: [ "test-coverage" ]
+    container_name: db-test-coverage
+    tmpfs:
+      - /var/lib/mysql
+    restart: "no"
+    networks:
+      - test_coverage_app_net
+
   #################
   # DEV - PHP SET #
   #################
+  php-init:
+    <<: [ *php-common, *build-dev ]
+    profiles: [ "dev" ]
+    container_name: php-init
+    user: root
+    environment:
+      HOME: /tmp
+    command: >
+      sh -lc '
+        mkdir -p /tmp/.config /app/backend/var /app/backend/vendor &&
+        chown -R ${HOST_UID:-1000}:${HOST_GID:-1000} /app/backend &&
+        composer install --no-interaction --optimize-autoloader
+      '
+    volumes:
+      - ./backend:/app/backend
+
   php-dev:
     <<: [ *php-common, *build-dev ]
     profiles: [ "dev" ]
+    container_name: php-dev
+    user: "${HOST_UID:-1000}:${HOST_GID:-1000}"
+    environment:
+      HOME: /tmp
     volumes:
       - ./backend:/app/backend
-      - composer_cache:/app/.composer-cache
+    #      - docker/php/debug.ini /usr/local/etc/php/conf.d/90-debug.ini
     command: >
       sh -lc '
         php bin/console doctrine:database:drop --force --if-exists --env=dev &&
@@ -146,6 +186,8 @@ services:
     depends_on:
       db-dev:
         condition: service_healthy
+      php-init:
+        condition: service_completed_successfully
     restart: unless-stopped
 
   ##################
@@ -154,26 +196,56 @@ services:
   php-test-runner:
     <<: [ *php-common, *build-test ]
     profiles: [ "test" ]
+    container_name: php-test-runner
+    user: root
     depends_on:
       db-test:
         condition: service_healthy
     command: >
       sh -lc '
-        php bin/console doctrine:database:drop --force --if-exists --env=test &&
+        rm -rf /app/backend/var/coverage &&
+        mkdir -p /tmp/.config /app/backend/{vendor,var/coverage} &&
+        chown -R ${HOST_UID:-1000}:${HOST_GID:-1000} /app/backend &&
         php bin/console doctrine:database:create --if-not-exists --env=test &&
         php bin/console doctrine:migrations:migrate --no-interaction --env=test &&
         php bin/console doctrine:fixtures:load --no-interaction --env=test &&
-        php bin/phpunit
+        php bin/phpunit --configuration phpunit.dist.xml --no-coverage
       '
     restart: "no"
+
+  php-test-coverage:
+    <<: [ *php-common, *build-test-coverage ]
+    profiles: [ "test-coverage" ]
+    container_name: php-test-coverage
+    user: root
+    environment:
+      XDEBUG_MODE: coverage
+      DATABASE_URL: 'mysql://app:app@db-test-coverage:3306/app?serverVersion=8.0.32&charset=utf8mb4'
+    volumes:
+      - ${COVERAGE_DIR}:/app/backend/var/coverage
+    depends_on:
+      db-test-coverage:
+        condition: service_healthy
+    command: >
+      sh -lc '
+        mkdir -p /tmp/.config /app/backend/{vendor,var/coverage} &&
+        chown -R ${HOST_UID:-1000}:${HOST_GID:-1000} /app/backend &&
+        php bin/console doctrine:database:create --if-not-exists --env=test &&
+        php bin/console doctrine:migrations:migrate --no-interaction --env=test &&
+        php bin/console doctrine:fixtures:load --no-interaction --env=test &&
+        php bin/phpunit --configuration phpunit.dist.xml'
+    restart: "no"
+    networks:
+      - test_coverage_app_net
 
   ##################
   # PROD - PHP SET #
   ##################
   web:
-    image: ${PROD_IMAGE:-studybuddy:prod-local}
+    image: ${PROD_IMAGE}
     <<: [ *php-common, *build-prod ]
     profiles: [ "prod" ]
+    container_name: web
     working_dir: /var/www/html
     user: "www-data:${HOST_GID:-1000}"
     depends_on:
@@ -197,6 +269,8 @@ services:
       test: [ "CMD-SHELL", "curl -fsS http://127.0.0.1/ || exit 1" ]
     command: >
       sh -lc '
+        echo "APP_ENV=prod" > /var/www/html/.env &&
+        php bin/console cache:clear --env=prod &&
         php bin/console doctrine:database:drop --force --if-exists --env=prod &&
         php bin/console doctrine:database:create --if-not-exists --env=prod &&
         php bin/console doctrine:migrations:migrate --no-interaction --env=prod &&
@@ -208,7 +282,8 @@ services:
   ##############
   node-deps:
     <<: *node-common
-    profiles: ["dev"]
+    profiles: [ "dev" ]
+    container_name: node-deps
     user: root
     command: >
       sh -lc '
@@ -221,13 +296,14 @@ services:
   node-dev:
     <<: *node-common
     profiles: [ "dev" ]
+    container_name: node-dev
     depends_on:
       node-deps:
         condition: service_completed_successfully
     command: npm run dev -- --host 0.0.0.0 --port 5173
     healthcheck:
       <<: *health-defaults
-      test: ["CMD-SHELL", "wget -q --spider http://127.0.0.1:5173 || exit 1"]
+      test: [ "CMD-SHELL", "wget -q --spider http://127.0.0.1:5173 || exit 1" ]
     restart: unless-stopped
 
   #################
@@ -236,21 +312,22 @@ services:
   mercure-dev:
     profiles: [ "dev" ]
     image: dunglas/mercure:${MERCURE_VERSION:-v0.24.0}
+    container_name: mercure-dev
     <<: *net
     environment:
       SERVER_NAME: ":80"
-      MERCURE_PUBLISHER_JWT_KEY: "!"
-      MERCURE_SUBSCRIBER_JWT_KEY: "!"
+      MERCURE_PUBLISHER_JWT_KEY: "24207d430335d87559f64ed568966be1b21022fc51d544ba336e8a7b70964478"
+      MERCURE_SUBSCRIBER_JWT_KEY: "24207d430335d87559f64ed568966be1b21022fc51d544ba336e8a7b70964478"
       MERCURE_EXTRA_DIRECTIVES: |
         demo
         anonymous
         cors_origins *
         publish_origins *
-#      MERCURE_EXTRA_DIRECTIVES: |
-#        "anonymous
-#        cors_origins http://localhost:5173 http://localhost:8000
-#        publish_origins http://localhost:5173 http://localhost:8000
-#        demo"
+    #      MERCURE_EXTRA_DIRECTIVES: |
+    #        "anonymous
+    #        cors_origins http://localhost:5173 http://localhost:8000
+    #        publish_origins http://localhost:5173 http://localhost:8000
+    #        demo"
     volumes:
       - mercure_dev_data:/data
       - mercure_dev_config:/config
@@ -264,14 +341,27 @@ services:
 ###########
 volumes:
   db_dev_data:
+    name: db_dev_data
   db_prod_data:
-  composer_cache:
+    name: db_prod_data
   mercure_dev_data:
+    name: mercure_dev_data
   mercure_dev_config:
+    name: mercure_dev_config
 
 ############
 # NETWORKS #
 ############
 networks:
-  app_net:
+  dev_app_net:
+    name: dev_app_net
+    driver: bridge
+  test_app_net:
+    name: test_app_net
+    driver: bridge
+  test_coverage_app_net:
+    name: test_coverage_app_net
+    driver: bridge
+  prod_app_net:
+    name: prod_app_net
     driver: bridge

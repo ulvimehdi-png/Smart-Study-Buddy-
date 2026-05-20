@@ -1,0 +1,17 @@
+.git
+.idea
+.vscode
+
+backend/var
+backend/vendor
+backend/public/uploads
+backend/.env*
+backend/.gitignore
+backend/README.md
+
+docker/mercure-remote
+
+frontend/node_modules
+frontend/dist
+frontend/.gitignore
+frontend/README.md

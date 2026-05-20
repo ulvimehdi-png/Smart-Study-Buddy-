@@ -1592,6 +1592,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *     mercure?: MercureConfig,
  *     monolog?: MonologConfig,
  *     twig?: TwigConfig,
+ *     web_profiler?: WebProfilerConfig,
  *     "when@dev"?: array{
  *         imports?: ImportsConfig,
  *         parameters?: ParametersConfig,
@@ -1623,6 +1624,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         mercure?: MercureConfig,
  *         monolog?: MonologConfig,
  *         twig?: TwigConfig,
+ *         web_profiler?: WebProfilerConfig,
  *     },
  *     "when@test"?: array{
  *         imports?: ImportsConfig,

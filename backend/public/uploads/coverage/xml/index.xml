@@ -1,0 +1,782 @@
+<?xml version="1.0"?>
+<phpunit xmlns="https://schema.phpunit.de/coverage/1.0">
+  <build time="Mon May 18 15:32:56 UTC 2026" phpunit="13.1.10" coverage="14.1.9">
+    <runtime name="PHP" version="8.4.18" url="https://www.php.net/"/>
+    <driver name="Xdebug" version="3.5.1"/>
+  </build>
+  <project source="/app/backend/src">
+    <tests>
+      <test name="App\Tests\Controller\ControllerUnitTest::testControllersReturn401WhenNotLoggedIn" size="unknown" status="success" time="0.019377"/>
+      <test name="App\Tests\Controller\CoreLogicTest::testDevMercurePingReturnsValidPayload" size="unknown" status="success" time="0.002479"/>
+      <test name="App\Tests\Entity\EntityCoverageTest::testUserEntity" size="unknown" status="success" time="0.004242"/>
+      <test name="App\Tests\Entity\EntityCoverageTest::testSubjectEntity" size="unknown" status="success" time="0.001574"/>
+      <test name="App\Tests\Entity\EntityCoverageTest::testTaskEntity" size="unknown" status="success" time="0.001509"/>
+      <test name="App\Tests\Entity\EntityCoverageTest::testNoteEntity" size="unknown" status="success" time="0.001539"/>
+      <test name="App\Tests\Entity\EntityCoverageTest::testSessionEntity" size="unknown" status="success" time="0.001251"/>
+      <test name="App\Tests\Entity\EntityCoverageTest::testSessionEntryEntity" size="unknown" status="success" time="0.001307"/>
+      <test name="App\Tests\Entity\EntityCoverageTest::testResourceEntity" size="unknown" status="success" time="0.001166"/>
+      <test name="App\Tests\Entity\EntityCoverageTest::testTagEntity" size="unknown" status="success" time="0.001105"/>
+      <test name="App\Tests\Entity\EntityCoverageTest::testSettingsEntity" size="unknown" status="success" time="0.001435"/>
+      <test name="App\Tests\Entity\EntityCoverageTest::testNoteAttachmentEntity" size="unknown" status="success" time="0.001188"/>
+      <test name="App\Tests\Entity\SessionCoverageTest::testSessionGettersAndSetters" size="unknown" status="success" time="0.001197"/>
+      <test name="App\Tests\Entity\SimpleCoverageTest::testReadMissingLines" size="unknown" status="success" time="0.001287"/>
+      <test name="App\Tests\Entity\TagSystemTest::testTaskTagRelationship" size="unknown" status="success" time="0.001157"/>
+      <test name="App\Tests\Entity\TagSystemTest::testNoteTagRelationship" size="unknown" status="success" time="0.001133"/>
+      <test name="App\Tests\Entity\TagSystemTest::testSubjectTagRelationship" size="unknown" status="success" time="0.001137"/>
+      <test name="App\Tests\Entity\AdvancedEntityTest::testArchivableSoftDeletableTrait" size="unknown" status="success" time="0.001256"/>
+      <test name="App\Tests\Entity\AdvancedEntityTest::testSessionChronologyValidation" size="unknown" status="success" time="0.005466"/>
+      <test name="App\Tests\Entity\AdvancedEntityTest::testSessionEntryChronologyValidation" size="unknown" status="success" time="0.002068"/>
+      <test name="App\Tests\Entity\AdvancedEntityTest::testResourceValidationMissingUrl" size="unknown" status="success" time="0.002160"/>
+      <test name="App\Tests\Entity\AdvancedEntityTest::testUserAchievementRelationship" size="unknown" status="success" time="0.001390"/>
+      <test name="App\Tests\Security\LoginHandlerTest::testLoginSuccessHandlerReturnsCorrectJson" size="unknown" status="success" time="0.003139"/>
+      <test name="App\Tests\Security\LoginHandlerTest::testLoginFailureHandlerReturns401" size="unknown" status="success" time="0.001564"/>
+    </tests>
+    <directory name="/">
+      <totals>
+        <lines total="6599" comments="594" code="6005" executable="1792" executed="570" percent="31.81"/>
+        <methods count="431" tested="264" percent="61.25"/>
+        <functions count="0" tested="0" percent="0"/>
+        <classes count="66" tested="8" percent="12.12"/>
+        <traits count="2" tested="0" percent="0.00"/>
+      </totals>
+      <directory name="Controller">
+        <totals>
+          <lines total="1206" comments="11" code="1195" executable="626" executed="35" percent="5.59"/>
+          <methods count="26" tested="1" percent="3.85"/>
+          <functions count="0" tested="0" percent="0"/>
+          <classes count="8" tested="1" percent="12.50"/>
+          <traits count="0" tested="0" percent="0"/>
+        </totals>
+        <file name="AchievementController.php" href="Controller/AchievementController.php.xml" hash="6365bb87a67c87494dcfcfc1fdf75aa324e13d2f">
+          <totals>
+            <lines total="66" comments="1" code="65" executable="28" executed="2" percent="7.14"/>
+            <methods count="2" tested="0" percent="0.00"/>
+            <functions count="0" tested="0" percent="0"/>
+            <classes count="1" tested="0" percent="0.00"/>
+            <traits count="0" tested="0" percent="0"/>
+          </totals>
+        </file>
+        <file name="DashboardController.php" href="Controller/DashboardController.php.xml" hash="372f3fdb49a5c51d798924291b71fe4357dbcbad">
+          <totals>
+            <lines total="194" comments="0" code="194" executable="131" executed="2" percent="1.53"/>
+            <methods count="1" tested="0" percent="0.00"/>
+            <functions count="0" tested="0" percent="0"/>
+            <classes count="1" tested="0" percent="0.00"/>
+            <traits count="0" tested="0" percent="0"/>
+          </totals>
+        </file>
+        <file name="DevMercureController.php" href="Controller/DevMercureController.php.xml" hash="73b0641782b238852b39c392843857dd13bc7830">
+          <totals>
+            <lines total="37" comments="0" code="37" executable="15" executed="15" percent="100.00"/>
+            <methods count="1" tested="1" percent="100.00"/>
+            <functions count="0" tested="0" percent="0"/>
+            <classes count="1" tested="1" percent="100.00"/>
+            <traits count="0" tested="0" percent="0"/>
+          </totals>
+        </file>
+        <file name="NotesController.php" href="Controller/NotesController.php.xml" hash="e8ed2c075f82b57d59f01bb72085ea22c40474b2">
+          <totals>
+            <lines total="193" comments="0" code="193" executable="106" executed="6" percent="5.66"/>
+            <methods count="4" tested="0" percent="0.00"/>
+            <functions count="0" tested="0" percent="0"/>
+            <classes count="1" tested="0" percent="0.00"/>
+            <traits count="0" tested="0" percent="0"/>
+          </totals>
+        </file>
+        <file name="ReportController.php" href="Controller/ReportController.php.xml" hash="e8e38e1b94e5df9ade9927fad5070b1e18bb24a2">
+          <totals>
+            <lines total="80" comments="8" code="72" executable="38" executed="2" percent="5.26"/>
+            <methods count="1" tested="0" percent="0.00"/>
+            <functions count="0" tested="0" percent="0"/>
+            <classes count="1" tested="0" percent="0.00"/>
+            <traits count="0" tested="0" percent="0"/>
+          </totals>
+        </file>
+        <file name="SecurityController.php" href="Controller/SecurityController.php.xml" hash="93f2717e9e43b4c4d7a47756af91e3bec91d3865">
+          <totals>
+            <lines total="290" comments="0" code="290" executable="130" executed="0" percent="0.00"/>
+            <methods count="10" tested="0" percent="0.00"/>
+            <functions count="0" tested="0" percent="0"/>
+            <classes count="1" tested="0" percent="0.00"/>
+            <traits count="0" tested="0" percent="0"/>
+          </totals>
+        </file>
+        <file name="SubjectsController.php" href="Controller/SubjectsController.php.xml" hash="e9b5fbfe29f67c294580c75396ce9e7ca7582ca2">
+          <totals>
+            <lines total="75" comments="0" code="75" executable="34" executed="0" percent="0.00"/>
+            <methods count="2" tested="0" percent="0.00"/>
+            <functions count="0" tested="0" percent="0"/>
+            <classes count="1" tested="0" percent="0.00"/>
+            <traits count="0" tested="0" percent="0"/>
+          </totals>
+        </file>
+        <file name="TasksController.php" href="Controller/TasksController.php.xml" hash="8ec74f0fe990e8a2cad7ab72bd354517dec4ab89">
+          <totals>
+            <lines total="271" comments="2" code="269" executable="144" executed="8" percent="5.56"/>
+            <methods count="5" tested="0" percent="0.00"/>
+            <functions count="0" tested="0" percent="0"/>
+            <classes count="1" tested="0" percent="0.00"/>
+            <traits count="0" tested="0" percent="0"/>
+          </totals>
+        </file>
+      </directory>
+      <directory name="Entity">
+        <totals>
+          <lines total="3174" comments="172" code="3002" executable="603" executed="521" percent="86.40"/>
+          <methods count="308" tested="257" percent="83.44"/>
+          <functions count="0" tested="0" percent="0"/>
+          <classes count="16" tested="1" percent="6.25"/>
+          <traits count="2" tested="0" percent="0.00"/>
+        </totals>
+        <directory name="Traits">
+          <totals>
+            <lines total="144" comments="4" code="140" executable="26" executed="12" percent="46.15"/>
+            <methods count="16" tested="8" percent="50.00"/>
+            <functions count="0" tested="0" percent="0"/>
+            <classes count="0" tested="0" percent="0"/>
+            <traits count="2" tested="0" percent="0.00"/>
+          </totals>
+          <file name="ArchivableSoftDeletableTrait.php" href="Entity/Traits/ArchivableSoftDeletableTrait.php.xml" hash="e665386a2dd1bdaefa5ca34c84041d3acae07a70">
+            <totals>
+              <lines total="81" comments="0" code="81" executable="16" executed="12" percent="75.00"/>
+              <methods count="10" tested="8" percent="80.00"/>
+              <functions count="0" tested="0" percent="0"/>
+              <classes count="0" tested="0" percent="0"/>
+              <traits count="1" tested="0" percent="0.00"/>
+            </totals>
+          </file>
+          <file name="TimestampableTrait.php" href="Entity/Traits/TimestampableTrait.php.xml" hash="d78b7a9ac5c105d09fb60fd38165f2a72784695e">
+            <totals>
+              <lines total="63" comments="4" code="59" executable="10" executed="0" percent="0.00"/>
+              <methods count="6" tested="0" percent="0.00"/>
+              <functions count="0" tested="0" percent="0"/>
+              <classes count="0" tested="0" percent="0"/>
+              <traits count="1" tested="0" percent="0.00"/>
+            </totals>
+          </file>
+        </directory>
+        <file name="Achievement.php" href="Entity/Achievement.php.xml" hash="73c9598e526bd1d7f0f63fb62b0430d8e74005b3">
+          <totals>
+            <lines total="38" comments="0" code="38" executable="7" executed="0" percent="0.00"/>
+            <methods count="7" tested="0" percent="0.00"/>
+            <functions count="0" tested="0" percent="0"/>
+            <classes count="1" tested="0" percent="0.00"/>
+            <traits count="0" tested="0" percent="0"/>
+          </totals>
+        </file>
+        <file name="Note.php" href="Entity/Note.php.xml" hash="8550708ccd7a0a4355a67c136837ed08e32b62ef">
+          <totals>
+            <lines total="291" comments="20" code="271" executable="59" executed="48" percent="81.36"/>
+            <methods count="26" tested="22" percent="84.62"/>
+            <functions count="0" tested="0" percent="0"/>
+            <classes count="1" tested="0" percent="0.00"/>
+            <traits count="0" tested="0" percent="0"/>
+          </totals>
+        </file>
+        <file name="NoteAttachment.php" href="Entity/NoteAttachment.php.xml" hash="10dacca5b2f03054d7ce01248cbc4078e6da6061">
+          <totals>
+            <lines total="127" comments="0" code="127" executable="19" executed="18" percent="94.74"/>
+            <methods count="13" tested="12" percent="92.31"/>
+            <functions count="0" tested="0" percent="0"/>
+            <classes count="1" tested="0" percent="0.00"/>
+            <traits count="0" tested="0" percent="0"/>
+          </totals>
+        </file>
+        <file name="NoteTag.php" href="Entity/NoteTag.php.xml" hash="ceb0158e84461f3a1475c966e3ebc4ef4b81a629">
+          <totals>
+            <lines total="75" comments="0" code="75" executable="9" executed="8" percent="88.89"/>
+            <methods count="7" tested="6" percent="85.71"/>
+            <functions count="0" tested="0" percent="0"/>
+            <classes count="1" tested="0" percent="0.00"/>
+            <traits count="0" tested="0" percent="0"/>
+          </totals>
+        </file>
+        <file name="Resource.php" href="Entity/Resource.php.xml" hash="e45a1f673b5a16c928090b7454cac474cceff22d">
+          <totals>
+            <lines total="240" comments="0" code="240" executable="48" executed="42" percent="87.50"/>
+            <methods count="24" tested="21" percent="87.50"/>
+            <functions count="0" tested="0" percent="0"/>
+            <classes count="1" tested="0" percent="0.00"/>
+            <traits count="0" tested="0" percent="0"/>
+          </totals>
+        </file>
+        <file name="ResourceTag.php" href="Entity/ResourceTag.php.xml" hash="76ddece0683e4118da110235b35e83b5bdce47b9">
+          <totals>
+            <lines total="75" comments="0" code="75" executable="9" executed="0" percent="0.00"/>
+            <methods count="7" tested="0" percent="0.00"/>
+            <functions count="0" tested="0" percent="0"/>
+            <classes count="1" tested="0" percent="0.00"/>
+            <traits count="0" tested="0" percent="0"/>
+          </totals>
+        </file>
+        <file name="Session.php" href="Entity/Session.php.xml" hash="2b32aa92f850dc6dd59a516236305429d15f9088">
+          <totals>
+            <lines total="280" comments="7" code="273" executable="57" executed="53" percent="92.98"/>
+            <methods count="26" tested="25" percent="96.15"/>
+            <functions count="0" tested="0" percent="0"/>
+            <classes count="1" tested="0" percent="0.00"/>
+            <traits count="0" tested="0" percent="0"/>
+          </totals>
+        </file>
+        <file name="SessionEntry.php" href="Entity/SessionEntry.php.xml" hash="2f99e6dfdb9ffa8d87c57597bf6e9eb93c0a5a4e">
+          <totals>
+            <lines total="225" comments="0" code="225" executable="47" executed="46" percent="97.87"/>
+            <methods count="24" tested="23" percent="95.83"/>
+            <functions count="0" tested="0" percent="0"/>
+            <classes count="1" tested="0" percent="0.00"/>
+            <traits count="0" tested="0" percent="0"/>
+          </totals>
+        </file>
+        <file name="Settings.php" href="Entity/Settings.php.xml" hash="b7efe2ceaf60dba548d653a71958ec332fb0a393">
+          <totals>
+            <lines total="140" comments="0" code="140" executable="25" executed="19" percent="76.00"/>
+            <methods count="13" tested="9" percent="69.23"/>
+            <functions count="0" tested="0" percent="0"/>
+            <classes count="1" tested="0" percent="0.00"/>
+            <traits count="0" tested="0" percent="0"/>
+          </totals>
+        </file>
+        <file name="Subject.php" href="Entity/Subject.php.xml" hash="d11a05d1bdc5e32188d281541f3fb810ac7d03e2">
+          <totals>
+            <lines total="343" comments="33" code="310" executable="72" executed="71" percent="98.61"/>
+            <methods count="31" tested="30" percent="96.77"/>
+            <functions count="0" tested="0" percent="0"/>
+            <classes count="1" tested="0" percent="0.00"/>
+            <traits count="0" tested="0" percent="0"/>
+          </totals>
+        </file>
+        <file name="SubjectTag.php" href="Entity/SubjectTag.php.xml" hash="561bdb8490bb582d46396d1222a2c26e91b28268">
+          <totals>
+            <lines total="75" comments="0" code="75" executable="9" executed="8" percent="88.89"/>
+            <methods count="7" tested="6" percent="85.71"/>
+            <functions count="0" tested="0" percent="0"/>
+            <classes count="1" tested="0" percent="0.00"/>
+            <traits count="0" tested="0" percent="0"/>
+          </totals>
+        </file>
+        <file name="Tag.php" href="Entity/Tag.php.xml" hash="8ce15f8324084f28ea24d892476f841e723badb9">
+          <totals>
+            <lines total="145" comments="24" code="121" executable="18" executed="17" percent="94.44"/>
+            <methods count="12" tested="11" percent="91.67"/>
+            <functions count="0" tested="0" percent="0"/>
+            <classes count="1" tested="0" percent="0.00"/>
+            <traits count="0" tested="0" percent="0"/>
+          </totals>
+        </file>
+        <file name="Task.php" href="Entity/Task.php.xml" hash="1e3aa3a14345c55304eed6891b88e5e58fa60009">
+          <totals>
+            <lines total="337" comments="20" code="317" executable="68" executed="65" percent="95.59"/>
+            <methods count="32" tested="30" percent="93.75"/>
+            <functions count="0" tested="0" percent="0"/>
+            <classes count="1" tested="0" percent="0.00"/>
+            <traits count="0" tested="0" percent="0"/>
+          </totals>
+        </file>
+        <file name="TaskTag.php" href="Entity/TaskTag.php.xml" hash="42ab80ebb2d0375cf6a55a1bce4625cbbae0a7f6">
+          <totals>
+            <lines total="75" comments="0" code="75" executable="9" executed="8" percent="88.89"/>
+            <methods count="7" tested="6" percent="85.71"/>
+            <functions count="0" tested="0" percent="0"/>
+            <classes count="1" tested="0" percent="0.00"/>
+            <traits count="0" tested="0" percent="0"/>
+          </totals>
+        </file>
+        <file name="User.php" href="Entity/User.php.xml" hash="3bdc2945ec02ba42ee4f2f20403e48373a9de737">
+          <totals>
+            <lines total="521" comments="64" code="457" executable="114" executed="99" percent="86.84"/>
+            <methods count="49" tested="41" percent="83.67"/>
+            <functions count="0" tested="0" percent="0"/>
+            <classes count="1" tested="0" percent="0.00"/>
+            <traits count="0" tested="0" percent="0"/>
+          </totals>
+        </file>
+        <file name="UserAchievement.php" href="Entity/UserAchievement.php.xml" hash="1ba7eee1d9839aa7303688c6511831e7112a147b">
+          <totals>
+            <lines total="43" comments="0" code="43" executable="7" executed="7" percent="100.00"/>
+            <methods count="7" tested="7" percent="100.00"/>
+            <functions count="0" tested="0" percent="0"/>
+            <classes count="1" tested="1" percent="100.00"/>
+            <traits count="0" tested="0" percent="0"/>
+          </totals>
+        </file>
+      </directory>
+      <directory name="Enum">
+        <totals>
+          <lines total="84" comments="0" code="84" executable="5" executed="3" percent="60.00"/>
+          <methods count="5" tested="3" percent="60.00"/>
+          <functions count="0" tested="0" percent="0"/>
+          <classes count="5" tested="3" percent="60.00"/>
+          <traits count="0" tested="0" percent="0"/>
+        </totals>
+        <file name="NoteSourceType.php" href="Enum/NoteSourceType.php.xml" hash="0ec0a7f0e9f55db645b7b9c99652a140a0a70b93">
+          <totals>
+            <lines total="17" comments="0" code="17" executable="1" executed="0" percent="0.00"/>
+            <methods count="1" tested="0" percent="0.00"/>
+            <functions count="0" tested="0" percent="0"/>
+            <classes count="1" tested="0" percent="0.00"/>
+            <traits count="0" tested="0" percent="0"/>
+          </totals>
+        </file>
+        <file name="ResourceType.php" href="Enum/ResourceType.php.xml" hash="7e833ba04b89c77440737f08ffc72b385849c0ea">
+          <totals>
+            <lines total="19" comments="0" code="19" executable="1" executed="0" percent="0.00"/>
+            <methods count="1" tested="0" percent="0.00"/>
+            <functions count="0" tested="0" percent="0"/>
+            <classes count="1" tested="0" percent="0.00"/>
+            <traits count="0" tested="0" percent="0"/>
+          </totals>
+        </file>
+        <file name="TaskPriority.php" href="Enum/TaskPriority.php.xml" hash="94c5595a7e26c383b212e31d28f0554c566e8f44">
+          <totals>
+            <lines total="16" comments="0" code="16" executable="1" executed="1" percent="100.00"/>
+            <methods count="1" tested="1" percent="100.00"/>
+            <functions count="0" tested="0" percent="0"/>
+            <classes count="1" tested="1" percent="100.00"/>
+            <traits count="0" tested="0" percent="0"/>
+          </totals>
+        </file>
+        <file name="TaskStatus.php" href="Enum/TaskStatus.php.xml" hash="14dd08c89f30b7f529b6e9233cce735c100eea03">
+          <totals>
+            <lines total="17" comments="0" code="17" executable="1" executed="1" percent="100.00"/>
+            <methods count="1" tested="1" percent="100.00"/>
+            <functions count="0" tested="0" percent="0"/>
+            <classes count="1" tested="1" percent="100.00"/>
+            <traits count="0" tested="0" percent="0"/>
+          </totals>
+        </file>
+        <file name="WeekStartDay.php" href="Enum/WeekStartDay.php.xml" hash="f5010e1e6634459b1be595c6b0336aae0f2ace0b">
+          <totals>
+            <lines total="15" comments="0" code="15" executable="1" executed="1" percent="100.00"/>
+            <methods count="1" tested="1" percent="100.00"/>
+            <functions count="0" tested="0" percent="0"/>
+            <classes count="1" tested="1" percent="100.00"/>
+            <traits count="0" tested="0" percent="0"/>
+          </totals>
+        </file>
+      </directory>
+      <directory name="LiveTimerSession">
+        <totals>
+          <lines total="1196" comments="30" code="1166" executable="425" executed="1" percent="0.24"/>
+          <methods count="64" tested="1" percent="1.56"/>
+          <functions count="0" tested="0" percent="0"/>
+          <classes count="18" tested="1" percent="5.56"/>
+          <traits count="0" tested="0" percent="0"/>
+        </totals>
+        <directory name="Controller">
+          <totals>
+            <lines total="370" comments="15" code="355" executable="115" executed="0" percent="0.00"/>
+            <methods count="16" tested="0" percent="0.00"/>
+            <functions count="0" tested="0" percent="0"/>
+            <classes count="3" tested="0" percent="0.00"/>
+            <traits count="0" tested="0" percent="0"/>
+          </totals>
+          <file name="AbstractSessionController.php" href="LiveTimerSession/Controller/AbstractSessionController.php.xml" hash="184e6d0b009bc6a1e6144b5b44abb88cdb3b094f">
+            <totals>
+              <lines total="105" comments="0" code="105" executable="30" executed="0" percent="0.00"/>
+              <methods count="6" tested="0" percent="0.00"/>
+              <functions count="0" tested="0" percent="0"/>
+              <classes count="1" tested="0" percent="0.00"/>
+              <traits count="0" tested="0" percent="0"/>
+            </totals>
+          </file>
+          <file name="SessionActionController.php" href="LiveTimerSession/Controller/SessionActionController.php.xml" hash="c4d473c90275a181539dd1d1c007aba58979f235">
+            <totals>
+              <lines total="167" comments="0" code="167" executable="58" executed="0" percent="0.00"/>
+              <methods count="7" tested="0" percent="0.00"/>
+              <functions count="0" tested="0" percent="0"/>
+              <classes count="1" tested="0" percent="0.00"/>
+              <traits count="0" tested="0" percent="0"/>
+            </totals>
+          </file>
+          <file name="SessionController.php" href="LiveTimerSession/Controller/SessionController.php.xml" hash="3ac6bedacef8ae11ab93f052078a696df89cac31">
+            <totals>
+              <lines total="98" comments="15" code="83" executable="27" executed="0" percent="0.00"/>
+              <methods count="3" tested="0" percent="0.00"/>
+              <functions count="0" tested="0" percent="0"/>
+              <classes count="1" tested="0" percent="0.00"/>
+              <traits count="0" tested="0" percent="0"/>
+            </totals>
+          </file>
+        </directory>
+        <directory name="DTO">
+          <totals>
+            <lines total="102" comments="0" code="102" executable="5" executed="0" percent="0.00"/>
+            <methods count="5" tested="0" percent="0.00"/>
+            <functions count="0" tested="0" percent="0"/>
+            <classes count="5" tested="0" percent="0.00"/>
+            <traits count="0" tested="0" percent="0"/>
+          </totals>
+          <directory name="Command">
+            <totals>
+              <lines total="84" comments="0" code="84" executable="4" executed="0" percent="0.00"/>
+              <methods count="4" tested="0" percent="0.00"/>
+              <functions count="0" tested="0" percent="0"/>
+              <classes count="4" tested="0" percent="0.00"/>
+              <traits count="0" tested="0" percent="0"/>
+            </totals>
+            <file name="ChangeConfig.php" href="LiveTimerSession/DTO/Command/ChangeConfig.php.xml" hash="8e7138061fcfc89ab17b54d992f1ee4dca37fd96">
+              <totals>
+                <lines total="19" comments="0" code="19" executable="1" executed="0" percent="0.00"/>
+                <methods count="1" tested="0" percent="0.00"/>
+                <functions count="0" tested="0" percent="0"/>
+                <classes count="1" tested="0" percent="0.00"/>
+                <traits count="0" tested="0" percent="0"/>
+              </totals>
+            </file>
+            <file name="CreateSession.php" href="LiveTimerSession/DTO/Command/CreateSession.php.xml" hash="4f6848eb9b6db8a4aae9fd2a444b6b901d9096f1">
+              <totals>
+                <lines total="33" comments="0" code="33" executable="1" executed="0" percent="0.00"/>
+                <methods count="1" tested="0" percent="0.00"/>
+                <functions count="0" tested="0" percent="0"/>
+                <classes count="1" tested="0" percent="0.00"/>
+                <traits count="0" tested="0" percent="0"/>
+              </totals>
+            </file>
+            <file name="EmptyCommand.php" href="LiveTimerSession/DTO/Command/EmptyCommand.php.xml" hash="c833dcda4006a0c73c9aa9b7c08eaad4a673c76f">
+              <totals>
+                <lines total="11" comments="0" code="11" executable="1" executed="0" percent="0.00"/>
+                <methods count="1" tested="0" percent="0.00"/>
+                <functions count="0" tested="0" percent="0"/>
+                <classes count="1" tested="0" percent="0.00"/>
+                <traits count="0" tested="0" percent="0"/>
+              </totals>
+            </file>
+            <file name="StopSession.php" href="LiveTimerSession/DTO/Command/StopSession.php.xml" hash="6f7bb0c8709ea0cb02eeb86b7c4dda137df5ee63">
+              <totals>
+                <lines total="21" comments="0" code="21" executable="1" executed="0" percent="0.00"/>
+                <methods count="1" tested="0" percent="0.00"/>
+                <functions count="0" tested="0" percent="0"/>
+                <classes count="1" tested="0" percent="0.00"/>
+                <traits count="0" tested="0" percent="0"/>
+              </totals>
+            </file>
+          </directory>
+          <file name="DurationDto.php" href="LiveTimerSession/DTO/DurationDto.php.xml" hash="a6e04dc7bd57ee0e29443c4a89c8a55b67fa2b18">
+            <totals>
+              <lines total="18" comments="0" code="18" executable="1" executed="0" percent="0.00"/>
+              <methods count="1" tested="0" percent="0.00"/>
+              <functions count="0" tested="0" percent="0"/>
+              <classes count="1" tested="0" percent="0.00"/>
+              <traits count="0" tested="0" percent="0"/>
+            </totals>
+          </file>
+        </directory>
+        <directory name="Enum">
+          <totals>
+            <lines total="66" comments="0" code="66" executable="9" executed="1" percent="11.11"/>
+            <methods count="5" tested="1" percent="20.00"/>
+            <functions count="0" tested="0" percent="0"/>
+            <classes count="3" tested="1" percent="33.33"/>
+            <traits count="0" tested="0" percent="0"/>
+          </totals>
+          <file name="SessionPhase.php" href="LiveTimerSession/Enum/SessionPhase.php.xml" hash="a2150b63ef740a51a5a67f41cd3ed1e5d825fd83">
+            <totals>
+              <lines total="20" comments="0" code="20" executable="2" executed="0" percent="0.00"/>
+              <methods count="2" tested="0" percent="0.00"/>
+              <functions count="0" tested="0" percent="0"/>
+              <classes count="1" tested="0" percent="0.00"/>
+              <traits count="0" tested="0" percent="0"/>
+            </totals>
+          </file>
+          <file name="SessionStatus.php" href="LiveTimerSession/Enum/SessionStatus.php.xml" hash="5623cabf3dc28179b875e6c47b523188a7b4f9d0">
+            <totals>
+              <lines total="28" comments="0" code="28" executable="6" executed="0" percent="0.00"/>
+              <methods count="2" tested="0" percent="0.00"/>
+              <functions count="0" tested="0" percent="0"/>
+              <classes count="1" tested="0" percent="0.00"/>
+              <traits count="0" tested="0" percent="0"/>
+            </totals>
+          </file>
+          <file name="SessionType.php" href="LiveTimerSession/Enum/SessionType.php.xml" hash="8c9a7a8f33e7afe0d1705d4e8c9373a7c0f293f9">
+            <totals>
+              <lines total="18" comments="0" code="18" executable="1" executed="1" percent="100.00"/>
+              <methods count="1" tested="1" percent="100.00"/>
+              <functions count="0" tested="0" percent="0"/>
+              <classes count="1" tested="1" percent="100.00"/>
+              <traits count="0" tested="0" percent="0"/>
+            </totals>
+          </file>
+        </directory>
+        <directory name="Service">
+          <totals>
+            <lines total="658" comments="15" code="643" executable="296" executed="0" percent="0.00"/>
+            <methods count="38" tested="0" percent="0.00"/>
+            <functions count="0" tested="0" percent="0"/>
+            <classes count="7" tested="0" percent="0.00"/>
+            <traits count="0" tested="0" percent="0"/>
+          </totals>
+          <file name="Finalizer.php" href="LiveTimerSession/Service/Finalizer.php.xml" hash="4f8b4c49eba52e9c0f6e29d7f781a5bbbc7c18e9">
+            <totals>
+              <lines total="129" comments="0" code="129" executable="67" executed="0" percent="0.00"/>
+              <methods count="3" tested="0" percent="0.00"/>
+              <functions count="0" tested="0" percent="0"/>
+              <classes count="1" tested="0" percent="0.00"/>
+              <traits count="0" tested="0" percent="0"/>
+            </totals>
+          </file>
+          <file name="Projector.php" href="LiveTimerSession/Service/Projector.php.xml" hash="a86211aa49efc8f4af5c3750db8c64f37eef6cf9">
+            <totals>
+              <lines total="115" comments="0" code="115" executable="63" executed="0" percent="0.00"/>
+              <methods count="6" tested="0" percent="0.00"/>
+              <functions count="0" tested="0" percent="0"/>
+              <classes count="1" tested="0" percent="0.00"/>
+              <traits count="0" tested="0" percent="0"/>
+            </totals>
+          </file>
+          <file name="Publisher.php" href="LiveTimerSession/Service/Publisher.php.xml" hash="b41a3aa79b760004ed012c9347e91cea59558606">
+            <totals>
+              <lines total="46" comments="0" code="46" executable="18" executed="0" percent="0.00"/>
+              <methods count="4" tested="0" percent="0.00"/>
+              <functions count="0" tested="0" percent="0"/>
+              <classes count="1" tested="0" percent="0.00"/>
+              <traits count="0" tested="0" percent="0"/>
+            </totals>
+          </file>
+          <file name="State.php" href="LiveTimerSession/Service/State.php.xml" hash="e69c90286a0db9befad9e6e198b0ce20e5aa6686">
+            <totals>
+              <lines total="236" comments="15" code="221" executable="96" executed="0" percent="0.00"/>
+              <methods count="14" tested="0" percent="0.00"/>
+              <functions count="0" tested="0" percent="0"/>
+              <classes count="1" tested="0" percent="0.00"/>
+              <traits count="0" tested="0" percent="0"/>
+            </totals>
+          </file>
+          <file name="StateHydrator.php" href="LiveTimerSession/Service/StateHydrator.php.xml" hash="b1a7ff521d9f09cee63575bb365a73bf1dd87a14">
+            <totals>
+              <lines total="50" comments="0" code="50" executable="32" executed="0" percent="0.00"/>
+              <methods count="2" tested="0" percent="0.00"/>
+              <functions count="0" tested="0" percent="0"/>
+              <classes count="1" tested="0" percent="0.00"/>
+              <traits count="0" tested="0" percent="0"/>
+            </totals>
+          </file>
+          <file name="Store.php" href="LiveTimerSession/Service/Store.php.xml" hash="298fc7b6369cb877b88e43d66fd8d4cdaf7401ee">
+            <totals>
+              <lines total="51" comments="0" code="51" executable="14" executed="0" percent="0.00"/>
+              <methods count="5" tested="0" percent="0.00"/>
+              <functions count="0" tested="0" percent="0"/>
+              <classes count="1" tested="0" percent="0.00"/>
+              <traits count="0" tested="0" percent="0"/>
+            </totals>
+          </file>
+          <file name="TimeService.php" href="LiveTimerSession/Service/TimeService.php.xml" hash="84a153f6f4938dd28a4194984b13107513a56f80">
+            <totals>
+              <lines total="31" comments="0" code="31" executable="6" executed="0" percent="0.00"/>
+              <methods count="4" tested="0" percent="0.00"/>
+              <functions count="0" tested="0" percent="0"/>
+              <classes count="1" tested="0" percent="0.00"/>
+              <traits count="0" tested="0" percent="0"/>
+            </totals>
+          </file>
+        </directory>
+      </directory>
+      <directory name="Repository">
+        <totals>
+          <lines total="633" comments="367" code="266" executable="19" executed="0" percent="0.00"/>
+          <methods count="15" tested="0" percent="0.00"/>
+          <functions count="0" tested="0" percent="0"/>
+          <classes count="14" tested="0" percent="0.00"/>
+          <traits count="0" tested="0" percent="0"/>
+        </totals>
+        <file name="NoteAttachmentRepository.php" href="Repository/NoteAttachmentRepository.php.xml" hash="4b7e97459aa27a274a6e9349f219d7dca6a536b7">
+          <totals>
+            <lines total="44" comments="26" code="18" executable="1" executed="0" percent="0.00"/>
+            <methods count="1" tested="0" percent="0.00"/>
+            <functions count="0" tested="0" percent="0"/>
+            <classes count="1" tested="0" percent="0.00"/>
+            <traits count="0" tested="0" percent="0"/>
+          </totals>
+        </file>
+        <file name="NoteRepository.php" href="Repository/NoteRepository.php.xml" hash="8f76c0980ce29a6f5bb298947d0d0e9a4dea1904">
+          <totals>
+            <lines total="44" comments="26" code="18" executable="1" executed="0" percent="0.00"/>
+            <methods count="1" tested="0" percent="0.00"/>
+            <functions count="0" tested="0" percent="0"/>
+            <classes count="1" tested="0" percent="0.00"/>
+            <traits count="0" tested="0" percent="0"/>
+          </totals>
+        </file>
+        <file name="NoteTagRepository.php" href="Repository/NoteTagRepository.php.xml" hash="01fcc0201b32a67bec3380b994b70e889809ac91">
+          <totals>
+            <lines total="44" comments="26" code="18" executable="1" executed="0" percent="0.00"/>
+            <methods count="1" tested="0" percent="0.00"/>
+            <functions count="0" tested="0" percent="0"/>
+            <classes count="1" tested="0" percent="0.00"/>
+            <traits count="0" tested="0" percent="0"/>
+          </totals>
+        </file>
+        <file name="ResourceRepository.php" href="Repository/ResourceRepository.php.xml" hash="44e52b9e4de46aeabb58008435d3cab801299cab">
+          <totals>
+            <lines total="44" comments="26" code="18" executable="1" executed="0" percent="0.00"/>
+            <methods count="1" tested="0" percent="0.00"/>
+            <functions count="0" tested="0" percent="0"/>
+            <classes count="1" tested="0" percent="0.00"/>
+            <traits count="0" tested="0" percent="0"/>
+          </totals>
+        </file>
+        <file name="ResourceTagRepository.php" href="Repository/ResourceTagRepository.php.xml" hash="fbcf6e37aaa8bc094a0cbeed0f94fa99bf4fc293">
+          <totals>
+            <lines total="44" comments="26" code="18" executable="1" executed="0" percent="0.00"/>
+            <methods count="1" tested="0" percent="0.00"/>
+            <functions count="0" tested="0" percent="0"/>
+            <classes count="1" tested="0" percent="0.00"/>
+            <traits count="0" tested="0" percent="0"/>
+          </totals>
+        </file>
+        <file name="SessionEntryRepository.php" href="Repository/SessionEntryRepository.php.xml" hash="72f73d662359e67d93996d8f7ad0003d9ebe27f7">
+          <totals>
+            <lines total="44" comments="26" code="18" executable="1" executed="0" percent="0.00"/>
+            <methods count="1" tested="0" percent="0.00"/>
+            <functions count="0" tested="0" percent="0"/>
+            <classes count="1" tested="0" percent="0.00"/>
+            <traits count="0" tested="0" percent="0"/>
+          </totals>
+        </file>
+        <file name="SessionRepository.php" href="Repository/SessionRepository.php.xml" hash="6060aa9ada534b3bbb5ebbbea0c4d9b7b5f97e5e">
+          <totals>
+            <lines total="44" comments="26" code="18" executable="1" executed="0" percent="0.00"/>
+            <methods count="1" tested="0" percent="0.00"/>
+            <functions count="0" tested="0" percent="0"/>
+            <classes count="1" tested="0" percent="0.00"/>
+            <traits count="0" tested="0" percent="0"/>
+          </totals>
+        </file>
+        <file name="SettingsRepository.php" href="Repository/SettingsRepository.php.xml" hash="8ad2d02494a0ee3ae936ade09258427410ebede7">
+          <totals>
+            <lines total="44" comments="26" code="18" executable="1" executed="0" percent="0.00"/>
+            <methods count="1" tested="0" percent="0.00"/>
+            <functions count="0" tested="0" percent="0"/>
+            <classes count="1" tested="0" percent="0.00"/>
+            <traits count="0" tested="0" percent="0"/>
+          </totals>
+        </file>
+        <file name="SubjectRepository.php" href="Repository/SubjectRepository.php.xml" hash="3f98ff6f5388674dcd167fcf8ea4f946959294cf">
+          <totals>
+            <lines total="44" comments="26" code="18" executable="1" executed="0" percent="0.00"/>
+            <methods count="1" tested="0" percent="0.00"/>
+            <functions count="0" tested="0" percent="0"/>
+            <classes count="1" tested="0" percent="0.00"/>
+            <traits count="0" tested="0" percent="0"/>
+          </totals>
+        </file>
+        <file name="SubjectTagRepository.php" href="Repository/SubjectTagRepository.php.xml" hash="18cb1ca955aaf162d18e464131af7f6e65724a88">
+          <totals>
+            <lines total="44" comments="26" code="18" executable="1" executed="0" percent="0.00"/>
+            <methods count="1" tested="0" percent="0.00"/>
+            <functions count="0" tested="0" percent="0"/>
+            <classes count="1" tested="0" percent="0.00"/>
+            <traits count="0" tested="0" percent="0"/>
+          </totals>
+        </file>
+        <file name="TagRepository.php" href="Repository/TagRepository.php.xml" hash="fa28171a11835e60ad90d1d7fd68d3120b870fd3">
+          <totals>
+            <lines total="44" comments="26" code="18" executable="1" executed="0" percent="0.00"/>
+            <methods count="1" tested="0" percent="0.00"/>
+            <functions count="0" tested="0" percent="0"/>
+            <classes count="1" tested="0" percent="0.00"/>
+            <traits count="0" tested="0" percent="0"/>
+          </totals>
+        </file>
+        <file name="TaskRepository.php" href="Repository/TaskRepository.php.xml" hash="ac68e2d57e6c79234852a7daef8213ea4bbfd0d2">
+          <totals>
+            <lines total="44" comments="26" code="18" executable="1" executed="0" percent="0.00"/>
+            <methods count="1" tested="0" percent="0.00"/>
+            <functions count="0" tested="0" percent="0"/>
+            <classes count="1" tested="0" percent="0.00"/>
+            <traits count="0" tested="0" percent="0"/>
+          </totals>
+        </file>
+        <file name="TaskTagRepository.php" href="Repository/TaskTagRepository.php.xml" hash="21430dfa9e0d4acb9644af3255175b2ac62ad86f">
+          <totals>
+            <lines total="44" comments="26" code="18" executable="1" executed="0" percent="0.00"/>
+            <methods count="1" tested="0" percent="0.00"/>
+            <functions count="0" tested="0" percent="0"/>
+            <classes count="1" tested="0" percent="0.00"/>
+            <traits count="0" tested="0" percent="0"/>
+          </totals>
+        </file>
+        <file name="UserRepository.php" href="Repository/UserRepository.php.xml" hash="6f6daf7c5cc227eabd4c6ef495cd20c8271f7855">
+          <totals>
+            <lines total="61" comments="29" code="32" executable="6" executed="0" percent="0.00"/>
+            <methods count="2" tested="0" percent="0.00"/>
+            <functions count="0" tested="0" percent="0"/>
+            <classes count="1" tested="0" percent="0.00"/>
+            <traits count="0" tested="0" percent="0"/>
+          </totals>
+        </file>
+      </directory>
+      <directory name="Security">
+        <totals>
+          <lines total="41" comments="0" code="41" executable="10" executed="10" percent="100.00"/>
+          <methods count="2" tested="2" percent="100.00"/>
+          <functions count="0" tested="0" percent="0"/>
+          <classes count="2" tested="2" percent="100.00"/>
+          <traits count="0" tested="0" percent="0"/>
+        </totals>
+        <file name="LoginFailureHandler.php" href="Security/LoginFailureHandler.php.xml" hash="412a1c5339910e9d0cb18fade0970cdffca4e90c">
+          <totals>
+            <lines total="18" comments="0" code="18" executable="3" executed="3" percent="100.00"/>
+            <methods count="1" tested="1" percent="100.00"/>
+            <functions count="0" tested="0" percent="0"/>
+            <classes count="1" tested="1" percent="100.00"/>
+            <traits count="0" tested="0" percent="0"/>
+          </totals>
+        </file>
+        <file name="LoginSuccessHandler.php" href="Security/LoginSuccessHandler.php.xml" hash="a816d17c6fa3e1ff62c5f456775fe868469fc255">
+          <totals>
+            <lines total="23" comments="0" code="23" executable="7" executed="7" percent="100.00"/>
+            <methods count="1" tested="1" percent="100.00"/>
+            <functions count="0" tested="0" percent="0"/>
+            <classes count="1" tested="1" percent="100.00"/>
+            <traits count="0" tested="0" percent="0"/>
+          </totals>
+        </file>
+      </directory>
+      <directory name="Service">
+        <totals>
+          <lines total="253" comments="14" code="239" executable="104" executed="0" percent="0.00"/>
+          <methods count="11" tested="0" percent="0.00"/>
+          <functions count="0" tested="0" percent="0"/>
+          <classes count="3" tested="0" percent="0.00"/>
+          <traits count="0" tested="0" percent="0"/>
+        </totals>
+        <file name="AchievementService.php" href="Service/AchievementService.php.xml" hash="85e53fc0aceccfba6fce540c32be976c1f755005">
+          <totals>
+            <lines total="58" comments="6" code="52" executable="17" executed="0" percent="0.00"/>
+            <methods count="3" tested="0" percent="0.00"/>
+            <functions count="0" tested="0" percent="0"/>
+            <classes count="1" tested="0" percent="0.00"/>
+            <traits count="0" tested="0" percent="0"/>
+          </totals>
+        </file>
+        <file name="ProfileImageStorage.php" href="Service/ProfileImageStorage.php.xml" hash="daa822273e3d427a055ba6bf8c4e167bfc4366f0">
+          <totals>
+            <lines total="139" comments="3" code="136" executable="65" executed="0" percent="0.00"/>
+            <methods count="6" tested="0" percent="0.00"/>
+            <functions count="0" tested="0" percent="0"/>
+            <classes count="1" tested="0" percent="0.00"/>
+            <traits count="0" tested="0" percent="0"/>
+          </totals>
+        </file>
+        <file name="SubjectService.php" href="Service/SubjectService.php.xml" hash="09c1ffb2ebe8397c99fd84856c9229f6dfdf1729">
+          <totals>
+            <lines total="56" comments="5" code="51" executable="22" executed="0" percent="0.00"/>
+            <methods count="2" tested="0" percent="0.00"/>
+            <functions count="0" tested="0" percent="0"/>
+            <classes count="1" tested="0" percent="0.00"/>
+            <traits count="0" tested="0" percent="0"/>
+          </totals>
+        </file>
+      </directory>
+      <file name="Kernel.php" href="Kernel.php.xml" hash="bee38488089a3614485de86c5eb58ed05f12499f">
+        <totals>
+          <lines total="12" comments="0" code="12" executable="0" executed="0" percent="0"/>
+          <methods count="0" tested="0" percent="0"/>
+          <functions count="0" tested="0" percent="0"/>
+          <classes count="0" tested="0" percent="0"/>
+          <traits count="0" tested="0" percent="0"/>
+        </totals>
+      </file>
+    </directory>
+  </project>
+</phpunit>

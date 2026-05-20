@@ -1,4 +1,4 @@
-const DEFAULT_HUB_URL = import.meta.env.MERCURE_PUBLIC_URL;
+const DEFAULT_HUB_URL= '/api/live-timer-sessions';
 
 function normalizeTopics(topics) {
     const list = Array.isArray(topics) ? topics : [topics];

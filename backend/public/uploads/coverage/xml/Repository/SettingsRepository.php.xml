@@ -1,0 +1,181 @@
+<?xml version="1.0"?>
+<phpunit xmlns="https://schema.phpunit.de/coverage/1.0">
+  <file name="SettingsRepository.php" path="/Repository" hash="8ad2d02494a0ee3ae936ade09258427410ebede7">
+    <totals>
+      <lines total="44" comments="26" code="18" executable="1" executed="0" percent="0.00"/>
+      <methods count="1" tested="0" percent="0.00"/>
+      <functions count="0" tested="0" percent="0"/>
+      <classes count="1" tested="0" percent="0.00"/>
+      <traits count="0" tested="0" percent="0"/>
+    </totals>
+    <class name="App\Repository\SettingsRepository" start="12" executable="1" executed="0" crap="2">
+      <namespace name="App\Repository"/>
+      <method name="__construct" signature="__construct(ManagerRegistry $registry)" start="14" end="17" crap="2" executable="1" executed="0" coverage="0"/>
+    </class>
+    <coverage/>
+    <source xmlns="https://schema.phpunit.de/coverage/1.0">
+      <line no="1">
+        <token name="T_OPEN_TAG">&lt;?php</token>
+      </line>
+      <line no="2"/>
+      <line no="3">
+        <token name="T_NAMESPACE">namespace</token>
+        <token name="T_WHITESPACE"> </token>
+        <token name="T_NAME_QUALIFIED">App\Repository</token>
+        <token name="T_SEMICOLON">;</token>
+      </line>
+      <line no="4"/>
+      <line no="5">
+        <token name="T_USE">use</token>
+        <token name="T_WHITESPACE"> </token>
+        <token name="T_NAME_QUALIFIED">App\Entity\Settings</token>
+        <token name="T_SEMICOLON">;</token>
+      </line>
+      <line no="6">
+        <token name="T_USE">use</token>
+        <token name="T_WHITESPACE"> </token>
+        <token name="T_NAME_QUALIFIED">Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository</token>
+        <token name="T_SEMICOLON">;</token>
+      </line>
+      <line no="7">
+        <token name="T_USE">use</token>
+        <token name="T_WHITESPACE"> </token>
+        <token name="T_NAME_QUALIFIED">Doctrine\Persistence\ManagerRegistry</token>
+        <token name="T_SEMICOLON">;</token>
+      </line>
+      <line no="8"/>
+      <line no="9">
+        <token name="T_DOC_COMMENT">/**</token>
+      </line>
+      <line no="10">
+        <token name="T_DOC_COMMENT"> * @extends ServiceEntityRepository&lt;Settings&gt;</token>
+      </line>
+      <line no="11">
+        <token name="T_DOC_COMMENT"> */</token>
+      </line>
+      <line no="12">
+        <token name="T_CLASS">class</token>
+        <token name="T_WHITESPACE"> </token>
+        <token name="T_STRING">SettingsRepository</token>
+        <token name="T_WHITESPACE"> </token>
+        <token name="T_EXTENDS">extends</token>
+        <token name="T_WHITESPACE"> </token>
+        <token name="T_STRING">ServiceEntityRepository</token>
+      </line>
+      <line no="13">
+        <token name="T_OPEN_CURLY">{</token>
+      </line>
+      <line no="14">
+        <token name="T_WHITESPACE">    </token>
+        <token name="T_PUBLIC">public</token>
+        <token name="T_WHITESPACE"> </token>
+        <token name="T_FUNCTION">function</token>
+        <token name="T_WHITESPACE"> </token>
+        <token name="T_STRING">__construct</token>
+        <token name="T_OPEN_BRACKET">(</token>
+        <token name="T_STRING">ManagerRegistry</token>
+        <token name="T_WHITESPACE"> </token>
+        <token name="T_VARIABLE">$registry</token>
+        <token name="T_CLOSE_BRACKET">)</token>
+      </line>
+      <line no="15">
+        <token name="T_WHITESPACE">    </token>
+        <token name="T_OPEN_CURLY">{</token>
+      </line>
+      <line no="16">
+        <token name="T_WHITESPACE">        </token>
+        <token name="T_STRING">parent</token>
+        <token name="T_DOUBLE_COLON">::</token>
+        <token name="T_STRING">__construct</token>
+        <token name="T_OPEN_BRACKET">(</token>
+        <token name="T_VARIABLE">$registry</token>
+        <token name="T_COMMA">,</token>
+        <token name="T_WHITESPACE"> </token>
+        <token name="T_STRING">Settings</token>
+        <token name="T_DOUBLE_COLON">::</token>
+        <token name="T_CLASS">class</token>
+        <token name="T_CLOSE_BRACKET">)</token>
+        <token name="T_SEMICOLON">;</token>
+      </line>
+      <line no="17">
+        <token name="T_WHITESPACE">    </token>
+        <token name="T_CLOSE_CURLY">}</token>
+      </line>
+      <line no="18"/>
+      <line no="19">
+        <token name="T_COMMENT">//    /**</token>
+      </line>
+      <line no="20">
+        <token name="T_COMMENT">//     * @return UserSettings[] Returns an array of UserSettings objects</token>
+      </line>
+      <line no="21">
+        <token name="T_COMMENT">//     */</token>
+      </line>
+      <line no="22">
+        <token name="T_COMMENT">//    public function findByExampleField($value): array</token>
+      </line>
+      <line no="23">
+        <token name="T_COMMENT">//    {</token>
+      </line>
+      <line no="24">
+        <token name="T_COMMENT">//        return $this-&gt;createQueryBuilder('u')</token>
+      </line>
+      <line no="25">
+        <token name="T_COMMENT">//            -&gt;andWhere('u.exampleField = :val')</token>
+      </line>
+      <line no="26">
+        <token name="T_COMMENT">//            -&gt;setParameter('val', $value)</token>
+      </line>
+      <line no="27">
+        <token name="T_COMMENT">//            -&gt;orderBy('u.id', 'ASC')</token>
+      </line>
+      <line no="28">
+        <token name="T_COMMENT">//            -&gt;setMaxResults(10)</token>
+      </line>
+      <line no="29">
+        <token name="T_COMMENT">//            -&gt;getQuery()</token>
+      </line>
+      <line no="30">
+        <token name="T_COMMENT">//            -&gt;getResult()</token>
+      </line>
+      <line no="31">
+        <token name="T_COMMENT">//        ;</token>
+      </line>
+      <line no="32">
+        <token name="T_COMMENT">//    }</token>
+      </line>
+      <line no="33"/>
+      <line no="34">
+        <token name="T_COMMENT">//    public function findOneBySomeField($value): ?UserSettings</token>
+      </line>
+      <line no="35">
+        <token name="T_COMMENT">//    {</token>
+      </line>
+      <line no="36">
+        <token name="T_COMMENT">//        return $this-&gt;createQueryBuilder('u')</token>
+      </line>
+      <line no="37">
+        <token name="T_COMMENT">//            -&gt;andWhere('u.exampleField = :val')</token>
+      </line>
+      <line no="38">
+        <token name="T_COMMENT">//            -&gt;setParameter('val', $value)</token>
+      </line>
+      <line no="39">
+        <token name="T_COMMENT">//            -&gt;getQuery()</token>
+      </line>
+      <line no="40">
+        <token name="T_COMMENT">//            -&gt;getOneOrNullResult()</token>
+      </line>
+      <line no="41">
+        <token name="T_COMMENT">//        ;</token>
+      </line>
+      <line no="42">
+        <token name="T_COMMENT">//    }</token>
+      </line>
+      <line no="43">
+        <token name="T_CLOSE_CURLY">}</token>
+      </line>
+      <line no="44"/>
+    </source>
+  </file>
+</phpunit>

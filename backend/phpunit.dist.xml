@@ -11,14 +11,15 @@
          cacheDirectory=".phpunit.cache"
 >
     <php>
-        <ini name="display_errors" value="1" />
-        <ini name="error_reporting" value="-1" />
-        <server name="APP_ENV" value="test" force="true" />
-        <server name="SHELL_VERBOSITY" value="-1" />
+        <ini name="display_errors" value="1"/>
+        <ini name="error_reporting" value="1"/>
+        <server name="APP_ENV" value="test" force="true"/>
+<!--        <server name="SHELL_VERBOSITY" value="-1"/>-->
+        <server name="SHELL_VERBOSITY" value="0"/>
     </php>
 
     <testsuites>
-        <testsuite name="Project Test Suite">
+        <testsuite name="Studybuddy PHPUnit Test">
             <directory>tests</directory>
         </testsuite>
     </testsuites>
@@ -32,9 +33,9 @@
             <directory>src</directory>
         </include>
         <exclude>
-        <directory suffix=".php">src/DataFixtures</directory>
-        <directory suffix=".php">src/Factory</directory>
-        <directory suffix=".php">src/Story</directory>
+            <directory>src/DataFixtures</directory>
+            <directory>src/Factory</directory>
+            <directory>src/Story</directory>
         </exclude>
 
         <deprecationTrigger>
@@ -44,7 +45,21 @@
         </deprecationTrigger>
     </source>
 
+    <coverage pathCoverage="true">
+        <report>
+            <html outputDirectory="var/coverage/html" lowUpperBound="55" highLowerBound="75"/>
+            <xml outputDirectory="var/coverage/xml"/>
+
+            <php outputFile="var/coverage/coverage.php"/>
+            <text outputFile="var/coverage/coverage.txt"/>
+
+            <clover outputFile="var/coverage/clover.xml"/>
+            <cobertura outputFile="var/coverage/cobertura.xml"/>
+            <crap4j outputFile="var/coverage/crap4j.xml" threshold="50"/>
+        </report>
+    </coverage>
+
     <extensions>
-        <bootstrap class="Zenstruck\Foundry\PHPUnit\FoundryExtension" />
+        <bootstrap class="Zenstruck\Foundry\PHPUnit\FoundryExtension"/>
     </extensions>
 </phpunit>

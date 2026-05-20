@@ -31,7 +31,9 @@
         "symfony/serializer": "8.0.*",
         "symfony/uid": "8.0.*",
         "symfony/validator": "8.0.*",
-        "symfony/yaml": "8.0.*"
+        "symfony/yaml": "8.0.*",
+        "ext-curl": "*",
+        "symfony/web-profiler-bundle": "8.0.*"
     },
     "config": {
         "allow-plugins": {
@@ -94,7 +96,6 @@
         "symfony/debug-bundle": "8.0.*",
         "symfony/maker-bundle": "^1.67",
         "symfony/stopwatch": "8.0.*",
-        "symfony/web-profiler-bundle": "8.0.*",
         "zenstruck/foundry": "^2.9.2"
     }
 }
