@@ -63,8 +63,7 @@ test_coverage_artifact:
     paths:
       - ${COVERAGE_DIR}
     expire_in: 1 hour
-  allow_failure: true
-  # NEEDS TO BE DELETED AFTER TESTS ARE FIXED !!!
+  allow_failure: false
 
 #
 # STAGE - BUILD

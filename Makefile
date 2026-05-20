@@ -190,9 +190,15 @@ deploy-ci-rsync:
 # but this is the best quick fix i could come up with when a lot is still changing
 # and i don't want to manually go check the contents out each time, cheers
 deploy-ci-env:
-	echo "APP_ENV=prod" | ssh "$(DEPLOY_HOST)" "cat > '$(DEPLOY_PATH)/.env'"
-	ssh "$(DEPLOY_HOST)" "cat > '$(DEPLOY_PATH)/.env.local'" < "$(PROD_ENV_LOCAL_FILE)"
-	ssh "$(DEPLOY_HOST)" "chmod 644 '$(DEPLOY_PATH)/.env' '$(DEPLOY_PATH)/.env.local' && test -f '$(DEPLOY_PATH)/.env.local'"
+	ssh "$(DEPLOY_HOST)" "cat > '$(DEPLOY_PATH)/.env'" < "$(DOT_ENV)"
+	printf "%s\n" \
+	"APP_ENV=prod" \
+	"APP_SECRET=$(APP_SECRET)" \
+	"DATABASE_URL=$(DATABASE_URL)" \
+	"JWT_PASSPHRASE=$(JWT_PASSPHRASE)" \
+	"MERCURE_JWT_SECRET=$(MERCURE_JWT_SECRET)" \
+	| ssh "$(DEPLOY_HOST)" "cat > '$(DEPLOY_PATH)/.env.local'"
+	ssh "$(DEPLOY_HOST)" "chmod 644 '$(DEPLOY_PATH)/.env' '$(DEPLOY_PATH)/.env.local'"
 
 # Same thing here, no auto-migrate deployment, but atm it's okay
 # because we dont even have real users :'O
