@@ -39,7 +39,7 @@ function SubjectOptionRow({
           </span>
         ) : null}
         {isSelected && (
-        <Check className="h-4 w-4 text-primary" />
+          <Check className="h-4 w-4 text-primary" />
         )}
         <span className="min-w-0 flex-1 truncate text-sm font-medium">{label}</span>
       </button>
@@ -49,7 +49,7 @@ function SubjectOptionRow({
           type="button"
           onClick={onRemove}
           className={cn("flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-danger/15 bg-danger/8 text-danger transition hover:bg-danger/14",
-                        isSelected ? "opacity-100" : "opacity-0 group-hover:opacity-100"
+            isSelected ? "opacity-100" : "opacity-0 group-hover:opacity-100"
           )}
           aria-label={`Remove ${label}`}
         >
@@ -341,7 +341,7 @@ export default function SubjectSelect({
               }
             }}
             placeholder="e.g. Math"
-            className="w-full rounded-2xl border border-border-base bg-bg-elevated px-4 py-3 text-text-main placeholder:text-text-muted outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/10"
+            className="w-full rounded-2xl border border-border-base bg-bg-elevated px-4 py-3 text-text-main placeholder:text-text-muted outline-none transition focus:border-primary"
             autoFocus
           />
         </SubjectModal>

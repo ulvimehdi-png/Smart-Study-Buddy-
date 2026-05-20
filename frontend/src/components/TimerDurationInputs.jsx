@@ -34,7 +34,7 @@ export default function TimerDurationInputs({ isPiP = false }) {
     }
   }
 
-  const inputClass = cn("border rounded px-2 py-1 w-16 bg-bg-elevated text-text-main focus:ring-2 focus:ring-primary-light outline-none transition-all",
+  const inputClass = cn("border rounded px-2 py-1 w-16 bg-bg-elevated text-text-main focus:border-primary outline-none transition-all",
                         isOwner ? "" : "cursor-not-allowed"
                       );
 

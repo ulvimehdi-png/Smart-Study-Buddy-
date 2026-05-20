@@ -184,19 +184,19 @@ export default function Notes() {
     {
       label: "Saved Notes",
       value: notes.length,
-      icon: <BookText className="h-5 w-5" />,
+      icon: BookText,
       iconClass: "bg-primary/10 text-primary",
     },
     {
       label: "Subjects",
       value: uniqueSubjects,
-      icon: <Tags className="h-5 w-5" />,
+      icon: Tags,
       iconClass: "bg-accent-light/10 text-accent-light",
     },
     {
       label: "Latest Entry",
       value: latestNote ? formatCompactDate(latestNote.createdAt) : "--",
-      icon: <CalendarDays className="h-5 w-5" />,
+      icon: CalendarDays,
       iconClass: "bg-accent/10 text-accent",
     },
   ];
@@ -221,16 +221,18 @@ export default function Notes() {
             </div>
           </div>
 
-          <div className="grid gap-3 sm:grid-cols-3 lg:min-w-90">
-            {stats.map(({ label, value, icon, iconClass }) => (
-              <SmallStats
-                key={label}
-                label={label}
-                value={value}
-                icon={icon}
-                iconClass={iconClass}
-              />
-            ))}
+          <div className="flex flex-col items-end gap-4 w-full lg:w-auto">
+            <div className="grid gap-3 grid-cols-2 sm:grid-cols-3 lg:min-w-90 w-full">
+              {stats.map(({ label, value, icon, iconClass }) => (
+                <SmallStats
+                  key={label}
+                  label={label}
+                  value={value}
+                  icon={icon}
+                  iconClass={iconClass}
+                />
+              ))}
+            </div>
           </div>
         </div>
 
@@ -259,7 +261,7 @@ export default function Notes() {
                     type="text"
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
-                    className="w-full rounded-xl border border-border-base bg-bg-elevated px-4 py-3 text-text-main placeholder:text-text-muted outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/10"
+                    className="w-full rounded-xl border border-border-base bg-bg-elevated px-4 py-3 text-text-main placeholder:text-text-muted outline-none transition focus:border-primary"
                     placeholder="What should you remember?"
                     required
                   />

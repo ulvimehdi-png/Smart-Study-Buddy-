@@ -106,7 +106,7 @@ export default function Tasks() {
         ? customSubject.trim()
         : selectedSubject;
 
-    if (!subject) { toast.error("Subject is required"); return; }
+    // if (!subject) { toast.error("Subject is required"); return; }
     if (!dueDate) { setDateWarning(true); toast.error("Due Date is required"); return; }
     if (!dueTime) { toast.error("Due Time is required"); return; }
 
@@ -179,7 +179,7 @@ export default function Tasks() {
     e.preventDefault();
     if (!editTitle?.trim()) { toast.error("Title is required"); return; }
     const subject = editSubject === NEW_SUBJECT_VALUE ? editCustomSubject.trim() : editSubject;
-    if (!subject) { toast.error("Subject is required"); return; }
+    // if (!subject) { toast.error("Subject is required"); return; }
     if (!editDueDate || !editDueTime) { toast.error("Due Date and Time are required"); return; }
 
     const dueDateStr = editDueDate + `T${editDueTime}:00`;
@@ -283,7 +283,7 @@ export default function Tasks() {
           body: JSON.stringify(item),
         });
         ok++;
-      } catch {}
+      } catch { }
     }
     toast.success(`✅ Imported ${ok} tasks successfully`);
     setImportPreview(null); setImportData([]);
@@ -297,19 +297,19 @@ export default function Tasks() {
     {
       label: "Pending",
       value: pendingTasks,
-      icon: <Clock className="h-5 w-5" />,
+      icon: Clock,
       iconClass: "bg-primary/10 text-primary",
     },
     {
       label: "Completed",
       value: completedTasks,
-      icon: <Check className="h-5 w-5" />,
+      icon: Check,
       iconClass: "bg-accent-light/10 text-accent-light",
     },
     {
       label: "Subjects",
       value: activeSubjects,
-      icon: <Sparkles className="h-5 w-5" />,
+      icon: Sparkles,
       iconClass: "bg-accent/10 text-accent",
     },
   ];
@@ -336,56 +336,55 @@ export default function Tasks() {
 
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-bg-base text-text-main page-enter">
+    <div className="relative min-h-screen overflow-hidden bg-bg-base text-text-main">
       <PageBackdrop />
 
-      <div className="relative mx-auto max-w-6xl px-4 pb-12 pt-22 sm:px-6 lg:px-8">
+      <div className="relative mx-auto max-w-7xl px-4 pb-12 pt-22 sm:px-6 lg:px-8">
         <div className="mb-8 flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
-          <div>
+          <div className="flex items-center gap-3">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
+              <Flag className="h-5 w-5" />
+            </div>
+            <div>
+              <h1 className="text-2xl font-semibold sm:text-3xl">Tasks</h1>
+              <p className="mt-1 text-sm text-text-secondary">
+                Track what still needs to get done.
+              </p>
+            </div>
+          </div>
+
+          <div className="flex flex-col items-end gap-4">
+            {/* Import / Export buttons */}
             <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
-                <Flag className="h-5 w-5" />
-              </div>
-              <div>
-                <h1 className="text-2xl font-semibold sm:text-3xl">Tasks</h1>
-                <p className="mt-1 text-sm text-text-secondary">
-                  Track what still needs to get done.
-                </p>
+              <button onClick={() => fileRef.current?.click()}
+                className="inline-flex items-center gap-2 rounded-xl border border-border-base bg-bg-card px-4 py-2.5 text-sm font-medium text-primary-dark hover:border-secondary/30 transition-all">
+                <Download className="h-4 w-4" /> Import
+              </button>
+              <input ref={fileRef} type="file" accept=".json,.csv" onChange={handleImportFile} className="hidden" />
+
+              <div className="relative">
+                <button onClick={() => setShowExportMenu(!showExportMenu)}
+                  className="inline-flex items-center gap-2 rounded-xl border border-border-base bg-bg-card px-4 py-2.5 text-sm font-medium text-primary-dark hover:border-primary/30 transition-all">
+                  <Upload className="h-4 w-4" /> Export <ChevronDown className="h-3 w-3" />
+                </button>
+                {showExportMenu && (
+                  <div className="absolute right-0 top-full mt-2 border border-border-base bg-bg-card rounded-xl p-2 min-w-[160px] z-50" style={{ animation: 'modalIn 0.2s ease' }}>
+                    <button onClick={() => doExport("json")} className="w-full text-left px-3 py-2 rounded-lg text-sm hover:bg-primary/10 transition">JSON format</button>
+                    <button onClick={() => doExport("csv")} className="w-full text-left px-3 py-2 rounded-lg text-sm hover:bg-primary/10 transition">CSV format</button>
+                  </div>
+                )}
               </div>
             </div>
 
-
-          <div className="grid gap-3 sm:grid-cols-3 lg:min-w-90">
-            {stats.map(({ label, value, icon, iconClass }) => (
-              <SmallStats label={label} value={value} icon={icon} iconClass={iconClass} />
-            ))}
+            <div className="grid gap-3 grid-cols-2 sm:grid-cols-3 lg:min-w-90 w-full">
+              {stats.map(({ label, value, icon, iconClass }, index) => (
+                <SmallStats key={index} label={label} value={value} icon={icon} iconClass={iconClass} />
+              ))}
+            </div>
           </div>
         </div>
 
-        {/* Import / Export buttons */}
-        <div className="flex items-center gap-3">
-          <button onClick={() => fileRef.current?.click()}
-                  className="inline-flex items-center gap-2 rounded-xl glass-card px-4 py-2.5 text-sm font-medium text-secondary hover:border-secondary/30 transition-all">
-            <Download className="h-4 w-4" /> Import
-          </button>
-          <input ref={fileRef} type="file" accept=".json,.csv" onChange={handleImportFile} className="hidden" />
-
-          <div className="relative">
-            <button onClick={() => setShowExportMenu(!showExportMenu)}
-                    className="inline-flex items-center gap-2 rounded-xl glass-card px-4 py-2.5 text-sm font-medium text-primary hover:border-primary/30 transition-all">
-              <Upload className="h-4 w-4" /> Export <ChevronDown className="h-3 w-3" />
-            </button>
-            {showExportMenu && (
-                <div className="absolute right-0 top-full mt-2 glass-card rounded-xl p-2 min-w-[160px] z-50" style={{ animation: 'modalIn 0.2s ease' }}>
-                  <button onClick={() => doExport("json")} className="w-full text-left px-3 py-2 rounded-lg text-sm hover:bg-primary/10 transition">JSON format</button>
-                  <button onClick={() => doExport("csv")} className="w-full text-left px-3 py-2 rounded-lg text-sm hover:bg-primary/10 transition">CSV format</button>
-                </div>
-            )}
-          </div>
-        </div>
-      </div>
-
-      {/* Add Task Form */}
+        {/* Add Task Form */}
         <section className="rounded-3xl border border-border-base bg-bg-card p-5 shadow-sm">
           <div className="flex items-start gap-4">
             <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
@@ -404,23 +403,23 @@ export default function Tasks() {
             className="mt-6 grid gap-4 lg:grid-cols-[220px_minmax(0,1fr)_auto]"
           >
             <SubjectSelect
-                options={subjectOptions}
-                value={selectedSubject}
-                onChange={setSelectedSubject}
-                customSubject={customSubject}
-                onCustomSubjectChange={setCustomSubject}
-                onRemoveOption={handleRemoveSubject}
+              options={subjectOptions}
+              value={selectedSubject}
+              onChange={setSelectedSubject}
+              customSubject={customSubject}
+              onCustomSubjectChange={setCustomSubject}
+              onRemoveOption={handleRemoveSubject}
             />
             <input
-                type="text"
-                placeholder="What needs to be done?"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                className="rounded-xl border border-border-base bg-bg-elevated px-4 py-3 text-text-main placeholder:text-text-muted outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/10"
-                required
+              type="text"
+              placeholder="What needs to be done?"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              className="rounded-xl border border-border-base bg-bg-elevated px-4 py-3 text-text-main placeholder:text-text-muted outline-none transition focus:border-primary"
+              required
             />
             <select value={priority} onChange={e => setPriority(e.target.value)}
-                    className="glass-input rounded-xl px-4 py-3 text-text-main outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20">
+              className="border bg-bg-elevated rounded-xl px-4 py-3 text-text-main outline-none transition focus:border-primary">
               <option value="low">Low Priority</option>
               <option value="medium">Medium Priority</option>
               <option value="high">High Priority</option>
@@ -430,19 +429,19 @@ export default function Tasks() {
               <div>
                 <label className="mb-1.5 block text-xs font-medium text-text-secondary uppercase tracking-wide">Due Date</label>
                 <input type="date" value={dueDate} onChange={e => { setDueDate(e.target.value); setDateWarning(false); }}
-                       min={minDateStr}
-                       className="glass-input rounded-xl px-4 py-3 text-text-main w-full outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20" />
+                  min={minDateStr}
+                  className="border bg-bg-elevated rounded-xl px-4 py-3 text-text-main w-full outline-none transition focus:border-primary" />
               </div>
               <div>
                 <label className="mb-1.5 block text-xs font-medium text-text-secondary uppercase tracking-wide">Time</label>
                 <input type="time" value={dueTime} onChange={e => setDueTime(e.target.value)}
-                       min={dueDate === minDateStr ? minTimeStr : undefined}
-                       className="glass-input rounded-xl px-4 py-3 text-text-main w-full outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20" />
+                  min={dueDate === minDateStr ? minTimeStr : undefined}
+                  className="border bg-bg-elevated rounded-xl px-4 py-3 text-text-main w-full outline-none transition focus:border-primary" />
               </div>
               <div className="flex items-end">
                 <button
-                    type="submit"
-                    className="inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-6 py-3 font-medium text-white transition hover:bg-primary-dark"
+                  type="submit"
+                  className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-xl bg-primary px-6 py-3 font-medium text-white transition hover:bg-primary-dark"
                 >
                   <Plus className="h-5 w-5" />
                   Add Task
@@ -451,10 +450,10 @@ export default function Tasks() {
             </div>
 
             {dateWarning && (
-                <div className="flex items-center gap-2 rounded-xl bg-primary/10 border border-primary/20 px-4 py-2.5 text-sm text-primary">
-                  <AlertCircle className="h-4 w-4 shrink-0" />
-                  📅 When is this due? Adding a date puts it on your calendar.
-                </div>
+              <div className="flex items-center gap-2 rounded-xl bg-primary/10 border border-primary/20 px-4 py-2.5 text-sm text-primary">
+                <AlertCircle className="h-4 w-4 shrink-0" />
+                📅 When is this due? Adding a date puts it on your calendar.
+              </div>
             )}
           </form>
         </section>
@@ -494,7 +493,7 @@ export default function Tasks() {
                   className={cn(
                     "rounded-2xl border p-5",
                     "md:flex md:items-center md:justify-between",
-                      priorityGlow[task.priority] || priorityGlow.medium,
+                    priorityGlow[task.priority] || priorityGlow.medium,
                     task.isCompleted
                       ? "border-primary/20 bg-primary/5"
                       : "border-border-base bg-bg-base",
@@ -520,15 +519,15 @@ export default function Tasks() {
                         {task.title}
                       </p>
                       <SubjectBadge
-                          subject={task.subject}
-                          tone={task.isCompleted ? "primary" : "accent"}
+                        subject={task.subject}
+                        tone={task.isCompleted ? "primary" : "accent"}
                       />
                       <span className={cn("rounded-full px-2 py-0.5 text-xs font-semibold uppercase tracking-wider",
-                          task.priority === "high" ? "bg-red-500/15 text-red-400" :
-                              task.priority === "medium" ? "bg-primary/15 text-primary" :
-                                  "bg-secondary/15 text-secondary")}>{task.priority}</span>
+                        task.priority === "high" ? "bg-red-500/15 text-red-400" :
+                          task.priority === "medium" ? "bg-primary/15 text-primary" :
+                            "bg-secondary/15 text-secondary")}>{task.priority}</span>
                       {task.dueDate && (
-                          <span className="text-xs text-text-muted flex items-center gap-2">
+                        <span className="text-xs text-text-muted flex items-center gap-2">
                           <span className="flex items-center gap-1">📅 {formatTaskDate(task.dueDate)}</span>
                           <span className="flex items-center gap-1">⏰ {formatTaskTime(task.dueDate)}</span>
                         </span>
@@ -553,10 +552,10 @@ export default function Tasks() {
                       {task.isCompleted ? "Done" : "In Progress"}
                     </span>
                     {!task.isCompleted && (
-                        <button onClick={() => handleEditClick(task)}
-                                className="inline-flex items-center gap-2 rounded-lg border border-primary/20 bg-primary/10 px-3 py-2 text-sm font-medium text-primary transition hover:bg-primary/20">
-                          <Pencil className="h-4 w-4" /> Edit
-                        </button>
+                      <button onClick={() => handleEditClick(task)}
+                        className="inline-flex items-center gap-2 rounded-lg border border-primary/20 bg-primary/10 px-3 py-2 text-sm font-medium text-primary transition hover:bg-primary/20">
+                        <Pencil className="h-4 w-4" /> Edit
+                      </button>
                     )}
 
                     <button

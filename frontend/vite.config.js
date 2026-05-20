@@ -30,6 +30,10 @@ export default defineConfig({
                 changeOrigin: true,
                 //rewrite: (path) => path.replace(/^\/api/, '')
             },
+            '/uploads': {
+                target: 'http://php-dev:8000',
+                changeOrigin: true,
+            },
         },
     },
 
