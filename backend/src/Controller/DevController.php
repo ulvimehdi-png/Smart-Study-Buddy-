@@ -84,7 +84,7 @@ final class DevController extends AbstractController
 
             'latestUsers' => $latestUsers,
 
-            'serverTime' => (new \DateTimeImmutable())->format(DATE_ATOM),
+            'serverTime' => new \DateTimeImmutable()->format(DATE_ATOM),
         ]);
     }
 
@@ -93,7 +93,7 @@ final class DevController extends AbstractController
     {
         $env = $_ENV['APP_ENV'] ?? 'prod';
         $logFile = $this->getParameter('kernel.logs_dir') . '/' . $env . '.log';
-        $errorsOnly = $request->query->getBoolean('errorsOnly', false);
+        $errorsOnly = $request->query->getBoolean('errorsOnly');
 
         if (!is_file($logFile)) {
             return $this->json([
@@ -121,7 +121,7 @@ final class DevController extends AbstractController
             'exists' => true,
             'errorsOnly' => $errorsOnly,
             'lineCount' => count($lines),
-            'lines' => array_map([$this, 'redactSecrets'], $lines),
+            'lines' => $lines,
         ]);
     }
 
@@ -134,16 +134,6 @@ final class DevController extends AbstractController
         }
 
         return array_slice($lines, -$maxLines);
-    }
-
-    private function redactSecrets(string $line): string
-    {
-        $patterns = [
-            '/(JWT_SECRET|MERCURE_JWT_SECRET|APP_SECRET|DATABASE_URL|PASSWORD|TOKEN|SECRET)=([^ ]+)/i',
-            '/Bearer\s+[A-Za-z0-9._\-]+/i',
-        ];
-
-        return preg_replace($patterns, '$1=[REDACTED]', $line) ?? $line;
     }
 
     private function isWritableDirectory(string $path): array

@@ -105,6 +105,7 @@ services:
   db-dev:
     <<: *db-base
     profiles: [ "dev" ]
+    container_name: db-dev
     volumes:
       - db_dev_data:/var/lib/mysql
     restart: unless-stopped
@@ -112,6 +113,7 @@ services:
   db-prod:
     <<: *db-base
     profiles: [ "prod" ]
+    container_name: db-prod
     volumes:
       - db_prod_data:/var/lib/mysql
     restart: unless-stopped
@@ -119,6 +121,7 @@ services:
   db-test:
     <<: *db-base
     profiles: [ "test" ]
+    container_name: db-test
     tmpfs:
       - /var/lib/mysql
     restart: "no"
@@ -129,6 +132,7 @@ services:
   php-init:
     <<: [ *php-common, *build-dev ]
     profiles: [ "dev" ]
+    container_name: php-init
     user: root
     environment:
       HOME: /tmp
@@ -141,18 +145,16 @@ services:
       '
     volumes:
       - ./backend:/app/backend
-      - backend_vendor:/app/backend/vendor
-      - backend_var:/app/backend/var
 
   php-dev:
     <<: [ *php-common, *build-dev ]
     profiles: [ "dev" ]
+    container_name: php-dev
+    user: "${HOST_UID:-1000}:${HOST_GID:-1000}"
     environment:
       HOME: /tmp
     volumes:
       - ./backend:/app/backend
-      - backend_vendor:/app/backend/vendor
-      - backend_var:/app/backend/var
 #      - docker/php/debug.ini /usr/local/etc/php/conf.d/90-debug.ini
     command: >
       sh -lc '
@@ -175,6 +177,7 @@ services:
   php-test-init:
     <<: [ *php-common, *build-test ]
     profiles: [ "test" ]
+    container_name: php-test-init
     user: root
     depends_on:
       db-test:
@@ -194,6 +197,7 @@ services:
   php-test-runner:
     <<: [ *php-common, *build-test ]
     profiles: [ "test" ]
+    container_name: php-test-runner
     depends_on:
       php-test-init:
         condition: service_completed_successfully
@@ -207,6 +211,7 @@ services:
     image: ${PROD_IMAGE}
     <<: [ *php-common, *build-prod ]
     profiles: [ "prod" ]
+    container_name: web
     working_dir: /var/www/html
     user: "www-data:${HOST_GID:-1000}"
     depends_on:
@@ -244,6 +249,7 @@ services:
   node-deps:
     <<: *node-common
     profiles: ["dev"]
+    container_name: node-deps
     user: root
     command: >
       sh -lc '
@@ -256,6 +262,7 @@ services:
   node-dev:
     <<: *node-common
     profiles: [ "dev" ]
+    container_name: node-dev
     depends_on:
       node-deps:
         condition: service_completed_successfully
@@ -271,6 +278,7 @@ services:
   mercure-dev:
     profiles: [ "dev" ]
     image: dunglas/mercure:${MERCURE_VERSION:-v0.24.0}
+    container_name: mercure-dev
     <<: *net
     environment:
       SERVER_NAME: ":80"
@@ -299,13 +307,13 @@ services:
 ###########
 volumes:
   db_dev_data:
+    name: db_dev_data
   db_prod_data:
-  composer_cache:
+    name: db_prod_data
   mercure_dev_data:
+    name: mercure_dev_data
   mercure_dev_config:
-  backend_vendor:
-  backend_var:
-
+    name: mercure_dev_config
 
 ############
 # NETWORKS #
