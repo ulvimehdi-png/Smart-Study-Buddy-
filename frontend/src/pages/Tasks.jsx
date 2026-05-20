@@ -62,14 +62,32 @@ export default function Tasks() {
     };
   };
 
-  /* TMP */
+  const sortTasks = (tasks) => {
+    // Sort by due date (soonest first)
+    return tasks.sort((a, b) => {
+      if (a.dueDate && b.dueDate) {
+        if (a.dueDate === b.dueDate) {
+          // Sort by priority (high > medium > low)
+          const priorityMap = { high: 3, medium: 2, low: 1 };
+          return (priorityMap[b.priority] || 0) - (priorityMap[a.priority] || 0);
+        }
+        return new Date(a.dueDate) - new Date(b.dueDate);
+      } else if (a.dueDate) {
+        return -1;
+      } else if (b.dueDate) {
+        return 1;
+      } else {
+        return 0;
+      }
+    });
+  };
 
   const fetchTasks = () => {
     fetch("/api/tasks", {
       credentials: "include",
     })
       .then((res) => res.json())
-      .then((data) => setTasks(data))
+      .then((data) => setTasks(sortTasks(data)))
       .catch((err) => console.error("Error fetching tasks:", err));
   };
 
@@ -255,7 +273,7 @@ export default function Tasks() {
         if (!data || !data.length) { toast.error("No records found"); return; }
         const mapped = data.map(mapTaskData);
         setImportData(mapped); setImportPreview(mapped.slice(0, 20));
-      } catch (err) { toast.error("❌ Invalid file format or empty content."); }
+      } catch (err) { toast.error("Invalid file format or empty content."); }
     };
     reader.readAsText(file);
     e.target.value = "";
@@ -268,22 +286,44 @@ export default function Tasks() {
     setImportPreview(newData.slice(0, 20)); // update preview
   };
 
+  const cancelImport = () => {
+    setImportPreview(null);
+    setImportData([]);
+  };
+
   const confirmImport = async () => {
     let ok = 0;
+    let failed = 0;
+
     for (const item of importData) {
       if (!item.title) continue; // skip if no title
       try {
-        await fetch("/api/tasks", {
+        const res = await fetch("/api/tasks", {
           method: "POST", credentials: "include",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(item),
         });
-        ok++;
-      } catch { }
+
+        if (res.ok) {
+          ok++;
+        } else {
+          failed++;
+        }
+      } catch {
+        failed++;
+      }
     }
-    toast.success(`✅ Imported ${ok} tasks successfully`);
-    setImportPreview(null); setImportData([]);
-    fetchTasks();
+
+    if (ok > 0) {
+      toast.success(`Imported ${ok} task${ok === 1 ? "" : "s"} successfully`);
+    }
+
+    if (failed > 0) {
+      toast.error(`${failed} task${failed === 1 ? "" : "s"} could not be imported`);
+    }
+
+    cancelImport();
+    refreshData();
   };
 
   const priorityGlow = { high: "border-l-4 border-l-red-500/60", medium: "border-l-4 border-l-primary/60", low: "border-l-4 border-l-secondary/60" };
@@ -315,7 +355,7 @@ export default function Tasks() {
   const minTimeStr = nowLocalString.split("T")[1];
 
   const canImport = importData.length > 0 && importData.every(task => {
-    if (!task.title?.trim() || !task.subject?.trim() || !task.priority || !task.dueDate) return false;
+    if (!task.title?.trim() || !task.priority || !task.dueDate) return false;
     return task.dueDate.slice(0, 16) >= nowLocalString;
   });
 
@@ -461,6 +501,112 @@ export default function Tasks() {
             </div>
           </form>
         </section>
+
+        {importPreview ? (
+          <section className="mt-6 rounded-3xl border border-border-base bg-bg-card p-5 shadow-sm">
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+              <div className="flex items-start gap-4">
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-secondary/10 text-secondary">
+                  <Download className="h-5 w-5" />
+                </div>
+                <div>
+                  <h2 className="text-lg font-semibold">Review Import</h2>
+                  <p className="mt-1 text-sm text-text-secondary">
+                    Check the imported tasks before adding them.
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex gap-3">
+                <button
+                  type="button"
+                  onClick={cancelImport}
+                  className="inline-flex items-center justify-center gap-2 rounded-xl border border-border-base bg-bg-elevated px-4 py-2.5 text-sm font-medium text-text-secondary transition hover:bg-bg-base"
+                >
+                  <X className="h-4 w-4" />
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  onClick={confirmImport}
+                  disabled={!canImport}
+                  className="inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-medium text-white transition hover:bg-primary-dark disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  <Check className="h-4 w-4" />
+                  Import {importData.length}
+                </button>
+              </div>
+            </div>
+
+            {!canImport ? (
+              <div className="mt-4 flex items-center gap-2 rounded-xl border border-primary/20 bg-primary/10 px-4 py-2.5 text-sm text-primary">
+                <AlertCircle className="h-4 w-4 shrink-0" />
+                Each imported task needs a title, priority, and a future due date.
+              </div>
+            ) : null}
+
+            <div className="mt-5 overflow-x-auto">
+              <table className="w-full min-w-[760px] text-left text-sm">
+                <thead className="text-xs uppercase text-text-secondary">
+                  <tr className="border-b border-border-base">
+                    <th className="py-2 pr-3 font-semibold">Title</th>
+                    <th className="py-2 pr-3 font-semibold">Subject</th>
+                    <th className="py-2 pr-3 font-semibold">Priority</th>
+                    <th className="py-2 pr-3 font-semibold">Due Date</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {importPreview.map((task, index) => (
+                    <tr key={index} className="border-b border-border-base/70">
+                      <td className="py-3 pr-3">
+                        <input
+                          type="text"
+                          value={task.title}
+                          onChange={(event) => handleImportEdit(index, "title", event.target.value)}
+                          className="w-full rounded-xl border border-border-base bg-bg-elevated px-3 py-2 text-text-main outline-none transition focus:border-primary"
+                        />
+                      </td>
+                      <td className="py-3 pr-3">
+                        <input
+                          type="text"
+                          value={task.subject}
+                          onChange={(event) => handleImportEdit(index, "subject", event.target.value)}
+                          className="w-full rounded-xl border border-border-base bg-bg-elevated px-3 py-2 text-text-main outline-none transition focus:border-primary"
+                        />
+                      </td>
+                      <td className="py-3 pr-3">
+                        <select
+                          value={task.priority}
+                          onChange={(event) => handleImportEdit(index, "priority", event.target.value)}
+                          className="w-full rounded-xl border border-border-base bg-bg-elevated px-3 py-2 text-text-main outline-none transition focus:border-primary"
+                        >
+                          <option value="low">Low</option>
+                          <option value="medium">Medium</option>
+                          <option value="high">High</option>
+                        </select>
+                      </td>
+                      <td className="py-3 pr-3">
+                        <input
+                          type="datetime-local"
+                          value={task.dueDate ? task.dueDate.slice(0, 16) : ""}
+                          min={nowLocalString}
+                          onChange={(event) => handleImportEdit(index, "dueDate", event.target.value ? `${event.target.value}:00` : "")}
+                          className="w-full rounded-xl border border-border-base bg-bg-elevated px-3 py-2 text-text-main outline-none transition focus:border-primary"
+                        />
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            {importData.length > importPreview.length ? (
+              <p className="mt-3 text-sm text-text-secondary">
+                Showing the first {importPreview.length} of {importData.length} tasks.
+              </p>
+            ) : null}
+          </section>
+        ) : null}
 
         <section className="mt-6 rounded-3xl border border-border-base bg-bg-card p-5 shadow-sm">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">

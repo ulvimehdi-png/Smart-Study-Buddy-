@@ -104,27 +104,25 @@ export default function Timer({ isPiP = false }) {
           {!isPlaying && !isPiP && <TimerDurationInputs />}
         </AnimatePresence>
       </div>
-      <AnimatePresence mode="wait" initial={false}>
-        <div className={cn("flex flex-col sm:flex-row gap-2 transition-all duration-300", isPiP ? "flex-row! m-2" : "m-8")}>
-          <TimerButton isPiP={isPiP} onClick={togglePlaying} IconComp={isPlaying ? Pause : Play} enabled={isOwner}>
-            {isPlaying ? "Pause" : "Start"}
-          </TimerButton>
-          <TimerButton isPiP={isPiP} onClick={resetTimer} IconComp={RotateCcw} enabled={isOwner}>
-            Reset
-          </TimerButton>
-          <TimerButton isPiP={isPiP} onClick={skipTimer} IconComp={FastForward} enabled={isOwner}>
-            Skip to {isResting ? "Work" : "Rest"}
-          </TimerButton>
-          <TimerButton
-            isPiP={isPiP}
-            onClick={shareTimer}
-            IconComp={Share2}
-            className={isShared ? 'bg-primary/20 hover:bg-primary/30 inset-shadow-primary/30 text-primary' : ''}
-          >
-            {hasCopiedShareLink ? 'Link Copied' : isShared ? 'Copy Link' : 'Share'}
-          </TimerButton>
-        </div>
-      </AnimatePresence>
+      <div className={cn("flex flex-col sm:flex-row gap-2 transition-all duration-300", isPiP ? "flex-row! m-2" : "m-8")}>
+        <TimerButton isPiP={isPiP} onClick={togglePlaying} IconComp={isPlaying ? Pause : Play} enabled={isOwner}>
+          {isPlaying ? "Pause" : "Start"}
+        </TimerButton>
+        <TimerButton isPiP={isPiP} onClick={resetTimer} IconComp={RotateCcw} enabled={isOwner}>
+          Reset
+        </TimerButton>
+        <TimerButton isPiP={isPiP} onClick={skipTimer} IconComp={FastForward} enabled={isOwner}>
+          Skip to {isResting ? "Work" : "Rest"}
+        </TimerButton>
+        <TimerButton
+          isPiP={isPiP}
+          onClick={shareTimer}
+          IconComp={Share2}
+          className={isShared ? 'bg-primary/20 hover:bg-primary/30 inset-shadow-primary/30 text-primary' : ''}
+        >
+          {hasCopiedShareLink ? 'Link Copied' : isShared ? 'Copy Link' : 'Share'}
+        </TimerButton>
+      </div>
       {!isPiP && (connectionStatus !== 'disconnected' || error) && (
         <div className="mt-2 text-xs text-text-secondary">
           {error ? error : `Live sync: ${connectionStatus}`}
