@@ -239,7 +239,7 @@ export default function SubjectSelect({
           type="button"
           onClick={() => setIsOpen((current) => !current)}
           className={cn(
-            "flex w-full items-center gap-3 rounded-2xl border p-2 text-left shadow-sm transition",
+            "flex w-full items-center gap-3 rounded-2xl border p-2 text-left transition",
             isOpen
               ? "border-primary bg-bg-card ring-2 ring-primary/10"
               : "border-border-base bg-bg-elevated hover:border-primary/40",

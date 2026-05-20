@@ -42,7 +42,7 @@ final class SubjectsController extends AbstractController
         return $this->json($data);
     }
 
-    #[Route('/{id}', methods: ['DELETE'])]
+    #[Route('/{id}/delete', methods: ['POST'])]
     public function deleteSubject(
         int $id,
         #[CurrentUser] ?User $user,

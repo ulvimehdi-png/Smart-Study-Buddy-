@@ -65,8 +65,8 @@ export function getLiveTimerSession(id) {
 }
 
 export function deleteLiveTimerSession(id) {
-    return api(`/api/live-timer-sessions/${id}`, {
-        method: 'DELETE',
+    return api(`/api/live-timer-sessions/${id}/delete`, {
+        method: 'POST',
     });
 }
 

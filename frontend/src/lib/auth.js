@@ -113,9 +113,38 @@ export function AuthProvider({ children }) {
         }
     }, []);
 
+    const deleteAccount = useCallback(async () => {
+        if (DEBUG) {
+            setUser(null);
+            return;
+        }
+
+        setLoading(true);
+        setError(null);
+        try {
+            const response = await fetch('/api/user/delete', {
+                method: 'POST',
+                credentials: 'include',
+            });
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data?.error || 'Failed to delete account');
+            }
+
+            setUser(null);
+            return data;
+        } catch (err) {
+            setError(err.message);
+            throw err;
+        } finally {
+            setLoading(false);
+        }
+    }, []);
+
     return createElement(
         AuthContext.Provider,
-        { value: { user, isAuthenticated: !!user, loading, error, authChecked, login, register, logout, getUser } },
+        { value: { user, isAuthenticated: !!user, loading, error, authChecked, login, register, logout, deleteAccount, getUser } },
         children
     );
 }

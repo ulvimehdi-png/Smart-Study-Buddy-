@@ -13,6 +13,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Http\Attribute\CurrentUser;
 
 #[Route('/api')]
@@ -220,7 +221,7 @@ final class SecurityController extends AbstractController
         ]);
     }
 
-    #[Route('/user/profile-image/delete', methods: ['GET'])]
+    #[Route('/user/profile-image/delete', methods: ['POST'])]
     public function deleteProfileImage(
         #[CurrentUser] ?User   $user,
         EntityManagerInterface $em,
@@ -280,6 +281,40 @@ final class SecurityController extends AbstractController
 
         $user->setPassword($hasher->hashPassword($user, $newPassword));
         $em->flush();
+
+        return $this->json(['success' => true]);
+    }
+
+    #[Route('/user/delete', methods: ['POST'])]
+    public function deleteAccount(
+        Request                $request,
+        #[CurrentUser] ?User   $user,
+        EntityManagerInterface $em,
+        ProfileImageStorage    $profileImageStorage,
+        TokenStorageInterface  $tokenStorage,
+    ): JsonResponse
+    {
+        if (!$user) {
+            return $this->json(['error' => 'Not logged in'], 401);
+        }
+
+        $userId = $user->getId();
+        $username = $user->getUsername();
+
+        $profileImageStorage->remove($user->getProfileImagePath());
+        $em->remove($user);
+        $em->flush();
+
+        $tokenStorage->setToken(null);
+        if ($request->hasSession()) {
+            $request->getSession()->invalidate();
+        }
+
+        $this->logger->info('User deleted account', [
+            'user_id' => $userId,
+            'username' => $username,
+            'ip' => $request->getClientIp(),
+        ]);
 
         return $this->json(['success' => true]);
     }

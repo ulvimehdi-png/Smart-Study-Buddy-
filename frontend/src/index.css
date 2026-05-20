@@ -43,7 +43,7 @@
 
   /* Component Specific */
   --input-bg: theme('colors.gray.50');
-  --blob-opacity: 0.3;
+  --blob-opacity: 0.55;
 
   --badge-text: theme('colors.amber.600');
 
@@ -76,7 +76,7 @@
 
   /* Component Specific */
   --input-bg: theme('colors.gray.800');
-  --blob-opacity: 0.15;
+  --blob-opacity: 0.55;
 
   --color-timer-work: theme('colors.cyan.500');
   --color-timer-rest: theme('colors.red.500');
@@ -182,9 +182,21 @@
   }
 
 
-  .animate-blob {
-    animation: blob 7s infinite;
+  .ambient-blobs {
+    background-image:
+      radial-gradient(circle at 16% 24%, color-mix(in srgb, var(--color-secondary-light) 46%, transparent) 0 9rem, transparent 25rem),
+      radial-gradient(circle at 86% 34%, color-mix(in srgb, var(--color-primary-light) 44%, transparent) 0 8rem, transparent 24rem),
+      radial-gradient(circle at 48% 94%, color-mix(in srgb, var(--color-accent-light) 36%, transparent) 0 10rem, transparent 27rem),
+      linear-gradient(to bottom right, var(--color-amber-50), var(--color-yellow-50), var(--color-orange-50));
     opacity: var(--blob-opacity);
+  }
+
+  .dark .ambient-blobs {
+    background-image:
+      radial-gradient(circle at 16% 24%, color-mix(in srgb, var(--color-secondary-dark) 42%, transparent) 0 9rem, transparent 25rem),
+      radial-gradient(circle at 86% 34%, color-mix(in srgb, var(--color-primary-dark) 40%, transparent) 0 8rem, transparent 24rem),
+      radial-gradient(circle at 48% 94%, color-mix(in srgb, var(--color-accent-dark) 34%, transparent) 0 10rem, transparent 27rem),
+      linear-gradient(to bottom right, var(--color-gray-800), var(--color-gray-900), var(--color-gray-800));
   }
 
 
@@ -223,12 +235,14 @@
     border: 2px solid transparent;
     background-clip: padding-box;
   }
-}
 
-@keyframes blob {
-  0%, 100% { transform: translate(0, 0) scale(1); }
-  33% { transform: translate(30px, -50px) scale(1.1); }
-  66% { transform: translate(-20px, 20px) scale(0.9); }
+  .dark input[type="date"],
+  .dark input[type="time"] {
+    /* Change the default calendar/time picker indicator color */
+    &::-webkit-calendar-picker-indicator {
+      filter: invert(1);
+    }
+  }
 }
 
 @keyframes toastSlideIn {

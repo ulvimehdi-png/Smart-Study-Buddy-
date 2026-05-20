@@ -25,20 +25,15 @@ export default function Tasks() {
 
   /* TMP */
   const [priority, setPriority] = useState("medium");
-  const [dueDate, setDueDate] = useState("");
-  const [dueTime, setDueTime] = useState("");
+  const [dueDate, setDueDate] = useState(new Date().toISOString().slice(0, 10));
+  const [dueTime, setDueTime] = useState(new Date().toISOString().slice(11, 16));
   const [dateWarning, setDateWarning] = useState(false);
   const [showExportMenu, setShowExportMenu] = useState(false);
   const [importPreview, setImportPreview] = useState(null);
   const [importData, setImportData] = useState([]);
   const [editingTask, setEditingTask] = useState(null);
-  const [editTitle, setEditTitle] = useState("");
-  const [editSubject, setEditSubject] = useState("");
-  const [editCustomSubject, setEditCustomSubject] = useState("");
-  const [editPriority, setEditPriority] = useState("medium");
-  const [editDueDate, setEditDueDate] = useState("");
-  const [editDueTime, setEditDueTime] = useState("");
   const fileRef = useRef(null);
+  const formRef = useRef(null);
   const toast = useToast();
 
   const formatTaskDate = (dateStr) => {
@@ -53,14 +48,46 @@ export default function Tasks() {
     return new Date(localStr).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
   };
 
-  /* TMP */
+  const readTaskDateParts = (dateStr) => {
+    if (!dateStr) {
+      return { date: "", time: "" };
+    }
+
+    const localStr = dateStr.replace(/(Z|[+-]\d{2}:\d{2})$/, "");
+    const [date = "", time = ""] = localStr.split("T");
+
+    return {
+      date,
+      time: time.slice(0, 5),
+    };
+  };
+
+  const sortTasks = (tasks) => {
+    // Sort by due date (soonest first)
+    return tasks.sort((a, b) => {
+      if (a.dueDate && b.dueDate) {
+        if (a.dueDate === b.dueDate) {
+          // Sort by priority (high > medium > low)
+          const priorityMap = { high: 3, medium: 2, low: 1 };
+          return (priorityMap[b.priority] || 0) - (priorityMap[a.priority] || 0);
+        }
+        return new Date(a.dueDate) - new Date(b.dueDate);
+      } else if (a.dueDate) {
+        return -1;
+      } else if (b.dueDate) {
+        return 1;
+      } else {
+        return 0;
+      }
+    });
+  };
 
   const fetchTasks = () => {
     fetch("/api/tasks", {
       credentials: "include",
     })
       .then((res) => res.json())
-      .then((data) => setTasks(data))
+      .then((data) => setTasks(sortTasks(data)))
       .catch((err) => console.error("Error fetching tasks:", err));
   };
 
@@ -82,19 +109,30 @@ export default function Tasks() {
 
   const handleToggle = (taskId) => {
     fetch(`/api/tasks/${taskId}/toggle`, {
-      method: "PUT",
+      method: "POST",
       credentials: "include",
     }).then(() => fetchTasks());
   };
 
   const handleDelete = (taskId) => {
-    fetch(`/api/tasks/${taskId}`, {
-      method: "DELETE",
+    fetch(`/api/tasks/${taskId}/delete`, {
+      method: "POST",
       credentials: "include",
     }).then(() => fetchTasks());
   };
 
-  const handleSubmit = (e) => {
+  const resetTaskForm = () => {
+    setEditingTask(null);
+    setTitle("");
+    setSelectedSubject("");
+    setCustomSubject("");
+    setPriority("medium");
+    setDueDate("");
+    setDueTime("");
+    setDateWarning(false);
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!title?.trim()) {
       toast.error("Title is required");
@@ -120,21 +158,26 @@ export default function Tasks() {
       return;
     }
 
-    fetch("/api/tasks", {
-      method: "POST",
-      credentials: "include",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ title, subject, priority, dueDate: dueDateStr }),
-    }).then(() => {
-      setTitle("");
-      setSelectedSubject("");
-      setCustomSubject("");
-      setPriority("medium");
-      setDueDate("");
-      setDueTime("");
+    const url = editingTask ? `/api/tasks/${editingTask.id}/update` : "/api/tasks";
+
+    try {
+      const res = await fetch(url, {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ title, subject, priority, dueDate: dueDateStr }),
+      });
+
+      if (!res.ok) {
+        throw new Error("Failed");
+      }
+
+      resetTaskForm();
       refreshData();
-      toast.success("Task created!");
-    });
+      toast.success(editingTask ? "Task updated!" : "Task created!");
+    } catch (error) {
+      toast.error(editingTask ? "Failed to update task" : "Failed to create task");
+    }
   };
 
   const handleRemoveSubject = async (option) => {
@@ -159,50 +202,21 @@ export default function Tasks() {
 
   const handleEditClick = (task) => {
     setEditingTask(task);
-    setEditTitle(task.title || "");
-    setEditSubject(task.subject?.name || task.subject || "");
-    setEditCustomSubject("");
-    setEditPriority(task.priority || "medium");
+    setTitle(task.title || "");
+    setSelectedSubject(task.subject?.name || task.subject || "");
+    setCustomSubject("");
+    setPriority(task.priority || "medium");
 
     if (task.dueDate) {
-      const localStr = task.dueDate.replace(/(Z|[+-]\d{2}:\d{2})$/, '');
-      const dateObj = new Date(localStr);
-      setEditDueDate(dateObj.toISOString().slice(0, 10));
-      setEditDueTime(dateObj.toTimeString().slice(0, 5));
+      const { date, time } = readTaskDateParts(task.dueDate);
+      setDueDate(date);
+      setDueTime(time);
     } else {
-      setEditDueDate("");
-      setEditDueTime("");
-    }
-  };
-
-  const handleEditSubmit = async (e) => {
-    e.preventDefault();
-    if (!editTitle?.trim()) { toast.error("Title is required"); return; }
-    const subject = editSubject === NEW_SUBJECT_VALUE ? editCustomSubject.trim() : editSubject;
-    // if (!subject) { toast.error("Subject is required"); return; }
-    if (!editDueDate || !editDueTime) { toast.error("Due Date and Time are required"); return; }
-
-    const dueDateStr = editDueDate + `T${editDueTime}:00`;
-    const nowLocalString = new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 16);
-
-    if (dueDateStr.slice(0, 16) < nowLocalString) {
-      toast.error("Due date and time cannot be in the past!");
-      return;
+      setDueDate("");
+      setDueTime("");
     }
 
-    try {
-      const res = await fetch(`/api/tasks/${editingTask.id}`, {
-        method: "PUT", credentials: "include",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ title: editTitle, subject: subject, priority: editPriority, dueDate: dueDateStr }),
-      });
-      if (!res.ok) throw new Error("Failed");
-      setEditingTask(null);
-      refreshData();
-      toast.success("Task updated!");
-    } catch (e) {
-      toast.error("Failed to update task");
-    }
+    formRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
   // Export
@@ -259,7 +273,7 @@ export default function Tasks() {
         if (!data || !data.length) { toast.error("No records found"); return; }
         const mapped = data.map(mapTaskData);
         setImportData(mapped); setImportPreview(mapped.slice(0, 20));
-      } catch (err) { toast.error("❌ Invalid file format or empty content."); }
+      } catch (err) { toast.error("Invalid file format or empty content."); }
     };
     reader.readAsText(file);
     e.target.value = "";
@@ -272,22 +286,44 @@ export default function Tasks() {
     setImportPreview(newData.slice(0, 20)); // update preview
   };
 
+  const cancelImport = () => {
+    setImportPreview(null);
+    setImportData([]);
+  };
+
   const confirmImport = async () => {
     let ok = 0;
+    let failed = 0;
+
     for (const item of importData) {
       if (!item.title) continue; // skip if no title
       try {
-        await fetch("/api/tasks", {
+        const res = await fetch("/api/tasks", {
           method: "POST", credentials: "include",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(item),
         });
-        ok++;
-      } catch { }
+
+        if (res.ok) {
+          ok++;
+        } else {
+          failed++;
+        }
+      } catch {
+        failed++;
+      }
     }
-    toast.success(`✅ Imported ${ok} tasks successfully`);
-    setImportPreview(null); setImportData([]);
-    fetchTasks();
+
+    if (ok > 0) {
+      toast.success(`Imported ${ok} task${ok === 1 ? "" : "s"} successfully`);
+    }
+
+    if (failed > 0) {
+      toast.error(`${failed} task${failed === 1 ? "" : "s"} could not be imported`);
+    }
+
+    cancelImport();
+    refreshData();
   };
 
   const priorityGlow = { high: "border-l-4 border-l-red-500/60", medium: "border-l-4 border-l-primary/60", low: "border-l-4 border-l-secondary/60" };
@@ -319,13 +355,16 @@ export default function Tasks() {
   const minTimeStr = nowLocalString.split("T")[1];
 
   const canImport = importData.length > 0 && importData.every(task => {
-    if (!task.title?.trim() || !task.subject?.trim() || !task.priority || !task.dueDate) return false;
+    if (!task.title?.trim() || !task.priority || !task.dueDate) return false;
     return task.dueDate.slice(0, 16) >= nowLocalString;
   });
 
   const combinedSubjectOptions = React.useMemo(() => {
     // Collect all subject names currently used in any task
-    const activeNames = new Set(tasks.map(t => t.subject?.trim()).filter(Boolean));
+    const activeNames = new Set([
+      ...subjectOptions.map((subject) => subject.name?.trim()).filter(Boolean),
+      ...tasks.map((task) => task.subject?.trim()).filter(Boolean),
+    ]);
 
     return Array.from(activeNames).map((name, i) => {
       // Find matching subject from API, if any (case-insensitive)
@@ -384,17 +423,19 @@ export default function Tasks() {
           </div>
         </div>
 
-        {/* Add Task Form */}
-        <section className="rounded-3xl border border-border-base bg-bg-card p-5 shadow-sm">
-          <div className="flex items-start gap-4">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
-              <Plus className="h-5 w-5" />
-            </div>
-            <div>
-              <h2 className="text-lg font-semibold">Add a Task</h2>
-              <p className="mt-1 text-sm text-text-secondary">
-                Create a task and assign a subject if useful.
-              </p>
+        {/* Add / Edit Task Form */}
+        <section ref={formRef} className="rounded-3xl border border-border-base bg-bg-card p-5 shadow-sm">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+            <div className="flex items-start gap-4">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                {editingTask ? <Pencil className="h-5 w-5" /> : <Plus className="h-5 w-5" />}
+              </div>
+              <div>
+                <h2 className="text-lg font-semibold">{editingTask ? "Edit Task" : "Add a Task"}</h2>
+                <p className="mt-1 text-sm text-text-secondary">
+                  {editingTask ? "Update the selected task using the same fields." : "Create a task and assign a subject if useful."}
+                </p>
+              </div>
             </div>
           </div>
 
@@ -403,7 +444,7 @@ export default function Tasks() {
             className="mt-6 grid gap-4 lg:grid-cols-[220px_minmax(0,1fr)_auto]"
           >
             <SubjectSelect
-              options={subjectOptions}
+              options={combinedSubjectOptions}
               value={selectedSubject}
               onChange={setSelectedSubject}
               customSubject={customSubject}
@@ -438,25 +479,134 @@ export default function Tasks() {
                   min={dueDate === minDateStr ? minTimeStr : undefined}
                   className="border bg-bg-elevated rounded-xl px-4 py-3 text-text-main w-full outline-none transition focus:border-primary" />
               </div>
-              <div className="flex items-end">
+              <div className="flex items-end gap-3">
                 <button
                   type="submit"
                   className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-xl bg-primary px-6 py-3 font-medium text-white transition hover:bg-primary-dark"
                 >
-                  <Plus className="h-5 w-5" />
-                  Add Task
+                  {editingTask ? <Check className="h-4 w-4" /> : <Plus className="h-5 w-5" />}
+                  {editingTask ? "Save Changes" : "Add Task"}
+                </button>
+                {editingTask ? (
+                  <button
+                    type="button"
+                    onClick={resetTaskForm}
+                    className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-xl border border-border-base bg-bg-elevated px-6 py-3 font-medium text-text-secondary transition hover:bg-bg-base"
+                  >
+                    <X className="h-4 w-4" />
+                    Cancel
+                  </button>
+                ) : null}
+              </div>
+            </div>
+          </form>
+        </section>
+
+        {importPreview ? (
+          <section className="mt-6 rounded-3xl border border-border-base bg-bg-card p-5 shadow-sm">
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+              <div className="flex items-start gap-4">
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-secondary/10 text-secondary">
+                  <Download className="h-5 w-5" />
+                </div>
+                <div>
+                  <h2 className="text-lg font-semibold">Review Import</h2>
+                  <p className="mt-1 text-sm text-text-secondary">
+                    Check the imported tasks before adding them.
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex gap-3">
+                <button
+                  type="button"
+                  onClick={cancelImport}
+                  className="inline-flex items-center justify-center gap-2 rounded-xl border border-border-base bg-bg-elevated px-4 py-2.5 text-sm font-medium text-text-secondary transition hover:bg-bg-base"
+                >
+                  <X className="h-4 w-4" />
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  onClick={confirmImport}
+                  disabled={!canImport}
+                  className="inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-medium text-white transition hover:bg-primary-dark disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  <Check className="h-4 w-4" />
+                  Import {importData.length}
                 </button>
               </div>
             </div>
 
-            {dateWarning && (
-              <div className="flex items-center gap-2 rounded-xl bg-primary/10 border border-primary/20 px-4 py-2.5 text-sm text-primary">
+            {!canImport ? (
+              <div className="mt-4 flex items-center gap-2 rounded-xl border border-primary/20 bg-primary/10 px-4 py-2.5 text-sm text-primary">
                 <AlertCircle className="h-4 w-4 shrink-0" />
-                📅 When is this due? Adding a date puts it on your calendar.
+                Each imported task needs a title, priority, and a future due date.
               </div>
-            )}
-          </form>
-        </section>
+            ) : null}
+
+            <div className="mt-5 overflow-x-auto">
+              <table className="w-full min-w-[760px] text-left text-sm">
+                <thead className="text-xs uppercase text-text-secondary">
+                  <tr className="border-b border-border-base">
+                    <th className="py-2 pr-3 font-semibold">Title</th>
+                    <th className="py-2 pr-3 font-semibold">Subject</th>
+                    <th className="py-2 pr-3 font-semibold">Priority</th>
+                    <th className="py-2 pr-3 font-semibold">Due Date</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {importPreview.map((task, index) => (
+                    <tr key={index} className="border-b border-border-base/70">
+                      <td className="py-3 pr-3">
+                        <input
+                          type="text"
+                          value={task.title}
+                          onChange={(event) => handleImportEdit(index, "title", event.target.value)}
+                          className="w-full rounded-xl border border-border-base bg-bg-elevated px-3 py-2 text-text-main outline-none transition focus:border-primary"
+                        />
+                      </td>
+                      <td className="py-3 pr-3">
+                        <input
+                          type="text"
+                          value={task.subject}
+                          onChange={(event) => handleImportEdit(index, "subject", event.target.value)}
+                          className="w-full rounded-xl border border-border-base bg-bg-elevated px-3 py-2 text-text-main outline-none transition focus:border-primary"
+                        />
+                      </td>
+                      <td className="py-3 pr-3">
+                        <select
+                          value={task.priority}
+                          onChange={(event) => handleImportEdit(index, "priority", event.target.value)}
+                          className="w-full rounded-xl border border-border-base bg-bg-elevated px-3 py-2 text-text-main outline-none transition focus:border-primary"
+                        >
+                          <option value="low">Low</option>
+                          <option value="medium">Medium</option>
+                          <option value="high">High</option>
+                        </select>
+                      </td>
+                      <td className="py-3 pr-3">
+                        <input
+                          type="datetime-local"
+                          value={task.dueDate ? task.dueDate.slice(0, 16) : ""}
+                          min={nowLocalString}
+                          onChange={(event) => handleImportEdit(index, "dueDate", event.target.value ? `${event.target.value}:00` : "")}
+                          className="w-full rounded-xl border border-border-base bg-bg-elevated px-3 py-2 text-text-main outline-none transition focus:border-primary"
+                        />
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            {importData.length > importPreview.length ? (
+              <p className="mt-3 text-sm text-text-secondary">
+                Showing the first {importPreview.length} of {importData.length} tasks.
+              </p>
+            ) : null}
+          </section>
+        ) : null}
 
         <section className="mt-6 rounded-3xl border border-border-base bg-bg-card p-5 shadow-sm">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
@@ -493,10 +643,10 @@ export default function Tasks() {
                   className={cn(
                     "rounded-2xl border p-5",
                     "md:flex md:items-center md:justify-between",
-                    priorityGlow[task.priority] || priorityGlow.medium,
                     task.isCompleted
                       ? "border-primary/20 bg-primary/5"
                       : "border-border-base bg-bg-base",
+                    priorityGlow[task.priority] || priorityGlow.medium,
                   )}
                 >
                   <div className="flex items-start gap-4">
@@ -538,7 +688,7 @@ export default function Tasks() {
                   <div className="mt-4 flex items-center justify-between gap-3 md:mt-0 md:justify-end">
                     <span
                       className={cn(
-                        "inline-flex items-center gap-2 rounded-full px-3 py-1 text-sm font-medium",
+                        "inline-flex items-center gap-2 rounded-full px-3 py-1 text-sm font-medium whitespace-nowrap",
                         task.isCompleted
                           ? "bg-primary/10 text-primary"
                           : "bg-accent/10 text-accent",
