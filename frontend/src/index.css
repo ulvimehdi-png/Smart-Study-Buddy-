@@ -181,13 +181,10 @@
     color: transparent;
   }
 
-
   .animate-blob {
     animation: blob 7s infinite;
     opacity: var(--blob-opacity);
   }
-
-
 
   .subject-select-scrollbar {
     scrollbar-width: thin;
@@ -222,6 +219,14 @@
     border-radius: 9999px;
     border: 2px solid transparent;
     background-clip: padding-box;
+  }
+
+  .dark input[type="date"],
+  .dark input[type="time"] {
+    /* Change the default calendar/time picker indicator color */
+    &::-webkit-calendar-picker-indicator {
+      filter: invert(1);
+    }
   }
 }
 

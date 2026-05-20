@@ -25,20 +25,15 @@ export default function Tasks() {
 
   /* TMP */
   const [priority, setPriority] = useState("medium");
-  const [dueDate, setDueDate] = useState("");
-  const [dueTime, setDueTime] = useState("");
+  const [dueDate, setDueDate] = useState(new Date().toISOString().slice(0, 10));
+  const [dueTime, setDueTime] = useState(new Date().toISOString().slice(11, 16));
   const [dateWarning, setDateWarning] = useState(false);
   const [showExportMenu, setShowExportMenu] = useState(false);
   const [importPreview, setImportPreview] = useState(null);
   const [importData, setImportData] = useState([]);
   const [editingTask, setEditingTask] = useState(null);
-  const [editTitle, setEditTitle] = useState("");
-  const [editSubject, setEditSubject] = useState("");
-  const [editCustomSubject, setEditCustomSubject] = useState("");
-  const [editPriority, setEditPriority] = useState("medium");
-  const [editDueDate, setEditDueDate] = useState("");
-  const [editDueTime, setEditDueTime] = useState("");
   const fileRef = useRef(null);
+  const formRef = useRef(null);
   const toast = useToast();
 
   const formatTaskDate = (dateStr) => {
@@ -51,6 +46,20 @@ export default function Tasks() {
     if (!dateStr) return "";
     const localStr = dateStr.replace(/(Z|[+-]\d{2}:\d{2})$/, '');
     return new Date(localStr).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
+  };
+
+  const readTaskDateParts = (dateStr) => {
+    if (!dateStr) {
+      return { date: "", time: "" };
+    }
+
+    const localStr = dateStr.replace(/(Z|[+-]\d{2}:\d{2})$/, "");
+    const [date = "", time = ""] = localStr.split("T");
+
+    return {
+      date,
+      time: time.slice(0, 5),
+    };
   };
 
   /* TMP */
@@ -94,7 +103,18 @@ export default function Tasks() {
     }).then(() => fetchTasks());
   };
 
-  const handleSubmit = (e) => {
+  const resetTaskForm = () => {
+    setEditingTask(null);
+    setTitle("");
+    setSelectedSubject("");
+    setCustomSubject("");
+    setPriority("medium");
+    setDueDate("");
+    setDueTime("");
+    setDateWarning(false);
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!title?.trim()) {
       toast.error("Title is required");
@@ -120,21 +140,26 @@ export default function Tasks() {
       return;
     }
 
-    fetch("/api/tasks", {
-      method: "POST",
-      credentials: "include",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ title, subject, priority, dueDate: dueDateStr }),
-    }).then(() => {
-      setTitle("");
-      setSelectedSubject("");
-      setCustomSubject("");
-      setPriority("medium");
-      setDueDate("");
-      setDueTime("");
+    const url = editingTask ? `/api/tasks/${editingTask.id}/update` : "/api/tasks";
+
+    try {
+      const res = await fetch(url, {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ title, subject, priority, dueDate: dueDateStr }),
+      });
+
+      if (!res.ok) {
+        throw new Error("Failed");
+      }
+
+      resetTaskForm();
       refreshData();
-      toast.success("Task created!");
-    });
+      toast.success(editingTask ? "Task updated!" : "Task created!");
+    } catch (error) {
+      toast.error(editingTask ? "Failed to update task" : "Failed to create task");
+    }
   };
 
   const handleRemoveSubject = async (option) => {
@@ -159,50 +184,21 @@ export default function Tasks() {
 
   const handleEditClick = (task) => {
     setEditingTask(task);
-    setEditTitle(task.title || "");
-    setEditSubject(task.subject?.name || task.subject || "");
-    setEditCustomSubject("");
-    setEditPriority(task.priority || "medium");
+    setTitle(task.title || "");
+    setSelectedSubject(task.subject?.name || task.subject || "");
+    setCustomSubject("");
+    setPriority(task.priority || "medium");
 
     if (task.dueDate) {
-      const localStr = task.dueDate.replace(/(Z|[+-]\d{2}:\d{2})$/, '');
-      const dateObj = new Date(localStr);
-      setEditDueDate(dateObj.toISOString().slice(0, 10));
-      setEditDueTime(dateObj.toTimeString().slice(0, 5));
+      const { date, time } = readTaskDateParts(task.dueDate);
+      setDueDate(date);
+      setDueTime(time);
     } else {
-      setEditDueDate("");
-      setEditDueTime("");
-    }
-  };
-
-  const handleEditSubmit = async (e) => {
-    e.preventDefault();
-    if (!editTitle?.trim()) { toast.error("Title is required"); return; }
-    const subject = editSubject === NEW_SUBJECT_VALUE ? editCustomSubject.trim() : editSubject;
-    // if (!subject) { toast.error("Subject is required"); return; }
-    if (!editDueDate || !editDueTime) { toast.error("Due Date and Time are required"); return; }
-
-    const dueDateStr = editDueDate + `T${editDueTime}:00`;
-    const nowLocalString = new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 16);
-
-    if (dueDateStr.slice(0, 16) < nowLocalString) {
-      toast.error("Due date and time cannot be in the past!");
-      return;
+      setDueDate("");
+      setDueTime("");
     }
 
-    try {
-      const res = await fetch(`/api/tasks/${editingTask.id}/update`, {
-        method: "POST", credentials: "include",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ title: editTitle, subject: subject, priority: editPriority, dueDate: dueDateStr }),
-      });
-      if (!res.ok) throw new Error("Failed");
-      setEditingTask(null);
-      refreshData();
-      toast.success("Task updated!");
-    } catch (e) {
-      toast.error("Failed to update task");
-    }
+    formRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
   // Export
@@ -325,7 +321,10 @@ export default function Tasks() {
 
   const combinedSubjectOptions = React.useMemo(() => {
     // Collect all subject names currently used in any task
-    const activeNames = new Set(tasks.map(t => t.subject?.trim()).filter(Boolean));
+    const activeNames = new Set([
+      ...subjectOptions.map((subject) => subject.name?.trim()).filter(Boolean),
+      ...tasks.map((task) => task.subject?.trim()).filter(Boolean),
+    ]);
 
     return Array.from(activeNames).map((name, i) => {
       // Find matching subject from API, if any (case-insensitive)
@@ -384,17 +383,19 @@ export default function Tasks() {
           </div>
         </div>
 
-        {/* Add Task Form */}
-        <section className="rounded-3xl border border-border-base bg-bg-card p-5 shadow-sm">
-          <div className="flex items-start gap-4">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
-              <Plus className="h-5 w-5" />
-            </div>
-            <div>
-              <h2 className="text-lg font-semibold">Add a Task</h2>
-              <p className="mt-1 text-sm text-text-secondary">
-                Create a task and assign a subject if useful.
-              </p>
+        {/* Add / Edit Task Form */}
+        <section ref={formRef} className="rounded-3xl border border-border-base bg-bg-card p-5 shadow-sm">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+            <div className="flex items-start gap-4">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                {editingTask ? <Pencil className="h-5 w-5" /> : <Plus className="h-5 w-5" />}
+              </div>
+              <div>
+                <h2 className="text-lg font-semibold">{editingTask ? "Edit Task" : "Add a Task"}</h2>
+                <p className="mt-1 text-sm text-text-secondary">
+                  {editingTask ? "Update the selected task using the same fields." : "Create a task and assign a subject if useful."}
+                </p>
+              </div>
             </div>
           </div>
 
@@ -403,7 +404,7 @@ export default function Tasks() {
             className="mt-6 grid gap-4 lg:grid-cols-[220px_minmax(0,1fr)_auto]"
           >
             <SubjectSelect
-              options={subjectOptions}
+              options={combinedSubjectOptions}
               value={selectedSubject}
               onChange={setSelectedSubject}
               customSubject={customSubject}
@@ -438,23 +439,26 @@ export default function Tasks() {
                   min={dueDate === minDateStr ? minTimeStr : undefined}
                   className="border bg-bg-elevated rounded-xl px-4 py-3 text-text-main w-full outline-none transition focus:border-primary" />
               </div>
-              <div className="flex items-end">
+              <div className="flex items-end gap-3">
                 <button
                   type="submit"
                   className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-xl bg-primary px-6 py-3 font-medium text-white transition hover:bg-primary-dark"
                 >
-                  <Plus className="h-5 w-5" />
-                  Add Task
+                  {editingTask ? <Check className="h-4 w-4" /> : <Plus className="h-5 w-5" />}
+                  {editingTask ? "Save Changes" : "Add Task"}
                 </button>
+                {editingTask ? (
+                  <button
+                    type="button"
+                    onClick={resetTaskForm}
+                    className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-xl border border-border-base bg-bg-elevated px-6 py-3 font-medium text-text-secondary transition hover:bg-bg-base"
+                  >
+                    <X className="h-4 w-4" />
+                    Cancel
+                  </button>
+                ) : null}
               </div>
             </div>
-
-            {dateWarning && (
-              <div className="flex items-center gap-2 rounded-xl bg-primary/10 border border-primary/20 px-4 py-2.5 text-sm text-primary">
-                <AlertCircle className="h-4 w-4 shrink-0" />
-                📅 When is this due? Adding a date puts it on your calendar.
-              </div>
-            )}
           </form>
         </section>
 
@@ -493,10 +497,10 @@ export default function Tasks() {
                   className={cn(
                     "rounded-2xl border p-5",
                     "md:flex md:items-center md:justify-between",
-                    priorityGlow[task.priority] || priorityGlow.medium,
                     task.isCompleted
                       ? "border-primary/20 bg-primary/5"
                       : "border-border-base bg-bg-base",
+                    priorityGlow[task.priority] || priorityGlow.medium,
                   )}
                 >
                   <div className="flex items-start gap-4">
@@ -538,7 +542,7 @@ export default function Tasks() {
                   <div className="mt-4 flex items-center justify-between gap-3 md:mt-0 md:justify-end">
                     <span
                       className={cn(
-                        "inline-flex items-center gap-2 rounded-full px-3 py-1 text-sm font-medium",
+                        "inline-flex items-center gap-2 rounded-full px-3 py-1 text-sm font-medium whitespace-nowrap",
                         task.isCompleted
                           ? "bg-primary/10 text-primary"
                           : "bg-accent/10 text-accent",
