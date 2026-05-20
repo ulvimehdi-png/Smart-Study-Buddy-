@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller;
 
 use App\Entity\Note;
@@ -21,7 +23,7 @@ final class NotesController extends AbstractController
         #[CurrentUser] ?User $user,
         EntityManagerInterface $em
     ): JsonResponse {
-        if (!$user) {
+        if (!$user instanceof User) {
             return $this->json(['error' => 'Not logged in'], 401);
         }
 
@@ -36,20 +38,20 @@ final class NotesController extends AbstractController
             ->getQuery()
             ->getResult();
 
-        $data = [];
-
-        foreach ($notes as $note) {
-            $subject = $note->getSubject();
-
-            $data[] = [
-                'noteId' => $note->getId(),
-                'id' => $note->getId(),
-                'title' => $note->getTitle(),
-                'content' => $note->getContent(),
-                'subject' => $subject && !$subject->isDeleted() ? $subject->getName() : null,
-                'createdAt' => $note->getCreatedAt()?->format(DATE_ATOM),
-            ];
-        }
+        $data = array_map(
+            static function (Note $note): array {
+                $subject = $note->getSubject();
+                return [
+                    'noteId' => $note->getId(),
+                    'id' => $note->getId(),
+                    'title' => $note->getTitle(),
+                    'content' => $note->getContent(),
+                    'subject' => $subject && !$subject->isDeleted() ? $subject->getName() : null,
+                    'createdAt' => $note->getCreatedAt()?->format(\DATE_ATOM),
+                ];
+            },
+            $notes
+        );
 
         return $this->json($data);
     }
@@ -61,12 +63,11 @@ final class NotesController extends AbstractController
         EntityManagerInterface $em,
         SubjectService $subjectService
     ): JsonResponse {
-        if (!$user) {
+        if (!$user instanceof User) {
             return $this->json(['error' => 'Not logged in'], 401);
         }
 
         $data = $request->toArray();
-
         $title = trim((string) ($data['title'] ?? ''));
         $content = trim((string) ($data['content'] ?? ''));
 
@@ -96,7 +97,7 @@ final class NotesController extends AbstractController
                 'subject' => $note->getSubject() && !$note->getSubject()->isDeleted()
                     ? $note->getSubject()->getName()
                     : null,
-                'createdAt' => $note->getCreatedAt()?->format(DATE_ATOM),
+                'createdAt' => $note->getCreatedAt()?->format(\DATE_ATOM),
             ],
         ], 201);
     }
@@ -107,21 +108,17 @@ final class NotesController extends AbstractController
         #[CurrentUser] ?User $user,
         EntityManagerInterface $em
     ): JsonResponse {
-        if (!$user) {
+        if (!$user instanceof User) {
             return $this->json(['error' => 'Not logged in'], 401);
         }
 
-        $note = $em->getRepository(Note::class)
-            ->createQueryBuilder('n')
-            ->where('n.id = :id')
-            ->andWhere('n.user = :user')
-            ->andWhere('n.deletedAt IS NULL')
-            ->setParameter('id', $id)
-            ->setParameter('user', $user)
-            ->getQuery()
-            ->getOneOrNullResult();
+        $note = $em->getRepository(Note::class)->findOneBy([
+            'id' => $id,
+            'user' => $user,
+            'deletedAt' => null
+        ]);
 
-        if (!$note) {
+        if (!$note instanceof Note) {
             return $this->json(['error' => 'Note not found'], 404);
         }
 
@@ -130,6 +127,7 @@ final class NotesController extends AbstractController
 
         return $this->json(['success' => true]);
     }
+
     #[Route('/{id}', methods: ['PUT'])]
     public function updateNote(
         int $id,
@@ -138,26 +136,21 @@ final class NotesController extends AbstractController
         EntityManagerInterface $em,
         SubjectService $subjectService
     ): JsonResponse {
-        if (!$user) {
+        if (!$user instanceof User) {
             return $this->json(['error' => 'Not logged in'], 401);
         }
 
-        $note = $em->getRepository(Note::class)
-            ->createQueryBuilder('n')
-            ->where('n.id = :id')
-            ->andWhere('n.user = :user')
-            ->andWhere('n.deletedAt IS NULL')
-            ->setParameter('id', $id)
-            ->setParameter('user', $user)
-            ->getQuery()
-            ->getOneOrNullResult();
+        $note = $em->getRepository(Note::class)->findOneBy([
+            'id' => $id,
+            'user' => $user,
+            'deletedAt' => null
+        ]);
 
-        if (!$note) {
+        if (!$note instanceof Note) {
             return $this->json(['error' => 'Note not found'], 404);
         }
 
         $data = $request->toArray();
-        
         $title = trim((string) ($data['title'] ?? ''));
         $content = trim((string) ($data['content'] ?? ''));
 
@@ -186,7 +179,7 @@ final class NotesController extends AbstractController
                 'subject' => $note->getSubject() && !$note->getSubject()->isDeleted()
                     ? $note->getSubject()->getName()
                     : null,
-                'createdAt' => $note->getCreatedAt()?->format(DATE_ATOM),
+                'createdAt' => $note->getCreatedAt()?->format(\DATE_ATOM),
             ],
         ]);
     }

@@ -13,8 +13,10 @@ function SubjectOptionRow({
 }) {
   return (
     <div
+      role="option"
+      aria-selected={isSelected}
       className={cn(
-        "flex items-center gap-2 rounded-2xl px-3 py-2 transition group",
+        "group flex items-center gap-2 rounded-2xl px-3 py-2 transition",
         tone === "create" ? "bg-accent/5" : "hover:bg-primary/8",
       )}
     >
@@ -22,7 +24,7 @@ function SubjectOptionRow({
         type="button"
         onClick={onClick}
         className={cn(
-          "flex min-w-0 flex-1 items-center gap-3 text-left h-9 w-9",
+          "flex h-9 min-w-0 flex-1 items-center gap-3 text-left",
           tone === "create" ? "text-accent" : "text-text-main",
         )}
       >
@@ -39,7 +41,7 @@ function SubjectOptionRow({
           </span>
         ) : null}
         {isSelected && (
-        <Check className="h-4 w-4 text-primary" />
+          <Check className="h-4 w-4 text-primary" aria-hidden="true" />
         )}
         <span className="min-w-0 flex-1 truncate text-sm font-medium">{label}</span>
       </button>
@@ -53,7 +55,7 @@ function SubjectOptionRow({
           )}
           aria-label={`Remove ${label}`}
         >
-          <Trash2 className="h-4 w-4" />
+          <Trash2 className="h-4 w-4" aria-hidden="true" />
         </button>
       ) : null}
     </div>
@@ -72,7 +74,7 @@ function SubjectModal({
   confirmTone = "primary",
 }) {
   return (
-    <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/45 px-4">
+    <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/45 px-4" role="dialog" aria-modal="true" aria-labelledby="modal-title">
       <div className="w-full max-w-lg rounded-3xl border border-border-base bg-bg-card p-5 shadow-2xl">
         <div className="flex items-start gap-4">
           <div
@@ -86,7 +88,7 @@ function SubjectModal({
             {icon}
           </div>
           <div className="min-w-0 flex-1">
-            <h3 className="text-lg font-semibold text-text-main">{title}</h3>
+            <h3 id="modal-title" className="text-lg font-semibold text-text-main">{title}</h3>
             <p className="mt-1 text-sm text-text-secondary">{description}</p>
           </div>
         </div>
@@ -256,9 +258,9 @@ export default function SubjectSelect({
             )}
           >
             {value === NEW_SUBJECT_VALUE ? (
-              <PlusCircle className="h-4 w-4" />
+              <PlusCircle className="h-4 w-4" aria-hidden="true" />
             ) : (
-              <span className="text-xs font-semibold uppercase">
+              <span className="text-xs font-semibold uppercase" aria-hidden="true">
                 {selectedLabel.slice(0, 2) || "--"}
               </span>
             )}
@@ -278,11 +280,12 @@ export default function SubjectSelect({
               "h-4 w-4 shrink-0 text-text-secondary transition-transform",
               isOpen ? "rotate-180" : "",
             )}
+            aria-hidden="true"
           />
         </button>
 
         {isOpen ? (
-          <div className="absolute left-0 right-0 z-30 mt-3 max-w-100 lg:w-100 overflow-hidden rounded-3xl border border-border-base bg-bg-card p-3 pr-0 shadow-xl">
+          <div className="absolute left-0 right-0 z-30 mt-3 max-w-100 overflow-hidden rounded-3xl border border-border-base bg-bg-card p-3 pr-0 shadow-xl lg:w-100">
             <div className="subject-select-scrollbar max-h-72 overflow-y-auto pr-1" role="listbox">
               <div className="space-y-1.5">
                 <SubjectOptionRow
@@ -304,9 +307,9 @@ export default function SubjectSelect({
             </div>
 
             <div className="my-2 border-t border-border-base" />
-            <div className="space-y-1.5">
+            <div className="space-y-1.5" role="listbox">
               <SubjectOptionRow
-                icon={<PlusCircle className="h-4 w-4" />}
+                icon={<PlusCircle className="h-4 w-4" aria-hidden="true" />}
                 label={customLabel}
                 isSelected={value === NEW_SUBJECT_VALUE}
                 onClick={openCreateModal}
@@ -319,7 +322,7 @@ export default function SubjectSelect({
 
       {isCreateModalOpen ? (
         <SubjectModal
-          icon={<PlusCircle className="h-5 w-5" />}
+          icon={<PlusCircle className="h-5 w-5" aria-hidden="true" />}
           title="Create New Subject"
           description="Enter the subject name you want to use for this item."
           onCancel={closeCreateModal}
@@ -327,10 +330,11 @@ export default function SubjectSelect({
           confirmLabel="Create Subject"
           confirmDisabled={!draftSubject.trim()}
         >
-          <p className="mb-2 block text-xs font-semibold uppercase text-primary">
+          <label htmlFor="newSubjectInput" className="mb-2 block text-xs font-semibold uppercase text-primary">
             Subject Name
-          </p>
+          </label>
           <input
+            id="newSubjectInput"
             type="text"
             value={draftSubject}
             onChange={(event) => setDraftSubject(event.target.value)}
@@ -349,7 +353,7 @@ export default function SubjectSelect({
 
       {isDeleteModalOpen ? (
         <SubjectModal
-          icon={<Trash2 className="h-5 w-5" />}
+          icon={<Trash2 className="h-5 w-5" aria-hidden="true" />}
           title="Remove Subject"
           description={`Remove "${optionToDelete?.name || ""}" from your subjects? Existing notes and tasks will no longer show that subject.`}
           onCancel={closeDeleteModal}

@@ -87,7 +87,7 @@ function PodiumCard({ user, index }) {
           <Icon className="h-4 w-4" />
           #{index + 1}
         </div>
-        <div className="rounded-full px-3 py-1 text-sm font-semibold text-text-main bg-text-main/5 border border-text-main/10">
+        <div className="rounded-full border border-text-main/10 bg-text-main/5 px-3 py-1 text-sm font-semibold text-text-main">
           {user.points} pts
         </div>
       </div>
@@ -107,7 +107,6 @@ function PodiumCard({ user, index }) {
 function LeaderboardRow({ user, index }) {
   const topThree = index < 3;
   const style = rankStyles[index];
-  console.log(index, user);
   
   return (
     <article
@@ -142,11 +141,156 @@ function LeaderboardRow({ user, index }) {
           </div>
         </div>
 
-        <div className="rounded-full px-3 py-1 text-sm font-semibold text-text-main bg-text-main/5 border border-text-main/10">
+        <div className="rounded-full border border-text-main/10 bg-text-main/5 px-3 py-1 text-sm font-semibold text-text-main">
           {user.points} pts
         </div>
       </div>
     </article>
+  );
+}
+
+function LeaderboardContent({ leaderboard, topThree, myBadges }) {
+  return (
+    <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_320px]">
+      <main className="space-y-6">
+        <section className="rounded-3xl border border-border-base bg-bg-card p-5 shadow-sm">
+          <div className="flex items-start gap-4">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
+              <Crown className="h-5 w-5" />
+            </div>
+            <div>
+              <h2 className="text-lg font-semibold">Top Students</h2>
+              <p className="mt-1 text-sm text-text-secondary">
+                The highest point earners right now.
+              </p>
+            </div>
+          </div>
+
+          {topThree.length === 0 ? (
+            <div className="mt-6 rounded-2xl border border-dashed border-border-base bg-bg-base px-6 py-12 text-center">
+              <Trophy className="mx-auto h-8 w-8 text-text-muted" />
+              <h3 className="mt-4 text-lg font-semibold">No rankings yet</h3>
+              <p className="mt-2 text-text-secondary">
+                Complete a task to become the first person on the board.
+              </p>
+            </div>
+          ) : (
+            <div className="mt-6 grid gap-4 md:grid-cols-3">
+              {topThree.map((user, index) => (
+                <PodiumCard
+                  key={user.id ?? user.username ?? index}
+                  user={user}
+                  index={index}
+                />
+              ))}
+            </div>
+          )}
+        </section>
+
+        <section className="rounded-3xl border border-border-base bg-bg-card p-5 shadow-sm">
+          <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+            <div className="flex items-start gap-4">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-accent/10 text-accent">
+                <Medal className="h-5 w-5" />
+              </div>
+              <div>
+                <h2 className="text-lg font-semibold">Full Leaderboard</h2>
+                <p className="mt-1 text-sm text-text-secondary">
+                  Top 10 StudyBuddy users by points.
+                </p>
+              </div>
+            </div>
+
+            <div className="rounded-full bg-primary/10 px-3 py-1 text-sm font-semibold text-primary">
+              {leaderboard.length} ranked
+            </div>
+          </div>
+
+          {leaderboard.length === 0 ? (
+            <div className="mt-6 rounded-2xl border border-dashed border-border-base bg-bg-base px-6 py-12 text-center">
+              <Users className="mx-auto h-8 w-8 text-text-muted" />
+              <h3 className="mt-4 text-lg font-semibold">No players yet</h3>
+              <p className="mt-2 text-text-secondary">
+                Once points are earned, the full ranking will appear here.
+              </p>
+            </div>
+          ) : (
+            <div className="space-y-4">
+              {leaderboard.map((user, index) => (
+                <LeaderboardRow
+                  key={user.id ?? user.username ?? index}
+                  user={user}
+                  index={index}
+                />
+              ))}
+            </div>
+          )}
+        </section>
+      </main>
+
+      <aside>
+        <section className="rounded-3xl border border-border-base bg-bg-card p-5 shadow-sm">
+          <div className="flex items-start gap-4">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
+              <Star className="h-5 w-5" />
+            </div>
+            <div>
+              <h2 className="text-lg font-semibold">My Badges</h2>
+              <p className="mt-1 text-sm text-text-secondary">
+                Your unlocked achievements.
+              </p>
+            </div>
+          </div>
+
+          {myBadges.length === 0 ? (
+            <div className="mt-6 rounded-2xl border border-dashed border-border-base bg-bg-base px-6 py-12 text-center">
+              <Star className="mx-auto h-8 w-8 text-text-muted" />
+              <h3 className="mt-4 text-lg font-semibold">No badges yet</h3>
+              <p className="mt-2 text-text-secondary">
+                Complete tasks and study sessions to unlock achievements.
+              </p>
+            </div>
+          ) : (
+            <div className="mt-6 space-y-4">
+              {myBadges.map((badge, index) => (
+                <article
+                  key={badge.id ?? badge.name ?? index}
+                  className="rounded-2xl border border-border-base bg-bg-base p-4"
+                >
+                  <div className="flex items-start gap-4">
+                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-primary/10 text-primary">
+                      <Flame className="h-6 w-6" />
+                    </div>
+
+                    <div className="min-w-0">
+                      <h3 className="font-semibold text-text-main">{badge.name}</h3>
+                      <p className="mt-1 text-sm leading-6 text-text-secondary">
+                        {badge.description}
+                      </p>
+                      <p className="mt-3 text-xs font-semibold text-primary">
+                        Unlocked {formatDate(badge.earnedAt)}
+                      </p>
+                    </div>
+                  </div>
+                </article>
+              ))}
+            </div>
+          )}
+        </section>
+      </aside>
+    </div>
+  );
+}
+
+function LoadingSkeleton() {
+  return (
+    <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_320px]">
+      <div className="space-y-6">
+        <div className="h-64 animate-pulse rounded-3xl border border-border-base bg-bg-card" />
+        <div className="h-80 animate-pulse rounded-3xl border border-border-base bg-bg-card" />
+      </div>
+      <div className="h-96 animate-pulse rounded-3xl border border-border-base bg-bg-card" />
+    </div>
   );
 }
 
@@ -180,7 +324,6 @@ export default function Leaderboard() {
         setMyBadges(Array.isArray(mineData?.badges) ? mineData.badges : []);
       })
       .catch((err) => {
-        console.error(err);
         if (mounted) setError(err.message || "Something went wrong.");
       })
       .finally(() => {
@@ -256,142 +399,13 @@ export default function Leaderboard() {
         )}
 
         {loading ? (
-          <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_320px]">
-            <div className="space-y-6">
-              <div className="h-64 animate-pulse rounded-3xl border border-border-base bg-bg-card" />
-              <div className="h-80 animate-pulse rounded-3xl border border-border-base bg-bg-card" />
-            </div>
-            <div className="h-96 animate-pulse rounded-3xl border border-border-base bg-bg-card" />
-          </div>
+          <LoadingSkeleton />
         ) : (
-          <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_320px]">
-            <main className="space-y-6">
-              <section className="rounded-3xl border border-border-base bg-bg-card p-5 shadow-sm">
-                <div className="flex items-start gap-4">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
-                    <Crown className="h-5 w-5" />
-                  </div>
-                  <div>
-                    <h2 className="text-lg font-semibold">Top Students</h2>
-                    <p className="mt-1 text-sm text-text-secondary">
-                      The highest point earners right now.
-                    </p>
-                  </div>
-                </div>
-
-                {topThree.length === 0 ? (
-                  <div className="mt-6 rounded-2xl border border-dashed border-border-base bg-bg-base px-6 py-12 text-center">
-                    <Trophy className="mx-auto h-8 w-8 text-text-muted" />
-                    <h3 className="mt-4 text-lg font-semibold">No rankings yet</h3>
-                    <p className="mt-2 text-text-secondary">
-                      Complete a task to become the first person on the board.
-                    </p>
-                  </div>
-                ) : (
-                  <div className="mt-6 grid gap-4 md:grid-cols-3">
-                    {topThree.map((user, index) => (
-                      <PodiumCard
-                        key={user.id ?? user.username ?? index}
-                        user={user}
-                        index={index}
-                      />
-                    ))}
-                  </div>
-                )}
-              </section>
-
-              <section className="rounded-3xl border border-border-base bg-bg-card p-5 shadow-sm">
-                <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-                  <div className="flex items-start gap-4">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-accent/10 text-accent">
-                      <Medal className="h-5 w-5" />
-                    </div>
-                    <div>
-                      <h2 className="text-lg font-semibold">Full Leaderboard</h2>
-                      <p className="mt-1 text-sm text-text-secondary">
-                        Top 10 StudyBuddy users by points.
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="rounded-full bg-primary/10 px-3 py-1 text-sm font-semibold text-primary">
-                    {leaderboard.length} ranked
-                  </div>
-                </div>
-
-                {leaderboard.length === 0 ? (
-                  <div className="mt-6 rounded-2xl border border-dashed border-border-base bg-bg-base px-6 py-12 text-center">
-                    <Users className="mx-auto h-8 w-8 text-text-muted" />
-                    <h3 className="mt-4 text-lg font-semibold">No players yet</h3>
-                    <p className="mt-2 text-text-secondary">
-                      Once points are earned, the full ranking will appear here.
-                    </p>
-                  </div>
-                ) : (
-                  <div className="mt-6 space-y-4">
-                    {leaderboard.map((user, index) => (
-                      <LeaderboardRow
-                        key={user.id ?? user.username ?? index}
-                        user={user}
-                        index={index}
-                      />
-                    ))}
-                  </div>
-                )}
-              </section>
-            </main>
-
-            <aside>
-              <section className="rounded-3xl border border-border-base bg-bg-card p-5 shadow-sm">
-                <div className="flex items-start gap-4">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
-                    <Star className="h-5 w-5" />
-                  </div>
-                  <div>
-                    <h2 className="text-lg font-semibold">My Badges</h2>
-                    <p className="mt-1 text-sm text-text-secondary">
-                      Your unlocked achievements.
-                    </p>
-                  </div>
-                </div>
-
-                {myBadges.length === 0 ? (
-                  <div className="mt-6 rounded-2xl border border-dashed border-border-base bg-bg-base px-6 py-12 text-center">
-                    <Star className="mx-auto h-8 w-8 text-text-muted" />
-                    <h3 className="mt-4 text-lg font-semibold">No badges yet</h3>
-                    <p className="mt-2 text-text-secondary">
-                      Complete tasks and study sessions to unlock achievements.
-                    </p>
-                  </div>
-                ) : (
-                  <div className="mt-6 space-y-4">
-                    {myBadges.map((badge, index) => (
-                      <article
-                        key={badge.id ?? badge.name ?? index}
-                        className="rounded-2xl border border-border-base bg-bg-base p-4"
-                      >
-                        <div className="flex items-start gap-4">
-                          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-primary/10 text-primary">
-                            <Flame className="h-6 w-6" />
-                          </div>
-
-                          <div className="min-w-0">
-                            <h3 className="font-semibold text-text-main">{badge.name}</h3>
-                            <p className="mt-1 text-sm leading-6 text-text-secondary">
-                              {badge.description}
-                            </p>
-                            <p className="mt-3 text-xs font-semibold text-primary">
-                              Unlocked {formatDate(badge.earnedAt)}
-                            </p>
-                          </div>
-                        </div>
-                      </article>
-                    ))}
-                  </div>
-                )}
-              </section>
-            </aside>
-          </div>
+          <LeaderboardContent 
+            leaderboard={leaderboard} 
+            topThree={topThree} 
+            myBadges={myBadges} 
+          />
         )}
       </div>
     </div>

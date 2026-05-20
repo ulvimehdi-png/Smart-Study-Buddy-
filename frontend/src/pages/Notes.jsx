@@ -15,6 +15,7 @@ const formatDate = (value) =>
   new Intl.DateTimeFormat(undefined, { dateStyle: "medium" }).format(
     new Date(value),
   );
+
 const formatCompactDate = (value) =>
   new Intl.DateTimeFormat(undefined, { month: "short", day: "numeric" }).format(
     new Date(value),
@@ -31,9 +32,7 @@ export default function Notes() {
   const [isSaving, setIsSaving] = useState(false);
 
   const fetchNotes = () => {
-    fetch("/api/notes", {
-      credentials: "include",
-    })
+    fetch("/api/notes", { credentials: "include" })
       .then((res) => res.json())
       .then((data) => setNotes(data))
       .catch((err) => console.error("Error fetching notes:", err));
@@ -50,7 +49,6 @@ export default function Notes() {
     fetchSubjects();
   }, []);
 
-  // Auto-save effect for existing notes
   useEffect(() => {
     if (!editingNoteId) return;
 
@@ -70,16 +68,15 @@ export default function Notes() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ title, content, subject }),
       })
-        .then((res) => res.json())
         .then(() => {
           setIsSaving(false);
-          refreshData(); // keep list in sync
+          refreshData();
         })
         .catch((err) => {
           console.error("Error auto-saving note:", err);
           setIsSaving(false);
         });
-    }, 1000); // 1s debounce
+    }, 1000);
 
     return () => clearTimeout(timeoutId);
   }, [title, content, selectedSubject, customSubject, editingNoteId]);
@@ -94,7 +91,6 @@ export default function Notes() {
       method: "DELETE",
       credentials: "include",
     })
-      .then((res) => res.json())
       .then(() => fetchNotes())
       .catch((err) => console.error("Error deleting note:", err));
   };
@@ -104,8 +100,7 @@ export default function Notes() {
     setTitle(note.title);
     setContent(note.content);
 
-    // Check if the subject is in the list, otherwise it might be a custom subject
-    const subjectExists = subjectOptions.some(opt => opt.name === note.subject);
+    const subjectExists = subjectOptions.some((opt) => opt.name === note.subject);
     if (note.subject && !subjectExists) {
       setSelectedSubject(NEW_SUBJECT_VALUE);
       setCustomSubject(note.subject);
@@ -114,8 +109,7 @@ export default function Notes() {
       setCustomSubject("");
     }
 
-    // Scroll to top to see the editor
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const cancelEdit = () => {
@@ -128,7 +122,6 @@ export default function Notes() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Strip HTML tags to check if content is actually empty
     const strippedContent = content.replace(/<[^>]*>/g, "").trim();
     if (!title || !strippedContent) return;
 
@@ -146,7 +139,6 @@ export default function Notes() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ title, content, subject }),
     })
-      .then((res) => res.json())
       .then(() => {
         setIsSaving(false);
         cancelEdit();
@@ -171,11 +163,11 @@ export default function Notes() {
   const uniqueSubjects = new Set(
     notes.map((note) => note.subject?.trim()).filter(Boolean),
   ).size;
+
   const latestNote = notes.reduce((latest, note) => {
     if (!note.createdAt) return latest;
     if (!latest) return note;
-    return new Date(note.createdAt).getTime() >
-      new Date(latest.createdAt).getTime()
+    return new Date(note.createdAt).getTime() > new Date(latest.createdAt).getTime()
       ? note
       : latest;
   }, null);
@@ -184,19 +176,19 @@ export default function Notes() {
     {
       label: "Saved Notes",
       value: notes.length,
-      icon: <BookText className="h-5 w-5" />,
+      icon: <BookText className="h-5 w-5" aria-hidden="true" />,
       iconClass: "bg-primary/10 text-primary",
     },
     {
       label: "Subjects",
       value: uniqueSubjects,
-      icon: <Tags className="h-5 w-5" />,
+      icon: <Tags className="h-5 w-5" aria-hidden="true" />,
       iconClass: "bg-accent-light/10 text-accent-light",
     },
     {
       label: "Latest Entry",
       value: latestNote ? formatCompactDate(latestNote.createdAt) : "--",
-      icon: <CalendarDays className="h-5 w-5" />,
+      icon: <CalendarDays className="h-5 w-5" aria-hidden="true" />,
       iconClass: "bg-accent/10 text-accent",
     },
   ];
@@ -210,7 +202,7 @@ export default function Notes() {
           <div>
             <div className="flex items-center gap-3">
               <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
-                <BookText className="h-5 w-5" />
+                <BookText className="h-5 w-5" aria-hidden="true" />
               </div>
               <div>
                 <h1 className="text-2xl font-semibold sm:text-3xl">Notes</h1>
@@ -234,17 +226,20 @@ export default function Notes() {
           </div>
         </div>
 
-        {/* New Note Section — full-width editor */}
         <section className="mb-8">
           <div className="rounded-3xl border border-border-base bg-bg-card p-5 shadow-sm sm:p-6">
             <div className="flex items-start gap-4 mb-5">
               <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
-                <NotebookPen className="h-5 w-5" />
+                <NotebookPen className="h-5 w-5" aria-hidden="true" />
               </div>
               <div>
-                <h2 className="text-lg font-semibold">{editingNoteId ? "Edit Note" : "New Note"}</h2>
+                <h2 className="text-lg font-semibold">
+                  {editingNoteId ? "Edit Note" : "New Note"}
+                </h2>
                 <p className="mt-1 text-sm text-text-secondary">
-                  {editingNoteId ? "Update your saved note." : "Write rich notes with formatting, lists, links, and more."}
+                  {editingNoteId
+                    ? "Update your saved note."
+                    : "Write rich notes with formatting, lists, links, and more."}
                 </p>
               </div>
             </div>
@@ -252,10 +247,11 @@ export default function Notes() {
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="grid gap-4 sm:grid-cols-2">
                 <div>
-                  <label className="mb-2 block text-sm font-medium text-text-secondary">
+                  <label htmlFor="noteTitleInput" className="mb-2 block text-sm font-medium text-text-secondary">
                     Title *
                   </label>
                   <input
+                    id="noteTitleInput"
                     type="text"
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
@@ -266,17 +262,19 @@ export default function Notes() {
                 </div>
 
                 <div>
-                  <label className="mb-2 block text-sm font-medium text-text-secondary">
+                  <label htmlFor="noteSubjectSelect" className="mb-2 block text-sm font-medium text-text-secondary">
                     Subject
                   </label>
-                  <SubjectSelect
-                    options={subjectOptions}
-                    value={selectedSubject}
-                    onChange={setSelectedSubject}
-                    customSubject={customSubject}
-                    onCustomSubjectChange={setCustomSubject}
-                    onRemoveOption={handleRemoveSubject}
-                  />
+                  <div id="noteSubjectSelect">
+                    <SubjectSelect
+                      options={subjectOptions}
+                      value={selectedSubject}
+                      onChange={setSelectedSubject}
+                      customSubject={customSubject}
+                      onCustomSubjectChange={setCustomSubject}
+                      onRemoveOption={handleRemoveSubject}
+                    />
+                  </div>
                 </div>
               </div>
 
@@ -285,10 +283,10 @@ export default function Notes() {
                   Content *
                 </label>
                 <TiptapEditor
-                  key={`editor-${editingNoteId || 'new'}-${notes.length}`}
+                  key={`editor-${editingNoteId || "new"}-${notes.length}`}
                   content={content}
                   onUpdate={setContent}
-                  placeholder="Start writing your notes here… Use the toolbar to format text, add lists, links, and more."
+                  placeholder="Start writing your notes here..."
                   minHeight="280px"
                 />
               </div>
@@ -308,19 +306,22 @@ export default function Notes() {
                   disabled={isSaving}
                   className="rounded-xl bg-primary px-8 py-3 font-medium text-white transition hover:bg-primary-dark cursor-pointer disabled:opacity-70 disabled:cursor-wait"
                 >
-                  {isSaving ? "Saving..." : editingNoteId ? "Update Note" : "Save Note"}
+                  {isSaving
+                    ? "Saving..."
+                    : editingNoteId
+                    ? "Update Note"
+                    : "Save Note"}
                 </button>
               </div>
             </form>
           </div>
         </section>
 
-        {/* Notes list */}
         <section>
           {notes.length === 0 ? (
             <div className="rounded-3xl border border-dashed border-border-base bg-bg-card px-6 py-14 text-center shadow-sm">
               <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 text-primary">
-                <BookText className="h-6 w-6" />
+                <BookText className="h-6 w-6" aria-hidden="true" />
               </div>
               <h2 className="mt-4 text-xl font-semibold">No notes yet</h2>
               <p className="mx-auto mt-2 max-w-md text-sm text-text-secondary">
@@ -347,20 +348,20 @@ export default function Notes() {
                         onClick={() => handleEdit(note)}
                         className="inline-flex shrink-0 items-center gap-2 rounded-lg border border-border-base bg-bg-elevated px-3 py-2 text-sm font-medium text-text-main transition hover:bg-bg-hover cursor-pointer"
                       >
-                        <NotebookPen className="h-4 w-4" />
+                        <NotebookPen className="h-4 w-4" aria-hidden="true" />
                         Edit
                       </button>
                       <button
                         onClick={() => handleDelete(note.noteId)}
                         className="inline-flex shrink-0 items-center gap-2 rounded-lg border border-danger/20 bg-danger/10 px-3 py-2 text-sm font-medium text-danger transition hover:bg-danger/15 cursor-pointer"
                       >
-                        <Trash2 className="h-4 w-4" />
+                        <Trash2 className="h-4 w-4" aria-hidden="true" />
                         Delete
                       </button>
                     </div>
                   </div>
                   <div className="mt-4 flex items-center gap-2 text-sm text-text-muted">
-                    <CalendarDays className="h-4 w-4" />
+                    <CalendarDays className="h-4 w-4" aria-hidden="true" />
                     {formatDate(note.createdAt)}
                   </div>
 

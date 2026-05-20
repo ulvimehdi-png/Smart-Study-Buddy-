@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller;
 
 use App\Entity\User;
@@ -33,27 +35,27 @@ final class SecurityController extends AbstractController
         ProfileImageStorage $profileImageStorage,
     ): JsonResponse {
         $data = $request->toArray();
-
         $username = trim((string) ($data['username'] ?? ''));
         $password = (string) ($data['password'] ?? '');
 
-        if ('' === $username || '' === $password){
-            return $this->json(['error' => 'Username and password are required.'], 400);
+        $error = $this->validateUsername($username);
+        if ($error !== null) {
+            return $this->json(['error' => $error], 400);
         }
 
-        $existing = $em->getRepository(User::class)->findOneBy([
-            'username' => $username,
-        ]);
+        if ('' === $password) {
+            return $this->json(['error' => 'Password is required.'], 400);
+        }
 
-        if ($existing) {
+        $existing = $em->getRepository(User::class)->findOneBy(['username' => $username]);
+
+        if ($existing instanceof User) {
             return $this->json(['error' => 'Username already exists.'], 409);
         }
 
         $user = new User();
         $user->setUsername($username);
-        $user->setPassword(
-            $hasher->hashPassword($user, $password)
-        );
+        $user->setPassword($hasher->hashPassword($user, $password));
 
         $settings = new Settings();
         $settings->setUser($user);
@@ -73,10 +75,9 @@ final class SecurityController extends AbstractController
     public function getCurrentUser(
         #[CurrentUser] ?User $user,
         ProfileImageStorage $profileImageStorage,
-    ): JsonResponse
-    {
+    ): JsonResponse {
         return $this->json([
-            'user' => $user ? $this->serializeUser($user, $profileImageStorage) : null,
+            'user' => $user instanceof User ? $this->serializeUser($user, $profileImageStorage) : null,
         ]);
     }
 
@@ -87,30 +88,21 @@ final class SecurityController extends AbstractController
         EntityManagerInterface $em,
         ProfileImageStorage $profileImageStorage,
     ): JsonResponse {
-        if (!$user) {
+        if (!$user instanceof User) {
             return $this->json(['error' => 'Not logged in'], 401);
         }
 
         $data = $request->toArray();
         $username = trim((string) ($data['username'] ?? ''));
 
-        if ('' === $username) {
-            return $this->json(['error' => 'Username is required.'], 400);
+        $error = $this->validateUsername($username);
+        if ($error !== null) {
+            return $this->json(['error' => $error], 400);
         }
 
-        if (mb_strlen($username) < 3 || mb_strlen($username) > 50) {
-            return $this->json(['error' => 'Username must be between 3 and 50 characters.'], 400);
-        }
+        $existing = $em->getRepository(User::class)->findOneBy(['username' => $username]);
 
-        if (!preg_match('/^[A-Za-z0-9_.-]+$/', $username)) {
-            return $this->json(['error' => 'Username contains invalid characters.'], 400);
-        }
-
-        $existing = $em->getRepository(User::class)->findOneBy([
-            'username' => $username,
-        ]);
-
-        if ($existing && $existing->getId() !== $user->getId()) {
+        if ($existing instanceof User && $existing->getId() !== $user->getId()) {
             return $this->json(['error' => 'Username already exists.'], 409);
         }
 
@@ -130,28 +122,22 @@ final class SecurityController extends AbstractController
         EntityManagerInterface $em,
         ProfileImageStorage $profileImageStorage,
     ): JsonResponse {
-        if (!$user) {
+        if (!$user instanceof User) {
             return $this->json(['error' => 'Not logged in'], 401);
         }
 
         $file = $request->files->get('profileImage');
 
-        if (!$file) {
-            return $this->json(['error' => 'Profile image file is required.'], 400);
-        }
-
-        if (!$file->isValid()) {
-            return $this->json(['error' => 'Uploaded file is invalid.'], 400);
+        if (!$file || !$file->isValid()) {
+            return $this->json(['error' => 'A valid profile image file is required.'], 400);
         }
 
         if ($file->getSize() > 2 * 1024 * 1024) {
             return $this->json(['error' => 'Profile image must be 2 MB or smaller.'], 400);
         }
 
-        $mimeType = $file->getMimeType() ?? '';
         $allowedMimeTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
-
-        if (!in_array($mimeType, $allowedMimeTypes, true)) {
+        if (!in_array($file->getMimeType() ?? '', $allowedMimeTypes, true)) {
             return $this->json(['error' => 'Unsupported image type.'], 400);
         }
 
@@ -171,7 +157,7 @@ final class SecurityController extends AbstractController
         EntityManagerInterface $em,
         ProfileImageStorage $profileImageStorage,
     ): JsonResponse {
-        if (!$user) {
+        if (!$user instanceof User) {
             return $this->json(['error' => 'Not logged in'], 401);
         }
 
@@ -192,7 +178,7 @@ final class SecurityController extends AbstractController
         EntityManagerInterface $em,
         UserPasswordHasherInterface $hasher
     ): JsonResponse {
-        if (!$user) {
+        if (!$user instanceof User) {
             return $this->json(['error' => 'Not logged in'], 401);
         }
 
@@ -238,4 +224,17 @@ final class SecurityController extends AbstractController
     {
         throw new \LogicException('Handled by Symfony security.');
     }
+
+    private function validateUsername(string $username): ?string
+{
+    if (empty($username)) {
+        return 'Username is required.';
+    }
+
+    if (!preg_match('/^[a-zA-Z0-9_]{3,20}$/', $username)) {
+        return 'Invalid username format.';
+    }
+
+    return null;
+}
 }

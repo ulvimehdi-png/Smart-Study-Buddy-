@@ -2,11 +2,13 @@ import React from 'react';
 import { Home, ArrowLeft } from 'lucide-react';
 import { AnimatedBlobs, GradientButton } from '../components/shared';
 import NotFoundImage from '../assets/404-integrated.png';
+import { useNavigate } from 'react-router-dom';
 
 export default function NotFound() {
+  const navigate = useNavigate();
+
   return (
     <div className="min-h-screen flex items-center justify-center relative px-4 py-20">
-      {/* Animated Background */}
       <AnimatedBlobs />
 
       <div className="max-w-2xl mx-auto text-center relative z-10 mt-8">
@@ -31,15 +33,13 @@ export default function NotFound() {
             Back to Home
           </GradientButton>
           
-          <GradientButton 
-            to="#" 
-            onClick={(e) => { e.preventDefault(); window.history.back(); }} 
-            icon={ArrowLeft} 
-            variant="secondary" 
-            size="lg"
+          <button 
+            onClick={() => navigate(-1)}
+            className="inline-flex items-center justify-center gap-2 rounded-xl bg-transparent border border-border-base px-6 py-3 font-medium text-text-main transition hover:bg-bg-elevated cursor-pointer"
           >
+            <ArrowLeft className="h-5 w-5" aria-hidden="true" />
             Go Back
-          </GradientButton>
+          </button>
         </div>
       </div>
     </div>

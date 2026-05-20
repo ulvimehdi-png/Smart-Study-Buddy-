@@ -25,6 +25,7 @@ export default function TimerButton({ isPiP, onClick, IconComp, children, enable
       >
       <IconComp
         size={isPiP ? 17: 20}
+        aria-hidden="true"
       />
       {!isPiP && 
       <span>

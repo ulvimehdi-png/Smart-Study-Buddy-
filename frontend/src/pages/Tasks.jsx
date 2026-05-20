@@ -19,17 +19,15 @@ export default function Tasks() {
   const [subjectOptions, setSubjectOptions] = useState([]);
 
   const fetchTasks = () => {
-    fetch("/api/tasks", {
-      credentials: "include",
-    })
+    fetch("/api/tasks", { credentials: "include" })
       .then((res) => res.json())
-      .then((data) => setTasks(data))
+      .then(setTasks)
       .catch((err) => console.error("Error fetching tasks:", err));
   };
 
   const fetchSubjects = () => {
     fetchSubjectOptions()
-      .then((data) => setSubjectOptions(data))
+      .then(setSubjectOptions)
       .catch((err) => console.error("Error fetching subjects:", err));
   };
 
@@ -47,24 +45,21 @@ export default function Tasks() {
     fetch(`/api/tasks/${taskId}/toggle`, {
       method: "PUT",
       credentials: "include",
-    }).then(() => fetchTasks());
+    }).then(fetchTasks);
   };
 
   const handleDelete = (taskId) => {
     fetch(`/api/tasks/${taskId}`, {
       method: "DELETE",
       credentials: "include",
-    }).then(() => fetchTasks());
+    }).then(fetchTasks);
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!title) return;
 
-    const subject =
-      selectedSubject === NEW_SUBJECT_VALUE
-        ? customSubject.trim()
-        : selectedSubject;
+    const subject = selectedSubject === NEW_SUBJECT_VALUE ? customSubject.trim() : selectedSubject;
 
     fetch("/api/tasks", {
       method: "POST",
@@ -81,37 +76,33 @@ export default function Tasks() {
 
   const handleRemoveSubject = async (option) => {
     await deleteSubjectOption(option.id);
-
     if (selectedSubject === option.name) {
       setSelectedSubject("");
     }
-
     refreshData();
   };
 
   const completedTasks = tasks.filter((task) => task.isCompleted).length;
   const pendingTasks = tasks.length - completedTasks;
-  const activeSubjects = new Set(
-    tasks.map((task) => task.subject?.trim()).filter(Boolean),
-  ).size;
+  const activeSubjects = new Set(tasks.map((task) => task.subject?.trim()).filter(Boolean)).size;
 
   const stats = [
     {
       label: "Pending",
       value: pendingTasks,
-      icon: <Clock className="h-5 w-5" />,
+      icon: <Clock className="h-5 w-5" aria-hidden="true" />,
       iconClass: "bg-primary/10 text-primary",
     },
     {
       label: "Completed",
       value: completedTasks,
-      icon: <Check className="h-5 w-5" />,
+      icon: <Check className="h-5 w-5" aria-hidden="true" />,
       iconClass: "bg-accent-light/10 text-accent-light",
     },
     {
       label: "Subjects",
       value: activeSubjects,
-      icon: <Sparkles className="h-5 w-5" />,
+      icon: <Sparkles className="h-5 w-5" aria-hidden="true" />,
       iconClass: "bg-accent/10 text-accent",
     },
   ];
@@ -125,7 +116,7 @@ export default function Tasks() {
           <div>
             <div className="flex items-center gap-3">
               <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
-                <Flag className="h-5 w-5" />
+                <Flag className="h-5 w-5" aria-hidden="true" />
               </div>
               <div>
                 <h1 className="text-2xl font-semibold sm:text-3xl">Tasks</h1>
@@ -138,7 +129,7 @@ export default function Tasks() {
 
           <div className="grid gap-3 sm:grid-cols-3 lg:min-w-90">
             {stats.map(({ label, value, icon, iconClass }) => (
-              <SmallStats label={label} value={value} icon={icon} iconClass={iconClass} />
+              <SmallStats key={label} label={label} value={value} icon={icon} iconClass={iconClass} />
             ))}
           </div>
         </div>
@@ -146,7 +137,7 @@ export default function Tasks() {
         <section className="rounded-3xl border border-border-base bg-bg-card p-5 shadow-sm">
           <div className="flex items-start gap-4">
             <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
-              <Plus className="h-5 w-5" />
+              <Plus className="h-5 w-5" aria-hidden="true" />
             </div>
             <div>
               <h2 className="text-lg font-semibold">Add a Task</h2>
@@ -156,10 +147,7 @@ export default function Tasks() {
             </div>
           </div>
 
-          <form
-            onSubmit={handleSubmit}
-            className="mt-6 grid gap-4 lg:grid-cols-[220px_minmax(0,1fr)_auto]"
-          >
+          <form onSubmit={handleSubmit} className="mt-6 grid gap-4 lg:grid-cols-[220px_minmax(0,1fr)_auto]">
             <SubjectSelect
               options={subjectOptions}
               value={selectedSubject}
@@ -168,7 +156,9 @@ export default function Tasks() {
               onCustomSubjectChange={setCustomSubject}
               onRemoveOption={handleRemoveSubject}
             />
+            <label htmlFor="newTaskTitle" className="sr-only">Task Title</label>
             <input
+              id="newTaskTitle"
               type="text"
               placeholder="What needs to be done?"
               value={title}
@@ -178,19 +168,19 @@ export default function Tasks() {
             />
             <button
               type="submit"
-              className="inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-6 py-3 font-medium text-white transition hover:bg-primary-dark"
+              className="inline-flex cursor-pointer items-center justify-center gap-2 rounded-xl bg-primary px-6 py-3 font-medium text-white transition hover:bg-primary-dark"
             >
-              <Plus className="h-5 w-5" />
+              <Plus className="h-5 w-5" aria-hidden="true" />
               Add Task
             </button>
           </form>
         </section>
 
         <section className="mt-6 rounded-3xl border border-border-base bg-bg-card p-5 shadow-sm">
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+          <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
             <div className="flex items-start gap-4">
               <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-accent/10 text-accent">
-                <Flag className="h-5 w-5" />
+                <Flag className="h-5 w-5" aria-hidden="true" />
               </div>
               <div>
                 <h2 className="text-lg font-semibold">Current Tasks</h2>
@@ -207,16 +197,16 @@ export default function Tasks() {
 
           {tasks.length === 0 ? (
             <div className="mt-6 rounded-2xl border border-dashed border-border-base bg-bg-base px-6 py-12 text-center">
-              <Sparkles className="mx-auto h-8 w-8 text-accent" />
+              <Sparkles className="mx-auto h-8 w-8 text-accent" aria-hidden="true" />
               <h3 className="mt-4 text-lg font-semibold">No tasks yet</h3>
               <p className="mt-2 text-text-secondary">
                 Create your first task above and it will appear here!
               </p>
             </div>
           ) : (
-            <div className="mt-6 space-y-4">
+            <ul className="space-y-4">
               {tasks.map((task) => (
-                <article
+                <li
                   key={task.taskId}
                   className={cn(
                     "rounded-2xl border p-5",
@@ -228,6 +218,7 @@ export default function Tasks() {
                 >
                   <div className="flex items-start gap-4">
                     <input
+                      id={`task-${task.taskId}`}
                       type="checkbox"
                       checked={task.isCompleted}
                       onChange={() => handleToggle(task.taskId)}
@@ -235,16 +226,17 @@ export default function Tasks() {
                     />
 
                     <div className="flex flex-wrap items-center gap-2">
-                      <p
+                      <label
+                        htmlFor={`task-${task.taskId}`}
                         className={cn(
-                          "text-base font-semibold",
+                          "cursor-pointer text-base font-semibold",
                           task.isCompleted
                             ? "text-text-muted line-through"
                             : "text-text-main",
                         )}
                       >
                         {task.title}
-                      </p>
+                      </label>
                       <SubjectBadge
                         subject={task.subject}
                         tone={task.isCompleted ? "primary" : "accent"}
@@ -270,16 +262,18 @@ export default function Tasks() {
                     </span>
 
                     <button
+                      type="button"
                       onClick={() => handleDelete(task.taskId)}
-                      className="inline-flex items-center gap-2 rounded-lg border border-danger/20 bg-danger/10 px-3 py-2 text-sm font-medium text-danger transition hover:bg-danger/15"
+                      aria-label={`Delete task: ${task.title}`}
+                      className="inline-flex cursor-pointer items-center gap-2 rounded-lg border border-danger/20 bg-danger/10 px-3 py-2 text-sm font-medium text-danger transition hover:bg-danger/15"
                     >
-                      <Trash2 className="h-4 w-4" />
+                      <Trash2 className="h-4 w-4" aria-hidden="true" />
                       Delete
                     </button>
                   </div>
-                </article>
+                </li>
               ))}
-            </div>
+            </ul>
           )}
         </section>
       </div>

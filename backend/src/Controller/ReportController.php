@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller;
 
 use App\Entity\Task;
@@ -21,25 +23,22 @@ final class ReportController extends AbstractController
         #[CurrentUser] ?User $user,
         EntityManagerInterface $em
     ): JsonResponse {
-        if (!$user) {
+        if (!$user instanceof User) {
             return $this->json(['error' => 'Not logged in'], 401);
         }
 
-        // 1. Find out what timeframe the user wants (daily by default)
-        $period = $request->query->get('period', 'daily');
-        $start = new \DateTimeImmutable();
+        $period = $request->query->getString('period', 'daily');
+        $now = new \DateTimeImmutable();
 
-        if ($period === 'daily') {
-            $start = $start->setTime(0, 0, 0); // Midnight today
-        } elseif ($period === 'weekly') {
-            $start = $start->modify('monday this week')->setTime(0, 0, 0); // Monday morning
-        } elseif ($period === 'monthly') {
-            $start = $start->modify('first day of this month')->setTime(0, 0, 0); // 1st of the month
-        }
+        $start = match ($period) {
+            'weekly' => $now->modify('monday this week')->setTime(0, 0, 0),
+            'monthly' => $now->modify('first day of this month')->setTime(0, 0, 0),
+            default => $now->setTime(0, 0, 0),
+        };
 
-        // 2. Get all tasks finished after that start time
         $tasks = $em->getRepository(Task::class)->createQueryBuilder('t')
-            ->leftJoin('t.subject', 's')->addSelect('s')
+            ->leftJoin('t.subject', 's')
+            ->addSelect('s')
             ->where('t.user = :user')
             ->andWhere('t.status = :status')
             ->andWhere('t.completedAt >= :start')
@@ -50,26 +49,19 @@ final class ReportController extends AbstractController
             ->getQuery()
             ->getResult();
 
-        // 3. Count them up by subject
         $subjectStats = [];
-        $totalCompleted = 0;
-
         foreach ($tasks as $task) {
-            $subjName = $task->getSubject() ? $task->getSubject()->getName() : 'No Subject';
-            if (!isset($subjectStats[$subjName])) {
-                $subjectStats[$subjName] = 0;
-            }
-            $subjectStats[$subjName]++;
-            $totalCompleted++;
+            $subjName = $task->getSubject()?->getName() ?? 'No Subject';
+            $subjectStats[$subjName] = ($subjectStats[$subjName] ?? 0) + 1;
         }
 
-        // Format for the website
         $formattedStats = [];
         foreach ($subjectStats as $subject => $count) {
             $formattedStats[] = ['subject' => $subject, 'count' => $count];
         }
 
-        // 4. Send the data back (10 points per finished task)
+        $totalCompleted = count($tasks);
+
         return $this->json([
             'period' => $period,
             'totalTasks' => $totalCompleted,

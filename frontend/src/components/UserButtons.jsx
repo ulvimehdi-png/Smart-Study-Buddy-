@@ -16,7 +16,6 @@ export default function UserButtons() {
     <div className="flex items-center gap-3">
       {auth.user ? (
         <>
-          {/* User Badge */}
           <Link
             to="/user"
             className={cn(
@@ -29,18 +28,17 @@ export default function UserButtons() {
             {auth.user.profileImageUrl ? (
               <img
                 src={auth.user.profileImageUrl}
-                alt="Profile"
+                alt={`${auth.user.username} profile picture`}
                 className="h-5 w-5 rounded-full object-cover"
               />
             ) : (
-              <User className="w-4 h-4 text-primary" />
+              <User className="w-4 h-4 text-primary" aria-hidden="true" />
             )}
             <span className="text-sm font-medium text-primary">
               {auth.user.username}
             </span>
           </Link>
 
-          {/* Logout Button - Using Semantic Red (or custom vars) */}
           <button
             onClick={handleLogout}
             className={cn(
@@ -50,13 +48,12 @@ export default function UserButtons() {
               "cursor-pointer"
             )}
           >
-            <LogOut className="w-4 h-4" />
+            <LogOut className="w-4 h-4" aria-hidden="true" />
             <span className="text-sm font-medium">Logout</span>
           </button>
         </>
       ) : (
         <>
-          {/* Sign In Link */}
           <GradientButton to="/login" size="sm">
             Sign In
           </GradientButton>

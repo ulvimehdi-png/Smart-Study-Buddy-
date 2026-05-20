@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\LiveTimerSession\Controller;
 
 use App\LiveTimerSession\DTO\Command\ChangeConfig;
@@ -7,7 +9,6 @@ use App\LiveTimerSession\DTO\Command\EmptyCommand;
 use App\LiveTimerSession\DTO\Command\StopSession;
 use App\LiveTimerSession\Enum\SessionStatus;
 use App\LiveTimerSession\Service\Finalizer;
-use App\LiveTimerSession\Service\Manager;
 use App\LiveTimerSession\Service\Projector;
 use App\LiveTimerSession\Service\Publisher;
 use App\LiveTimerSession\Service\Store;
@@ -27,8 +28,7 @@ final class SessionActionController extends AbstractSessionController
         Publisher                         $publisher,
         Projector                         $projector,
         TimeService                       $time,
-    ): JsonResponse
-    {
+    ): JsonResponse {
         return $this->applyCommand(
             $id,
             $store,
@@ -46,8 +46,7 @@ final class SessionActionController extends AbstractSessionController
         Publisher                         $publisher,
         Projector                         $projector,
         TimeService                       $time,
-    ): JsonResponse
-    {
+    ): JsonResponse {
         return $this->applyCommand(
             $id,
             $store,
@@ -65,8 +64,7 @@ final class SessionActionController extends AbstractSessionController
         Publisher                         $publisher,
         Projector                         $projector,
         TimeService                       $time,
-    ): JsonResponse
-    {
+    ): JsonResponse {
         return $this->applyCommand(
             $id,
             $store,
@@ -84,8 +82,7 @@ final class SessionActionController extends AbstractSessionController
         Publisher                         $publisher,
         Projector                         $projector,
         TimeService                       $time,
-    ): JsonResponse
-    {
+    ): JsonResponse {
         return $this->applyCommand(
             $id,
             $store,
@@ -103,8 +100,7 @@ final class SessionActionController extends AbstractSessionController
         Publisher                         $publisher,
         Projector                         $projector,
         TimeService                       $time,
-    ): JsonResponse
-    {
+    ): JsonResponse {
         return $this->applyCommand(
             $id,
             $store,
@@ -122,8 +118,7 @@ final class SessionActionController extends AbstractSessionController
         Publisher                         $publisher,
         Projector                         $projector,
         TimeService                       $time,
-    ): JsonResponse
-    {
+    ): JsonResponse {
         return $this->applyCommand(
             $id,
             $store,
@@ -141,8 +136,7 @@ final class SessionActionController extends AbstractSessionController
         Publisher                         $publisher,
         Finalizer                         $finalizer,
         TimeService                       $time,
-    ): JsonResponse
-    {
+    ): JsonResponse {
         $state = $this->requireOwnedState($id, $store);
 
         $session = $finalizer->finalize(

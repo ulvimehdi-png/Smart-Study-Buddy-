@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\LiveTimerSession\Controller;
 
 use App\LiveTimerSession\DTO\Command\CreateSession;
@@ -14,6 +16,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\Routing\Attribute\Route;
+
 #[Route('/api/live-timer-sessions')]
 final class SessionController extends AbstractSessionController
 {
@@ -24,24 +27,7 @@ final class SessionController extends AbstractSessionController
         Projector                          $projector,
         Publisher                          $publisher,
         TimeService                        $time
-    ): JsonResponse
-    {
-        /*
-        $state = $store->create([
-            'ownerUserId' => $this->requireCurrentUserId(),
-            'work' => [
-                'minutes' => $request->work->minutes,
-                'seconds' => $request->work->seconds,
-            ],
-            'break' => [
-                'minutes' => $request->break->minutes,
-                'seconds' => $request->break->seconds,
-            ],
-            'subjectId' => $request->subjectId,
-            'taskId' => $request->taskId,
-        ]);
-        */
-
+    ): JsonResponse {
         $id = bin2hex(random_bytes(16));
 
         $state = State::create(
@@ -73,8 +59,7 @@ final class SessionController extends AbstractSessionController
         string    $id,
         Store     $store,
         Projector $projector,
-    ): JsonResponse
-    {
+    ): JsonResponse {
         $state = $this->requireState($id, $store);
 
         return $this->jsonProjection($state, $projector);
@@ -85,8 +70,7 @@ final class SessionController extends AbstractSessionController
         string    $id,
         Store     $store,
         Publisher $publisher,
-    ): JsonResponse
-    {
+    ): JsonResponse {
         $this->requireOwnedState($id, $store);
 
         $publisher->publishDeleted($id);

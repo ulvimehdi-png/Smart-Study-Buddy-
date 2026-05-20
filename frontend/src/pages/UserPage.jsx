@@ -185,7 +185,7 @@ export default function UserPage() {
                   </div>
                 )}
                 <div className="absolute -bottom-2 -right-2 flex h-10 w-10 items-center justify-center rounded-2xl border border-border-base bg-bg-card text-primary shadow-sm">
-                  <Camera className="h-4 w-4" />
+                  <Camera className="h-4 w-4" aria-hidden="true" />
                 </div>
               </div>
 
@@ -196,25 +196,26 @@ export default function UserPage() {
             </div>
 
             <div className="mt-6 space-y-3">
-              <label className="flex cursor-pointer items-center justify-center gap-2 rounded-2xl bg-primary px-4 py-3 font-medium text-white transition hover:bg-primary-dark">
-                <Camera className="h-4 w-4" />
+              <label htmlFor="profileImageUpload" className="flex cursor-pointer items-center justify-center gap-2 rounded-2xl bg-primary px-4 py-3 font-medium text-white transition hover:bg-primary-dark">
+                <Camera className="h-4 w-4" aria-hidden="true" />
                 {isSavingProfileImage ? "Uploading..." : "Upload Picture"}
-                <input
-                  type="file"
-                  accept="image/*"
-                  className="hidden"
-                  onChange={handleProfileImageChange}
-                  disabled={isSavingProfileImage}
-                />
               </label>
+              <input
+                id="profileImageUpload"
+                type="file"
+                accept="image/*"
+                className="sr-only"
+                onChange={handleProfileImageChange}
+                disabled={isSavingProfileImage}
+              />
 
               <button
                 type="button"
                 onClick={clearProfileImage}
                 disabled={isSavingProfileImage}
-                className="flex w-full items-center justify-center gap-2 rounded-2xl border border-danger/20 bg-danger/10 px-4 py-3 font-medium text-danger transition hover:bg-danger/15"
+                className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-2xl border border-danger/20 bg-danger/10 px-4 py-3 font-medium text-danger transition hover:bg-danger/15"
               >
-                <Trash2 className="h-4 w-4" />
+                <Trash2 className="h-4 w-4" aria-hidden="true" />
                 Remove Picture
               </button>
             </div>
@@ -224,7 +225,7 @@ export default function UserPage() {
             <section className="rounded-3xl border border-border-base bg-bg-card p-6 shadow-sm">
               <div className="flex items-start gap-4">
                 <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-primary/10 text-primary">
-                  <UserRound className="h-5 w-5" />
+                  <UserRound className="h-5 w-5" aria-hidden="true" />
                 </div>
                 <div>
                   <h2 className="text-lg font-semibold">Profile</h2>
@@ -236,10 +237,11 @@ export default function UserPage() {
 
               <form onSubmit={handleProfileSubmit} className="mt-6 space-y-4">
                 <div>
-                  <label className="mb-2 block text-sm font-medium text-text-secondary">
+                  <label htmlFor="usernameInput" className="mb-2 block text-sm font-medium text-text-secondary">
                     Username
                   </label>
                   <input
+                    id="usernameInput"
                     type="text"
                     value={username}
                     onChange={(event) => setUsername(event.target.value)}
@@ -248,16 +250,18 @@ export default function UserPage() {
                   />
                 </div>
 
-                {profileMessage ? (
-                  <p className="text-sm text-text-secondary">{profileMessage}</p>
-                ) : null}
+                <div aria-live="polite">
+                  {profileMessage && (
+                    <p className="text-sm text-text-secondary">{profileMessage}</p>
+                  )}
+                </div>
 
                 <button
                   type="submit"
                   disabled={isSavingProfile}
-                  className="inline-flex items-center gap-2 rounded-2xl bg-primary px-5 py-3 font-medium text-white transition hover:bg-primary-dark disabled:cursor-not-allowed disabled:opacity-60"
+                  className="inline-flex cursor-pointer items-center gap-2 rounded-2xl bg-primary px-5 py-3 font-medium text-white transition hover:bg-primary-dark disabled:cursor-not-allowed disabled:opacity-60"
                 >
-                  <Save className="h-4 w-4" />
+                  <Save className="h-4 w-4" aria-hidden="true" />
                   {isSavingProfile ? "Saving..." : "Save Profile"}
                 </button>
               </form>
@@ -266,7 +270,7 @@ export default function UserPage() {
             <section className="rounded-3xl border border-border-base bg-bg-card p-6 shadow-sm">
               <div className="flex items-start gap-4">
                 <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-accent/10 text-accent">
-                  <KeyRound className="h-5 w-5" />
+                  <KeyRound className="h-5 w-5" aria-hidden="true" />
                 </div>
                 <div>
                   <h2 className="text-lg font-semibold">Password</h2>
@@ -278,10 +282,11 @@ export default function UserPage() {
 
               <form onSubmit={handlePasswordSubmit} className="mt-6 space-y-4">
                 <div>
-                  <label className="mb-2 block text-sm font-medium text-text-secondary">
+                  <label htmlFor="currentPassword" className="mb-2 block text-sm font-medium text-text-secondary">
                     Current Password
                   </label>
                   <input
+                    id="currentPassword"
                     type="password"
                     value={passwords.currentPassword}
                     onChange={(event) => setPasswords((current) => ({
@@ -294,10 +299,11 @@ export default function UserPage() {
                 </div>
 
                 <div>
-                  <label className="mb-2 block text-sm font-medium text-text-secondary">
+                  <label htmlFor="newPassword" className="mb-2 block text-sm font-medium text-text-secondary">
                     New Password
                   </label>
                   <input
+                    id="newPassword"
                     type="password"
                     value={passwords.newPassword}
                     onChange={(event) => setPasswords((current) => ({
@@ -310,10 +316,11 @@ export default function UserPage() {
                 </div>
 
                 <div>
-                  <label className="mb-2 block text-sm font-medium text-text-secondary">
+                  <label htmlFor="confirmPassword" className="mb-2 block text-sm font-medium text-text-secondary">
                     Confirm New Password
                   </label>
                   <input
+                    id="confirmPassword"
                     type="password"
                     value={passwords.confirmPassword}
                     onChange={(event) => setPasswords((current) => ({
@@ -325,16 +332,18 @@ export default function UserPage() {
                   />
                 </div>
 
-                {passwordMessage ? (
-                  <p className="text-sm text-text-secondary">{passwordMessage}</p>
-                ) : null}
+                <div aria-live="polite">
+                  {passwordMessage && (
+                    <p className="text-sm text-text-secondary">{passwordMessage}</p>
+                  )}
+                </div>
 
                 <button
                   type="submit"
                   disabled={isSavingPassword}
-                  className="inline-flex items-center gap-2 rounded-2xl bg-accent px-5 py-3 font-medium text-white transition hover:bg-accent-dark disabled:cursor-not-allowed disabled:opacity-60"
+                  className="inline-flex cursor-pointer items-center gap-2 rounded-2xl bg-accent px-5 py-3 font-medium text-white transition hover:bg-accent-dark disabled:cursor-not-allowed disabled:opacity-60"
                 >
-                  <KeyRound className="h-4 w-4" />
+                  <KeyRound className="h-4 w-4" aria-hidden="true" />
                   {isSavingPassword ? "Updating..." : "Update Password"}
                 </button>
               </form>

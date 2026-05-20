@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -17,7 +19,7 @@ final class DevMercureController extends AbstractController
         $topic = 'http://localhost/timer/test';
         $payload = [
             'message' => 'Hello from symfony DevMercureController',
-            'sentAt' => (new \DateTimeImmutable()->format(DATE_ATOM))
+            'sentAt' => (new \DateTimeImmutable())->format(\DATE_ATOM)
         ];
 
         $update = new Update(

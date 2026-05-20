@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X } from 'lucide-react'; // Removed unused User, LogOut
+import { Menu, X } from 'lucide-react';
 import { useAuth } from '../lib/auth';
 import { cn } from '@/lib/utils';
 import { useTimer } from '../lib/useTimer';
-import { Logo, ThemeToggle } from './shared'; // Removed unused GradientButton
+import { Logo, ThemeToggle } from './shared';
 import UserButtons from './UserButtons';
 
 const NAV_LINKS = [
@@ -37,7 +37,7 @@ export default function Navbar() {
       'text-sm font-medium transition-colors duration-200',
       isMobile ? 'block px-3 py-2 rounded-lg' : '',
       isActive(path) 
-        ? 'text-primary' // Use our brand primary color
+        ? 'text-primary'
         : 'text-text-secondary hover:text-accent dark:hover:text-accent-light'
     );
   };
@@ -70,24 +70,20 @@ export default function Navbar() {
       )}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center h-16">
-        {/* Logo */}
         <Link to="/" className="flex items-center">
           <Logo size="md" className="transition-transform hover:scale-105" />
         </Link>
 
-        {/* Desktop Navigation */}
         <div className="hidden md:flex gap-8">
           {NAV_LINKS.map((link) => renderNavLink(link))}
         </div>
 
-        {/* Desktop Actions */}
         <div className="hidden md:flex items-center gap-4">
           <UserButtons />
-          <div className="h-6 w-px bg-border-base mx-2" /> {/* Divider */}
+          <div className="h-6 w-px bg-border-base mx-2" />
           <ThemeToggle />
         </div>
 
-        {/* Mobile Toggle */}
         <div className="md:hidden flex items-center gap-2">
           <ThemeToggle />
           <button
@@ -95,12 +91,11 @@ export default function Navbar() {
             className="p-2 rounded-lg text-secondary hover:bg-elevated transition-colors"
             aria-label="Toggle Menu"
           >
-            {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            {isMobileMenuOpen ? <X className="w-6 h-6" aria-hidden="true" /> : <Menu className="w-6 h-6" aria-hidden="true" />}
           </button>
         </div>
       </div>
 
-      {/* Mobile Menu */}
       {isMobileMenuOpen && (
         <div className="md:hidden bg-base border-t border-base shadow-xl animate-in fade-in slide-in-from-top-4 duration-200">
           <div className="px-4 py-6 flex flex-col gap-4 text-center">
