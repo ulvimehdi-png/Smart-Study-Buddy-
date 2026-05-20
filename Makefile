@@ -167,7 +167,7 @@ prod-ci: prod-ci-setup prod-ci-export
 
 # Test if files/dirs exist and merge them into
 deploy-ci-setup:
-	ssh -o BatchMode=yes -o ConnectTimeout=15 "$DEPLOY_HOST" "echo remote-ok"
+	ssh -o BatchMode=yes -o ConnectTimeout=15 "$(DEPLOY_HOST)" "echo remote-ok"
 	@test -f $(EXPORT_DIR)/public/index.html
 	@test -f $(EXPORT_DIR)/public/index.php
 	@test -f $(EXPORT_DIR)/bin/console
