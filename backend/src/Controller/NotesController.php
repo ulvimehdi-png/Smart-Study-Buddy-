@@ -101,7 +101,7 @@ final class NotesController extends AbstractController
         ], 201);
     }
 
-    #[Route('/{id}', methods: ['DELETE'])]
+    #[Route('/{id}/delete', methods: ['POST'])]
     public function deleteNote(
         int $id,
         #[CurrentUser] ?User $user,
@@ -130,7 +130,7 @@ final class NotesController extends AbstractController
 
         return $this->json(['success' => true]);
     }
-    #[Route('/{id}', methods: ['PUT'])]
+    #[Route('/{id}/update', methods: ['POST'])]
     public function updateNote(
         int $id,
         Request $request,

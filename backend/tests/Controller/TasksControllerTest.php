@@ -56,7 +56,7 @@ class TasksControllerTest extends WebTestCase
         $entityManager->flush();
 
         $client->loginUser($testUser);
-        $client->request('PUT', '/api/tasks/' . $task->getId() . '/toggle');
+        $client->request('POST', '/api/tasks/' . $task->getId() . '/toggle');
 
         $this->assertResponseIsSuccessful();
     }
@@ -74,7 +74,7 @@ class TasksControllerTest extends WebTestCase
         $entityManager->flush();
 
         $client->loginUser($testUser);
-        $client->request('DELETE', '/api/tasks/' . $task->getId());
+        $client->request('POST', '/api/tasks/' . $task->getId() . '/delete');
 
         $this->assertResponseIsSuccessful();
     }

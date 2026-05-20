@@ -132,7 +132,7 @@ final class TasksController extends AbstractController
         ], 201);
     }
 
-    #[Route('/{id}/toggle', methods: ['PUT'])]
+    #[Route('/{id}/toggle', methods: ['POST'])]
     public function toggleTask(
         int $id,
         #[CurrentUser] ?User $user,
@@ -176,7 +176,7 @@ final class TasksController extends AbstractController
         return $this->json(['success' => true]);
     }
 
-    #[Route('/{id}', methods: ['PUT'])]
+    #[Route('/{id}/update', methods: ['POST'])]
     public function updateTask(
         int $id,
         Request $request,
@@ -238,7 +238,7 @@ final class TasksController extends AbstractController
         return $this->json(['success' => true]);
     }
 
-    #[Route('/{id}', methods: ['DELETE'])]
+    #[Route('/{id}/delete', methods: ['POST'])]
     public function deleteTask(
         int $id,
         #[CurrentUser] ?User $user,

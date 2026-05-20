@@ -80,7 +80,7 @@ final class SessionController extends AbstractSessionController
         return $this->jsonProjection($state, $projector);
     }
 
-    #[Route('/{id}', methods: ['DELETE'])]
+    #[Route('/{id}/delete', methods: ['POST'])]
     public function delete(
         string    $id,
         Store     $store,

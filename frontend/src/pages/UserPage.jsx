@@ -136,8 +136,8 @@ export default function UserPage() {
     setIsSavingProfileImage(true);
     setProfileMessage("");
 
-    fetch("/api/user/profile-image", {
-      method: "DELETE",
+    fetch("/api/user/profile-image/delete", {
+      method: "POST",
       credentials: "include",
     })
       .then(async (response) => {

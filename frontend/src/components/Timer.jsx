@@ -69,7 +69,7 @@ export default function Timer({ isPiP = false }) {
 
   return (
     <div className="flex flex-col items-center h-full justify-center" id="timer">
-      <div className={cn("relative flex flex-col md:flex-row justify-center items-center mt-2", isPiP ? "w-48 h-48" : "w-full h-full")} >
+      <div className={cn("relative flex flex-col md:flex-row justify-center items-center mt-2", isPiP ? "w-48 h-48" : "")} >
         <CircularProgressbarWithChildren
           value={100 - percentage}
           counterClockwise={false}

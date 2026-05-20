@@ -64,8 +64,8 @@ export default function Notes() {
           ? customSubject.trim()
           : selectedSubject;
 
-      fetch(`/api/notes/${editingNoteId}`, {
-        method: "PUT",
+      fetch(`/api/notes/${editingNoteId}/update`, {
+        method: "POST",
         credentials: "include",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ title, content, subject }),
@@ -90,8 +90,8 @@ export default function Notes() {
   };
 
   const handleDelete = (noteId) => {
-    fetch(`/api/notes/${noteId}`, {
-      method: "DELETE",
+    fetch(`/api/notes/${noteId}/delete`, {
+      method: "POST",
       credentials: "include",
     })
       .then((res) => res.json())
@@ -137,8 +137,8 @@ export default function Notes() {
         ? customSubject.trim()
         : selectedSubject;
 
-    const url = editingNoteId ? `/api/notes/${editingNoteId}` : "/api/notes";
-    const method = editingNoteId ? "PUT" : "POST";
+    const url = editingNoteId ? `/api/notes/${editingNoteId}/update` : "/api/notes";
+    const method = "POST";
 
     fetch(url, {
       method,

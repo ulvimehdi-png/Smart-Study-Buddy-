@@ -60,7 +60,7 @@ class NoteControllerTest extends WebTestCase
         $entityManager->flush();
 
         $client->loginUser($testUser);
-        $client->request('DELETE', '/api/notes/' . $note->getId());
+        $client->request('POST', '/api/notes/' . $note->getId() . '/delete');
 
         $this->assertResponseIsSuccessful();
     }

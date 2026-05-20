@@ -28,11 +28,12 @@ export async function fetchSubjectOptions() {
     .filter(Boolean);
 }
 
-export async function deleteSubjectOption(subjectId) {
-  const response = await fetch(`/api/subjects/${subjectId}`, {
-    method: "DELETE",
+export async function deleteSubjectOption(id) {
+  const response = await fetch(`/api/subjects/${id}/delete`, {
+    method: "POST",
     credentials: "include",
   });
+
   const result = await response.json();
 
   if (!response.ok) {

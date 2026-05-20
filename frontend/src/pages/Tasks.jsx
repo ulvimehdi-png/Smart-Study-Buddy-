@@ -82,14 +82,14 @@ export default function Tasks() {
 
   const handleToggle = (taskId) => {
     fetch(`/api/tasks/${taskId}/toggle`, {
-      method: "PUT",
+      method: "POST",
       credentials: "include",
     }).then(() => fetchTasks());
   };
 
   const handleDelete = (taskId) => {
-    fetch(`/api/tasks/${taskId}`, {
-      method: "DELETE",
+    fetch(`/api/tasks/${taskId}/delete`, {
+      method: "POST",
       credentials: "include",
     }).then(() => fetchTasks());
   };
@@ -191,8 +191,8 @@ export default function Tasks() {
     }
 
     try {
-      const res = await fetch(`/api/tasks/${editingTask.id}`, {
-        method: "PUT", credentials: "include",
+      const res = await fetch(`/api/tasks/${editingTask.id}/update`, {
+        method: "POST", credentials: "include",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ title: editTitle, subject: subject, priority: editPriority, dueDate: dueDateStr }),
       });
