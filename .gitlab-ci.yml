@@ -94,7 +94,7 @@ deploy:
       variables:
         DEPLOY_ENVIRONMENT: "production"
     - if: '$CI_COMMIT_BRANCH == "integration/ci-cd-all"'
-      when: manual
+      when: always
       variables:
         DEPLOY_ENVIRONMENT: "production-deploy-test"
     - when: never

@@ -260,7 +260,7 @@ export default function DeveloperPage() {
                                 />
 
                                 <a
-                                    href={status?.coverage?.url || "/uploads/coverage/html/index.html"}
+                                    href={status?.coverage?.url || "/upload/coverage/html/index.html"}
                                     target="_blank"
                                     rel="noreferrer"
                                     className="flex w-full items-center justify-center gap-2 rounded-2xl bg-primary px-4 py-3 font-medium text-white transition hover:bg-primary-dark"

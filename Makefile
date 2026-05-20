@@ -165,7 +165,6 @@ prod-ci: prod-ci-setup prod-ci-export
 # DEPLOYMENT #
 ##############
 
-# Test if files/dirs exist and merge them into
 deploy-ci-setup:
 	ssh -o BatchMode=yes -o ConnectTimeout=15 "$(DEPLOY_HOST)" "echo remote-ok"
 	@test -f $(EXPORT_DIR)/public/index.html
@@ -175,7 +174,6 @@ deploy-ci-setup:
 
 	@test -d $(COVERAGE_DIR)
 	@test -f $(COVERAGE_DIR)/html/index.html
-	cp -a $(COVERAGE_DIR)/. $(EXPORT_DIR)/public/coverage
 
 deploy-ci-rsync:
 	@test -d $(COVERAGE_DIR)
@@ -184,11 +182,13 @@ deploy-ci-rsync:
 				--exclude="upload/" \
 				--exclude="var/cache/" \
 				--exclude="var/log/" \
+				--exclude=".editorconfig" \
+				--exclude="phpunit.dist.xml" \
 				"$(EXPORT_DIR)/" $(DEPLOY_HOST):$(DEPLOY_PATH)
+	rsync -rvz --delete-after "$(COVERAGE_DIR)/." "$(DEPLOY_HOST):$(DEPLOY_PATH)/upload/coverage"
+	ssh "$(DEPLOY_HOST)" "chmod -R 775 /var/www/html/upload/"
+	ssh "$(DEPLOY_HOST)" "ln -sf /var/www/html/public/uploads/ /var/www/html/upload/"
 
-# For "real" deployment the env-files should be handled differently,
-# but this is the best quick fix i could come up with when a lot is still changing
-# and i don't want to manually go check the contents out each time, cheers
 deploy-ci-env:
 	ssh "$(DEPLOY_HOST)" "cat > '$(DEPLOY_PATH)/.env'" < "$(DOT_ENV)"
 	printf "%s\n" \
