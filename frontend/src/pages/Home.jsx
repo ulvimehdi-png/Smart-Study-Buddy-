@@ -161,7 +161,7 @@ export default function Home() {
       {/* Core Features Section */}
       <section id="features" className="py-20 px-4">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
+          <div className="text-center mb-8">
             <Badge icon={Star} className="mb-4">
               Core Features
             </Badge>
@@ -192,7 +192,7 @@ export default function Home() {
       {/* Advanced Features Section */}
       <section className="py-20 px-4">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
+          <div className="text-center mb-8">
             <Badge icon={Zap} className="mb-4">
               Advanced Features
             </Badge>
@@ -202,7 +202,7 @@ export default function Home() {
             </h2>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {shouldFeatures.map((feature, index) => {
               const Icon = feature.icon;
               return (
@@ -234,7 +234,7 @@ export default function Home() {
             <Badge icon={Sparkles} variant="accent" className="mb-4">
               Coming Soon
             </Badge>
-            <h3 className="text-4xl md:text-5xl font-bold mb-8">
+            <h3 className="text-4xl md:text-5xl font-bold mb-4">
               Future Innovations
             </h3>
           </div>

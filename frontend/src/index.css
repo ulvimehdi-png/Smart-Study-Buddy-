@@ -43,7 +43,7 @@
 
   /* Component Specific */
   --input-bg: theme('colors.gray.50');
-  --blob-opacity: 0.3;
+  --blob-opacity: 0.55;
 
   --badge-text: theme('colors.amber.600');
 
@@ -76,7 +76,7 @@
 
   /* Component Specific */
   --input-bg: theme('colors.gray.800');
-  --blob-opacity: 0.15;
+  --blob-opacity: 0.55;
 
   --color-timer-work: theme('colors.cyan.500');
   --color-timer-rest: theme('colors.red.500');
@@ -184,18 +184,18 @@
 
   .ambient-blobs {
     background-image:
-      radial-gradient(circle at 16% 24%, color-mix(in srgb, var(--color-secondary-light) 38%, transparent) 0 13rem, transparent 20rem),
-      radial-gradient(circle at 86% 34%, color-mix(in srgb, var(--color-primary-light) 35%, transparent) 0 12rem, transparent 19rem),
-      radial-gradient(circle at 48% 94%, color-mix(in srgb, var(--color-accent-light) 30%, transparent) 0 14rem, transparent 21rem),
+      radial-gradient(circle at 16% 24%, color-mix(in srgb, var(--color-secondary-light) 46%, transparent) 0 9rem, transparent 25rem),
+      radial-gradient(circle at 86% 34%, color-mix(in srgb, var(--color-primary-light) 44%, transparent) 0 8rem, transparent 24rem),
+      radial-gradient(circle at 48% 94%, color-mix(in srgb, var(--color-accent-light) 36%, transparent) 0 10rem, transparent 27rem),
       linear-gradient(to bottom right, var(--color-amber-50), var(--color-yellow-50), var(--color-orange-50));
     opacity: var(--blob-opacity);
   }
 
   .dark .ambient-blobs {
     background-image:
-      radial-gradient(circle at 16% 24%, color-mix(in srgb, var(--color-secondary-dark) 35%, transparent) 0 13rem, transparent 20rem),
-      radial-gradient(circle at 86% 34%, color-mix(in srgb, var(--color-primary-dark) 32%, transparent) 0 12rem, transparent 19rem),
-      radial-gradient(circle at 48% 94%, color-mix(in srgb, var(--color-accent-dark) 28%, transparent) 0 14rem, transparent 21rem),
+      radial-gradient(circle at 16% 24%, color-mix(in srgb, var(--color-secondary-dark) 42%, transparent) 0 9rem, transparent 25rem),
+      radial-gradient(circle at 86% 34%, color-mix(in srgb, var(--color-primary-dark) 40%, transparent) 0 8rem, transparent 24rem),
+      radial-gradient(circle at 48% 94%, color-mix(in srgb, var(--color-accent-dark) 34%, transparent) 0 10rem, transparent 27rem),
       linear-gradient(to bottom right, var(--color-gray-800), var(--color-gray-900), var(--color-gray-800));
   }
 
