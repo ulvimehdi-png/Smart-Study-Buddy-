@@ -581,7 +581,7 @@ final class SecurityControllerTest extends ApiWebTestCase
 
     public function testDeleteProfileImageRejectsAnonymousUser(): void
     {
-        $this->client->request('DELETE', '/api/user/profile-image');
+        $this->client->request('POST', '/api/user/profile-image/delete');
 
         self::assertResponseStatusCodeSame(401);
 
@@ -598,7 +598,7 @@ final class SecurityControllerTest extends ApiWebTestCase
 
         $this->loginAs($user);
 
-        $this->client->request('DELETE', '/api/user/profile-image');
+        $this->client->request('POST', '/api/user/profile-image/delete');
 
         self::assertResponseIsSuccessful();
 
