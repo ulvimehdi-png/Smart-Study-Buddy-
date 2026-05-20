@@ -46,7 +46,7 @@ final class DevController extends AbstractController
             ->getQuery()
             ->getArrayResult();
 
-        $coverageIndex = $projectDir . '/upload/coverage/index.html';
+        $coverageIndex = $projectDir . '/upload/coverage/html/index.html';
 
         return $this->json([
             'environment' => $_ENV['APP_ENV'] ?? 'unknown',
@@ -70,7 +70,7 @@ final class DevController extends AbstractController
 
             'coverage' => [
                 'available' => is_file($coverageIndex),
-                'url' => '/upload/coverage/index.html',
+                'url' => '/upload/coverage/html/index.html',
             ],
 
             'stats' => [

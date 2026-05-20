@@ -26,21 +26,8 @@ final class SessionController extends AbstractSessionController
         TimeService                        $time
     ): JsonResponse
     {
-        /*
-        $state = $store->create([
-            'ownerUserId' => $this->requireCurrentUserId(),
-            'work' => [
-                'minutes' => $request->work->minutes,
-                'seconds' => $request->work->seconds,
-            ],
-            'break' => [
-                'minutes' => $request->break->minutes,
-                'seconds' => $request->break->seconds,
-            ],
-            'subjectId' => $request->subjectId,
-            'taskId' => $request->taskId,
-        ]);
-        */
+        $status = SessionStatus::tryFrom($request->status) ?? SessionStatus::IDLE;
+        $phase = SessionPhase::tryFrom($request->phase) ?? SessionPhase::FOCUS;
 
         $id = bin2hex(random_bytes(16));
 
@@ -56,8 +43,8 @@ final class SessionController extends AbstractSessionController
                 'seconds' => $request->break->seconds,
             ]),
             time: $time,
-            phase: SessionPhase::from($request->phase),
-            status: SessionStatus::from($request->status),
+            phase: $phase,
+            status: $status,
             remainingMs: $request->remainingMs,
             subjectId: $request->subjectId,
             taskId: $request->taskId,

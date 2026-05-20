@@ -3,18 +3,18 @@
 ## Project URL
 Provide a link to the main page of your application. Or if you have multiple parts in your website you can provide a list of links (i.e. not all pages are in your main navigation bar)
 
-* [Main login page](https://a25sewtxxx.studev.groept.be/public)
-* [Admin page](https://a25sewtxxx.studev.groept.be/public/admin)
+* [Main login page](https://a25sewt301.studev.groept.be/login)
+* [Admin page](https://a25sewt301.studev.groept.be/admin)
 
 ---
 
 ## Website credentials
 ### Regular user
-- login :
-- password :
-### Admin / Library manager / ...
-- login :
-- password :
+- login : demo
+- password : demo123
+### Admin / Developer
+- login : admin
+- password : admin123
 
 ---
 

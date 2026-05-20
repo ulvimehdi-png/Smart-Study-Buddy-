@@ -181,7 +181,7 @@ services:
         php bin/console doctrine:database:create --if-not-exists --env=dev &&
         php bin/console doctrine:migrations:migrate --no-interaction --env=dev &&
         php bin/console foundry:load-story baseStory --no-interaction &&
-        symfony server:start --port=8001 --listen-ip=0.0.0.0
+        PHP_CLI_SERVER_WORKERS=20 php -S 0.0.0.0:8001 public/index.php
       '
     depends_on:
       db-dev:
@@ -316,8 +316,10 @@ services:
     <<: *net
     environment:
       SERVER_NAME: ":80"
-      MERCURE_PUBLISHER_JWT_KEY: "24207d430335d87559f64ed568966be1b21022fc51d544ba336e8a7b70964478"
-      MERCURE_SUBSCRIBER_JWT_KEY: "24207d430335d87559f64ed568966be1b21022fc51d544ba336e8a7b70964478"
+#      MERCURE_PUBLISHER_JWT_KEY: "24207d430335d87559f64ed568966be1b21022fc51d544ba336e8a7b70964478"
+#      MERCURE_SUBSCRIBER_JWT_KEY: "24207d430335d87559f64ed568966be1b21022fc51d544ba336e8a7b70964478"
+      MERCURE_PUBLISHER_JWT_KEY: "!"
+      MERCURE_SUBSCRIBER_JWT_KEY: "!"
       MERCURE_EXTRA_DIRECTIVES: |
         demo
         anonymous

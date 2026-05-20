@@ -1,7 +1,6 @@
 import {defineConfig} from 'vite'
-//import react, {reactCompilerPreset} from '@vitejs/plugin-react'
-//import babel from '@rolldown/plugin-babel'
-import react from '@vitejs/plugin-react-swc'
+import react, {reactCompilerPreset} from '@vitejs/plugin-react'
+import babel from '@rolldown/plugin-babel'
 import tailwindcss from '@tailwindcss/vite'
 
 const usePolling = process.env.VITE_USE_POLLING === 'false'
@@ -11,28 +10,27 @@ export default defineConfig({
     plugins: [
         tailwindcss(),
         react(),
-        // babel({presets: [reactCompilerPreset()]})
+        babel({presets: [reactCompilerPreset()]})
     ],
 
     base: '/',
 
     server: {
-        host: '127.0.0.1',
+        host: '0.0.0.0',
         port: 5173,
         strictPort: true,
+
         watch: {
             usePolling,
             interval: usePolling ? 300 : undefined,
         },
+
         proxy: {
             '/api': {
                 target: 'http://php-dev:8001',
-                changeOrigin: true,
+                changeOrigin: false,
+                secure: false,
                 //rewrite: (path) => path.replace(/^\/api/, '')
-            },
-            '/uploads': {
-                target: 'http://php-dev:8000',
-                changeOrigin: true,
             },
         },
     },

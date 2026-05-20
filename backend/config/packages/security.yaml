@@ -33,6 +33,8 @@ security:
 
             logout:
                 path: /api/logout
+                invalidate_session: true
+                delete_cookies: true
 
             # Activate different ways to authenticate:
             # https://symfony.com/doc/current/security.html#the-firewall

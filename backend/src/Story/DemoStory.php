@@ -2,465 +2,242 @@
 
 namespace App\Story;
 
+use App\Entity\Subject;
+use App\Entity\Task;
+use App\Entity\User;
+use App\Factory\NoteFactory;
+use App\Factory\SubjectFactory;
+use App\Factory\TaskFactory;
+use App\Factory\UserFactory;
+use Zenstruck\Foundry\Attribute\AsFixture;
 use Zenstruck\Foundry\Story;
 
+#[AsFixture(name: 'demoStory', groups: ['demo'])]
 final class DemoStory extends Story
 {
+    private const string POOL_PRESENTATION_USERS = 'presentation-users';
+    private const string POOL_PRESENTATION_SUBJECTS = 'presentation-subjects';
+    private const string POOL_PRESENTATION_TASKS = 'presentation-tasks';
+    private const string POOL_PRESENTATION_NOTES = 'presentation-notes';
+
+    private const int PRESENTATION_USERS = 3;
+
     public function build(): void
     {
-        MinimalStory::load();
+        $users = $this->createUsers();
+        $subjects = $this->createSubjects($users);
+        $tasks = $this->createTasks($users, $subjects);
 
-        $users = [
-            'emma' => UserFactory::createOne([
-                'username' => 'emma',
-                'email' => 'emma@studybuddy.test',
-                'roles' => ['ROLE_USER'],
-                'password' => 'secret',
-                'displayName' => 'Emma Verstraeten',
-                'profileImagePath' => null,
-                'isActive' => true,
-                'lastLoginAt' => new \DateTimeImmutable('-30 minutes'),
-                'points' => 840,
-                'createdAt' => new \DateTimeImmutable('-60 days'),
-                'updatedAt' => new \DateTimeImmutable('-30 minutes'),
-            ]),
-            'noah' => UserFactory::createOne([
-                'username' => 'noah',
-                'email' => 'noah@studybuddy.test',
-                'roles' => ['ROLE_USER'],
-                'password' => 'secret',
-                'displayName' => 'Noah Peeters',
-                'profileImagePath' => null,
-                'isActive' => true,
-                'lastLoginAt' => new \DateTimeImmutable('-3 hours'),
-                'points' => 430,
-                'createdAt' => new \DateTimeImmutable('-45 days'),
-                'updatedAt' => new \DateTimeImmutable('-3 hours'),
-            ]),
-        ];
+        $this->createNotes($users, $subjects, $tasks);
+    }
 
-        foreach ($users as $key => $user) {
-            $this->addState("demo-user-{$key}", $user);
-            $this->addToPool('users-demo', [$user]);
+    /**
+     * @return array<int, User>
+     */
+    private function createUsers(): array
+    {
+        $users = [];
 
-            SettingsFactory::createOne([
-                'user' => $user,
-                'timezone' => 'Europe/Brussels',
-                'weekStartDay' => self::enumCase(WeekStartDay::class, ['MONDAY'], ['monday', 'mon']),
-                'defaultSessionType' => self::enumCase(SessionType::class, ['FOCUS', 'POMODORO'], ['focus', 'pomodoro']),
-                'defaultSessionMinutes' => 50,
-                'defaultBreakMinutes' => 10,
-                'createdAt' => new \DateTimeImmutable('-45 days'),
-                'updatedAt' => new \DateTimeImmutable('-1 day'),
+        $users[1] = UserFactory::new()
+            ->basic(100)
+            ->create([
+                'username' => 'demo',
+                'email' => 'demo@studybuddy.test',
+                'displayName' => 'Demo Student',
+                'points' => 1860,
+                'currentStreak' => 9,
+                'longestStreak' => 21,
+                'lastLoginAt' => new \DateTimeImmutable('-2 hours'),
             ]);
-        }
 
-        UserAchievementFactory::createOne([
-            'user' => $users['emma'],
-            'achievement' => MinimalStory::get('achievement1'),
-            'earnedAt' => new \DateTimeImmutable('-12 days'),
-        ]);
+        $users[2] = UserFactory::new()
+            ->basic(101)
+            ->create([
+                'username' => 'alex',
+                'email' => 'alex@studybuddy.test',
+                'displayName' => 'Alex Engineer',
+                'points' => 920,
+                'currentStreak' => 4,
+                'longestStreak' => 11,
+                'lastLoginAt' => new \DateTimeImmutable('-1 day'),
+            ]);
 
-        UserAchievementFactory::createOne([
-            'user' => $users['emma'],
-            'achievement' => MinimalStory::get('achievement2'),
-            'earnedAt' => new \DateTimeImmutable('-5 days'),
-        ]);
+        $users[3] = UserFactory::new()
+            ->basic(102)
+            ->create([
+                'username' => 'sam',
+                'email' => 'sam@studybuddy.test',
+                'displayName' => 'Sam Researcher',
+                'points' => 540,
+                'currentStreak' => 2,
+                'longestStreak' => 8,
+                'lastLoginAt' => new \DateTimeImmutable('-3 days'),
+            ]);
 
-        $subjects = [
-            'power-electronics' => SubjectFactory::createOne([
-                'user' => $users['emma'],
-                'code' => 'ELEC-PE',
-                'name' => 'Power Electronics',
-                'description' => 'Converter design, LT8711 zeta topology, measurements and report preparation.',
-                'colorHex' => '#2F6FED',
-                'targetTotalMinutes' => 2400,
-                'targetWeeklyMinutes' => 420,
-                'createdAt' => new \DateTimeImmutable('-40 days'),
-                'updatedAt' => new \DateTimeImmutable('-1 day'),
-                'archivedAt' => null,
-                'deletedAt' => null,
-            ]),
-            'web-technology' => SubjectFactory::createOne([
-                'user' => $users['emma'],
-                'code' => 'ICT-WEB',
-                'name' => 'Software & Web Technology',
-                'description' => 'Symfony backend, React frontend, StudyBuddy feature delivery and testing.',
-                'colorHex' => '#1F9D55',
-                'targetTotalMinutes' => 3000,
-                'targetWeeklyMinutes' => 480,
-                'createdAt' => new \DateTimeImmutable('-38 days'),
-                'updatedAt' => new \DateTimeImmutable('-2 days'),
-                'archivedAt' => null,
-                'deletedAt' => null,
-            ]),
-            'machine-learning' => SubjectFactory::createOne([
-                'user' => $users['emma'],
-                'code' => 'ICT-ML',
-                'name' => 'Machine Learning',
-                'description' => 'Dry Bean classification, decision trees, neural networks and reproducible evaluation.',
-                'colorHex' => '#8B5CF6',
-                'targetTotalMinutes' => 2100,
-                'targetWeeklyMinutes' => 360,
-                'createdAt' => new \DateTimeImmutable('-35 days'),
-                'updatedAt' => new \DateTimeImmutable('-3 days'),
-                'archivedAt' => null,
-                'deletedAt' => null,
-            ]),
+        $this->registerCollection(
+            self::POOL_PRESENTATION_USERS,
+            'presentationUser',
+            $users
+        );
+
+        return $users;
+    }
+
+    /**
+     * @param array<int, User> $users
+     *
+     * @return array<int, Subject>
+     */
+    private function createSubjects(array $users): array
+    {
+        $rows = [
+            1 => [1, 'WEBTECH', 'Web Technology', 'Symfony, React, deployment, CI/CD, and realtime timers.'],
+            2 => [1, 'ML', 'Machine Learning', 'Dry Bean classification, evaluation, macro-F1, and model comparison.'],
+            3 => [1, 'ELEC', 'Power Electronics', 'LTspice simulations, ripple analysis, and buck-boost design.'],
+            4 => [1, 'EMBED', 'Embedded Systems', 'Microcontrollers, UART protocols, and scheduling.'],
+            5 => [1, 'RND', 'Research Methods', 'Presentation structure, references, and report quality.'],
+
+            6 => [2, 'NET', 'Computer Networks', 'VLANs, reverse proxies, DNS, and network segmentation.'],
+            7 => [2, 'DB', 'Database Systems', 'Doctrine mapping, relations, migrations, and fixtures.'],
+
+            8 => [3, 'UX', 'User Experience', 'Dashboard clarity, onboarding, and visual consistency.'],
+            9 => [3, 'SEC', 'Application Security', 'Authentication, authorization, upload handling, and API logout.'],
         ];
 
-        foreach ($subjects as $key => $subject) {
-            $this->addState("demo-subject-{$key}", $subject);
-            $this->addToPool('subjects-demo', [$subject]);
+        $subjects = [];
+
+        foreach ($rows as $i => [$userIndex, $code, $name, $description]) {
+            $subjects[$i] = SubjectFactory::new()
+                ->basic($i + 100)
+                ->forUser($users[$userIndex])
+                ->create([
+                    'code' => $code,
+                    'name' => $name,
+                    'description' => $description,
+                ]);
         }
 
-        $tags = [
-            'exam' => TagFactory::createOne([
-                'user' => $users['emma'],
-                'name' => 'exam',
-                'colorHex' => '#DC2626',
-                'createdAt' => new \DateTimeImmutable('-35 days'),
-                'updatedAt' => new \DateTimeImmutable('-1 day'),
-            ]),
-            'lab' => TagFactory::createOne([
-                'user' => $users['emma'],
-                'name' => 'lab',
-                'colorHex' => '#2563EB',
-                'createdAt' => new \DateTimeImmutable('-35 days'),
-                'updatedAt' => new \DateTimeImmutable('-1 day'),
-            ]),
-            'report' => TagFactory::createOne([
-                'user' => $users['emma'],
-                'name' => 'report',
-                'colorHex' => '#9333EA',
-                'createdAt' => new \DateTimeImmutable('-35 days'),
-                'updatedAt' => new \DateTimeImmutable('-1 day'),
-            ]),
-            'backend' => TagFactory::createOne([
-                'user' => $users['emma'],
-                'name' => 'backend',
-                'colorHex' => '#059669',
-                'createdAt' => new \DateTimeImmutable('-35 days'),
-                'updatedAt' => new \DateTimeImmutable('-1 day'),
-            ]),
+        $this->registerCollection(
+            self::POOL_PRESENTATION_SUBJECTS,
+            'presentationSubject',
+            $subjects
+        );
+
+        return $subjects;
+    }
+
+    /**
+     * @param array<int, User> $users
+     * @param array<int, Subject> $subjects
+     *
+     * @return array<int, Task>
+     */
+    private function createTasks(array $users, array $subjects): array
+    {
+        $rows = [
+            1 => [1, 1, 'Finish Symfony security tests', 'Cover register, profile update, password update, and image upload branches.', '+1 day'],
+            2 => [1, 1, 'Prepare admin dashboard demo', 'Show Mercure health, writable upload directory, latest logs, and registered users.', '+2 days'],
+            3 => [1, 1, 'Finalize CI coverage deployment', 'Generate PHPUnit coverage and publish it under /upload/coverage.', '+2 days'],
+            4 => [1, 2, 'Export Dry Bean confusion matrix', 'Prepare model comparison figure for the presentation.', '-1 day'],
+            5 => [1, 2, 'Write macro-F1 explanation', 'Explain why macro-F1 is relevant for multiclass imbalance.', '+3 days'],
+            6 => [1, 3, 'Capture LTspice ripple plots', 'Collect screenshots for input/output ripple behavior.', '-2 days'],
+            7 => [1, 3, 'Summarize buck-boost efficiency', 'Prepare graph and short interpretation for report discussion.', '+4 days'],
+            8 => [1, 4, 'Document UART frame format', 'Prepare protocol diagram and validation notes.', '+5 days'],
+            9 => [1, 5, 'Finalize presentation storyline', 'Problem, architecture, implementation, demo, evaluation, reflection.', '+1 day'],
+
+            10 => [2, 6, 'Prepare VLAN diagram', 'Show current and target homelab network segmentation.', '+6 days'],
+            11 => [2, 7, 'Review Doctrine relations', 'Verify nullable and non-nullable ownership before fixture expansion.', '+2 days'],
+
+            12 => [3, 8, 'Polish dashboard empty states', 'Improve first-login experience and presentation readability.', '+4 days'],
+            13 => [3, 9, 'Check upload execution blocking', 'Verify Apache refuses PHP execution inside /upload.', '+1 day'],
         ];
 
-        foreach ($tags as $key => $tag) {
-            $this->addState("demo-tag-{$key}", $tag);
-            $this->addToPool('tags-demo', [$tag]);
+        $tasks = [];
+
+        foreach ($rows as $i => [$userIndex, $subjectIndex, $title, $description, $due]) {
+            $tasks[$i] = TaskFactory::new()
+                ->basic($i + 100)
+                ->forUser($users[$userIndex])
+                ->forSubject($subjects[$subjectIndex])
+                ->create([
+                    'title' => $title,
+                    'description' => $description,
+                    'dueAt' => new \DateTimeImmutable($due),
+                ]);
         }
 
-        SubjectTagFactory::createOne([
-            'subject' => $subjects['power-electronics'],
-            'tag' => $tags['lab'],
-            'createdAt' => new \DateTimeImmutable('-30 days'),
-        ]);
+        $this->registerCollection(
+            self::POOL_PRESENTATION_TASKS,
+            'presentationTask',
+            $tasks
+        );
 
-        SubjectTagFactory::createOne([
-            'subject' => $subjects['power-electronics'],
-            'tag' => $tags['report'],
-            'createdAt' => new \DateTimeImmutable('-30 days'),
-        ]);
+        return $tasks;
+    }
 
-        SubjectTagFactory::createOne([
-            'subject' => $subjects['web-technology'],
-            'tag' => $tags['backend'],
-            'createdAt' => new \DateTimeImmutable('-30 days'),
-        ]);
+    /**
+     * @param array<int, User> $users
+     * @param array<int, Subject> $subjects
+     * @param array<int, Task> $tasks
+     */
+    private function createNotes(
+        array $users,
+        array $subjects,
+        array $tasks,
+    ): void
+    {
+        $rows = [
+            1 => [1, 1, 1, 'Symfony security notes', 'Logout must return JSON or 204 for API usage; redirects are wrong for XHR.'],
+            2 => [1, 1, 2, 'Deployment routing notes', '/api goes through Symfony, /upload is static Apache, React handles client-side routing.'],
+            3 => [1, 1, 3, 'Coverage deployment notes', 'Coverage is generated in the test image and deployed as static files under /upload/coverage.'],
+            4 => [1, 2, 4, 'Dry Bean evaluation summary', 'Decision trees are interpretable; MLP improves predictive performance after scaling.'],
+            5 => [1, 2, 5, 'Macro-F1 note', 'Macro-F1 gives each class equal weight and is useful for comparing per-class behavior.'],
+            6 => [1, 3, 6, 'Power electronics simulation note', 'Ripple and transient behavior are central for the 12 V universal supply discussion.'],
+            7 => [1, 3, 7, 'Efficiency plot interpretation', 'Efficiency should be discussed across input voltage and load ranges.'],
+            8 => [1, 4, 8, 'Embedded protocol checklist', 'Keep frame format deterministic and include checksum/error handling.'],
+            9 => [1, 5, 9, 'Presentation structure', 'Start from problem context, then architecture, demo, metrics, and reflection.'],
 
-        SubjectTagFactory::createOne([
-            'subject' => $subjects['machine-learning'],
-            'tag' => $tags['exam'],
-            'createdAt' => new \DateTimeImmutable('-30 days'),
-        ]);
+            10 => [2, 6, 10, 'Network segmentation note', 'Use diagrams to explain trust zones and traffic flows.'],
+            11 => [2, 7, 11, 'Doctrine mapping note', 'Required user ownership must be respected in fixtures and tests.'],
 
-        $tasks = [
-            'zeta-report' => TaskFactory::createOne([
-                'user' => $users['emma'],
-                'subject' => $subjects['power-electronics'],
-                'title' => 'Finish zeta converter measurement section',
-                'description' => 'Add efficiency table, ripple method and thermal observations.',
-                'status' => self::enumCase(TaskStatus::class, ['IN_PROGRESS', 'ACTIVE', 'TODO'], ['in_progress', 'active', 'todo']),
-                'priority' => self::enumCase(TaskPriority::class, ['HIGH'], ['high']),
-                'estimatedMinutes' => 180,
-                'dueAt' => new \DateTimeImmutable('+3 days'),
-                'scheduledFor' => new \DateTimeImmutable('+1 day'),
-                'completedAt' => null,
-                'createdAt' => new \DateTimeImmutable('-6 days'),
-                'updatedAt' => new \DateTimeImmutable('-2 hours'),
-                'archivedAt' => null,
-                'deletedAt' => null,
-            ]),
-            'studycontent-upload' => TaskFactory::createOne([
-                'user' => $users['emma'],
-                'subject' => $subjects['web-technology'],
-                'title' => 'Implement StudyContent resource upload flow',
-                'description' => 'Backend endpoint, metadata persistence, frontend test page and validation feedback.',
-                'status' => self::enumCase(TaskStatus::class, ['TODO', 'OPEN', 'PENDING'], ['todo', 'open', 'pending']),
-                'priority' => self::enumCase(TaskPriority::class, ['HIGH'], ['high']),
-                'estimatedMinutes' => 240,
-                'dueAt' => new \DateTimeImmutable('+2 days'),
-                'scheduledFor' => new \DateTimeImmutable('+12 hours'),
-                'completedAt' => null,
-                'createdAt' => new \DateTimeImmutable('-4 days'),
-                'updatedAt' => new \DateTimeImmutable('-1 hour'),
-                'archivedAt' => null,
-                'deletedAt' => null,
-            ]),
-            'ml-evaluation' => TaskFactory::createOne([
-                'user' => $users['emma'],
-                'subject' => $subjects['machine-learning'],
-                'title' => 'Freeze macro-F1 evaluation table',
-                'description' => 'Compare decision tree and MLP results on validation/test splits.',
-                'status' => self::enumCase(TaskStatus::class, ['DONE', 'COMPLETED'], ['done', 'completed']),
-                'priority' => self::enumCase(TaskPriority::class, ['MEDIUM', 'NORMAL'], ['medium', 'normal']),
-                'estimatedMinutes' => 120,
-                'dueAt' => new \DateTimeImmutable('-1 day'),
-                'scheduledFor' => new \DateTimeImmutable('-2 days'),
-                'completedAt' => new \DateTimeImmutable('-1 day'),
-                'createdAt' => new \DateTimeImmutable('-10 days'),
-                'updatedAt' => new \DateTimeImmutable('-1 day'),
-                'archivedAt' => null,
-                'deletedAt' => null,
-            ]),
+            12 => [3, 8, 12, 'UX dashboard note', 'Presentation screenshots need populated cards, charts, and recent activity.'],
+            13 => [3, 9, 13, 'Upload security note', 'Uploads should be outside public build assets and PHP execution must be disabled.'],
         ];
 
-        foreach ($tasks as $key => $task) {
-            $this->addState("demo-task-{$key}", $task);
-            $this->addToPool('tasks-demo', [$task]);
+        $notes = [];
+
+        foreach ($rows as $i => [$userIndex, $subjectIndex, $taskIndex, $title, $content]) {
+            $notes[$i] = NoteFactory::new()
+                ->basic($i + 100)
+                ->forUser($users[$userIndex])
+                ->forSubject($subjects[$subjectIndex])
+                ->forTask($tasks[$taskIndex])
+                ->create([
+                    'title' => $title,
+                    'content' => $content,
+                ]);
         }
 
-        TaskTagFactory::createOne([
-            'task' => $tasks['zeta-report'],
-            'tag' => $tags['report'],
-            'createdAt' => new \DateTimeImmutable('-5 days'),
-        ]);
+        $this->registerCollection(
+            self::POOL_PRESENTATION_NOTES,
+            'presentationNote',
+            $notes
+        );
+    }
 
-        TaskTagFactory::createOne([
-            'task' => $tasks['studycontent-upload'],
-            'tag' => $tags['backend'],
-            'createdAt' => new \DateTimeImmutable('-4 days'),
-        ]);
-
-        TaskTagFactory::createOne([
-            'task' => $tasks['ml-evaluation'],
-            'tag' => $tags['exam'],
-            'createdAt' => new \DateTimeImmutable('-8 days'),
-        ]);
-
-        $notes = [
-            'zeta-measurements' => NoteFactory::createOne([
-                'user' => $users['emma'],
-                'subject' => $subjects['power-electronics'],
-                'task' => $tasks['zeta-report'],
-                'title' => 'Zeta converter measurement notes',
-                'content' => "Key measurements:\n\n- Check efficiency at Vin = 5 V, 12 V, 18 V.\n- Keep thermal and ripple sections separated.\n- Include probe setup notes.",
-                'sourceType' => self::enumCase(NoteSourceType::class, ['MANUAL', 'TEXT'], ['manual', 'text']),
-                'externalUrl' => null,
-                'createdAt' => new \DateTimeImmutable('-5 days'),
-                'updatedAt' => new \DateTimeImmutable('-1 hour'),
-                'archivedAt' => null,
-                'deletedAt' => null,
-            ]),
-            'symfony-plan' => NoteFactory::createOne([
-                'user' => $users['emma'],
-                'subject' => $subjects['web-technology'],
-                'task' => $tasks['studycontent-upload'],
-                'title' => 'StudyContent implementation plan',
-                'content' => "Implementation slice:\n\n1. Upload controller.\n2. Resource entity persistence.\n3. Test page in React.\n4. Fixtures for realistic resources.",
-                'sourceType' => self::enumCase(NoteSourceType::class, ['MANUAL', 'TEXT'], ['manual', 'text']),
-                'externalUrl' => null,
-                'createdAt' => new \DateTimeImmutable('-4 days'),
-                'updatedAt' => new \DateTimeImmutable('-2 hours'),
-                'archivedAt' => null,
-                'deletedAt' => null,
-            ]),
-            'dry-bean-results' => NoteFactory::createOne([
-                'user' => $users['emma'],
-                'subject' => $subjects['machine-learning'],
-                'task' => $tasks['ml-evaluation'],
-                'title' => 'Dry Bean evaluation summary',
-                'content' => "Report macro-F1 as primary metric. Accuracy remains secondary. Keep test data untouched until final evaluation.",
-                'sourceType' => self::enumCase(NoteSourceType::class, ['MANUAL', 'TEXT'], ['manual', 'text']),
-                'externalUrl' => null,
-                'createdAt' => new \DateTimeImmutable('-8 days'),
-                'updatedAt' => new \DateTimeImmutable('-1 day'),
-                'archivedAt' => null,
-                'deletedAt' => null,
-            ]),
-        ];
-
-        foreach ($notes as $key => $note) {
-            $this->addState("demo-note-{$key}", $note);
-            $this->addToPool('notes-demo', [$note]);
+    /**
+     * @param array<int, object> $entities
+     */
+    private function registerCollection(
+        string $pool,
+        string $prefix,
+        array  $entities,
+    ): void
+    {
+        foreach ($entities as $i => $entity) {
+            $this->addState("{$prefix}{$i}", $entity);
         }
 
-        NoteTagFactory::createOne([
-            'note' => $notes['zeta-measurements'],
-            'tag' => $tags['lab'],
-            'createdAt' => new \DateTimeImmutable('-5 days'),
-        ]);
-
-        NoteTagFactory::createOne([
-            'note' => $notes['symfony-plan'],
-            'tag' => $tags['backend'],
-            'createdAt' => new \DateTimeImmutable('-4 days'),
-        ]);
-
-        NoteTagFactory::createOne([
-            'note' => $notes['dry-bean-results'],
-            'tag' => $tags['exam'],
-            'createdAt' => new \DateTimeImmutable('-8 days'),
-        ]);
-
-        NoteAttachmentFactory::createOne([
-            'note' => $notes['zeta-measurements'],
-            'originalFilename' => 'zeta-efficiency-table.pdf',
-            'storagePath' => 'fixtures/demo/zeta-efficiency-table.pdf',
-            'mimeType' => 'application/pdf',
-            'sizeBytes' => 384000,
-            'checksumSha256' => hash('sha256', 'zeta-efficiency-table.pdf'),
-            'createdAt' => new \DateTimeImmutable('-5 days'),
-            'updatedAt' => new \DateTimeImmutable('-5 days'),
-        ]);
-
-        $resources = [
-            'lt8711-datasheet' => ResourceFactory::createOne([
-                'user' => $users['emma'],
-                'subject' => $subjects['power-electronics'],
-                'title' => 'LT8711 datasheet',
-                'description' => 'Controller reference for zeta converter design constraints.',
-                'resourceType' => self::enumCase(ResourceType::class, ['LINK', 'URL'], ['link', 'url']),
-                'externalUrl' => 'https://example.test/lt8711-datasheet',
-                'originalFilename' => null,
-                'storagePath' => null,
-                'mimeType' => null,
-                'sizeBytes' => null,
-                'checksumSha256' => null,
-                'createdAt' => new \DateTimeImmutable('-20 days'),
-                'updatedAt' => new \DateTimeImmutable('-2 days'),
-                'archivedAt' => null,
-                'deletedAt' => null,
-            ]),
-            'studycontent-api-spec' => ResourceFactory::createOne([
-                'user' => $users['emma'],
-                'subject' => $subjects['web-technology'],
-                'title' => 'StudyContent API scratch spec',
-                'description' => 'Local design notes for notes/resources/tags API endpoints.',
-                'resourceType' => self::enumCase(ResourceType::class, ['FILE', 'UPLOAD'], ['file', 'upload']),
-                'externalUrl' => null,
-                'originalFilename' => 'studycontent-api-spec.md',
-                'storagePath' => 'fixtures/demo/studycontent-api-spec.md',
-                'mimeType' => 'text/markdown',
-                'sizeBytes' => 18000,
-                'checksumSha256' => hash('sha256', 'studycontent-api-spec.md'),
-                'createdAt' => new \DateTimeImmutable('-6 days'),
-                'updatedAt' => new \DateTimeImmutable('-1 day'),
-                'archivedAt' => null,
-                'deletedAt' => null,
-            ]),
-        ];
-
-        foreach ($resources as $key => $resource) {
-            $this->addState("demo-resource-{$key}", $resource);
-            $this->addToPool('resources-demo', [$resource]);
-        }
-
-        ResourceTagFactory::createOne([
-            'resource' => $resources['lt8711-datasheet'],
-            'tag' => $tags['lab'],
-            'createdAt' => new \DateTimeImmutable('-20 days'),
-        ]);
-
-        ResourceTagFactory::createOne([
-            'resource' => $resources['studycontent-api-spec'],
-            'tag' => $tags['backend'],
-            'createdAt' => new \DateTimeImmutable('-6 days'),
-        ]);
-
-        $session1Started = new \DateTimeImmutable('-2 days');
-
-        $session1 = SessionFactory::createOne([
-            'user' => $users['emma'],
-            'status' => self::enumCase(SessionStatus::class, ['COMPLETED', 'DONE'], ['completed', 'done']),
-            'sessionType' => self::enumCase(SessionType::class, ['FOCUS', 'POMODORO'], ['focus', 'pomodoro']),
-            'startedAt' => $session1Started,
-            'endedAt' => $session1Started->modify('+95 minutes'),
-            'plannedMinutes' => 100,
-            'actualFocusMinutes' => 88,
-            'breakMinutes' => 10,
-            'distractionCount' => 2,
-            'sessionNote' => 'Good progress on measurement section and report structure.',
-            'createdAt' => $session1Started,
-            'updatedAt' => $session1Started->modify('+95 minutes'),
-        ]);
-
-        $session2Started = new \DateTimeImmutable('-1 day');
-
-        $session2 = SessionFactory::createOne([
-            'user' => $users['emma'],
-            'status' => self::enumCase(SessionStatus::class, ['COMPLETED', 'DONE'], ['completed', 'done']),
-            'sessionType' => self::enumCase(SessionType::class, ['FOCUS', 'POMODORO'], ['focus', 'pomodoro']),
-            'startedAt' => $session2Started,
-            'endedAt' => $session2Started->modify('+55 minutes'),
-            'plannedMinutes' => 50,
-            'actualFocusMinutes' => 48,
-            'breakMinutes' => 10,
-            'distractionCount' => 0,
-            'sessionNote' => 'Backend endpoint design was clarified.',
-            'createdAt' => $session2Started,
-            'updatedAt' => $session2Started->modify('+55 minutes'),
-        ]);
-
-        $this->addState('demo-session-power-electronics', $session1);
-        $this->addState('demo-session-web-technology', $session2);
-
-        SessionEntryFactory::createOne([
-            'session' => $session1,
-            'subject' => $subjects['power-electronics'],
-            'task' => $tasks['zeta-report'],
-            'note' => $notes['zeta-measurements'],
-            'plannedMinutes' => 50,
-            'actualFocusMinutes' => 44,
-            'entryStartedAt' => $session1Started,
-            'entryEndedAt' => $session1Started->modify('+44 minutes'),
-            'subjectNameSnapshot' => 'Power Electronics',
-            'taskTitleSnapshot' => 'Finish zeta converter measurement section',
-            'noteTitleSnapshot' => 'Zeta converter measurement notes',
-            'createdAt' => $session1Started,
-            'updatedAt' => $session1Started->modify('+44 minutes'),
-        ]);
-
-        SessionEntryFactory::createOne([
-            'session' => $session1,
-            'subject' => $subjects['power-electronics'],
-            'task' => $tasks['zeta-report'],
-            'note' => $notes['zeta-measurements'],
-            'plannedMinutes' => 50,
-            'actualFocusMinutes' => 44,
-            'entryStartedAt' => $session1Started->modify('+50 minutes'),
-            'entryEndedAt' => $session1Started->modify('+94 minutes'),
-            'subjectNameSnapshot' => 'Power Electronics',
-            'taskTitleSnapshot' => 'Finish zeta converter measurement section',
-            'noteTitleSnapshot' => 'Zeta converter measurement notes',
-            'createdAt' => $session1Started->modify('+50 minutes'),
-            'updatedAt' => $session1Started->modify('+94 minutes'),
-        ]);
-
-        SessionEntryFactory::createOne([
-            'session' => $session2,
-            'subject' => $subjects['web-technology'],
-            'task' => $tasks['studycontent-upload'],
-            'note' => $notes['symfony-plan'],
-            'plannedMinutes' => 50,
-            'actualFocusMinutes' => 48,
-            'entryStartedAt' => $session2Started,
-            'entryEndedAt' => $session2Started->modify('+48 minutes'),
-            'subjectNameSnapshot' => 'Software & Web Technology',
-            'taskTitleSnapshot' => 'Implement StudyContent resource upload flow',
-            'noteTitleSnapshot' => 'StudyContent implementation plan',
-            'createdAt' => $session2Started,
-            'updatedAt' => $session2Started->modify('+48 minutes'),
-        ]);
+        $this->addToPool($pool, $entities);
     }
 }
