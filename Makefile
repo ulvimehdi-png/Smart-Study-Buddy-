@@ -193,10 +193,10 @@ deploy-ci-env:
 	ssh "$(DEPLOY_HOST)" "cat > '$(DEPLOY_PATH)/.env'" < "$(DOT_ENV)"
 	printf "%s\n" \
 	"APP_ENV=prod" \
-	"APP_SECRET=$(APP_SECRET)" \
-	"DATABASE_URL=$(DATABASE_URL)" \
-	"JWT_PASSPHRASE=$(JWT_PASSPHRASE)" \
-	"MERCURE_JWT_SECRET=$(MERCURE_JWT_SECRET)" \
+	"$(APP_SECRET)" \
+	"$(DATABASE_URL)" \
+	"$(JWT_PASSPHRASE)" \
+	"$(MERCURE_JWT_SECRET)" \
 	| ssh "$(DEPLOY_HOST)" "cat > '$(DEPLOY_PATH)/.env.local'"
 	ssh "$(DEPLOY_HOST)" "chmod 644 '$(DEPLOY_PATH)/.env' '$(DEPLOY_PATH)/.env.local'"
 
