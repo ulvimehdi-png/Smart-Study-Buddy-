@@ -35,6 +35,8 @@
             <directory>src/DataFixtures</directory>
             <directory>src/Factory</directory>
             <directory>src/Story</directory>
+            <directory>src/LiveTimerSession/DTO</directory>
+            <directory>src/LiveTimerSession/Enum</directory>
         </exclude>
 
         <deprecationTrigger>
@@ -44,9 +46,9 @@
         </deprecationTrigger>
     </source>
 
-    <coverage pathCoverage="true">
+    <coverage>
         <report>
-            <html outputDirectory="var/coverage/html" lowUpperBound="50" highLowerBound="65"/>
+            <html outputDirectory="var/coverage/html" lowUpperBound="40" highLowerBound="70"/>
         </report>
     </coverage>
 
