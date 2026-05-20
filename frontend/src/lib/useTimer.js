@@ -385,7 +385,7 @@ export function TimerProvider({ children }) {
         const deltaTime = time - previousTime;
 
         setLocalMsLeft((previousMsLeft) => {
-          const nextMsLeft = previousMsLeft - deltaTime;
+          const nextMsLeft = Math.round(previousMsLeft - deltaTime);
 
           if (nextMsLeft > 0) {
             return nextMsLeft;
@@ -592,7 +592,7 @@ export function TimerProvider({ children }) {
         status: localIsPlaying ? 'running' : localMsLeft === durationToMs(localIsResting ? restDraft : workDraft)
           ? 'idle'
           : 'paused',
-        remainingMs: localMsLeft,
+        remainingMs: Math.round(localMsLeft),
       });
 
       ensuredSessionId = created?.id ?? '';

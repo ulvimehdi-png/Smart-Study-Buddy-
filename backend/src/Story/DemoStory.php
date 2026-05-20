@@ -2,6 +2,7 @@
 
 namespace App\Story;
 
+use App\Entity\Note;
 use App\Entity\Subject;
 use App\Entity\Task;
 use App\Entity\User;
@@ -15,20 +16,21 @@ use Zenstruck\Foundry\Story;
 #[AsFixture(name: 'demoStory', groups: ['demo'])]
 final class DemoStory extends Story
 {
-    private const string POOL_PRESENTATION_USERS = 'presentation-users';
-    private const string POOL_PRESENTATION_SUBJECTS = 'presentation-subjects';
-    private const string POOL_PRESENTATION_TASKS = 'presentation-tasks';
-    private const string POOL_PRESENTATION_NOTES = 'presentation-notes';
+    private const string POOL_DEMO_USERS = 'demo-users';
+    private const string POOL_DEMO_SUBJECTS = 'demo-subjects';
+    private const string POOL_DEMO_TASKS = 'demo-tasks';
+    private const string POOL_DEMO_NOTES = 'demo-notes';
 
-    private const int PRESENTATION_USERS = 3;
+    private const int TASKS_PER_SUBJECT = 6;
+    private const int NOTES_PER_SUBJECT = 4;
 
     public function build(): void
     {
         $users = $this->createUsers();
         $subjects = $this->createSubjects($users);
-        $tasks = $this->createTasks($users, $subjects);
+        $tasks = $this->createTasks($subjects);
 
-        $this->createNotes($users, $subjects, $tasks);
+        $this->createNotes($subjects, $tasks);
     }
 
     /**
@@ -39,44 +41,69 @@ final class DemoStory extends Story
         $users = [];
 
         $users[1] = UserFactory::new()
-            ->basic(100)
+            ->basic(200)
             ->create([
                 'username' => 'demo',
                 'email' => 'demo@studybuddy.test',
                 'displayName' => 'Demo Student',
-                'points' => 1860,
-                'currentStreak' => 9,
-                'longestStreak' => 21,
-                'lastLoginAt' => new \DateTimeImmutable('-2 hours'),
+                'points' => 2450,
+                'currentStreak' => 12,
+                'longestStreak' => 28,
+                'lastLoginAt' => new \DateTimeImmutable('-1 hour'),
             ]);
 
         $users[2] = UserFactory::new()
-            ->basic(101)
+            ->basic(201)
+            ->isAdmin()
             ->create([
-                'username' => 'alex',
-                'email' => 'alex@studybuddy.test',
-                'displayName' => 'Alex Engineer',
-                'points' => 920,
-                'currentStreak' => 4,
-                'longestStreak' => 11,
-                'lastLoginAt' => new \DateTimeImmutable('-1 day'),
+                'username' => 'admin',
+                'email' => 'admin@studybuddy.test',
+                'displayName' => 'Admin Developer',
+                'points' => 5200,
+                'currentStreak' => 18,
+                'longestStreak' => 42,
+                'lastLoginAt' => new \DateTimeImmutable('-20 minutes'),
             ]);
 
         $users[3] = UserFactory::new()
-            ->basic(102)
+            ->basic(202)
             ->create([
-                'username' => 'sam',
-                'email' => 'sam@studybuddy.test',
-                'displayName' => 'Sam Researcher',
-                'points' => 540,
-                'currentStreak' => 2,
-                'longestStreak' => 8,
-                'lastLoginAt' => new \DateTimeImmutable('-3 days'),
+                'username' => 'lisa',
+                'email' => 'lisa@studybuddy.test',
+                'displayName' => 'Lisa Analyst',
+                'points' => 1320,
+                'currentStreak' => 5,
+                'longestStreak' => 13,
+                'lastLoginAt' => new \DateTimeImmutable('-1 day'),
+            ]);
+
+        $users[4] = UserFactory::new()
+            ->basic(203)
+            ->create([
+                'username' => 'noah',
+                'email' => 'noah@studybuddy.test',
+                'displayName' => 'Noah Designer',
+                'points' => 980,
+                'currentStreak' => 3,
+                'longestStreak' => 9,
+                'lastLoginAt' => new \DateTimeImmutable('-2 days'),
+            ]);
+
+        $users[5] = UserFactory::new()
+            ->basic(204)
+            ->create([
+                'username' => 'maya',
+                'email' => 'maya@studybuddy.test',
+                'displayName' => 'Maya Researcher',
+                'points' => 1760,
+                'currentStreak' => 7,
+                'longestStreak' => 19,
+                'lastLoginAt' => new \DateTimeImmutable('-6 hours'),
             ]);
 
         $this->registerCollection(
-            self::POOL_PRESENTATION_USERS,
-            'presentationUser',
+            self::POOL_DEMO_USERS,
+            'demoUser',
             $users
         );
 
@@ -91,24 +118,42 @@ final class DemoStory extends Story
     private function createSubjects(array $users): array
     {
         $rows = [
-            1 => [1, 'WEBTECH', 'Web Technology', 'Symfony, React, deployment, CI/CD, and realtime timers.'],
-            2 => [1, 'ML', 'Machine Learning', 'Dry Bean classification, evaluation, macro-F1, and model comparison.'],
-            3 => [1, 'ELEC', 'Power Electronics', 'LTspice simulations, ripple analysis, and buck-boost design.'],
-            4 => [1, 'EMBED', 'Embedded Systems', 'Microcontrollers, UART protocols, and scheduling.'],
-            5 => [1, 'RND', 'Research Methods', 'Presentation structure, references, and report quality.'],
+            [1, 'SEWT', 'Software Engineering', 'Requirements, architecture, testing, CI/CD, maintainability, and deployment workflows.'],
+            [1, 'WEB', 'Web Application Development', 'React, Symfony, API integration, routing, authentication, and frontend/backend boundaries.'],
+            [1, 'DBS', 'Database Systems', 'Relational modeling, Doctrine ORM, migrations, indexes, and data integrity.'],
+            [1, 'SEC', 'Application Security', 'Authentication, authorization, upload security, CORS, session handling, and secure deployment.'],
+            [1, 'UXD', 'User Experience Design', 'Dashboard usability, user flows, accessibility, layout quality, and visual consistency.'],
 
-            6 => [2, 'NET', 'Computer Networks', 'VLANs, reverse proxies, DNS, and network segmentation.'],
-            7 => [2, 'DB', 'Database Systems', 'Doctrine mapping, relations, migrations, and fixtures.'],
+            [2, 'ADMIN', 'Developer Operations', 'Admin monitoring, logs, coverage reports, deployment checks, and operational diagnostics.'],
+            [2, 'CI', 'Continuous Integration', 'Automated tests, build artifacts, deployment scripts, PHPUnit coverage, and GitLab pipelines.'],
+            [2, 'QA', 'Quality Assurance', 'Feature verification, regression testing, smoke tests, and release readiness.'],
+            [2, 'OPS', 'Production Operations', 'Apache routing, environment files, migrations, cache warmup, and static upload handling.'],
+            [2, 'OBS', 'Observability', 'Logs, health checks, status pages, dashboards, and troubleshooting workflow.'],
 
-            8 => [3, 'UX', 'User Experience', 'Dashboard clarity, onboarding, and visual consistency.'],
-            9 => [3, 'SEC', 'Application Security', 'Authentication, authorization, upload handling, and API logout.'],
+            [3, 'STAT', 'Applied Statistics', 'Descriptive statistics, distributions, hypothesis testing, confidence intervals, and visual analysis.'],
+            [3, 'ML', 'Machine Learning', 'Classification, model evaluation, validation splits, confusion matrices, and performance metrics.'],
+            [3, 'BI', 'Business Intelligence', 'Dashboards, KPIs, reporting, data summaries, and decision-support metrics.'],
+            [3, 'DATA', 'Data Engineering', 'Data cleaning, feature preparation, import/export flows, and reproducible pipelines.'],
+            [3, 'RISK', 'Risk Analysis', 'Risk identification, mitigation planning, scoring, and prioritization.'],
+
+            [4, 'MOB', 'Mobile Development', 'Mobile UI patterns, offline behavior, notifications, API usage, and responsive design.'],
+            [4, 'HCI', 'Human-Computer Interaction', 'Interaction design, user feedback loops, cognitive load, and usability validation.'],
+            [4, 'PM', 'Project Management', 'Planning, milestones, task breakdowns, communication, and scope control.'],
+            [4, 'DES', 'Product Design', 'Problem framing, prototyping, design systems, and iteration based on feedback.'],
+            [4, 'COMM', 'Technical Communication', 'Presentation structure, demo scripts, documentation, and stakeholder explanation.'],
+
+            [5, 'ALG', 'Algorithms', 'Complexity, graph traversal, sorting, dynamic programming, and problem-solving patterns.'],
+            [5, 'OS', 'Operating Systems', 'Processes, scheduling, memory, filesystems, concurrency, and system-level reasoning.'],
+            [5, 'NET', 'Computer Networks', 'HTTP, DNS, routing, firewalls, reverse proxies, ports, and traffic flows.'],
+            [5, 'CLOUD', 'Cloud Infrastructure', 'Containers, services, environment isolation, deployment targets, and runtime configuration.'],
+            [5, 'AIETH', 'AI Ethics', 'Bias, transparency, accountability, privacy, and responsible model usage.'],
         ];
 
         $subjects = [];
 
         foreach ($rows as $i => [$userIndex, $code, $name, $description]) {
-            $subjects[$i] = SubjectFactory::new()
-                ->basic($i + 100)
+            $subjects[$i + 1] = SubjectFactory::new()
+                ->basic($i + 300)
                 ->forUser($users[$userIndex])
                 ->create([
                     'code' => $code,
@@ -118,8 +163,8 @@ final class DemoStory extends Story
         }
 
         $this->registerCollection(
-            self::POOL_PRESENTATION_SUBJECTS,
-            'presentationSubject',
+            self::POOL_DEMO_SUBJECTS,
+            'demoSubject',
             $subjects
         );
 
@@ -127,48 +172,48 @@ final class DemoStory extends Story
     }
 
     /**
-     * @param array<int, User> $users
      * @param array<int, Subject> $subjects
      *
      * @return array<int, Task>
      */
-    private function createTasks(array $users, array $subjects): array
+    private function createTasks(array $subjects): array
     {
-        $rows = [
-            1 => [1, 1, 'Finish Symfony security tests', 'Cover register, profile update, password update, and image upload branches.', '+1 day'],
-            2 => [1, 1, 'Prepare admin dashboard demo', 'Show Mercure health, writable upload directory, latest logs, and registered users.', '+2 days'],
-            3 => [1, 1, 'Finalize CI coverage deployment', 'Generate PHPUnit coverage and publish it under /upload/coverage.', '+2 days'],
-            4 => [1, 2, 'Export Dry Bean confusion matrix', 'Prepare model comparison figure for the presentation.', '-1 day'],
-            5 => [1, 2, 'Write macro-F1 explanation', 'Explain why macro-F1 is relevant for multiclass imbalance.', '+3 days'],
-            6 => [1, 3, 'Capture LTspice ripple plots', 'Collect screenshots for input/output ripple behavior.', '-2 days'],
-            7 => [1, 3, 'Summarize buck-boost efficiency', 'Prepare graph and short interpretation for report discussion.', '+4 days'],
-            8 => [1, 4, 'Document UART frame format', 'Prepare protocol diagram and validation notes.', '+5 days'],
-            9 => [1, 5, 'Finalize presentation storyline', 'Problem, architecture, implementation, demo, evaluation, reflection.', '+1 day'],
-
-            10 => [2, 6, 'Prepare VLAN diagram', 'Show current and target homelab network segmentation.', '+6 days'],
-            11 => [2, 7, 'Review Doctrine relations', 'Verify nullable and non-nullable ownership before fixture expansion.', '+2 days'],
-
-            12 => [3, 8, 'Polish dashboard empty states', 'Improve first-login experience and presentation readability.', '+4 days'],
-            13 => [3, 9, 'Check upload execution blocking', 'Verify Apache refuses PHP execution inside /upload.', '+1 day'],
+        $templates = [
+            ['Review lecture material', 'Read the core theory and summarize the most important concepts.'],
+            ['Prepare practical exercise', 'Work through exercises and document blockers or unclear points.'],
+            ['Create presentation slide', 'Prepare one clean visual slide with key takeaways and examples.'],
+            ['Write implementation notes', 'Document design choices, constraints, and trade-offs.'],
+            ['Validate feature behavior', 'Test the expected behavior and record any remaining issues.'],
+            ['Prepare demo scenario', 'Create a small realistic scenario that can be shown during the presentation.'],
         ];
 
         $tasks = [];
+        $i = 1;
 
-        foreach ($rows as $i => [$userIndex, $subjectIndex, $title, $description, $due]) {
-            $tasks[$i] = TaskFactory::new()
-                ->basic($i + 100)
-                ->forUser($users[$userIndex])
-                ->forSubject($subjects[$subjectIndex])
-                ->create([
-                    'title' => $title,
-                    'description' => $description,
-                    'dueAt' => new \DateTimeImmutable($due),
-                ]);
+        foreach ($subjects as $subject) {
+            $user = $subject->getUser();
+
+            foreach ($templates as $j => [$title, $description]) {
+                $dueOffset = (($i % 17) - 5);
+                $due = $dueOffset >= 0 ? "+{$dueOffset} days" : "{$dueOffset} days";
+
+                $tasks[$i] = TaskFactory::new()
+                    ->basic($i + 300)
+                    ->forUser($user)
+                    ->forSubject($subject)
+                    ->create([
+                        'title' => "{$title}: {$subject->getName()}",
+                        'description' => "{$description} Subject: {$subject->getName()}.",
+                        'dueAt' => new \DateTimeImmutable($due),
+                    ]);
+
+                ++$i;
+            }
         }
 
         $this->registerCollection(
-            self::POOL_PRESENTATION_TASKS,
-            'presentationTask',
+            self::POOL_DEMO_TASKS,
+            'demoTask',
             $tasks
         );
 
@@ -176,51 +221,47 @@ final class DemoStory extends Story
     }
 
     /**
-     * @param array<int, User> $users
      * @param array<int, Subject> $subjects
      * @param array<int, Task> $tasks
      */
-    private function createNotes(
-        array $users,
-        array $subjects,
-        array $tasks,
-    ): void
+    private function createNotes(array $subjects, array $tasks): void
     {
-        $rows = [
-            1 => [1, 1, 1, 'Symfony security notes', 'Logout must return JSON or 204 for API usage; redirects are wrong for XHR.'],
-            2 => [1, 1, 2, 'Deployment routing notes', '/api goes through Symfony, /upload is static Apache, React handles client-side routing.'],
-            3 => [1, 1, 3, 'Coverage deployment notes', 'Coverage is generated in the test image and deployed as static files under /upload/coverage.'],
-            4 => [1, 2, 4, 'Dry Bean evaluation summary', 'Decision trees are interpretable; MLP improves predictive performance after scaling.'],
-            5 => [1, 2, 5, 'Macro-F1 note', 'Macro-F1 gives each class equal weight and is useful for comparing per-class behavior.'],
-            6 => [1, 3, 6, 'Power electronics simulation note', 'Ripple and transient behavior are central for the 12 V universal supply discussion.'],
-            7 => [1, 3, 7, 'Efficiency plot interpretation', 'Efficiency should be discussed across input voltage and load ranges.'],
-            8 => [1, 4, 8, 'Embedded protocol checklist', 'Keep frame format deterministic and include checksum/error handling.'],
-            9 => [1, 5, 9, 'Presentation structure', 'Start from problem context, then architecture, demo, metrics, and reflection.'],
-
-            10 => [2, 6, 10, 'Network segmentation note', 'Use diagrams to explain trust zones and traffic flows.'],
-            11 => [2, 7, 11, 'Doctrine mapping note', 'Required user ownership must be respected in fixtures and tests.'],
-
-            12 => [3, 8, 12, 'UX dashboard note', 'Presentation screenshots need populated cards, charts, and recent activity.'],
-            13 => [3, 9, 13, 'Upload security note', 'Uploads should be outside public build assets and PHP execution must be disabled.'],
+        $templates = [
+            ['Concept summary', 'Key definitions, assumptions, diagrams, and common pitfalls collected for quick review.'],
+            ['Practical findings', 'Observed behavior, important edge cases, and implementation notes from hands-on work.'],
+            ['Presentation notes', 'Short explanation intended for a demo slide or spoken presentation segment.'],
+            ['Revision checklist', 'Checklist of items to verify before the final evaluation or live demonstration.'],
         ];
 
         $notes = [];
+        $i = 1;
 
-        foreach ($rows as $i => [$userIndex, $subjectIndex, $taskIndex, $title, $content]) {
-            $notes[$i] = NoteFactory::new()
-                ->basic($i + 100)
-                ->forUser($users[$userIndex])
-                ->forSubject($subjects[$subjectIndex])
-                ->forTask($tasks[$taskIndex])
-                ->create([
-                    'title' => $title,
-                    'content' => $content,
-                ]);
+        foreach ($subjects as $subjectIndex => $subject) {
+            $user = $subject->getUser();
+
+            for ($j = 0; $j < self::NOTES_PER_SUBJECT; ++$j) {
+                [$title, $content] = $templates[$j % count($templates)];
+
+                $taskIndex = (($subjectIndex - 1) * self::TASKS_PER_SUBJECT) + (($j % self::TASKS_PER_SUBJECT) + 1);
+                $task = $tasks[$taskIndex] ?? null;
+
+                $notes[$i] = NoteFactory::new()
+                    ->basic($i + 300)
+                    ->forUser($user)
+                    ->forSubject($subject)
+                    ->forTask($task)
+                    ->create([
+                        'title' => "{$title}: {$subject->getName()}",
+                        'content' => "{$content}\n\nThis note belongs to {$subject->getName()} and is part of the demo dataset.",
+                    ]);
+
+                ++$i;
+            }
         }
 
         $this->registerCollection(
-            self::POOL_PRESENTATION_NOTES,
-            'presentationNote',
+            self::POOL_DEMO_NOTES,
+            'demoNote',
             $notes
         );
     }
@@ -231,9 +272,8 @@ final class DemoStory extends Story
     private function registerCollection(
         string $pool,
         string $prefix,
-        array  $entities,
-    ): void
-    {
+        array $entities,
+    ): void {
         foreach ($entities as $i => $entity) {
             $this->addState("{$prefix}{$i}", $entity);
         }
