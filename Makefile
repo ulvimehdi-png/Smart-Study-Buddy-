@@ -175,19 +175,39 @@ deploy-ci-setup:
 	@test -d $(COVERAGE_DIR)
 	@test -f $(COVERAGE_DIR)/html/index.html
 
-deploy-ci-rsync:
-	@test -d $(COVERAGE_DIR)
+deploy-ci-storage:
+	ssh "$(DEPLOY_HOST)" "\
+		set -e; \
+		mkdir -p '$(DEPLOY_PATH)/upload/avatars'; \
+		mkdir -p '$(DEPLOY_PATH)/upload/coverage'; \
+		rm -f '$(DEPLOY_PATH)/public/uploads'; \
+		chmod 775 '$(DEPLOY_PATH)/upload' '$(DEPLOY_PATH)/upload/avatars' '$(DEPLOY_PATH)/upload/coverage'; \
+	"
+
+deploy-ci-upload-htaccess:
+	ssh "$(DEPLOY_HOST)" "cat > '$(DEPLOY_PATH)/upload/.htaccess'" < backend/upload/.htaccess
+	ssh "$(DEPLOY_HOST)" "chmod 644 '$(DEPLOY_PATH)/upload/.htaccess'"
+
+deploy-ci-rsync-app:
 	rsync -rvz --delete-after \
-				--exclude=".env*" \
-				--exclude="upload/" \
-				--exclude="var/cache/" \
-				--exclude="var/log/" \
-				--exclude=".editorconfig" \
-				--exclude="phpunit.dist.xml" \
-				"$(EXPORT_DIR)/" $(DEPLOY_HOST):$(DEPLOY_PATH)
-	rsync -rvz --delete-after "$(COVERAGE_DIR)/." "$(DEPLOY_HOST):$(DEPLOY_PATH)/upload/coverage"
-	ssh "$(DEPLOY_HOST)" "chmod -R 775 /var/www/html/upload/"
-	ssh "$(DEPLOY_HOST)" "ln -sf /var/www/html/public/uploads/ /var/www/html/upload/"
+		--exclude=".env*" \
+		--exclude="upload/" \
+		--exclude="var/cache/" \
+		--exclude="var/log/" \
+		--exclude=".editorconfig" \
+		--exclude="phpunit.dist.xml" \
+		"$(EXPORT_DIR)/" "$(DEPLOY_HOST):$(DEPLOY_PATH)/"
+
+deploy-ci-rsync-coverage:
+	rsync -rvz --delete-after \
+		"$(COVERAGE_DIR)/" "$(DEPLOY_HOST):$(DEPLOY_PATH)/upload/coverage/"
+
+deploy-ci-permissions:
+	ssh "$(DEPLOY_HOST)" "\
+		set -e; \
+		find '$(DEPLOY_PATH)/upload' -type d -exec chmod 775 {} \; ; \
+		find '$(DEPLOY_PATH)/upload' -type f -exec chmod 664 {} \; ; \
+	"
 
 deploy-ci-env:
 	ssh "$(DEPLOY_HOST)" "cat > '$(DEPLOY_PATH)/.env'" < "$(DOT_ENV)"
@@ -215,7 +235,9 @@ deploy-ci-warm-cache:
     		php bin/console cache:clear --env=prod --no-debug; \
     		php bin/console cache:warmup --env=prod;"
 
-deploy-ci: deploy-ci-setup deploy-ci-rsync deploy-ci-env deploy-ci-migrate deploy-ci-warm-cache
+deploy-ci: deploy-ci-setup deploy-ci-storage deploy-ci-upload-htaccess \
+			deploy-ci-rsync-app deploy-ci-rsync-coverage deploy-ci-permissions \
+			deploy-ci-env deploy-ci-migrate deploy-ci-warm-cache
 
 #############
 # UTILITIES #

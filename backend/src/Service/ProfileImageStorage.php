@@ -3,21 +3,26 @@
 namespace App\Service;
 
 use App\Entity\User;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
-use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\String\Slugger\SluggerInterface;
 
 final class ProfileImageStorage
 {
-    private SluggerInterface $slugger;
-    private string $uploadDir;
-    private string $publicPrefix;
+    private const AVATAR_DIR = 'avatars';
+    private const MAX_AVATAR_SIZE = 512;
+    private const WEBP_QUALITY = 82;
 
-    public function __construct(KernelInterface $kernel, SluggerInterface $slugger)
+    public function __construct(
+        #[Autowire('%app.upload_dir%')]
+        private readonly string           $uploadRootDir,
+
+        #[Autowire('%app.upload_public_prefix%')]
+        private readonly string           $publicPrefix,
+
+        private readonly SluggerInterface $slugger,
+    )
     {
-        $this->slugger = $slugger;
-        $this->publicPrefix = '/uploads/avatars';
-        $this->uploadDir = $kernel->getProjectDir() . '/public' . $this->publicPrefix;
     }
 
     public function publicUrl(?string $path): ?string
@@ -26,36 +31,50 @@ final class ProfileImageStorage
             return null;
         }
 
-        return $this->publicPrefix . ltrim($path, '/');
+        return rtrim($this->publicPrefix, '/') . '/' . ltrim($path, '/');
     }
 
     public function store(User $user, UploadedFile $file): string
     {
-        //if (!is_dir($this->uploadDir)) {
-        //    mkdir($this->uploadDir, 0775, true);
-        //}
+        $avatarDir = $this->avatarDir();
 
         if (
-            !is_dir($this->uploadDir)
-            && !mkdir($concurrentDirectory = $this->uploadDir, 0775, true)
-            && !is_dir($concurrentDirectory)) {
-            throw new \RuntimeException(sprintf('Directory "%s" was not created', $concurrentDirectory));
+            !is_dir($avatarDir)
+            && !mkdir($avatarDir, 0755, true)
+            && !is_dir($avatarDir)
+        ) {
+            throw new \RuntimeException(sprintf('Directory "%s" was not created.', $avatarDir));
         }
 
         $this->remove($user->getProfileImagePath());
 
-        $baseName = $this->slugger->slug($user->getUsername() ?: 'user')->lower()->toString();
-        $fileName = sprintf('%s-%s.webp', $baseName, bin2hex(random_bytes(8)));
+        $baseName = $this->slugger
+            ->slug($user->getUsername() ?: 'user')
+            ->lower()
+            ->toString();
 
-        if ($this->canResizeWithGd() && $this->storeResizedWebp($file, $this->uploadDir . '/' . $fileName)) {
-            return $fileName;
+        $webpFileName = sprintf('%s-%s.webp', $baseName, bin2hex(random_bytes(8)));
+        $webpRelativePath = self::AVATAR_DIR . '/' . $webpFileName;
+        $webpAbsolutePath = $this->absolutePath($webpRelativePath);
+
+        if ($this->canResizeWithGd() && $this->storeResizedWebp($file, $webpAbsolutePath)) {
+            return $webpRelativePath;
         }
 
-        $extension = $file->guessExtension() ?: $file->getClientOriginalExtension() ?: 'bin';
-        $fallbackName = sprintf('%s-%s.%s', $baseName, bin2hex(random_bytes(8)), strtolower($extension));
-        $file->move($this->uploadDir, $fallbackName);
+        $extension = $file->guessExtension()
+            ?: $file->getClientOriginalExtension()
+                ?: 'bin';
 
-        return $fallbackName;
+        $fallbackFileName = sprintf(
+            '%s-%s.%s',
+            $baseName,
+            bin2hex(random_bytes(8)),
+            strtolower($extension)
+        );
+
+        $file->move($avatarDir, $fallbackFileName);
+
+        return self::AVATAR_DIR . '/' . $fallbackFileName;
     }
 
     public function remove(?string $path): void
@@ -64,11 +83,23 @@ final class ProfileImageStorage
             return;
         }
 
-        $absolutePath = $this->uploadDir . '/' . basename($path);
+        $absolutePath = $this->absolutePath($path);
 
         if (is_file($absolutePath)) {
             @unlink($absolutePath);
         }
+    }
+
+    private function avatarDir(): string
+    {
+        return rtrim($this->uploadRootDir, '/') . '/' . self::AVATAR_DIR;
+    }
+
+    private function absolutePath(string $relativePath): string
+    {
+        $relativePath = ltrim($relativePath, '/');
+
+        return rtrim($this->uploadRootDir, '/') . '/' . $relativePath;
     }
 
     private function canResizeWithGd(): bool
@@ -83,13 +114,13 @@ final class ProfileImageStorage
     {
         $contents = @file_get_contents($file->getPathname());
 
-        if (false === $contents) {
+        if ($contents === false) {
             return false;
         }
 
         $source = @imagecreatefromstring($contents);
 
-        if (false === $source) {
+        if ($source === false) {
             return false;
         }
 
@@ -101,38 +132,40 @@ final class ProfileImageStorage
             return false;
         }
 
-        $size = min($width, $height);
-        $srcX = (int)floor(($width - $size) / 2);
-        $srcY = (int)floor(($height - $size) / 2);
-        $targetSize = min(512, $size);
+        $sourceSize = min($width, $height);
+        $sourceX = (int) floor(($width - $sourceSize) / 2);
+        $sourceY = (int) floor(($height - $sourceSize) / 2);
+        $targetSize = min(self::MAX_AVATAR_SIZE, $sourceSize);
 
         $target = imagecreatetruecolor($targetSize, $targetSize);
 
         imagealphablending($target, true);
         imagesavealpha($target, true);
 
-        if (!imagecopyresampled(
+        $resampled = imagecopyresampled(
             $target,
             $source,
             0,
             0,
-            $srcX,
-            $srcY,
+            $sourceX,
+            $sourceY,
             $targetSize,
             $targetSize,
-            $size,
-            $size
-        )) {
+            $sourceSize,
+            $sourceSize
+        );
+
+        if (!$resampled) {
             imagedestroy($source);
             imagedestroy($target);
             return false;
         }
 
-        $written = imagewebp($target, $targetPath, 82);
+        $written = imagewebp($target, $targetPath, self::WEBP_QUALITY);
 
         imagedestroy($source);
         imagedestroy($target);
 
-        return false !== $written;
+        return $written !== false;
     }
 }

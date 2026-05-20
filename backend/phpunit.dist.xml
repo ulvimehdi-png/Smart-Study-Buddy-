@@ -14,8 +14,7 @@
         <ini name="display_errors" value="1"/>
         <ini name="error_reporting" value="1"/>
         <server name="APP_ENV" value="test" force="true"/>
-<!--        <server name="SHELL_VERBOSITY" value="-1"/>-->
-        <server name="SHELL_VERBOSITY" value="0"/>
+        <server name="SHELL_VERBOSITY" value="-1"/>
     </php>
 
     <testsuites>
@@ -47,15 +46,7 @@
 
     <coverage pathCoverage="true">
         <report>
-            <html outputDirectory="var/coverage/html" lowUpperBound="55" highLowerBound="75"/>
-            <xml outputDirectory="var/coverage/xml"/>
-
-            <php outputFile="var/coverage/coverage.php"/>
-            <text outputFile="var/coverage/coverage.txt"/>
-
-            <clover outputFile="var/coverage/clover.xml"/>
-            <cobertura outputFile="var/coverage/cobertura.xml"/>
-            <crap4j outputFile="var/coverage/crap4j.xml" threshold="50"/>
+            <html outputDirectory="var/coverage/html" lowUpperBound="50" highLowerBound="65"/>
         </report>
     </coverage>
 

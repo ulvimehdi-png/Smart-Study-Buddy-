@@ -1,7 +1,7 @@
 RewriteEngine On
 
 #
-# BLOCKING RULES (source dirs/(dot)files)
+# HARD BLOCK SOURCE / INTERNAL PATHS
 #
 RewriteRule ^(bin|config|migrations|src|var|vendor)(/|$) - [F,L]
 
@@ -14,6 +14,13 @@ RewriteRule ^(bin|config|migrations|src|var|vendor)(/|$) - [F,L]
 </FilesMatch>
 
 #
+# TOP-LEVEL UPLOADS
+#
+RewriteRule ^upload(/|$) - [L]
+
+
+#
 # EVERYTHING ELSE -> public/
+# /api/... becomes /public/api/... and is then handled by public/.htaccess
 #
 RewriteRule ^(.*)$ public/$1 [L]

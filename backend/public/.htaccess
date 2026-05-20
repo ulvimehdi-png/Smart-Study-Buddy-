@@ -1,14 +1,14 @@
 RewriteEngine On
 
 #
-# SERVE REAL FILES DIRECTLY
+# SERVE REAL PUBLIC FILES DIRECTLY
 #
 RewriteCond %{REQUEST_FILENAME} -f [OR]
 RewriteCond %{REQUEST_FILENAME} -d
 RewriteRule ^ - [L]
 
 #
-# Symfony Front Controller
+# Symfony API Front Controller
 #
 RewriteRule ^api(/|$) index.php [QSA,L]
 

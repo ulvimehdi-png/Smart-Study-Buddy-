@@ -220,7 +220,7 @@ final class SecurityController extends AbstractController
         ]);
     }
 
-    #[Route('/user/profile-image', methods: ['DELETE'])]
+    #[Route('/user/profile-image/delete', methods: ['GET'])]
     public function deleteProfileImage(
         #[CurrentUser] ?User   $user,
         EntityManagerInterface $em,

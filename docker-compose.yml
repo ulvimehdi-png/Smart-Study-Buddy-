@@ -102,7 +102,7 @@ x-node-common: &node-common
   <<: [ *user, *net ]
   volumes:
     - ./frontend:/app/frontend
-    - ./backend/public/uploads:/app/frontend/public/uploads:ro
+    - ./backend/upload:/app/frontend/public/upload:ro
 
 ############
 # SERVICES #

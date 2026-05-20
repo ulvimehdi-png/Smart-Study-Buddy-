@@ -14,7 +14,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
-
 #[Route('/api/dev')]
 final class DevController extends AbstractController
 {
@@ -47,7 +46,7 @@ final class DevController extends AbstractController
             ->getQuery()
             ->getArrayResult();
 
-        $coverageIndex = $projectDir . '/public/uploads/coverage/html/index.html';
+        $coverageIndex = $projectDir . '/upload/coverage/index.html';
 
         return $this->json([
             'environment' => $_ENV['APP_ENV'] ?? 'unknown',
@@ -65,13 +64,13 @@ final class DevController extends AbstractController
             'mercure' => $this->checkMercure($httpClient),
 
             'storage' => [
-                'uploads' => $this->isWritableDirectory($projectDir . '/public/uploads'),
-                'avatars' => $this->isWritableDirectory($projectDir . '/public/uploads/avatar'),
+                'uploads' => $this->isWritableDirectory($projectDir . '/upload'),
+                'avatars' => $this->isWritableDirectory($projectDir . '/upload/avatar'),
             ],
 
             'coverage' => [
                 'available' => is_file($coverageIndex),
-                'url' => '/uploads/coverage/html/index.html',
+                'url' => '/upload/coverage/index.html',
             ],
 
             'stats' => [
