@@ -1,4 +1,5 @@
-const DEFAULT_HUB_URL= '/api/live-timer-sessions';
+// const DEFAULT_HUB_URL= '/api/live-timer-sessions';
+const DEFAULT_HUB_URL= 'http://91.99.103.4:33033/.well-known/mercure';
 
 function normalizeTopics(topics) {
     const list = Array.isArray(topics) ? topics : [topics];
