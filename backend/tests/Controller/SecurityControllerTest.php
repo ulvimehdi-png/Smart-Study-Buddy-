@@ -394,6 +394,43 @@ final class SecurityControllerTest extends ApiWebTestCase
         self::assertFalse($this->passwordHasher->isPasswordValid($user, 'current_password'));
     }
 
+    public function testDeleteAccountRejectsAnonymousUser(): void
+    {
+        $this->client->request('POST', '/api/user/delete');
+
+        self::assertResponseStatusCodeSame(401);
+
+        $data = $this->responseData();
+
+        self::assertSame('Not logged in', $data['error']);
+    }
+
+    public function testDeleteAccountRemovesAuthenticatedUserAndSession(): void
+    {
+        $user = $this->loginAs();
+        $userId = $user->getId();
+
+        $this->client->request('POST', '/api/user/delete');
+
+        self::assertResponseIsSuccessful();
+
+        $data = $this->responseData();
+
+        self::assertTrue($data['success']);
+
+        $this->entityManager->clear();
+
+        self::assertNull($this->entityManager->getRepository(User::class)->find($userId));
+
+        $this->client->request('GET', '/api/user');
+
+        self::assertResponseIsSuccessful();
+
+        $data = $this->responseData();
+
+        self::assertNull($data['user']);
+    }
+
     public function testUpdateProfileImageRejectsAnonymousUser(): void
     {
         $this->client->request('POST', '/api/user/profile-image');

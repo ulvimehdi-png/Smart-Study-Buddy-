@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { Camera, KeyRound, Save, Trash2, UserRound } from "lucide-react";
+import { AlertTriangle, Camera, KeyRound, Save, Trash2, UserRound } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/lib/auth";
 import PageBackdrop from "@/components/shared/PageBackdrop";
 
@@ -11,12 +12,15 @@ function initialsFromUsername(username) {
 
 export default function UserPage() {
   const auth = useAuth();
+  const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [profileMessage, setProfileMessage] = useState("");
   const [passwordMessage, setPasswordMessage] = useState("");
+  const [accountMessage, setAccountMessage] = useState("");
   const [isSavingProfile, setIsSavingProfile] = useState(false);
   const [isSavingPassword, setIsSavingPassword] = useState(false);
   const [isSavingProfileImage, setIsSavingProfileImage] = useState(false);
+  const [isDeletingAccount, setIsDeletingAccount] = useState(false);
   const [passwords, setPasswords] = useState({
     currentPassword: "",
     newPassword: "",
@@ -158,6 +162,28 @@ export default function UserPage() {
       });
   };
 
+  const handleDeleteAccount = async () => {
+    const confirmed = window.confirm(
+      "This will permanently delete your account and all of its data. This cannot be undone."
+    );
+
+    if (!confirmed) {
+      return;
+    }
+
+    setIsDeletingAccount(true);
+    setAccountMessage("");
+
+    try {
+      await auth.deleteAccount();
+      navigate("/", { replace: true });
+    } catch (error) {
+      setAccountMessage(String(error?.message || error));
+    } finally {
+      setIsDeletingAccount(false);
+    }
+  };
+
   return (
     <div className="relative min-h-screen overflow-hidden bg-bg-base text-text-main">
       <PageBackdrop />
@@ -170,57 +196,7 @@ export default function UserPage() {
           </p>
         </div>
 
-        <div className="grid gap-6 lg:grid-cols-[360px_minmax(0,1fr)]">
-          <section className="rounded-3xl border border-border-base bg-bg-card p-6 shadow-sm">
-            <div className="flex flex-col items-center text-center">
-              <div className="relative">
-                {auth.user?.profileImageUrl ? (
-                  <img
-                    src={auth.user.profileImageUrl}
-                    alt="Profile"
-                    className="h-30 w-30 rounded-3xl object-cover ring-4 ring-primary/10"
-                  />
-                ) : (
-                  <div className="flex h-30 w-30 items-center justify-center rounded-3xl bg-gradient-primary-accent text-3xl font-semibold text-white ring-4 ring-primary/10">
-                    {initialsFromUsername(auth.user?.username)}
-                  </div>
-                )}
-                <div className="absolute -bottom-2 -right-2 flex h-10 w-10 items-center justify-center rounded-2xl border border-border-base bg-bg-card text-primary shadow-sm">
-                  <Camera className="h-4 w-4" />
-                </div>
-              </div>
-
-              <h2 className="mt-5 text-xl font-semibold">{auth.user?.username || "User"}</h2>
-              <p className="mt-1 text-sm text-text-secondary">
-                Upload an image and it will be stored on the server.
-              </p>
-            </div>
-
-            <div className="mt-6 space-y-3">
-              <label className="flex cursor-pointer items-center justify-center gap-2 rounded-2xl bg-primary px-4 py-3 font-medium text-white transition hover:bg-primary-dark">
-                <Camera className="h-4 w-4" />
-                {isSavingProfileImage ? "Uploading..." : "Upload Picture"}
-                <input
-                  type="file"
-                  accept="image/*"
-                  className="hidden"
-                  onChange={handleProfileImageChange}
-                  disabled={isSavingProfileImage}
-                />
-              </label>
-
-              <button
-                type="button"
-                onClick={clearProfileImage}
-                disabled={isSavingProfileImage}
-                className="flex w-full items-center justify-center gap-2 rounded-2xl border border-danger/20 bg-danger/10 px-4 py-3 font-medium text-danger transition hover:bg-danger/15"
-              >
-                <Trash2 className="h-4 w-4" />
-                Remove Picture
-              </button>
-            </div>
-          </section>
-
+        <div className="grid gap-6 lg:grid-cols-2">
           <div className="space-y-6">
             <section className="rounded-3xl border border-border-base bg-bg-card p-6 shadow-sm">
               <div className="flex items-start gap-4">
@@ -339,6 +315,87 @@ export default function UserPage() {
                   {isSavingPassword ? "Updating..." : "Update Password"}
                 </button>
               </form>
+            </section>
+          </div>
+          <div className="space-y-6">
+            <section className="rounded-3xl border border-border-base bg-bg-card p-6 shadow-sm">
+              <div className="flex flex-col items-center text-center">
+                <div className="relative">
+                  {auth.user?.profileImageUrl ? (
+                    <img
+                      src={auth.user.profileImageUrl}
+                      alt="Profile"
+                      className="h-30 w-30 rounded-3xl object-cover ring-4 ring-primary/10"
+                    />
+                  ) : (
+                    <div className="flex h-30 w-30 items-center justify-center rounded-3xl bg-gradient-primary-accent text-3xl font-semibold text-white ring-4 ring-primary/10">
+                      {initialsFromUsername(auth.user?.username)}
+                    </div>
+                  )}
+                  <div className="absolute -bottom-2 -right-2 flex h-10 w-10 items-center justify-center rounded-2xl border border-border-base bg-bg-card text-primary shadow-sm">
+                    <Camera className="h-4 w-4" />
+                  </div>
+                </div>
+
+                <h2 className="mt-5 text-xl font-semibold">{auth.user?.username || "User"}</h2>
+                <p className="mt-1 text-sm text-text-secondary">
+                  Upload an image and it will be stored on the server.
+                </p>
+              </div>
+
+              <div className="mt-6 space-y-3">
+                <label className="flex cursor-pointer items-center justify-center gap-2 rounded-2xl bg-primary px-4 py-3 font-medium text-white transition hover:bg-primary-dark">
+                  <Camera className="h-4 w-4" />
+                  {isSavingProfileImage ? "Uploading..." : "Upload Picture"}
+                  <input
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={handleProfileImageChange}
+                    disabled={isSavingProfileImage}
+                  />
+                </label>
+
+                { auth.user.profileImageUrl &&
+                  <button
+                    type="button"
+                    onClick={clearProfileImage}
+                    disabled={isSavingProfileImage}
+                    className="flex w-full items-center justify-center gap-2 rounded-2xl border border-danger/20 bg-danger/10 px-4 py-3 font-medium text-danger transition hover:bg-danger/15"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                    Remove Picture
+                  </button>
+                }
+              </div>
+            </section>
+          
+            <section className="rounded-3xl border border-danger/25 bg-danger/5 p-6 shadow-sm">
+              <div className="flex items-start gap-4">
+                <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-danger/10 text-danger">
+                  <AlertTriangle className="h-5 w-5" />
+                </div>
+                <div>
+                  <h2 className="text-lg font-semibold text-danger">Delete Account</h2>
+                  <p className="mt-1 text-sm text-text-secondary">
+                    Permanently remove your account and all saved study data.
+                  </p>
+                </div>
+              </div>
+
+              {accountMessage ? (
+                <p className="mt-5 text-sm text-danger">{accountMessage}</p>
+              ) : null}
+
+              <button
+                type="button"
+                onClick={handleDeleteAccount}
+                disabled={isDeletingAccount}
+                className="mt-6 inline-flex items-center gap-2 rounded-2xl border border-danger/25 bg-danger px-5 py-3 font-medium text-white transition hover:bg-danger/90 disabled:cursor-not-allowed disabled:opacity-60"
+              >
+                <Trash2 className="h-4 w-4" />
+                {isDeletingAccount ? "Deleting..." : "Delete Account"}
+              </button>
             </section>
           </div>
         </div>
