@@ -190,22 +190,22 @@ deploy-ci-rsync:
 # but this is the best quick fix i could come up with when a lot is still changing
 # and i don't want to manually go check the contents out each time, cheers
 deploy-ci-env:
-	echo "APP_ENV=prod" | ssh "$DEPLOY_HOST" "cat > '$DEPLOY_PATH/.env'"
-	ssh "$DEPLOY_HOST" "cat > '$DEPLOY_PATH/.env.local'" < "$PROD_ENV_LOCAL_FILE"
-	ssh "$DEPLOY_HOST" "chmod 644 '$DEPLOY_PATH/.env' '$DEPLOY_PATH/.env.local' && test -f '$DEPLOY_PATH/.env.local'"
+	echo "APP_ENV=prod" | ssh "$(DEPLOY_HOST)" "cat > '$(DEPLOY_PATH)/.env'"
+	ssh "$(DEPLOY_HOST)" "cat > '$(DEPLOY_PATH)/.env.local'" < "$(PROD_ENV_LOCAL_FILE)"
+	ssh "$(DEPLOY_HOST)" "chmod 644 '$(DEPLOY_PATH)/.env' '$(DEPLOY_PATH)/.env.local' && test -f '$(DEPLOY_PATH)/.env.local'"
 
 # Same thing here, no auto-migrate deployment, but atm it's okay
 # because we dont even have real users :'O
 deploy-ci-migrate:
-	ssh "$DEPLOY_HOST" "\
+	ssh "$(DEPLOY_HOST)" "\
 		set -e; \
-		cd '$DEPLOY_PATH'; \
+		cd '$(DEPLOY_PATH)'; \
  		php bin/console doctrine:migrations:migrate --no-interaction --env=prod;"
 
 deploy-ci-warm-cache:
-	ssh "$DEPLOY_HOST" "\
+	ssh "$(DEPLOY_HOST)" "\
     		set -e; \
-    		cd '$DEPLOY_PATH'; \
+    		cd '$(DEPLOY_PATH)'; \
     		php bin/console cache:clear --env=prod --no-debug; \
     		php bin/console cache:warmup --env=prod;"
 
