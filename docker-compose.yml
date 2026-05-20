@@ -130,11 +130,21 @@ services:
 
   db-test:
     <<: *db-base
-    profiles: [ "test", "test-coverage" ]
+    profiles: [ "test" ]
     container_name: db-test
     tmpfs:
       - /var/lib/mysql
     restart: "no"
+
+  db-test-coverage:
+    <<: *db-base
+    profiles: [ "test-coverage" ]
+    container_name: db-test-coverage
+    tmpfs:
+      - /var/lib/mysql
+    restart: "no"
+    networks:
+      - test_coverage_app_net
 
   #################
   # DEV - PHP SET #
@@ -183,10 +193,10 @@ services:
   ##################
   # TEST - PHP SET #
   ##################
-  php-test-init:
+  php-test-runner:
     <<: [ *php-common, *build-test ]
-    profiles: [ "test", "test-coverage" ]
-    container_name: php-test-init
+    profiles: [ "test" ]
+    container_name: php-test-runner
     user: root
     depends_on:
       db-test:
@@ -198,18 +208,9 @@ services:
         chown -R ${HOST_UID:-1000}:${HOST_GID:-1000} /app/backend &&
         php bin/console doctrine:database:create --if-not-exists --env=test &&
         php bin/console doctrine:migrations:migrate --no-interaction --env=test &&
-        php bin/console doctrine:fixtures:load --no-interaction --env=test
+        php bin/console doctrine:fixtures:load --no-interaction --env=test &&
+        php bin/phpunit --configuration phpunit.dist.xml --no-coverage
       '
-    restart: "no"
-
-  php-test-runner:
-    <<: [ *php-common, *build-test ]
-    profiles: [ "test" ]
-    container_name: php-test-runner
-    depends_on:
-      php-test-init:
-        condition: service_completed_successfully
-    command: php bin/phpunit --configuration phpunit.dist.xml --no-coverage
     restart: "no"
 
   php-test-coverage:
@@ -219,13 +220,23 @@ services:
     user: root
     environment:
       XDEBUG_MODE: coverage
+      DATABASE_URL: 'mysql://app:app@db-test-coverage:3306/app?serverVersion=8.0.32&charset=utf8mb4'
     volumes:
       - ${COVERAGE_DIR}:/app/backend/var/coverage
     depends_on:
-      php-test-init:
-        condition: service_completed_successfully
-    command: php bin/phpunit --configuration phpunit.dist.xml
+      db-test-coverage:
+        condition: service_healthy
+    command: >
+      sh -lc '
+        mkdir -p /tmp/.config /app/backend/{vendor,var/coverage} &&
+        chown -R ${HOST_UID:-1000}:${HOST_GID:-1000} /app/backend &&
+        php bin/console doctrine:database:create --if-not-exists --env=test &&
+        php bin/console doctrine:migrations:migrate --no-interaction --env=test &&
+        php bin/console doctrine:fixtures:load --no-interaction --env=test &&
+        php bin/phpunit --configuration phpunit.dist.xml'
     restart: "no"
+    networks:
+      - test_coverage_app_net
 
   ##################
   # PROD - PHP SET #
@@ -347,6 +358,9 @@ networks:
     driver: bridge
   test_app_net:
     name: test_app_net
+    driver: bridge
+  test_coverage_app_net:
+    name: test_coverage_app_net
     driver: bridge
   prod_app_net:
     name: prod_app_net

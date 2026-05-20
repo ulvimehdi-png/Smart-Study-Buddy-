@@ -1,12 +1,3 @@
-.PHONY: \
-	help \
-	config-check print-ports \
-	dev-up dev-down dev-reset dev-smoke \
-	test test-down \
-	prod-build prod-build-clean prod-up prod-up-detached prod-down \
-	prod-reset prod-smoke prod-export \
-	dev-logs dev-logs-single test-logs test-logs-single prod-logs prod-logs-single
-
 ####################
 # GENERAL DEFAULTS #
 ####################
@@ -104,8 +95,11 @@ dev-ci: dev-ci-setup dev-ci-test dev-ci-teardown
 # ENVIRONMENT = TEST #
 ######################
 test: test-down
-	$(TEST_CMD) up --build --abort-on-container-exit --exit-code-from php-test-runner
-	$(MAKE) test-down
+	set +e; \
+	$(TEST_CMD) up --build --abort-on-container-exit --exit-code-from php-test-runner; \
+	status=$$?; \
+	$(MAKE) test-down; \
+	exit $$status
 
 test-down:
 	$(TEST_CMD) down -v --remove-orphans
@@ -119,8 +113,11 @@ test-ci-setup: test-down
 
 # docker compose "exports" through bind mount
 test-ci-export:
-	$(TEST_CMD_COVERAGE) up --build --abort-on-container-exit --exit-code-from php-test-coverage
-	$(TEST_CMD_COVERAGE) down -v --remove-orphans
+	set +e; \
+	$(TEST_CMD_COVERAGE) up --build --abort-on-container-exit --exit-code-from php-test-coverage; \
+	status=$$?; \
+	$(TEST_CMD_COVERAGE) down -v --remove-orphans; \
+	exit $$status
 
 test-ci: test-ci-setup test-ci-export
 
@@ -170,7 +167,7 @@ prod-ci: prod-ci-setup prod-ci-export
 
 # Test if files/dirs exist and merge them into
 deploy-ci-setup:
-	#ssh -o BatchMode=yes -o ConnectTimeout=15 "$DEPLOY_HOST" "echo remote-ok"
+	ssh -o BatchMode=yes -o ConnectTimeout=15 "$DEPLOY_HOST" "echo remote-ok"
 	@test -f $(EXPORT_DIR)/public/index.html
 	@test -f $(EXPORT_DIR)/public/index.php
 	@test -f $(EXPORT_DIR)/bin/console
@@ -257,27 +254,77 @@ help:
 	@echo "Development:"
 	@echo "  make dev-up"
 	@echo "  make dev-down"
+	@echo "  make dev-build"
+	@echo "  make dev-build-clean"
+	@echo "  make dev-down-clean"
 	@echo "  make dev-reset"
+	@echo "  make dev-shell-php"
+	@echo "  make dev-shell-node"
 	@echo "  make dev-smoke"
 	@echo "  make dev-logs"
-	@echo "  make dev-logs-single"
+	@echo "  make dev-logs-single service=php-dev"
+	@echo ""
+	@echo "Development CI:"
+	@echo "  make dev-ci"
 	@echo ""
 	@echo "Testing:"
 	@echo "  make test"
 	@echo "  make test-down"
 	@echo "  make test-logs"
-	@echo "  make test-logs-single"
+	@echo "  make test-logs-single service=php-test-runner"
 	@echo ""
-	@echo "Production emulation / CI:"
+	@echo "Testing CI / Coverage:"
+	@echo "  make test-ci"
+	@echo ""
+	@echo "Production (local emulation):"
 	@echo "  make prod-build"
 	@echo "  make prod-build-clean"
 	@echo "  make prod-up"
-	@echo "  make prod-up-detached"
 	@echo "  make prod-down"
+	@echo "  make prod-down-clean"
 	@echo "  make prod-reset"
-	@echo "  make prod-smoke"
-	@echo "  make prod-export"
-	@echo "
 	@echo "  make prod-logs"
-	@echo "  make prod-logs-single"
-	@echo "TODO"
+	@echo "  make prod-logs-single service=web"
+	@echo ""
+	@echo "Production CI:"
+	@echo "  make prod-ci"
+	@echo ""
+	@echo "Deployment:"
+	@echo "  make deploy-ci"
+	@echo ""
+	@echo "Utilities:"
+	@echo "  make config-check"
+	@echo "  make print-ports"
+	@echo ""
+
+
+.PHONY: \
+	help \
+	config-check print-ports \
+	\
+	dev-endpoints \
+	dev-up dev-down \
+	dev-build dev-build-clean \
+	dev-down-clean dev-reset \
+	dev-shell-php dev-shell-node \
+	dev-smoke \
+	dev-ci-setup dev-ci-test dev-ci-teardown dev-ci \
+	\
+	test test-down \
+	test-ci-setup test-ci-export test-ci \
+	test-logs test-logs-single \
+	\
+	prod-up prod-down \
+	prod-build prod-build-clean \
+	prod-down-clean prod-reset \
+	prod-ci-setup prod-ci-export prod-ci \
+	prod-logs prod-logs-single \
+	\
+	deploy-ci-setup \
+	deploy-ci-rsync \
+	deploy-ci-env \
+	deploy-ci-migrate \
+	deploy-ci-warm-cache \
+	deploy-ci \
+	\
+	dev-logs dev-logs-single
