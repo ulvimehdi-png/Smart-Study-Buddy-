@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { AnimatePresence, motion as Motion } from 'framer-motion';
+import { AnimatePresence, motion as Motion } from 'motion/react';
 import { Share2, FastForward, Pause, Play, RotateCcw, BellRing } from 'lucide-react';
 import { CircularProgressbarWithChildren, buildStyles } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
@@ -9,7 +9,7 @@ import TimerDurationInputs from './TimerDurationInputs';
 import TimerButton from './Button/TimerButton';
 
 function formatTime(timeLeftMs) {
-  return `${String(Math.floor(timeLeftMs / 60000)).padStart(2, '0')}:${String(Math.ceil((timeLeftMs % 60000) / 1000)).padStart(2, '0')}`;
+  return `${String(Math.floor(timeLeftMs / 60000)).padStart(2, '0')}:${String(Math.floor((timeLeftMs % 60000) / 1000)).padStart(2, '0')}`;
 }
 
 function formatDate(ms) {

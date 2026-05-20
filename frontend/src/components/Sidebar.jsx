@@ -89,7 +89,7 @@ export default function Sidebar({ isSidebarOpen = true, setIsSidebarOpen }) {
         isScrolled
           ? "bg-bg-base/30 backdrop-blur-lg border-b border-base shadow-sm"
           : "bg-transparent border-transparent",
-        isPlaying ? 'opacity-0 pointer-events-none' : 'opacity-100'
+        (isPlaying && location.pathname.startsWith('/timer')) ? 'opacity-0 pointer-events-none' : 'opacity-100'
       )}>
 
         <button
@@ -123,7 +123,7 @@ export default function Sidebar({ isSidebarOpen = true, setIsSidebarOpen }) {
           // Mobile state
           isMobileMenuOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0",
           // Timer state
-          isPlaying ? "lg:-translate-x-full opacity-0 pointer-events-none" : "opacity-100"
+          (isPlaying && location.pathname.startsWith('/timer')) ? "lg:-translate-x-full opacity-0 pointer-events-none" : "opacity-100"
         )}
       >
         {/* Logo Area */}
