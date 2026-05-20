@@ -23,11 +23,6 @@ trait TimestampableTrait
 
         $this->createdAt = $now;
         $this->updatedAt = $now;
-
-        //if (!isset($this->createdAt)) {
-        //    $this->createdAt = $now;
-        //}
-        //$this->updatedAt = $now;
     }
 
     #[ORM\PreUpdate]

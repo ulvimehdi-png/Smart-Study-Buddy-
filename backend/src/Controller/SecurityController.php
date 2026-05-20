@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller;
 
 use App\Entity\Settings;
@@ -179,7 +181,7 @@ final class SecurityController extends AbstractController
         ProfileImageStorage    $profileImageStorage,
     ): JsonResponse
     {
-        if (!$user) {
+        if (!$user instanceof User) {
             return $this->json(['error' => 'Not logged in'], 401);
         }
 
@@ -228,7 +230,7 @@ final class SecurityController extends AbstractController
         ProfileImageStorage    $profileImageStorage,
     ): JsonResponse
     {
-        if (!$user) {
+        if (!$user instanceof User) {
             return $this->json(['error' => 'Not logged in'], 401);
         }
 
@@ -250,7 +252,7 @@ final class SecurityController extends AbstractController
         UserPasswordHasherInterface $hasher
     ): JsonResponse
     {
-        if (!$user) {
+        if (!$user instanceof User) {
             return $this->json(['error' => 'Not logged in'], 401);
         }
 
@@ -330,4 +332,17 @@ final class SecurityController extends AbstractController
     {
         throw new \LogicException('Handled by Symfony security.');
     }
+
+    private function validateUsername(string $username): ?string
+{
+    if (empty($username)) {
+        return 'Username is required.';
+}
+
+    if (!preg_match('/^[a-zA-Z0-9_]{3,20}$/', $username)) {
+        return 'Invalid username format.';
+    }
+
+    return null;
+}
 }

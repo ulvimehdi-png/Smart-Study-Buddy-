@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller;
 
 use App\Entity\Task;
@@ -7,23 +9,41 @@ use App\Entity\User;
 use App\Enum\TaskStatus;
 use App\Enum\TaskPriority;
 use App\Service\SubjectService;
+use App\Service\AchievementService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\CurrentUser;
-use App\Service\AchievementService;
 
 #[Route('/api/tasks')]
 final class TasksController extends AbstractController
 {
+    private function serializeTask(Task $task): array
+    {
+        $subject = $task->getSubject();
+
+        return [
+            'taskId' => $task->getId(),
+            'id' => $task->getId(),
+            'title' => $task->getTitle(),
+            'description' => $task->getDescription(),
+            'isCompleted' => $task->getStatus() === TaskStatus::DONE,
+            'status' => $task->getStatus()->value,
+            'dueDate' => $task->getDueAt()?->format(\DATE_ATOM),
+            'createdAt' => $task->getCreatedAt()?->format(\DATE_ATOM),
+            'completedAt' => $task->getCompletedAt()?->format(\DATE_ATOM),
+            'subject' => $subject && !$subject->isDeleted() ? $subject->getName() : null,
+        ];
+    }
+
     #[Route('', methods: ['GET'])]
     public function getTasks(
         #[CurrentUser] ?User $user,
         EntityManagerInterface $em
     ): JsonResponse {
-        if (!$user) {
+        if (!$user instanceof User) {
             return $this->json(['error' => 'Not logged in'], 401);
         }
 
@@ -49,26 +69,7 @@ final class TasksController extends AbstractController
             return $aDone <=> $bDone;
         });
 
-        $data = [];
-
-        foreach ($tasks as $task) {
-            $isCompleted = $task->getStatus() === TaskStatus::DONE;
-            $subject = $task->getSubject();
-
-            $data[] = [
-                'taskId' => $task->getId(),
-                'id' => $task->getId(),
-                'title' => $task->getTitle(),
-                'description' => $task->getDescription(),
-                'isCompleted' => $isCompleted,
-                'status' => $task->getStatus()->value,
-                'dueDate' => $task->getDueAt()?->format(DATE_ATOM),
-                'createdAt' => $task->getCreatedAt()?->format(DATE_ATOM),
-                'completedAt' => $task->getCompletedAt()?->format(DATE_ATOM),
-                'priority' => $task->getPriority()->value,
-                'subject' => $subject && !$subject->isDeleted() ? $subject->getName() : null,
-            ];
-        }
+        $data = array_map(fn(Task $task) => $this->serializeTask($task), $tasks);
 
         return $this->json($data);
     }
@@ -80,7 +81,7 @@ final class TasksController extends AbstractController
         EntityManagerInterface $em,
         SubjectService $subjectService
     ): JsonResponse {
-        if (!$user) {
+        if (!$user instanceof User) {
             return $this->json(['error' => 'Not logged in'], 401);
         }
 
@@ -114,21 +115,7 @@ final class TasksController extends AbstractController
 
         return $this->json([
             'success' => true,
-            'task' => [
-                'taskId' => $task->getId(),
-                'id' => $task->getId(),
-                'title' => $task->getTitle(),
-                'description' => $task->getDescription(),
-                'isCompleted' => false,
-                'status' => $task->getStatus()->value,
-                'dueDate' => $task->getDueAt()?->format(DATE_ATOM),
-                'createdAt' => $task->getCreatedAt()?->format(DATE_ATOM),
-                'completedAt' => null,
-                'priority' => $task->getPriority()->value,
-                'subject' => $task->getSubject() && !$task->getSubject()->isDeleted()
-                    ? $task->getSubject()->getName()
-                    : null,
-            ],
+            'task' => $this->serializeTask($task),
         ], 201);
     }
 
@@ -139,36 +126,28 @@ final class TasksController extends AbstractController
         EntityManagerInterface $em,
         AchievementService $achievementService
     ): JsonResponse {
-        if (!$user) {
+        if (!$user instanceof User) {
             return $this->json(['error' => 'Not logged in'], 401);
         }
 
-        $task = $em->getRepository(Task::class)
-            ->createQueryBuilder('t')
-            ->where('t.id = :id')
-            ->andWhere('t.user = :user')
-            ->andWhere('t.deletedAt IS NULL')
-            ->setParameter('id', $id)
-            ->setParameter('user', $user)
-            ->getQuery()
-            ->getOneOrNullResult();
+        $task = $em->getRepository(Task::class)->findOneBy([
+            'id' => $id,
+            'user' => $user,
+            'deletedAt' => null
+        ]);
 
-        if (!$task) {
+        if (!$task instanceof Task) {
             return $this->json(['error' => 'Task not found'], 404);
         }
 
         if ($task->getStatus() === TaskStatus::DONE) {
             $task->setStatus(TaskStatus::TODO);
             $task->setCompletedAt(null);
-            
-            // Deduct points if they uncheck it
-            $achievementService->removePoints($user, 10); 
+            $achievementService->removePoints($user, 10);
         } else {
             $task->setStatus(TaskStatus::DONE);
             $task->setCompletedAt(new \DateTimeImmutable());
-            
-            // Add points when completed
-            $achievementService->addPoints($user, 10); 
+            $achievementService->addPoints($user, 10);
         }
 
         $em->flush();
@@ -244,21 +223,17 @@ final class TasksController extends AbstractController
         #[CurrentUser] ?User $user,
         EntityManagerInterface $em
     ): JsonResponse {
-        if (!$user) {
+        if (!$user instanceof User) {
             return $this->json(['error' => 'Not logged in'], 401);
         }
 
-        $task = $em->getRepository(Task::class)
-            ->createQueryBuilder('t')
-            ->where('t.id = :id')
-            ->andWhere('t.user = :user')
-            ->andWhere('t.deletedAt IS NULL')
-            ->setParameter('id', $id)
-            ->setParameter('user', $user)
-            ->getQuery()
-            ->getOneOrNullResult();
+        $task = $em->getRepository(Task::class)->findOneBy([
+            'id' => $id,
+            'user' => $user,
+            'deletedAt' => null
+        ]);
 
-        if (!$task) {
+        if (!$task instanceof Task) {
             return $this->json(['error' => 'Task not found'], 404);
         }
 

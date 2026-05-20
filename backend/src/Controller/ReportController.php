@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller;
 
 use App\Entity\Task;
@@ -21,11 +23,10 @@ final class ReportController extends AbstractController
         #[CurrentUser] ?User $user,
         EntityManagerInterface $em
     ): JsonResponse {
-        if (!$user) {
+        if (!$user instanceof User) {
             return $this->json(['error' => 'Not logged in'], 401);
         }
 
-        // 1. Find out what timeframe the user wants (daily by default)
         $period = $request->query->get('period', 'daily');
         $start = new \DateTimeImmutable();
 
@@ -37,7 +38,6 @@ final class ReportController extends AbstractController
             $start = $start->modify('first day of this month')->setTime(0, 0, 0); // 1st of the month
         }
 
-        // 2. Get all tasks finished after that start time
         $tasks = $em->getRepository(Task::class)->createQueryBuilder('t')
             ->leftJoin('t.subject', 's')->addSelect('s')
             ->where('t.user = :user')
@@ -50,7 +50,6 @@ final class ReportController extends AbstractController
             ->getQuery()
             ->getResult();
 
-        // 3. Count them up by subject
         $subjectStats = [];
         $totalCompleted = 0;
 

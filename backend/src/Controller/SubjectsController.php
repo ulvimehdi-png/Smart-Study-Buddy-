@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller;
 
 use App\Entity\Subject;
@@ -18,7 +20,7 @@ final class SubjectsController extends AbstractController
         #[CurrentUser] ?User $user,
         EntityManagerInterface $em
     ): JsonResponse {
-        if (!$user) {
+        if (!$user instanceof User) {
             return $this->json(['error' => 'Not logged in'], 401);
         }
 
@@ -48,21 +50,17 @@ final class SubjectsController extends AbstractController
         #[CurrentUser] ?User $user,
         EntityManagerInterface $em
     ): JsonResponse {
-        if (!$user) {
+        if (!$user instanceof User) {
             return $this->json(['error' => 'Not logged in'], 401);
         }
 
-        $subject = $em->getRepository(Subject::class)
-            ->createQueryBuilder('s')
-            ->where('s.id = :id')
-            ->andWhere('s.user = :user')
-            ->andWhere('s.deletedAt IS NULL')
-            ->setParameter('id', $id)
-            ->setParameter('user', $user)
-            ->getQuery()
-            ->getOneOrNullResult();
+        $subject = $em->getRepository(Subject::class)->findOneBy([
+            'id' => $id,
+            'user' => $user,
+            'deletedAt' => null
+        ]);
 
-        if (!$subject) {
+        if (!$subject instanceof Subject) {
             return $this->json(['error' => 'Subject not found'], 404);
         }
 

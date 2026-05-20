@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller;
 
 use App\Entity\Note;
@@ -22,7 +24,7 @@ final class DashboardController extends AbstractController
         #[CurrentUser] ?User $user,
         EntityManagerInterface $em
     ): JsonResponse {
-        if (!$user) {
+        if (!$user instanceof User) {
             return $this->json(['error' => 'Not logged in'], 401);
         }
 
@@ -70,18 +72,17 @@ final class DashboardController extends AbstractController
             ->getQuery()
             ->getResult();
 
-        $recent = [];
-
-        foreach ($notes as $n) {
-            $recent[] = [
+        $recent = array_map(
+            static fn (Note $n): array => [
                 'noteId' => $n->getId(),
                 'id' => $n->getId(),
                 'title' => $n->getTitle(),
                 'content' => $n->getContent(),
-                'createdAt' => $n->getCreatedAt()?->format(DATE_ATOM),
+                'createdAt' => $n->getCreatedAt()?->format(\DATE_ATOM),
                 'subject' => $n->getSubject()?->getName(),
-            ];
-        }
+            ],
+            $notes
+        );
 
         $subjects = $em->getRepository(Subject::class)
             ->createQueryBuilder('s')
@@ -103,8 +104,6 @@ final class DashboardController extends AbstractController
             ->getResult();
 
         $progressMap = [];
-        $pendingTasks = [];
-
         foreach ($subjects as $subject) {
             $progressMap[$subject->getId()] = [
                 'subject' => $subject->getName(),
@@ -114,6 +113,7 @@ final class DashboardController extends AbstractController
             ];
         }
 
+        $pendingTasks = [];
         foreach ($tasks as $task) {
             $subject = $task->getSubject();
 
@@ -126,7 +126,7 @@ final class DashboardController extends AbstractController
                 ];
             }
 
-            if (!$subject || $subject->isDeleted()) {
+            if (!$subject || $subject->isDeleted() || !isset($progressMap[$subject->getId()])) {
                 continue;
             }
 
@@ -188,7 +188,7 @@ final class DashboardController extends AbstractController
             'progress' => $progress,
             'recentNotes' => $recent,
             'points' => $user->getPoints(),
-            'pendingTasks' => array_slice($pendingTasks, 0, 5) // Return top 5 pending tasks
+            'pendingTasks' => array_slice($pendingTasks, 0, 5)
         ]);
     }
 }
