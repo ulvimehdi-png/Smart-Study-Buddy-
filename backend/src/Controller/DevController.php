@@ -92,7 +92,7 @@ final class DevController extends AbstractController
     public function logs(Request $request): JsonResponse
     {
         $env = $_ENV['APP_ENV'] ?? 'prod';
-        $logFile = $this->getParameter('kernel.logs_dir') . '/' . $env . '.log';
+        $logFile = sprintf("%s/%s.log", $this->getParameter('kernel.logs_dir'), $env);
         $errorsOnly = $request->query->getBoolean('errorsOnly');
 
         if (!is_file($logFile)) {

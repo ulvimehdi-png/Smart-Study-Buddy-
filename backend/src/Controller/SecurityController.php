@@ -89,7 +89,7 @@ final class SecurityController extends AbstractController
         ]);
 
         return $this->json([
-            'status' => 'user created',
+            'status' => 'register_user_success',
             'user' => $this->serializeUser($user, $profileImageStorage),
         ], 201);
     }
@@ -100,6 +100,10 @@ final class SecurityController extends AbstractController
         ProfileImageStorage  $profileImageStorage,
     ): JsonResponse
     {
+        if (!$user) {
+            return $this->json(['user' => null]);
+        }
+
         $this->logger->info('Current user is active', [
             'user_id' => $user->getId(),
             'username' => $user->getUsername(),

@@ -19,7 +19,9 @@ variables:
   DEPLOY_PATH: "/var/www/html"
   HOST_UID: "1001"
   HOST_GID: "1001"
-  ARTIFACTS_DIR: ".deploy"
+  ARTIFACTS_DIR: ".artifacts"
+  EXPORT_DIR: ${ARTIFACTS_DIR}/export
+  COVERAGE_DIR: ${ARTIFACTS_DIR}/coverage
   #PROD_ENV_LOCAL_FILE must be set in GL cicd
 
 workflow:
@@ -31,8 +33,7 @@ workflow:
 
 #
 # STAGE - VALIDATE
-# Just a quick check to see if all tools
-# are available
+# Just a quick check to see if all tools are available
 #
 validate_compose:
   stage: validate
@@ -54,10 +55,14 @@ validate_compose:
 #  script:
 #    - make dev-ci
 
-test_stack:
+test_coverage_artifact:
   stage: test
   script:
     - make test-ci
+  artifacts:
+    paths:
+      - ${COVERAGE_DIR}
+    expire_in: 1 hour
   allow_failure: true
   # NEEDS TO BE DELETED AFTER TESTS ARE FIXED !!!
 
@@ -70,7 +75,7 @@ build_prod_artifact:
     - make prod-ci
   artifacts:
     paths:
-      - ${ARTIFACTS_DIR}/
+      - ${EXPORT_DIR}
     expire_in: 1 hour
 
 #
@@ -80,6 +85,8 @@ deploy:
   stage: deploy
   needs:
     - job: build_prod_artifact
+      artifacts: true
+    - job: test_coverage_artifact
       artifacts: true
   resource_group: studev-deploy
   rules:

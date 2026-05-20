@@ -58,6 +58,11 @@ FROM php-base AS php-test
 
 WORKDIR /app/backend
 
+# Xdebug ONLY in dev
+RUN pecl install xdebug \
+    && docker-php-ext-enable xdebug \
+    && rm -rf /tmp/pear
+
 ENV APP_ENV=test
 RUN echo "APP_ENV=test" > /app/backend/.env
 
@@ -71,6 +76,21 @@ RUN composer install \
       --optimize-autoloader \
       --classmap-authoritative \
       --no-scripts
+
+RUN rm -rf var/coverage \
+      && mkdir -p var/coverage
+
+#######################
+# TEST COVERAGE IMAGE #
+#######################
+FROM php-test AS php-test-coverage
+
+WORKDIR /app/backend
+
+ENV APP_ENV=test
+ENV XDEBUG_MODE=coverage
+
+
 
 ##########
 # VENDOR #

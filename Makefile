@@ -4,7 +4,7 @@
 	dev-up dev-down dev-reset dev-smoke \
 	test test-down \
 	prod-build prod-build-clean prod-up prod-up-detached prod-down \
-	prod-reset prod-smoke prod-export prod-artifact \
+	prod-reset prod-smoke prod-export \
 	dev-logs dev-logs-single test-logs test-logs-single prod-logs prod-logs-single
 
 ####################
@@ -16,20 +16,24 @@ export
 SHELL 			:= bash
 .SHELLFLAGS 	:= -eu -o pipefail -c
 
-EXPORT_DIR 		?= .deploy
+ARTIFACT_DIR	?= .artifacts
+EXPORT_DIR 		?= $(ARTIFACT_DIR)/export
+COVERAGE_DIR	?= $(ARTIFACT_DIR)/coverage
 
 #################
 # PROJECT NAMES #
 #################
 APP_NAME	:= studybuddy
 CI_SUFFIX	:= $(if $(CI_PIPELINE_ID),$(CI_PIPELINE_ID),local)
+
 PROD_IMAGE	?= $(APP_NAME):prod-$(CI_SUFFIX)
 
 PROJECT_NAME = $(APP_NAME)_$(1)_$(CI_SUFFIX)
 
-PROJECT_DEV  := $(call PROJECT_NAME,dev)
-PROJECT_TEST := $(call PROJECT_NAME,test)
-PROJECT_PROD := $(call PROJECT_NAME,prod)
+PROJECT_DEV				:= $(call PROJECT_NAME,dev)
+PROJECT_TEST			:= $(call PROJECT_NAME,test)
+PROJECT_TEST_COVERAGE	:= $(call PROJECT_NAME,test-coverage)
+PROJECT_PROD			:= $(call PROJECT_NAME,prod)
 
 ####################
 # COMPOSE DEFAULTS #
@@ -37,18 +41,17 @@ PROJECT_PROD := $(call PROJECT_NAME,prod)
 COMPOSE_BASE		= docker compose --project-directory . --env-file ./compose.env -f docker-compose.yml
 COMPOSE_BASE_LOCAL	= $(COMPOSE_BASE) -f docker-compose.local.yml
 
-COMPOSE_RUN			= APP_ENV=$(1) COMPOSE_PROJECT_NAME=$(2) $(3) --profile $(1)
+COMPOSE_RUN			= APP_ENV=$(1) COMPOSE_PROJECT_NAME=$(2) $(3) --profile $(4)
 
-DEV_CMD				:= $(call COMPOSE_RUN,dev,$(PROJECT_DEV),$(COMPOSE_BASE_LOCAL))
-TEST_CMD			:= $(call COMPOSE_RUN,test,$(PROJECT_TEST),$(COMPOSE_BASE))
-PROD_CMD			:= $(call COMPOSE_RUN,prod,$(PROJECT_PROD),$(COMPOSE_BASE))
+DEV_CMD				:= $(call COMPOSE_RUN,dev,$(PROJECT_DEV),$(COMPOSE_BASE_LOCAL),dev)
+TEST_CMD			:= $(call COMPOSE_RUN,test,$(PROJECT_TEST),$(COMPOSE_BASE),test)
+TEST_CMD_COVERAGE	:= $(call COMPOSE_RUN,test,$(PROJECT_TEST_COVERAGE),$(COMPOSE_BASE),test-coverage)
+PROD_CMD			:= $(call COMPOSE_RUN,prod,$(PROJECT_PROD),$(COMPOSE_BASE),prod)
+PROD_CMD_LOCAL		:= $(call COMPOSE_RUN,prod,$(PROJECT_PROD),$(COMPOSE_BASE_LOCAL),prod)
 
-EXEC_CMD = $(1) exec -T $(2) $(3)
 
+EXEC_CMD = $(1) exec $(2) $(3)
 
-PROD_LOCAL := APP_ENV=prod COMPOSE_PROJECT_NAME=$(PROJECT_PROD) \
-docker compose --project-directory . --env-file ./compose.env \
--f docker-compose.yml -f docker-compose.local.yml --profile prod
 #####################
 # ENVIRONMENT = DEV #
 #####################
@@ -107,27 +110,39 @@ test: test-down
 test-down:
 	$(TEST_CMD) down -v --remove-orphans
 
-test-ci: test
+#
+# -- test ci -- just to be sure down also includes local
+#
+test-ci-setup: test-down
+	rm -rf $(COVERAGE_DIR)
+	mkdir -p $(COVERAGE_DIR)
+
+# docker compose "exports" through bind mount
+test-ci-export:
+	$(TEST_CMD_COVERAGE) up --build --abort-on-container-exit --exit-code-from php-test-coverage
+	$(TEST_CMD_COVERAGE) down -v --remove-orphans
+
+test-ci: test-ci-setup test-ci-export
 
 ######################
 # ENVIRONMENT = PROD #
 ######################
 prod-up:
 	@echo WARNING: this is just the local emulation of the production environment
-	$(PROD_LOCAL) up -d
+	$(PROD_CMD_LOCAL) up -d
 	@echo WARNING: this is just the local emulation of the production environment
 
 prod-down:
-	$(PROD_LOCAL) down
+	$(PROD_CMD_LOCAL) down
 
 prod-down-clean:
-	$(PROD_LOCAL) down -v --remove-orphans
+	$(PROD_CMD_LOCAL) down -v --remove-orphans
 
 prod-build:
-	$(PROD_LOCAL) build
+	$(PROD_CMD_LOCAL) build
 
 prod-build-clean:
-	$(PROD_LOCAL) build --no-cache --pull
+	$(PROD_CMD_LOCAL) build --no-cache --pull
 
 prod-reset: prod-down-clean prod-build-clean prod-up
 
@@ -152,14 +167,21 @@ prod-ci: prod-ci-setup prod-ci-export
 ##############
 # DEPLOYMENT #
 ##############
+
+# Test if files/dirs exist and merge them into
 deploy-ci-setup:
-	ssh -o BatchMode=yes -o ConnectTimeout=15 "$DEPLOY_HOST" "echo remote-ok"
+	#ssh -o BatchMode=yes -o ConnectTimeout=15 "$DEPLOY_HOST" "echo remote-ok"
 	@test -f $(EXPORT_DIR)/public/index.html
 	@test -f $(EXPORT_DIR)/public/index.php
 	@test -f $(EXPORT_DIR)/bin/console
 	@test -d $(EXPORT_DIR)/vendor
 
+	@test -d $(COVERAGE_DIR)
+	@test -f $(COVERAGE_DIR)/html/index.html
+	cp -a $(COVERAGE_DIR)/. $(EXPORT_DIR)/public/coverage
+
 deploy-ci-rsync:
+	@test -d $(COVERAGE_DIR)
 	rsync -rvz --delete-after \
 				--exclude=".env*" \
 				--exclude="upload/" \
@@ -255,7 +277,7 @@ help:
 	@echo "  make prod-reset"
 	@echo "  make prod-smoke"
 	@echo "  make prod-export"
-	@echo "  make prod-artifact"
+	@echo "
 	@echo "  make prod-logs"
 	@echo "  make prod-logs-single"
 	@echo "TODO"

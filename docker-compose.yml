@@ -8,7 +8,7 @@ x-user: &user
 
 x-net: &net
   networks:
-    - app_net
+    - ${APP_ENV:-dev}_app_net
 
 x-health-defaults: &health-defaults
   interval: 5s
@@ -22,17 +22,17 @@ x-health-defaults: &health-defaults
 x-db-base: &db-base
   image: "mysql:${MYSQL_VERSION:-8.0.32}"
   environment:
-    MYSQL_ROOT_PASSWORD:  "${MYSQL_ROOT_PASSWORD:-root}"
-    MYSQL_USER:           "${MYSQL_USER:-app}"
-    MYSQL_PASSWORD:       "${MYSQL_PASSWORD:-app}"
-    MYSQL_DATABASE:       "app_${APP_ENV:-dev}"
+    MYSQL_ROOT_PASSWORD: "${MYSQL_ROOT_PASSWORD:-root}"
+    MYSQL_USER: "${MYSQL_USER:-app}"
+    MYSQL_PASSWORD: "${MYSQL_PASSWORD:-app}"
+    MYSQL_DATABASE: "app_${APP_ENV:-dev}"
   command:
     - --default-authentication-plugin=mysql_native_password
     - --character-set-server=utf8mb4
     - --collation-server=utf8mb4_unicode_ci
   healthcheck:
     <<: *health-defaults
-    test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -uroot -p$${MYSQL_ROOT_PASSWORD} --silent"]
+    test: [ "CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -uroot -p$${MYSQL_ROOT_PASSWORD} --silent" ]
   <<: *net
 
 ############
@@ -41,7 +41,7 @@ x-db-base: &db-base
 x-php-common: &php-common
   working_dir: /app/backend
   init: true
-  <<: [*user, *net]
+  <<: [ *user, *net ]
   environment:
     HOME: /tmp
     XDG_CONFIG_HOME: /tmp/.config
@@ -72,6 +72,16 @@ x-build-test: &build-test
       COMPOSER_VERSION: "${COMPOSER_VERSION:-2.9.5}"
       NODE_VERSION: "${NODE_VERSION:-22-alpine}"
 
+x-build-test-coverage: &build-test-coverage
+  build:
+    context: .
+    dockerfile: ./docker/php/Dockerfile
+    target: php-test-coverage
+    args:
+      PHP_VERSION: "${PHP_VERSION:-8.4.18}"
+      COMPOSER_VERSION: "${COMPOSER_VERSION:-2.9.5}"
+      NODE_VERSION: "${NODE_VERSION:-22-alpine}"
+
 x-build-prod: &build-prod
   build:
     context: .
@@ -89,7 +99,7 @@ x-node-common: &node-common
   image: "node:${NODE_VERSION:-22-alpine}"
   working_dir: /app/frontend
   init: true
-  <<: [*user, *net]
+  <<: [ *user, *net ]
   volumes:
     - ./frontend:/app/frontend
     - ./backend/public/uploads:/app/frontend/public/uploads:ro
@@ -120,7 +130,7 @@ services:
 
   db-test:
     <<: *db-base
-    profiles: [ "test" ]
+    profiles: [ "test", "test-coverage" ]
     container_name: db-test
     tmpfs:
       - /var/lib/mysql
@@ -138,8 +148,7 @@ services:
       HOME: /tmp
     command: >
       sh -lc '
-        mkdir -p /tmp/.config /tmp/.cache /tmp/.composer &&
-        mkdir -p /app/backend/var /app/backend/vendor &&
+        mkdir -p /tmp/.config /app/backend/var /app/backend/vendor &&
         chown -R ${HOST_UID:-1000}:${HOST_GID:-1000} /app/backend &&
         composer install --no-interaction --optimize-autoloader
       '
@@ -155,7 +164,7 @@ services:
       HOME: /tmp
     volumes:
       - ./backend:/app/backend
-#      - docker/php/debug.ini /usr/local/etc/php/conf.d/90-debug.ini
+    #      - docker/php/debug.ini /usr/local/etc/php/conf.d/90-debug.ini
     command: >
       sh -lc '
         php bin/console doctrine:database:drop --force --if-exists --env=dev &&
@@ -176,7 +185,7 @@ services:
   ##################
   php-test-init:
     <<: [ *php-common, *build-test ]
-    profiles: [ "test" ]
+    profiles: [ "test", "test-coverage" ]
     container_name: php-test-init
     user: root
     depends_on:
@@ -184,9 +193,8 @@ services:
         condition: service_healthy
     command: >
       sh -lc '
-        set -eux
-        mkdir -p /tmp/.config /tmp/.cache /tmp/.composer &&
-        mkdir -p /app/backend/var /app/backend/vendor &&
+        rm -rf /app/backend/var/coverage &&
+        mkdir -p /tmp/.config /app/backend/{vendor,var/coverage} &&
         chown -R ${HOST_UID:-1000}:${HOST_GID:-1000} /app/backend &&
         php bin/console doctrine:database:create --if-not-exists --env=test &&
         php bin/console doctrine:migrations:migrate --no-interaction --env=test &&
@@ -201,7 +209,22 @@ services:
     depends_on:
       php-test-init:
         condition: service_completed_successfully
-    command: php bin/phpunit
+    command: php bin/phpunit --configuration phpunit.dist.xml --no-coverage
+    restart: "no"
+
+  php-test-coverage:
+    <<: [ *php-common, *build-test-coverage ]
+    profiles: [ "test-coverage" ]
+    container_name: php-test-coverage
+    user: root
+    environment:
+      XDEBUG_MODE: coverage
+    volumes:
+      - ${COVERAGE_DIR}:/app/backend/var/coverage
+    depends_on:
+      php-test-init:
+        condition: service_completed_successfully
+    command: php bin/phpunit --configuration phpunit.dist.xml
     restart: "no"
 
   ##################
@@ -248,7 +271,7 @@ services:
   ##############
   node-deps:
     <<: *node-common
-    profiles: ["dev"]
+    profiles: [ "dev" ]
     container_name: node-deps
     user: root
     command: >
@@ -269,7 +292,7 @@ services:
     command: npm run dev -- --host 0.0.0.0 --port 5173
     healthcheck:
       <<: *health-defaults
-      test: ["CMD-SHELL", "wget -q --spider http://127.0.0.1:5173 || exit 1"]
+      test: [ "CMD-SHELL", "wget -q --spider http://127.0.0.1:5173 || exit 1" ]
     restart: unless-stopped
 
   #################
@@ -289,11 +312,11 @@ services:
         anonymous
         cors_origins *
         publish_origins *
-#      MERCURE_EXTRA_DIRECTIVES: |
-#        "anonymous
-#        cors_origins http://localhost:5173 http://localhost:8000
-#        publish_origins http://localhost:5173 http://localhost:8000
-#        demo"
+    #      MERCURE_EXTRA_DIRECTIVES: |
+    #        "anonymous
+    #        cors_origins http://localhost:5173 http://localhost:8000
+    #        publish_origins http://localhost:5173 http://localhost:8000
+    #        demo"
     volumes:
       - mercure_dev_data:/data
       - mercure_dev_config:/config
@@ -319,5 +342,12 @@ volumes:
 # NETWORKS #
 ############
 networks:
-  app_net:
+  dev_app_net:
+    name: dev_app_net
+    driver: bridge
+  test_app_net:
+    name: test_app_net
+    driver: bridge
+  prod_app_net:
+    name: prod_app_net
     driver: bridge
